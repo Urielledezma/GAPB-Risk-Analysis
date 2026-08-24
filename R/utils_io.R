@@ -5,6 +5,12 @@
 # RStudio, run with Rscript from the repository root, or knitted by Quarto from
 # inside reports/.
 
+# Null-coalescing. Base R gained `%||%` in 4.4.0; defined here so the project
+# also runs on 4.2 and 4.3.
+if (!exists("%||%", mode = "function")) {
+  `%||%` <- function(x, y) if (is.null(x)) y else x
+}
+
 #' Locate the project root by walking up for the .Rproj file.
 #'
 #' @param start Directory to start from.

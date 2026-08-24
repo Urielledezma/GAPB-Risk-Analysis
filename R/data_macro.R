@@ -166,6 +166,3 @@ quarter_end_date <- function(period) {
     )[quarter]
   }, character(1)))
 }
-
-# Null-coalescing helper. Base R has no ??.
-`%||%` <- function(x, y) if (is.null(x)) y else x
