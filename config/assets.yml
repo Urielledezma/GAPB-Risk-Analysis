@@ -59,12 +59,23 @@ universe:
     factset_id: BBAJIOO-MX
 
 # Macroeconomic series used in stage 02.
+#
+# The annual GDP series comes from the World Bank, which needs no token, so the
+# stage 02 GDP comparison reproduces for anyone. INEGI is the optional
+# higher-resolution source for the quarterly series and requires a free token.
 macro:
-  gdp:
+  gdp_annual:
+    provider: worldbank
+    # Real GDP growth, annual %, Mexico.
+    country: MEX
+    indicator: NY.GDP.MKTP.KD.ZG
+    label: Crecimiento anual del PIB real de México
+  gdp_quarterly:
     provider: inegi
-    # Real GDP, seasonally adjusted, quarterly index (INEGI BIE indicator id).
+    # Real GDP, seasonally adjusted, quarterly (INEGI BIE indicator id).
+    # Provisional: confirm against the BIE catalogue before relying on it.
     indicator: "494262"
-    label: PIB real de México
+    label: PIB real trimestral de México
   reference_rate:
     provider: banxico
     # Overnight interbank funding rate (Banxico SIE series id).
