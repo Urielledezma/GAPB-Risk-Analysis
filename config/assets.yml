@@ -1,0 +1,76 @@
+# Asset universe.
+#
+# The single source of truth for every ticker in the project. No symbol is
+# hard-coded anywhere else: ingest scripts, the portfolio construction in stage
+# 05 and the reports all read from this file. Repointing the pipeline at a
+# different universe is an edit here and nothing more.
+#
+# factset_id values follow FactSet's <ticker>-<region> convention and are
+# provisional until confirmed against an authenticated call. Yahoo symbols are
+# the operative ones -- they drive every committed dataset.
+
+subject: GAPB.MX # Primary asset. Stages 01-04 analyse this issuer.
+
+history_start: "2000-01-01" # Loaders take whatever exists from this date onward.
+currency: MXN
+exchange: BMV
+
+universe:
+  - ticker: GAPB.MX
+    name: Grupo Aeroportuario del Pacífico, S.A.B. de C.V.
+    series: B
+    sector: Industrials
+    industry: Transportation Infrastructure
+    factset_id: GAPB-MX
+
+  - ticker: WALMEX.MX
+    name: Wal-Mart de México, S.A.B. de C.V.
+    series: "*"
+    sector: Consumer Staples
+    industry: Consumer Staples Distribution & Retail
+    factset_id: WALMEX-MX
+
+  - ticker: GMEXICOB.MX
+    name: Grupo México, S.A.B. de C.V.
+    series: B
+    sector: Materials
+    industry: Metals & Mining
+    factset_id: GMEXICOB-MX
+
+  - ticker: ORBIA.MX
+    name: Orbia Advance Corporation, S.A.B. de C.V.
+    series: "*"
+    sector: Materials
+    industry: Chemicals
+    factset_id: ORBIA-MX
+
+  - ticker: ALSEA.MX
+    name: Alsea, S.A.B. de C.V.
+    series: "*"
+    sector: Consumer Discretionary
+    industry: Hotels, Restaurants & Leisure
+    factset_id: ALSEA-MX
+
+  - ticker: BBAJIOO.MX
+    name: Banco del Bajío, S.A., Institución de Banca Múltiple
+    series: O
+    sector: Financials
+    industry: Banks
+    factset_id: BBAJIOO-MX
+
+# Macroeconomic series used in stage 02.
+macro:
+  gdp:
+    provider: inegi
+    # Real GDP, seasonally adjusted, quarterly index (INEGI BIE indicator id).
+    indicator: "494262"
+    label: PIB real de México
+  reference_rate:
+    provider: banxico
+    # Overnight interbank funding rate (Banxico SIE series id).
+    series: SF61745
+    label: Tasa objetivo Banco de México
+  fx_usdmxn:
+    provider: banxico
+    series: SF43718
+    label: Tipo de cambio FIX USD/MXN

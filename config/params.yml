@@ -1,0 +1,83 @@
+# Model parameters.
+#
+# Every constant the analysis depends on lives here. Reports read these values;
+# they never restate them. Changing a confidence level or an estimation window
+# is a one-line edit that propagates to every table and chart on the next
+# render.
+
+# --- Sample windows ----------------------------------------------------------
+sample:
+  # Estimation sample for volatility and VaR models.
+  start: "2021-01-01"
+  # Hard cut-off. Nothing after this date informs a fitted parameter.
+  end: "2025-12-31"
+  # Out-of-sample evaluation period for stage 04.
+  oos_start: "2026-01-01"
+  # Years reported individually in the year-by-year volatility table.
+  annual_breakdown: [2021, 2022, 2023, 2024, 2025]
+
+# --- Conventions -------------------------------------------------------------
+conventions:
+  trading_days_per_year: 252
+  # Continuously compounded. The alternative, simple returns, is not used
+  # anywhere in this project -- log returns are additive across time, which the
+  # horizon scaling in stages 03 and 05 relies on.
+  return_type: log
+  price_field: adjusted
+
+# --- Distribution tests ------------------------------------------------------
+tests:
+  alpha: 0.05
+
+# --- Geometric Brownian motion (stage 03) ------------------------------------
+gbm:
+  # Horizons in trading days, using daily parameters.
+  horizons_days: [10, 20, 40]
+  # Horizons in months, using annualised parameters.
+  horizons_months: [3, 6, 9, 12]
+  confidence: 0.95
+  n_paths: 10000
+
+# --- Variance models (stage 04) ----------------------------------------------
+variance:
+  # Moving-average windows to sweep when selecting m.
+  ma_windows: [5, 10, 20, 40, 60, 120, 252]
+  ewma:
+    # RiskMetrics convention, used as the benchmark against which an optimised
+    # lambda has to justify itself.
+    lambda_riskmetrics: 0.94
+    lambda_grid_min: 0.80
+    lambda_grid_max: 0.995
+    lambda_grid_by: 0.005
+  garch:
+    # Orders swept for (p, q); selection is on information criteria.
+    max_p: 2
+    max_q: 2
+    distributions: [norm, std, sstd]
+  # Reference series the forecasts are scored against.
+  realised_measure: abs_return
+
+# --- Value at Risk (stage 05) ------------------------------------------------
+var:
+  # Equally weighted position per asset, in MXN.
+  position_mxn: 100000
+  confidence: [0.95, 0.975, 0.99]
+  horizons_days: [1, 5, 10, 20]
+  # Trailing window used for the parametric covariance matrix.
+  parametric_window_months: 6
+  monte_carlo:
+    n_simulations: 100000
+    confidence: 0.99
+  backtest:
+    # Rolling window for the one-day backtest, in trading days.
+    window: 250
+    # Kupiec unconditional coverage test.
+    alpha: 0.05
+  optimisation:
+    objective: minimise_var
+    confidence: 0.99
+    long_only: true
+    max_weight: 0.40
+
+# --- Reproducibility ---------------------------------------------------------
+seed: 20260101
