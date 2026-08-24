@@ -1,0 +1,380 @@
+[
+  {
+    "objectID": "05-value-at-risk.html",
+    "href": "05-value-at-risk.html",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "",
+    "text": "ImportantePendiente de redacción\n\n\n\nQué se estima y con qué propósito."
+  },
+  {
+    "objectID": "05-value-at-risk.html#introducción",
+    "href": "05-value-at-risk.html#introducción",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "",
+    "text": "ImportantePendiente de redacción\n\n\n\nQué se estima y con qué propósito."
+  },
+  {
+    "objectID": "05-value-at-risk.html#construcción-de-la-cartera",
+    "href": "05-value-at-risk.html#construcción-de-la-cartera",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "2 Construcción de la cartera",
+    "text": "2 Construcción de la cartera\nLa cartera invierte $100,000 en cada una de las seis emisoras. Son pesos iguales en monto, no en número de acciones: las seis cotizan a niveles de precio muy distintos y una cartera de cien acciones de cada una sería una apuesta concentrada en la más cara.\n\n\nVer código\nreport_table(\n  portfolio$holdings,\n  caption = paste0(\"Composición inicial al \", portfolio$as_of, \".\")\n)\n\n\n\n\nTabla 1: Composición inicial al 2026-08-21.\n\n\n\n\n\n\n\nticker\nprice\nweight\nvalue\nshares\n\n\n\n\n6747\nALSEA.MX\n40.26\n0.1667\n100,000\n2,483.9\n\n\n9062\nBBAJIOO.MX\n56.54\n0.1667\n100,000\n1,768.7\n\n\n14215\nGAPB.MX\n358.37\n0.1667\n100,000\n279.0\n\n\n20973\nGMEXICOB.MX\n237.00\n0.1667\n100,000\n421.9\n\n\n27731\nORBIA.MX\n21.89\n0.1667\n100,000\n4,568.3\n\n\n33707\nWALMEX.MX\n46.53\n0.1667\n100,000\n2,149.2\n\n\n\n\n\n\n\n\nEl valor inicial de la cartera es \\(S_0 =\\) $600,000."
+  },
+  {
+    "objectID": "05-value-at-risk.html#var-no-paramétrico-simulación-histórica",
+    "href": "05-value-at-risk.html#var-no-paramétrico-simulación-histórica",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "3 VaR no paramétrico: simulación histórica",
+    "text": "3 VaR no paramétrico: simulación histórica\nEl cuantil se lee directamente de la distribución empírica, sin suponer ninguna forma funcional, de modo que las colas pesadas y la asimetría se arrastran tal como la muestra las exhibe.\n\n\nVer código\ngrid &lt;- expand.grid(\n  confidence = params()$var$confidence,\n  horizon = params()$var$horizons_days\n)\nhist_var &lt;- do.call(rbind, lapply(seq_len(nrow(grid)), function(i) {\n  var_historical(portfolio_r, grid$confidence[i], grid$horizon[i], portfolio$value)\n}))\nreport_table(hist_var, caption = \"VaR por simulación histórica.\", digits = 2)\n\n\n\n\nTabla 2: VaR por simulación histórica.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nmethod\nconfidence\nhorizon\nvar_return\nvar_currency\nvar_pct\n\n\n\n\nhistorical (scale)\n0.95\n1\n-0.02\n10,788\n0.02\n\n\nhistorical (scale)\n0.98\n1\n-0.02\n14,372\n0.02\n\n\nhistorical (scale)\n0.99\n1\n-0.03\n20,227\n0.03\n\n\nhistorical (scale)\n0.95\n5\n-0.04\n23,856\n0.04\n\n\nhistorical (scale)\n0.98\n5\n-0.05\n31,661\n0.05\n\n\nhistorical (scale)\n0.99\n5\n-0.08\n44,290\n0.07\n\n\nhistorical (scale)\n0.95\n10\n-0.06\n33,457\n0.06\n\n\nhistorical (scale)\n0.98\n10\n-0.08\n44,281\n0.07\n\n\nhistorical (scale)\n0.99\n10\n-0.11\n61,663\n0.10\n\n\nhistorical (scale)\n0.95\n20\n-0.08\n46,763\n0.08\n\n\nhistorical (scale)\n0.98\n20\n-0.11\n61,652\n0.10\n\n\nhistorical (scale)\n0.99\n20\n-0.15\n85,310\n0.14\n\n\n\n\n\n\n\n\n\n\nVer código\npnl &lt;- portfolio$value * (exp(portfolio_r) - 1)\ncuts &lt;- vapply(params()$var$confidence, function(c) {\n  -var_historical(portfolio_r, c, 1, portfolio$value)$var_currency\n}, numeric(1))\ncut_labels &lt;- data.frame(\n  confidence = paste0(100 * params()$var$confidence, \"%\"),\n  value = cuts,\n  stringsAsFactors = FALSE\n)\n\nggplot(data.frame(pnl = pnl), aes(pnl)) +\n  geom_histogram(bins = 100, fill = RISK_PALETTE[1], alpha = 0.7) +\n  geom_vline(\n    data = cut_labels, aes(xintercept = value, colour = confidence),\n    linewidth = 0.6\n  ) +\n  scale_colour_manual(values = unname(RISK_PALETTE[c(2, 4, 6)])) +\n  scale_x_continuous(labels = label_dollar(prefix = \"$\")) +\n  labs(\n    x = \"Pérdida / ganancia diaria (MXN)\", y = \"Frecuencia\",\n    caption = \"Líneas verticales: VaR a un día por nivel de confianza.\"\n  )\n\n\n\n\n\n\n\n\nFigura 1: Distribución de pérdidas y ganancias diarias de la cartera, con el VaR a un día."
+  },
+  {
+    "objectID": "05-value-at-risk.html#var-paramétrico",
+    "href": "05-value-at-risk.html#var-paramétrico",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "4 VaR paramétrico",
+    "text": "4 VaR paramétrico\nBajo normalidad, con \\(\\Sigma\\) la matriz de covarianzas y \\(w\\) el vector de pesos:\n\\[\n\\sigma_p = \\sqrt{w' \\Sigma\\, w}\n\\qquad\n\\text{VaR}_{h} = S_0\\left(1 - e^{\\,z_{1-c}\\,\\sigma_p\\sqrt{h}}\\right)\n\\]\nEl escalamiento por \\(\\sqrt{h}\\) supone independencia serial: la varianza crece linealmente en el tiempo y la desviación estándar con su raíz.\n\n\nVer código\ncovariance &lt;- covariance_matrix(matrix_returns)\nsigma_p &lt;- portfolio_sigma(portfolio$weights, covariance)\n\nparam_var &lt;- do.call(rbind, lapply(seq_len(nrow(grid)), function(i) {\n  var_parametric(sigma_p, grid$confidence[i], grid$horizon[i], portfolio$value)\n}))\nreport_table(param_var, caption = \"VaR paramétrico (varianza-covarianza).\", digits = 2)\n\n\n\n\nTabla 3: VaR paramétrico (varianza-covarianza).\n\n\n\n\n\n\nmethod\nconfidence\nhorizon\nvar_return\nvar_currency\nvar_pct\n\n\n\n\nparametric\n0.95\n1\n-0.02\n11,462\n0.02\n\n\nparametric\n0.98\n1\n-0.02\n13,633\n0.02\n\n\nparametric\n0.99\n1\n-0.03\n16,147\n0.03\n\n\nparametric\n0.95\n5\n-0.04\n25,328\n0.04\n\n\nparametric\n0.98\n5\n-0.05\n30,057\n0.05\n\n\nparametric\n0.99\n5\n-0.06\n35,506\n0.06\n\n\nparametric\n0.95\n10\n-0.06\n35,503\n0.06\n\n\nparametric\n0.98\n10\n-0.07\n42,061\n0.07\n\n\nparametric\n0.99\n10\n-0.09\n49,590\n0.08\n\n\nparametric\n0.95\n20\n-0.09\n49,587\n0.08\n\n\nparametric\n0.98\n20\n-0.10\n58,608\n0.10\n\n\nparametric\n0.99\n20\n-0.12\n68,911\n0.11\n\n\n\n\n\n\n\n\n\n\nVer código\nreport_table(\n  as.data.frame(round(stats::cov2cor(covariance), 3)),\n  caption = \"Matriz de correlaciones de los últimos seis meses.\"\n)\n\n\n\n\nTabla 4: Matriz de correlaciones de los últimos seis meses.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nALSEA.MX\nBBAJIOO.MX\nGAPB.MX\nGMEXICOB.MX\nORBIA.MX\nWALMEX.MX\n\n\n\n\nALSEA.MX\n1.000\n0.181\n0.146\n0.284\n0.254\n0.152\n\n\nBBAJIOO.MX\n0.181\n1.000\n0.192\n0.490\n0.308\n0.118\n\n\nGAPB.MX\n0.146\n0.192\n1.000\n0.326\n0.278\n0.232\n\n\nGMEXICOB.MX\n0.284\n0.490\n0.326\n1.000\n0.449\n0.160\n\n\nORBIA.MX\n0.254\n0.308\n0.278\n0.449\n1.000\n0.224\n\n\nWALMEX.MX\n0.152\n0.118\n0.232\n0.160\n0.224\n1.000"
+  },
+  {
+    "objectID": "05-value-at-risk.html#backtesting",
+    "href": "05-value-at-risk.html#backtesting",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "5 Backtesting",
+    "text": "5 Backtesting\nCada día se estima el VaR con la ventana previa únicamente, de modo que la serie es lo que el modelo habría reportado ese día. Estimarlo sobre la muestra completa y contar excepciones contra esa misma muestra no es un backtest.\nLa prueba de cobertura incondicional de Kupiec contrasta el número observado de excepciones contra el esperado:\n\\[\nLR = -2\\ln\\frac{(1-p)^{\\,n-x}\\,p^{\\,x}}{(1-\\hat\\pi)^{\\,n-x}\\,\\hat\\pi^{\\,x}} \\;\\sim\\; \\chi^2_{1}\n\\]\n\n\nVer código\nconfidence &lt;- 0.99\nrolling_hist &lt;- rolling_var(portfolio_r, confidence, method = \"historical\")\nrolling_param &lt;- rolling_var(portfolio_r, confidence, method = \"parametric\")\n\nbacktest &lt;- rbind(\n  cbind(metodo = \"Histórico\", backtest_var(portfolio_r, rolling_hist, confidence)),\n  cbind(metodo = \"Paramétrico\", backtest_var(portfolio_r, rolling_param, confidence))\n)\nreport_table(backtest, caption = \"Backtesting del VaR a un día al 99%.\")\n\n\n\n\nTabla 5: Backtesting del VaR a un día al 99%.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nmetodo\nconfidence\nn\nexpected_breaches\nobserved_breaches\nbreach_rate\nlr_statistic\np_value\nreject_model\n\n\n\n\nHistórico\n0.99\n2,064\n20.64\n35\n0.0170\n8.349\n0.0039\nTRUE\n\n\nParamétrico\n0.99\n2,064\n20.64\n38\n0.0184\n11.815\n0.0006\nTRUE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nComparación de excepciones observadas contra esperadas y evaluación del desempeño. Demasiadas pocas excepciones reprueban la prueba igual que demasiadas: un modelo que nunca se excede no es conservador, está mal calibrado y es caro."
+  },
+  {
+    "objectID": "05-value-at-risk.html#optimización-de-la-cartera",
+    "href": "05-value-at-risk.html#optimización-de-la-cartera",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "6 Optimización de la cartera",
+    "text": "6 Optimización de la cartera\n\n\n\nTabla 6\n\n\n\nVer código\noptimal &lt;- optimise_min_var(matrix_returns)\n\ncomparison &lt;- compare_allocations(\n  matrix_returns,\n  list(\n    \"Pesos iguales\" = portfolio$weights,\n    \"VaR mínimo\" = optimal$weights\n  ),\n  value = portfolio$value\n)\nreport_table(comparison, caption = \"Cartera equiponderada frente a la de VaR mínimo.\", digits = 2)\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nComparación de composiciones y análisis del cambio en riesgo y diversificación. Activar el chunk cuando nloptr esté instalado (renv::restore())."
+  },
+  {
+    "objectID": "05-value-at-risk.html#var-individual-y-expected-shortfall",
+    "href": "05-value-at-risk.html#var-individual-y-expected-shortfall",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "7 VaR individual y Expected Shortfall",
+    "text": "7 VaR individual y Expected Shortfall\n\n\nVer código\nposition &lt;- params()$var$position_mxn\nsubject_returns &lt;- returns[returns$ticker == subject(), \"log_return\"]\n\nindividual &lt;- var_monte_carlo(\n  subject_returns,\n  confidence = params()$var$monte_carlo$confidence,\n  horizon = 1,\n  value = position\n)\nreport_table(\n  individual,\n  caption = paste0(\"VaR y ES al 99% por Monte Carlo sobre una posición de \", fmt_mxn(position), \" en \", subject(), \".\"),\n  digits = 2\n)\n\n\n\n\nTabla 7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en GAPB.MX.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nmethod\nconfidence\nhorizon\nn_simulations\nvar_return\nvar_currency\nvar_pct\nes_return\nes_currency\nes_pct\n\n\n\n\nmonte carlo (bootstrap)\n0.99\n1\n100,000\n-0.05\n5,106\n0.05\n-0.07\n7,183\n0.07\n\n\n\n\n\n\n\n\nEl Expected Shortfall es la pérdida promedio condicionada a haber rebasado el VaR:\n\\[\n\\text{ES}_c = \\mathbb{E}\\left[\\,L \\mid L \\ge \\text{VaR}_c\\,\\right]\n\\]\nDonde el VaR dice cuánto se pierde antes de entrar al peor 1%, el ES dice cuánto se pierde dentro de ese 1% — la pregunta que el VaR es estructuralmente incapaz de responder."
+  },
+  {
+    "objectID": "05-value-at-risk.html#análisis-e-interpretación",
+    "href": "05-value-at-risk.html#análisis-e-interpretación",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "8 Análisis e interpretación",
+    "text": "8 Análisis e interpretación\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\n\n¿Qué diferencias hay entre el VaR paramétrico y el no paramétrico?\n¿Cuál captura mejor los eventos extremos?\n¿Cuál es más conservador?\n¿Qué implica elegir un modelo que subestima el riesgo?\n¿Qué arroja el backtesting y qué se concluye de ello?"
+  },
+  {
+    "objectID": "05-value-at-risk.html#conclusiones",
+    "href": "05-value-at-risk.html#conclusiones",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "9 Conclusiones",
+    "text": "9 Conclusiones\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nComparación de metodologías y justificación de cuál se usaría en la práctica."
+  },
+  {
+    "objectID": "05-value-at-risk.html#referencias",
+    "href": "05-value-at-risk.html#referencias",
+    "title": "Valor en Riesgo y Expected Shortfall",
+    "section": "10 Referencias",
+    "text": "10 Referencias"
+  },
+  {
+    "objectID": "03-returns-volatility-gbm.html",
+    "href": "03-returns-volatility-gbm.html",
+    "title": "Rendimientos, volatilidad y movimiento browniano geométrico",
+    "section": "",
+    "text": "ImportantePendiente de redacción\n\n\n\nPropósito del análisis y estructura del documento."
+  },
+  {
+    "objectID": "03-returns-volatility-gbm.html#introducción",
+    "href": "03-returns-volatility-gbm.html#introducción",
+    "title": "Rendimientos, volatilidad y movimiento browniano geométrico",
+    "section": "",
+    "text": "ImportantePendiente de redacción\n\n\n\nPropósito del análisis y estructura del documento."
+  },
+  {
+    "objectID": "03-returns-volatility-gbm.html#metodología",
+    "href": "03-returns-volatility-gbm.html#metodología",
+    "title": "Rendimientos, volatilidad y movimiento browniano geométrico",
+    "section": "2 Metodología",
+    "text": "2 Metodología\nEl rendimiento logarítmico diario se define como\n\\[\nr_t = \\ln\\!\\left(\\frac{S_t}{S_{t-1}}\\right)\n\\]\nLos rendimientos logarítmicos son aditivos en el tiempo, propiedad que hace exacto el escalamiento por horizonte. Bajo el supuesto de independencia serial, la media y la volatilidad se anualizan como\n\\[\n\\mu_{\\text{anual}} = 252\\,\\mu_{\\text{diario}}\n\\qquad\n\\sigma_{\\text{anual}} = \\sqrt{252}\\,\\sigma_{\\text{diario}}\n\\]"
+  },
+  {
+    "objectID": "03-returns-volatility-gbm.html#rendimientos-y-volatilidad",
+    "href": "03-returns-volatility-gbm.html#rendimientos-y-volatilidad",
+    "title": "Rendimientos, volatilidad y movimiento browniano geométrico",
+    "section": "3 Rendimientos y volatilidad",
+    "text": "3 Rendimientos y volatilidad\n\nPeriodo completo de estimación\n\n\nVer código\nreport_table(\n  return_moments(sample_returns$log_return),\n  caption = \"Momentos de la muestra de estimación (2021-2025).\"\n)\n\n\n\n\nTabla 1: Momentos de la muestra de estimación (2021-2025).\n\n\n\n\n\n\nn\nmean_daily\nvol_daily\nmean_annual\nvol_annual\n\n\n\n\n1,258\n0.0008\n0.0209\n0.2001\n0.3322\n\n\n\n\n\n\n\n\n\n\nEstimación año por año\n\n\nVer código\nreport_table(\n  return_moments_by_year(sample_returns),\n  caption = \"Media y volatilidad, diarias y anualizadas, por año.\"\n)\n\n\n\n\nTabla 2: Media y volatilidad, diarias y anualizadas, por año.\n\n\n\n\n\n\nyear\nn\nmean_daily\nvol_daily\nmean_annual\nvol_annual\n\n\n\n\n2,021\n253\n0.0011\n0.0163\n0.2895\n0.2592\n\n\n2,022\n252\n0.0002\n0.0218\n0.0388\n0.3454\n\n\n2,023\n251\n0.0005\n0.0275\n0.1325\n0.4369\n\n\n2,024\n251\n0.0010\n0.0198\n0.2490\n0.3139\n\n\n2,025\n251\n0.0012\n0.0176\n0.2903\n0.2789\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\n¿Hay cambios estructurales? ¿Años con volatilidad particularmente elevada? ¿Periodos de mayor riesgo, y a qué corresponden?"
+  },
+  {
+    "objectID": "03-returns-volatility-gbm.html#pruebas-estadísticas",
+    "href": "03-returns-volatility-gbm.html#pruebas-estadísticas",
+    "title": "Rendimientos, volatilidad y movimiento browniano geométrico",
+    "section": "4 Pruebas estadísticas",
+    "text": "4 Pruebas estadísticas\n\nNormalidad\nEl estadístico de Jarque-Bera contrasta conjuntamente el tercer y cuarto momento contra los de una normal:\n\\[\nJB = \\frac{n}{6}\\left(S^2 + \\frac{(K-3)^2}{4}\\right) \\;\\sim\\; \\chi^2_{2}\n\\]\n\n\nVer código\njb &lt;- jarque_bera_table(list(\n  \"Rendimientos\" = sample_returns$log_return,\n  \"Precio\" = sample_prices$adjusted,\n  \"Logaritmo del precio\" = log(sample_prices$adjusted)\n))\nreport_table(jb, caption = \"Prueba de Jarque-Bera sobre las tres series.\")\n\n\n\n\nTabla 3: Prueba de Jarque-Bera sobre las tres series.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nseries\nn\nskewness\nkurtosis\nexcess_kurtosis\nstatistic\np_value\nreject_normality\n\n\n\n\nRendimientos\n1,258\n-1.1301\n23.837\n20.8371\n23,026.20\n0\nTRUE\n\n\nPrecio\n1,258\n0.6767\n2.673\n-0.3271\n101.62\n0\nTRUE\n\n\nLogaritmo del precio\n1,258\n0.1420\n2.349\n-0.6513\n26.46\n0\nTRUE\n\n\n\n\n\n\n\n\n\n\nVer código\nmu &lt;- mean(sample_returns$log_return)\nsigma &lt;- sd(sample_returns$log_return)\n\nggplot(sample_returns, aes(log_return)) +\n  geom_histogram(aes(y = after_stat(density)), bins = 80,\n                 fill = RISK_PALETTE[1], alpha = 0.7) +\n  stat_function(fun = dnorm, args = list(mean = mu, sd = sigma),\n                colour = RISK_PALETTE[2], linewidth = 0.7) +\n  scale_x_continuous(labels = label_percent(accuracy = 1)) +\n  labs(\n    x = \"Rendimiento logarítmico diario\", y = \"Densidad\",\n    caption = \"Barra: distribución empírica. Línea: normal con la media y la desviación de la muestra.\"\n  )\n\n\n\n\n\n\n\n\nFigura 1: Distribución empírica de los rendimientos diarios frente a la normal ajustada.\n\n\n\n\n\n\n\nMedia igual a cero\n\\[\nt = \\frac{\\bar{r}}{s/\\sqrt{n}} \\;\\sim\\; t_{\\,n-1}\n\\]\n\n\nVer código\nreport_table(\n  mean_zero_test(sample_returns$log_return),\n  caption = \"Prueba t de media diaria igual a cero.\"\n)\n\n\n\n\nTabla 4: Prueba t de media diaria igual a cero.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nn\nmean\nstd_error\nstatistic\ndf\np_value\nconf_low\nconf_high\nreject_zero_mean\n\n\n\n\n1,258\n0.0008\n0.0006\n1.345\n1,257\n0.1787\n-0.0004\n0.002\nFALSE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nInterpretación en términos de eficiencia de mercado. No rechazar la hipótesis de media cero es el resultado interesante, no el decepcionante."
+  },
+  {
+    "objectID": "03-returns-volatility-gbm.html#modelo-con-parámetros-diarios",
+    "href": "03-returns-volatility-gbm.html#modelo-con-parámetros-diarios",
+    "title": "Rendimientos, volatilidad y movimiento browniano geométrico",
+    "section": "5 Modelo con parámetros diarios",
+    "text": "5 Modelo con parámetros diarios\nEl movimiento browniano geométrico postula\n\\[\ndS_t = \\mu S_t\\,dt + \\sigma S_t\\,dW_t\n\\]\ncuya solución, por el lema de Itô, es\n\\[\nS_t = S_0 \\exp\\!\\left[\\left(\\mu - \\tfrac{\\sigma^2}{2}\\right)t + \\sigma W_t\\right]\n\\]\nde modo que \\(\\ln S_t\\) es normal y \\(S_t\\) es lognormal. El intervalo de confianza se construye sobre los cuantiles de la lognormal, no como una banda simétrica alrededor de la media: el precio no puede ser negativo y su distribución es asimétrica a la derecha.\n\n\nVer código\ngbm &lt;- gbm_params(sample_returns$log_return)\ns0 &lt;- sample_prices$adjusted[which.max(sample_prices$date)]\n\nreport_table(\n  gbm_projection(s0, gbm$nu_daily, gbm$sigma_daily, params()$gbm$horizons_days),\n  caption = \"Proyección con parámetros diarios. Horizonte en días hábiles.\"\n)\n\n\n\n\nTabla 5: Proyección con parámetros diarios. Horizonte en días hábiles.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nhorizon\ns0\nexpected\nmedian\nlower\nupper\nconfidence\ninterval_width\n\n\n\n\n10\n471\n475.8\n474.8\n417.0\n540.5\n0.95\n0.2601\n\n\n20\n471\n480.7\n478.6\n398.4\n574.9\n0.95\n0.3689\n\n\n40\n471\n490.5\n486.2\n375.1\n630.2\n0.95\n0.5246"
+  },
+  {
+    "objectID": "03-returns-volatility-gbm.html#modelo-con-parámetros-anuales",
+    "href": "03-returns-volatility-gbm.html#modelo-con-parámetros-anuales",
+    "title": "Rendimientos, volatilidad y movimiento browniano geométrico",
+    "section": "6 Modelo con parámetros anuales",
+    "text": "6 Modelo con parámetros anuales\n\n\nVer código\nhorizons_years &lt;- params()$gbm$horizons_months / 12\n\nreport_table(\n  gbm_projection(s0, gbm$nu_annual, gbm$sigma_annual, horizons_years),\n  caption = \"Proyección con parámetros anualizados. Horizonte en años.\"\n)\n\n\n\n\nTabla 6: Proyección con parámetros anualizados. Horizonte en años.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nhorizon\ns0\nexpected\nmedian\nlower\nupper\nconfidence\ninterval_width\n\n\n\n\n0.25\n471\n502.1\n495.2\n357.6\n685.7\n0.95\n0.6626\n\n\n0.50\n471\n535.1\n520.6\n328.5\n824.9\n0.95\n0.9536\n\n\n0.75\n471\n570.4\n547.3\n311.4\n961.8\n0.95\n1.1884\n\n\n1.00\n471\n608.0\n575.3\n300.0\n1,103.3\n0.95\n1.3961\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nCómo se amplifica la incertidumbre al ampliar el horizonte: el ancho del intervalo crece con \\(\\sqrt{t}\\) mientras el valor esperado crece con \\(t\\)."
+  },
+  {
+    "objectID": "03-returns-volatility-gbm.html#discusión",
+    "href": "03-returns-volatility-gbm.html#discusión",
+    "title": "Rendimientos, volatilidad y movimiento browniano geométrico",
+    "section": "7 Discusión",
+    "text": "7 Discusión\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\n¿Son normales los rendimientos? ¿Es el precio normal o lognormal? ¿Qué implica suponer normalidad al modelar riesgo, y qué riesgos introduce ese supuesto en la toma de decisiones? La respuesta debe apoyarse en los estadísticos calculados arriba, no en la teoría general."
+  },
+  {
+    "objectID": "03-returns-volatility-gbm.html#conclusiones",
+    "href": "03-returns-volatility-gbm.html#conclusiones",
+    "title": "Rendimientos, volatilidad y movimiento browniano geométrico",
+    "section": "8 Conclusiones",
+    "text": "8 Conclusiones\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nSíntesis de hallazgos y validez del modelo teórico frente a los datos."
+  },
+  {
+    "objectID": "03-returns-volatility-gbm.html#referencias",
+    "href": "03-returns-volatility-gbm.html#referencias",
+    "title": "Rendimientos, volatilidad y movimiento browniano geométrico",
+    "section": "9 Referencias",
+    "text": "9 Referencias"
+  },
+  {
+    "objectID": "01-asset-profile.html",
+    "href": "01-asset-profile.html",
+    "title": "El activo y su negocio",
+    "section": "",
+    "text": "ImportantePendiente de redacción\n\n\n\nSíntesis de lo que se presenta en esta etapa: qué se caracteriza, con qué información y a qué conclusión se llega."
+  },
+  {
+    "objectID": "01-asset-profile.html#introducción",
+    "href": "01-asset-profile.html#introducción",
+    "title": "El activo y su negocio",
+    "section": "",
+    "text": "ImportantePendiente de redacción\n\n\n\nSíntesis de lo que se presenta en esta etapa: qué se caracteriza, con qué información y a qué conclusión se llega."
+  },
+  {
+    "objectID": "01-asset-profile.html#descripción-general-del-activo-y-del-negocio",
+    "href": "01-asset-profile.html#descripción-general-del-activo-y-del-negocio",
+    "title": "El activo y su negocio",
+    "section": "2 Descripción general del activo y del negocio",
+    "text": "2 Descripción general del activo y del negocio\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nEl objetivo de este apartado es dimensionar la empresa, no enumerarla. Los siguientes elementos son insumos para ese argumento:\n\ngiro y función principal;\ninicio de operaciones y evolución;\nlíneas de negocio y su peso relativo;\npresencia geográfica;\nmarcas, subsidiarias y activos concesionados;\nplantilla aproximada;\ninfraestructura clave;\ncompetidores y posición de mercado;\neventos recientes relevantes.\n\nCada afirmación se respalda con reporte trimestral, informe anual o documento oficial de la BMV, citado con @clave contra references.bib.\n\n\n\n\n\nIdentificación del emisor analizado.\n\n\n\n\n\n\n\n\n\n\nticker\nname\nseries\nsector\nindustry\nfactset_id\n\n\n\n\nGAPB.MX\nGrupo Aeroportuario del Pacífico, S.A.B. de C.V.\nB\nIndustrials\nTransportation Infrastructure\nGAPB-MX"
+  },
+  {
+    "objectID": "01-asset-profile.html#análisis-de-estados-financieros",
+    "href": "01-asset-profile.html#análisis-de-estados-financieros",
+    "title": "El activo y su negocio",
+    "section": "3 Análisis de estados financieros",
+    "text": "3 Análisis de estados financieros\nLos fundamentales provienen de FactSet y no se versionan en este repositorio. Para reproducir este apartado se requiere una clave con entitlements de API:\nsource(\"../analysis/03_ingest_fundamentals.R\")\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nIngresos, márgenes bruto, operativo y neto de los últimos tres ejercicios, con la definición de cada margen y su interpretación económica. Nivel de endeudamiento y estructura de capital.\nReportar cifras no es analizarlas: cada movimiento relevante debe tener una explicación en términos del negocio."
+  },
+  {
+    "objectID": "01-asset-profile.html#indicadores-financieros-clave",
+    "href": "01-asset-profile.html#indicadores-financieros-clave",
+    "title": "El activo y su negocio",
+    "section": "4 Indicadores financieros clave",
+    "text": "4 Indicadores financieros clave\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nROE, ROA, deuda/capital, deuda/EBITDA y margen EBITDA, con el dato más reciente. Para cada indicador: definición, valor, y qué dice sobre este negocio en particular."
+  },
+  {
+    "objectID": "01-asset-profile.html#utilidad-por-acción",
+    "href": "01-asset-profile.html#utilidad-por-acción",
+    "title": "El activo y su negocio",
+    "section": "5 Utilidad por acción",
+    "text": "5 Utilidad por acción\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nEvolución trimestral del EPS de 2019 a 2025 y su estabilidad en el tiempo."
+  },
+  {
+    "objectID": "01-asset-profile.html#dividendos-y-splits",
+    "href": "01-asset-profile.html#dividendos-y-splits",
+    "title": "El activo y su negocio",
+    "section": "6 Dividendos y splits",
+    "text": "6 Dividendos y splits\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nPolítica de dividendos, su frecuencia, y cualquier cambio relevante. Splits históricos, fechas y proporciones, y su efecto sobre la serie de precios ajustada que utilizan las etapas siguientes."
+  },
+  {
+    "objectID": "01-asset-profile.html#identificación-de-riesgos",
+    "href": "01-asset-profile.html#identificación-de-riesgos",
+    "title": "El activo y su negocio",
+    "section": "7 Identificación de riesgos",
+    "text": "7 Identificación de riesgos\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nRiesgos operativos, macroeconómicos y financieros del emisor, argumentados en términos de cómo cada uno se transmite al precio de la acción.\nEste apartado es el puente conceptual hacia las etapas cuantitativas: lo que aquí se identifique como fuente de riesgo debe reaparecer en la etapa 02 como evento y en las etapas 03 a 05 como volatilidad medida."
+  },
+  {
+    "objectID": "01-asset-profile.html#conclusión",
+    "href": "01-asset-profile.html#conclusión",
+    "title": "El activo y su negocio",
+    "section": "8 Conclusión",
+    "text": "8 Conclusión\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nCaracterización integrada del negocio —sólido, en expansión o en consolidación— sostenida por la evidencia de los apartados anteriores, y el perfil de riesgo que cabría esperar observar después en el precio."
+  },
+  {
+    "objectID": "01-asset-profile.html#referencias",
+    "href": "01-asset-profile.html#referencias",
+    "title": "El activo y su negocio",
+    "section": "9 Referencias",
+    "text": "9 Referencias"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Análisis de riesgo de mercado",
+    "section": "",
+    "text": "Este sitio reúne el análisis de riesgo de mercado de Grupo Aeroportuario del Pacífico y de una cartera de seis emisoras de la Bolsa Mexicana de Valores. El trabajo avanza en cinco etapas, de los fundamentos del emisor a un modelo de Valor en Riesgo sometido a backtesting."
+  },
+  {
+    "objectID": "index.html#estructura-del-análisis",
+    "href": "index.html#estructura-del-análisis",
+    "title": "Análisis de riesgo de mercado",
+    "section": "Estructura del análisis",
+    "text": "Estructura del análisis\n\n\n\nEtapa\nPregunta que responde\n\n\n\n\n01 · El activo y su negocio\n¿Qué hace la empresa, cómo se financia y qué riesgos carga por estructura?\n\n\n02 · Precio, caídas y eventos\n¿Cómo se ha comportado el precio, dónde están las caídas y qué hechos las explican?\n\n\n03 · Rendimientos, volatilidad y GBM\n¿Son normales los rendimientos? ¿Qué implica proyectar el precio con un movimiento browniano geométrico?\n\n\n04 · Modelos de varianza\n¿Qué modelo de volatilidad pronostica mejor fuera de muestra?\n\n\n05 · Valor en Riesgo y Expected Shortfall\n¿Cuál es la exposición a pérdidas de la cartera y sobrevive el modelo al backtesting?"
+  },
+  {
+    "objectID": "index.html#universo-analizado",
+    "href": "index.html#universo-analizado",
+    "title": "Análisis de riesgo de mercado",
+    "section": "Universo analizado",
+    "text": "Universo analizado\n\n\n\nEmisoras que integran la cartera analizada en la etapa 05.\n\n\n\n\n\n\n\n\nticker\nname\nsector\nindustry\n\n\n\n\nGAPB.MX\nGrupo Aeroportuario del Pacífico, S.A.B. de C.V.\nIndustrials\nTransportation Infrastructure\n\n\nWALMEX.MX\nWal-Mart de México, S.A.B. de C.V.\nConsumer Staples\nConsumer Staples Distribution & Retail\n\n\nGMEXICOB.MX\nGrupo México, S.A.B. de C.V.\nMaterials\nMetals & Mining\n\n\nORBIA.MX\nOrbia Advance Corporation, S.A.B. de C.V.\nMaterials\nChemicals\n\n\nALSEA.MX\nAlsea, S.A.B. de C.V.\nConsumer Discretionary\nHotels, Restaurants & Leisure\n\n\nBBAJIOO.MX\nBanco del Bajío, S.A., Institución de Banca Múltiple\nFinancials\nBanks"
+  },
+  {
+    "objectID": "index.html#cobertura-de-datos",
+    "href": "index.html#cobertura-de-datos",
+    "title": "Análisis de riesgo de mercado",
+    "section": "Cobertura de datos",
+    "text": "Cobertura de datos\n\n\n\nHistoria de cotización disponible por emisora.\n\n\nticker\ninicio\nfin\nobservaciones\n\n\n\n\nALSEA.MX\n2000-01-18\n2026-08-21\n6,747\n\n\nBBAJIOO.MX\n2017-06-08\n2026-08-21\n2,315\n\n\nGAPB.MX\n2006-02-27\n2026-08-21\n5,153\n\n\nGMEXICOB.MX\n2000-01-03\n2026-08-21\n6,758\n\n\nORBIA.MX\n2000-01-03\n2026-08-21\n6,758\n\n\nWALMEX.MX\n2003-01-01\n2026-08-21\n5,976"
+  },
+  {
+    "objectID": "index.html#nota-metodológica",
+    "href": "index.html#nota-metodológica",
+    "title": "Análisis de riesgo de mercado",
+    "section": "Nota metodológica",
+    "text": "Nota metodológica\nTodo el análisis trabaja con rendimientos logarítmicos, aditivos en el tiempo, lo que hace exacto —y no aproximado— el escalamiento por horizonte de las etapas 03 y 05. Los parámetros de cada modelo se estiman con información disponible hasta el 31 de diciembre de 2025; 2026 se reserva como periodo de evaluación fuera de muestra.\nLos reportes no consultan ninguna API: leen exclusivamente los datos versionados en data/processed/. Cualquier persona puede clonar el repositorio y reproducir cada cifra sin credenciales.\n\n\n\n\n\n\nNotaFuentes de información\n\n\n\n\n\nPrecios diarios y volumen: Yahoo Finance / Bolsa Mexicana de Valores. Crecimiento anual del PIB real de México: Banco Mundial. Fundamentales corporativos: FactSet, citado como fuente sin redistribución del contenido."
+  },
+  {
+    "objectID": "02-price-history-events.html",
+    "href": "02-price-history-events.html",
+    "title": "Precio, caídas y eventos",
+    "section": "",
+    "text": "ImportantePendiente de redacción\n\n\n\nQué se examina en esta etapa y por qué: el precio responde a información nueva que los inversionistas no controlan ni anticipan, y esa exposición es una parte fundamental del riesgo financiero."
+  },
+  {
+    "objectID": "02-price-history-events.html#introducción",
+    "href": "02-price-history-events.html#introducción",
+    "title": "Precio, caídas y eventos",
+    "section": "",
+    "text": "ImportantePendiente de redacción\n\n\n\nQué se examina en esta etapa y por qué: el precio responde a información nueva que los inversionistas no controlan ni anticipan, y esa exposición es una parte fundamental del riesgo financiero."
+  },
+  {
+    "objectID": "02-price-history-events.html#exploración-de-la-serie-histórica",
+    "href": "02-price-history-events.html#exploración-de-la-serie-histórica",
+    "title": "Precio, caídas y eventos",
+    "section": "2 Exploración de la serie histórica",
+    "text": "2 Exploración de la serie histórica\n\n\nVer código\nggplot(subject_prices, aes(date, adjusted)) +\n  geom_line(colour = RISK_PALETTE[1], linewidth = 0.5) +\n  scale_y_continuous(labels = label_dollar(prefix = \"$\")) +\n  labs(\n    x = NULL, y = \"Precio ajustado (MXN)\",\n    caption = \"Fuente: Yahoo Finance / BMV. Serie ajustada por dividendos y splits.\"\n  )\n\n\n\n\n\n\n\n\nFigura 1: Precio ajustado de GAPB desde su listado en la BMV.\n\n\n\n\n\n\n\nVer código\nggplot(subject_returns, aes(date, log_return)) +\n  geom_line(colour = RISK_PALETTE[1], linewidth = 0.25) +\n  scale_y_continuous(labels = label_percent(accuracy = 1)) +\n  labs(x = NULL, y = \"Rendimiento logarítmico diario\")\n\n\n\n\n\n\n\n\nFigura 2: Rendimientos logarítmicos diarios.\n\n\n\n\n\n\nMáximo drawdown\nEl drawdown mide la caída proporcional desde el máximo acumulado hasta la fecha:\n\\[\nDD_t = \\frac{S_t}{\\max_{s \\le t} S_s} - 1\n\\]\n\n\nVer código\ndrawdown &lt;- max_drawdown(subject_prices$adjusted, subject_prices$date)\nreport_table(drawdown, caption = \"Máximo drawdown del periodo completo.\")\n\n\n\n\nTabla 1: Máximo drawdown del periodo completo.\n\n\n\n\n\n\nmax_drawdown\npeak_date\ntrough_date\nrecovery_date\n\n\n\n\n-0.6458\n2007-10-18\n2008-10-27\n2012-02-27\n\n\n\n\n\n\n\n\n\n\nVer código\nsubject_prices$drawdown &lt;- drawdown_series(subject_prices$adjusted)\nggplot(subject_prices, aes(date, drawdown)) +\n  geom_area(fill = RISK_PALETTE[1], alpha = 0.25) +\n  geom_line(colour = RISK_PALETTE[1], linewidth = 0.4) +\n  scale_y_continuous(labels = label_percent(accuracy = 1)) +\n  labs(x = NULL, y = \"Drawdown\")\n\n\n\n\n\n\n\n\nFigura 3: Drawdown respecto del máximo acumulado.\n\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nDescripción del comportamiento general e identificación de al menos cinco periodos con movimientos pronunciados, justificados con criterio financiero y no sólo visual."
+  },
+  {
+    "objectID": "02-price-history-events.html#eventos-y-explicación-de-los-movimientos",
+    "href": "02-price-history-events.html#eventos-y-explicación-de-los-movimientos",
+    "title": "Precio, caídas y eventos",
+    "section": "3 Eventos y explicación de los movimientos",
+    "text": "3 Eventos y explicación de los movimientos\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nPara cada periodo identificado: qué ocurrió en el entorno financiero, macroeconómico, político o en la propia empresa, y por qué ese hecho es relevante para el precio de este activo en particular.\nEl énfasis está en mostrar que el precio responde a choques e información nueva, no en narrar la noticia."
+  },
+  {
+    "objectID": "02-price-history-events.html#relación-con-el-ciclo-económico",
+    "href": "02-price-history-events.html#relación-con-el-ciclo-económico",
+    "title": "Precio, caídas y eventos",
+    "section": "4 Relación con el ciclo económico",
+    "text": "4 Relación con el ciclo económico\n\n\nVer código\nannual &lt;- do.call(rbind, lapply(\n  split(subject_returns, format(subject_returns$date, \"%Y\")),\n  function(one) {\n    data.frame(\n      year = as.integer(format(one$date[1], \"%Y\")),\n      asset_return = 100 * (exp(sum(one$log_return)) - 1),\n      stringsAsFactors = FALSE\n    )\n  }\n))\ncombined &lt;- merge(annual, gdp[, c(\"year\", \"gdp_growth\")], by = \"year\")\n\nlong &lt;- rbind(\n  data.frame(year = combined$year, serie = \"GAPB\", valor = combined$asset_return),\n  data.frame(year = combined$year, serie = \"PIB real\", valor = combined$gdp_growth)\n)\n\nggplot(long, aes(year, valor, fill = serie)) +\n  geom_col(position = position_dodge(width = 0.75), width = 0.7) +\n  geom_hline(yintercept = 0, colour = RISK_INK$baseline, linewidth = 0.3) +\n  scale_fill_manual(values = unname(RISK_PALETTE[1:2])) +\n  labs(\n    x = NULL, y = \"Variación anual (%)\",\n    caption = \"Fuentes: Yahoo Finance / BMV y Banco Mundial.\"\n  )\n\n\n\n\n\n\n\n\nFigura 4: Rendimiento anual del activo frente al crecimiento anual del PIB real de México.\n\n\n\n\n\n\n\nVer código\nreport_table(\n  combined,\n  caption = \"Rendimiento anual del activo y crecimiento del PIB real.\",\n  digits = 2\n)\n\n\n\n\nTabla 2: Rendimiento anual del activo y crecimiento del PIB real.\n\n\n\n\n\n\nyear\nasset_return\ngdp_growth\n\n\n\n\n2,006\n45.02\n4.81\n\n\n2,007\n19.51\n2.08\n\n\n2,008\n-31.80\n0.94\n\n\n2,009\n38.85\n-6.30\n\n\n2,010\n29.87\n4.97\n\n\n2,011\n-1.77\n3.44\n\n\n2,012\n62.32\n3.55\n\n\n2,013\n-2.92\n0.85\n\n\n2,014\n44.63\n2.50\n\n\n2,015\n72.09\n2.70\n\n\n2,016\n16.90\n1.77\n\n\n2,017\n26.03\n1.87\n\n\n2,018\n-17.04\n1.97\n\n\n2,019\n47.69\n-0.39\n\n\n2,020\n-1.65\n-8.35\n\n\n2,021\n33.73\n6.05\n\n\n2,022\n3.96\n3.71\n\n\n2,023\n14.11\n3.11\n\n\n2,024\n28.14\n1.35\n\n\n2,025\n33.53\n0.56\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\n¿El activo se mueve con el ciclo económico, lo amplifica o se desacopla? ¿Qué explica las coincidencias y las diferencias?"
+  },
+  {
+    "objectID": "02-price-history-events.html#periodo-reciente",
+    "href": "02-price-history-events.html#periodo-reciente",
+    "title": "Precio, caídas y eventos",
+    "section": "5 Periodo reciente",
+    "text": "5 Periodo reciente\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nEventos del último año —tasas de interés, entorno internacional, cambios regulatorios, resultados trimestrales— y cómo se reflejan, o no, en el precio y en los rendimientos."
+  },
+  {
+    "objectID": "02-price-history-events.html#conclusión",
+    "href": "02-price-history-events.html#conclusión",
+    "title": "Precio, caídas y eventos",
+    "section": "6 Conclusión",
+    "text": "6 Conclusión\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nSíntesis razonada, no resumen: qué enseña este ejercicio sobre el riesgo, la incertidumbre y el papel de la información nueva en la formación de precios."
+  },
+  {
+    "objectID": "02-price-history-events.html#referencias",
+    "href": "02-price-history-events.html#referencias",
+    "title": "Precio, caídas y eventos",
+    "section": "7 Referencias",
+    "text": "7 Referencias"
+  },
+  {
+    "objectID": "04-variance-models.html",
+    "href": "04-variance-models.html",
+    "title": "Modelos de varianza",
+    "section": "",
+    "text": "ImportantePendiente de redacción\n\n\n\nQué se estima, con qué información y cómo se compara."
+  },
+  {
+    "objectID": "04-variance-models.html#introducción",
+    "href": "04-variance-models.html#introducción",
+    "title": "Modelos de varianza",
+    "section": "",
+    "text": "ImportantePendiente de redacción\n\n\n\nQué se estima, con qué información y cómo se compara."
+  },
+  {
+    "objectID": "04-variance-models.html#metodología",
+    "href": "04-variance-models.html#metodología",
+    "title": "Modelos de varianza",
+    "section": "2 Metodología",
+    "text": "2 Metodología\nCuatro estimadores de la misma cantidad, ordenados por cuánta estructura suponen:\n\\[\n\\text{MA}(m):\\quad \\hat\\sigma^2_t = \\frac{1}{m}\\sum_{i=1}^{m} r^2_{t-i}\n\\]\n\\[\n\\text{EWMA}:\\quad \\hat\\sigma^2_t = \\lambda\\,\\hat\\sigma^2_{t-1} + (1-\\lambda)\\,r^2_{t-1}\n\\]\n\\[\n\\text{GARCH}(p,q):\\quad \\sigma^2_t = \\omega + \\sum_{i=1}^{q}\\alpha_i r^2_{t-i} + \\sum_{j=1}^{p}\\beta_j \\sigma^2_{t-j}\n\\]\nLos cuatro estiman la varianza a partir de rendimientos al cuadrado y no de desviaciones respecto de una media móvil. A frecuencia diaria la media es indistinguible de cero —la etapa 03 lo contrasta directamente— y restar una estimación ruidosa de ella agrega varianza al estimador sin eliminar sesgo.\nToda estimación en \\(t\\) usa información hasta \\(t-1\\). Los parámetros se estiman con datos hasta el 31 de diciembre de 2025 y se evalúan sobre 2026."
+  },
+  {
+    "objectID": "04-variance-models.html#promedios-móviles",
+    "href": "04-variance-models.html#promedios-móviles",
+    "title": "Modelos de varianza",
+    "section": "3 Promedios móviles",
+    "text": "3 Promedios móviles\n\n\nVer código\nma &lt;- ma_volatility_grid(estimation$log_return)\nma_long &lt;- do.call(rbind, lapply(colnames(ma), function(column) {\n  data.frame(\n    date = estimation$date,\n    ventana = column,\n    sigma = ma[, column],\n    stringsAsFactors = FALSE\n  )\n}))\nma_long &lt;- ma_long[is.finite(ma_long$sigma), ]\n\nggplot(ma_long, aes(date, sigma, colour = ventana)) +\n  geom_line(linewidth = 0.4) +\n  scale_y_continuous(labels = label_percent(accuracy = 0.1)) +\n  labs(x = NULL, y = \"Volatilidad diaria estimada\")\n\n\n\n\n\n\n\n\nFigura 1: Volatilidad estimada con distintas ventanas móviles.\n\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nSelección de \\(m\\) con criterio de ajuste y capacidad predictiva, e interpretación de cómo cambia la estimación conforme se amplía la ventana."
+  },
+  {
+    "objectID": "04-variance-models.html#ewma",
+    "href": "04-variance-models.html#ewma",
+    "title": "Modelos de varianza",
+    "section": "4 EWMA",
+    "text": "4 EWMA\n\n\nVer código\nlambda_rm &lt;- params()$variance$ewma$lambda_riskmetrics\nestimation$ewma &lt;- ewma_volatility(estimation$log_return, lambda = lambda_rm)\n\nggplot(estimation[is.finite(estimation$ewma), ], aes(date, ewma)) +\n  geom_line(colour = RISK_PALETTE[1], linewidth = 0.4) +\n  scale_y_continuous(labels = label_percent(accuracy = 0.1)) +\n  labs(x = NULL, y = \"Volatilidad diaria estimada\")\n\n\n\n\n\n\n\n\nFigura 2: EWMA con el factor de decaimiento de RiskMetrics."
+  },
+  {
+    "objectID": "04-variance-models.html#ewma-calibrado-con-los-datos",
+    "href": "04-variance-models.html#ewma-calibrado-con-los-datos",
+    "title": "Modelos de varianza",
+    "section": "5 EWMA calibrado con los datos",
+    "text": "5 EWMA calibrado con los datos\n\n\nVer código\nfit_rmse &lt;- ewma_fit_lambda(estimation$log_return, loss = \"rmse\")\nfit_ll &lt;- ewma_fit_lambda(estimation$log_return, loss = \"loglik\")\n\nreport_table(\n  data.frame(\n    criterio = c(\"RMSE\", \"Log-verosimilitud\"),\n    lambda = c(fit_rmse$lambda, fit_ll$lambda),\n    alpha = c(fit_rmse$alpha, fit_ll$alpha)\n  ),\n  caption = \"Factor de decaimiento seleccionado bajo cada criterio.\"\n)\n\n\n\n\nTabla 1: Factor de decaimiento seleccionado bajo cada criterio.\n\n\n\n\n\n\ncriterio\nlambda\nalpha\n\n\n\n\nRMSE\n0.995\n0.005\n\n\nLog-verosimilitud\n0.985\n0.015\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nJustificación de \\(\\lambda\\) y comparación de la velocidad de respuesta frente a los promedios móviles. Si los dos criterios discrepan, la discrepancia es informativa: el RMSE es simétrico, la verosimilitud penaliza mucho más subestimar la volatilidad que sobreestimarla."
+  },
+  {
+    "objectID": "04-variance-models.html#arch-garch",
+    "href": "04-variance-models.html#arch-garch",
+    "title": "Modelos de varianza",
+    "section": "6 ARCH / GARCH",
+    "text": "6 ARCH / GARCH\n\n\n\nTabla 2\n\n\n\nVer código\ngarch &lt;- fit_garch(estimation$log_return)\nreport_table(garch$selection, caption = \"Tabla de selección de órdenes.\")\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nIdentificación del modelo, justificación del orden seleccionado e interpretación de los coeficientes: persistencia \\(\\alpha + \\beta\\), velocidad de reversión y significado de una persistencia cercana a uno.\nActivar el chunk anterior cuando rugarch esté instalado (renv::restore())."
+  },
+  {
+    "objectID": "04-variance-models.html#evaluación-fuera-de-muestra",
+    "href": "04-variance-models.html#evaluación-fuera-de-muestra",
+    "title": "Modelos de varianza",
+    "section": "7 Evaluación fuera de muestra",
+    "text": "7 Evaluación fuera de muestra\n\n\n\nTabla 3\n\n\n\nVer código\nrealised &lt;- realised_volatility(evaluation$log_return)\n\nscores &lt;- rbind(\n  score_volatility(ma_oos, realised, \"MA(m*)\"),\n  score_volatility(ewma_oos, realised, \"EWMA\"),\n  score_volatility(ewma_fit_oos, realised, \"EWMA calibrado\"),\n  score_volatility(garch_oos, realised, \"GARCH\")\n)\nreport_table(scores, caption = \"Desempeño fuera de muestra, 2026.\")\n\n\n\n\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nConstruir las series fuera de muestra de cada modelo y compararlas contra la volatilidad realizada. Responder de forma argumentada:\n\n¿Qué modelo captura mejor los periodos de alta volatilidad?\n¿Cuál reacciona más rápido a los cambios de mercado?\n¿Cuál es más estable en sus estimaciones?\n¿Cuál tiende a sobreestimar y cuál a subestimar?"
+  },
+  {
+    "objectID": "04-variance-models.html#conclusión",
+    "href": "04-variance-models.html#conclusión",
+    "title": "Modelos de varianza",
+    "section": "8 Conclusión",
+    "text": "8 Conclusión\n\n\n\n\n\n\nImportantePendiente de redacción\n\n\n\nComparación general y, desde una perspectiva financiera, qué modelo se usaría y por qué."
+  },
+  {
+    "objectID": "04-variance-models.html#referencias",
+    "href": "04-variance-models.html#referencias",
+    "title": "Modelos de varianza",
+    "section": "9 Referencias",
+    "text": "9 Referencias"
+  }
+]
