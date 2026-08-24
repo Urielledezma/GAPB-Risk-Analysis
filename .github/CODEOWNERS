@@ -1,0 +1,8 @@
+# Default reviewer for everything.
+* @Urielledezma
+
+# The analytics library and the configuration decide every number in every
+# report. Changes here get a review even when the diff looks trivial.
+/R/       @Urielledezma
+/config/  @Urielledezma
+/tests/   @Urielledezma
