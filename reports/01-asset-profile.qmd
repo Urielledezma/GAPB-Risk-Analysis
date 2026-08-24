@@ -1,0 +1,107 @@
+---
+title: "El activo y su negocio"
+subtitle: "Caracterización del emisor, estructura financiera y taxonomía de riesgos"
+date: last-modified
+date-format: "D [de] MMMM [de] YYYY"
+---
+
+```{r setup}
+#| include: false
+source("_setup.R")
+```
+
+## Introducción
+
+::: {.callout-important title="Pendiente de redacción"}
+Síntesis de lo que se presenta en esta etapa: qué se caracteriza, con qué
+información y a qué conclusión se llega.
+:::
+
+## Descripción general del activo y del negocio
+
+::: {.callout-important title="Pendiente de redacción"}
+El objetivo de este apartado es **dimensionar** la empresa, no enumerarla. Los
+siguientes elementos son insumos para ese argumento:
+
+- giro y función principal;
+- inicio de operaciones y evolución;
+- líneas de negocio y su peso relativo;
+- presencia geográfica;
+- marcas, subsidiarias y activos concesionados;
+- plantilla aproximada;
+- infraestructura clave;
+- competidores y posición de mercado;
+- eventos recientes relevantes.
+
+Cada afirmación se respalda con reporte trimestral, informe anual o documento
+oficial de la BMV, citado con `@clave` contra `references.bib`.
+:::
+
+```{r asset-metadata}
+#| echo: false
+report_table(
+  asset_meta(),
+  caption = "Identificación del emisor analizado."
+)
+```
+
+## Análisis de estados financieros
+
+Los fundamentales provienen de FactSet y no se versionan en este repositorio.
+Para reproducir este apartado se requiere una clave con entitlements de API:
+
+```r
+source("../analysis/03_ingest_fundamentals.R")
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+Ingresos, márgenes bruto, operativo y neto de los últimos tres ejercicios, con
+la definición de cada margen y su interpretación económica. Nivel de
+endeudamiento y estructura de capital.
+
+Reportar cifras no es analizarlas: cada movimiento relevante debe tener una
+explicación en términos del negocio.
+:::
+
+## Indicadores financieros clave
+
+::: {.callout-important title="Pendiente de redacción"}
+ROE, ROA, deuda/capital, deuda/EBITDA y margen EBITDA, con el dato más reciente.
+Para cada indicador: definición, valor, y qué dice sobre este negocio en
+particular.
+:::
+
+## Utilidad por acción
+
+::: {.callout-important title="Pendiente de redacción"}
+Evolución trimestral del EPS de 2019 a 2025 y su estabilidad en el tiempo.
+:::
+
+## Dividendos y *splits*
+
+::: {.callout-important title="Pendiente de redacción"}
+Política de dividendos, su frecuencia, y cualquier cambio relevante. *Splits*
+históricos, fechas y proporciones, y su efecto sobre la serie de precios
+ajustada que utilizan las etapas siguientes.
+:::
+
+## Identificación de riesgos
+
+::: {.callout-important title="Pendiente de redacción"}
+Riesgos operativos, macroeconómicos y financieros del emisor, argumentados en
+términos de cómo cada uno se transmite al precio de la acción.
+
+Este apartado es el puente conceptual hacia las etapas cuantitativas: lo que
+aquí se identifique como fuente de riesgo debe reaparecer en la etapa 02 como
+evento y en las etapas 03 a 05 como volatilidad medida.
+:::
+
+## Conclusión
+
+::: {.callout-important title="Pendiente de redacción"}
+Caracterización integrada del negocio —sólido, en expansión o en consolidación—
+sostenida por la evidencia de los apartados anteriores, y el perfil de riesgo
+que cabría esperar observar después en el precio.
+:::
+
+## Referencias

@@ -1,0 +1,68 @@
+project:
+  type: website
+  output-dir: ../docs
+  render:
+    - index.qmd
+    - 01-asset-profile.qmd
+    - 02-price-history-events.qmd
+    - 03-returns-volatility-gbm.qmd
+    - 04-variance-models.qmd
+    - 05-value-at-risk.qmd
+
+website:
+  title: "Análisis de Riesgo · GAPB"
+  description: "Análisis de riesgo de mercado de Grupo Aeroportuario del Pacífico (BMV: GAPB)"
+  repo-url: https://github.com/Urielledezma/Analisis-de-Riesgo
+  repo-actions: [source]
+  page-navigation: true
+  navbar:
+    left:
+      - href: index.qmd
+        text: Inicio
+      - href: 01-asset-profile.qmd
+        text: "01 · Activo"
+      - href: 02-price-history-events.qmd
+        text: "02 · Precio y eventos"
+      - href: 03-returns-volatility-gbm.qmd
+        text: "03 · Rendimientos"
+      - href: 04-variance-models.qmd
+        text: "04 · Volatilidad"
+      - href: 05-value-at-risk.qmd
+        text: "05 · VaR"
+    right:
+      - icon: github
+        href: https://github.com/Urielledezma/Analisis-de-Riesgo
+        aria-label: Repositorio en GitHub
+  page-footer:
+    left: "Licencia MIT · el contenido de terceros conserva los términos de su proveedor."
+    right: "Fuentes de mercado: Yahoo Finance / BMV · Macro: Banco Mundial"
+
+format:
+  html:
+    theme: [cosmo, _theme.scss]
+    toc: true
+    toc-depth: 3
+    toc-title: "En esta página"
+    number-sections: true
+    number-depth: 2
+    code-fold: true
+    code-summary: "Ver código"
+    code-tools: false
+    fig-width: 8
+    fig-height: 4.5
+    fig-dpi: 200
+    fig-align: center
+    tbl-cap-location: top
+    df-print: kable
+    smooth-scroll: true
+    link-external-newwindow: true
+    citations-hover: true
+
+lang: es
+bibliography: references.bib
+csl: ../paper/apa.csl
+
+execute:
+  echo: true
+  warning: false
+  message: false

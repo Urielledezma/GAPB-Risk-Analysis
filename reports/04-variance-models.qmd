@@ -1,0 +1,168 @@
+﻿---
+title: "Modelos de varianza"
+subtitle: "Promedios móviles, EWMA, EWMA calibrado y ARCH/GARCH, evaluados fuera de muestra"
+date: last-modified
+date-format: "D [de] MMMM [de] YYYY"
+---
+
+```{r setup}
+#| include: false
+source("_setup.R")
+```
+
+```{r data}
+#| include: false
+returns <- read_processed("returns_daily")
+subject_returns <- returns[returns$ticker == subject(), ]
+
+estimation <- in_sample(subject_returns)
+evaluation <- subject_returns[subject_returns$date >= as.Date(params()$sample$oos_start), ]
+```
+
+## Introducción
+
+::: {.callout-important title="Pendiente de redacción"}
+Qué se estima, con qué información y cómo se compara.
+:::
+
+## Metodología
+
+Cuatro estimadores de la misma cantidad, ordenados por cuánta estructura
+suponen:
+
+$$
+\text{MA}(m):\quad \hat\sigma^2_t = \frac{1}{m}\sum_{i=1}^{m} r^2_{t-i}
+$$
+
+$$
+\text{EWMA}:\quad \hat\sigma^2_t = \lambda\,\hat\sigma^2_{t-1} + (1-\lambda)\,r^2_{t-1}
+$$
+
+$$
+\text{GARCH}(p,q):\quad \sigma^2_t = \omega + \sum_{i=1}^{q}\alpha_i r^2_{t-i} + \sum_{j=1}^{p}\beta_j \sigma^2_{t-j}
+$$
+
+Los cuatro estiman la varianza a partir de rendimientos al cuadrado y no de
+desviaciones respecto de una media móvil. A frecuencia diaria la media es
+indistinguible de cero —la etapa 03 lo contrasta directamente— y restar una
+estimación ruidosa de ella agrega varianza al estimador sin eliminar sesgo.
+
+Toda estimación en $t$ usa información hasta $t-1$. Los parámetros se estiman
+con datos hasta el **31 de diciembre de 2025** y se evalúan sobre 2026.
+
+## Promedios móviles
+
+```{r}
+#| label: fig-ma
+#| fig-cap: "Volatilidad estimada con distintas ventanas móviles."
+ma <- ma_volatility_grid(estimation$log_return)
+ma_long <- do.call(rbind, lapply(colnames(ma), function(column) {
+  data.frame(
+    date = estimation$date,
+    ventana = column,
+    sigma = ma[, column],
+    stringsAsFactors = FALSE
+  )
+}))
+ma_long <- ma_long[is.finite(ma_long$sigma), ]
+
+ggplot(ma_long, aes(date, sigma, colour = ventana)) +
+  geom_line(linewidth = 0.4) +
+  scale_y_continuous(labels = label_percent(accuracy = 0.1)) +
+  labs(x = NULL, y = "Volatilidad diaria estimada")
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+Selección de $m$ con criterio de ajuste y capacidad predictiva, e interpretación
+de cómo cambia la estimación conforme se amplía la ventana.
+:::
+
+## EWMA
+
+```{r}
+#| label: fig-ewma
+#| fig-cap: "EWMA con el factor de decaimiento de RiskMetrics."
+lambda_rm <- params()$variance$ewma$lambda_riskmetrics
+estimation$ewma <- ewma_volatility(estimation$log_return, lambda = lambda_rm)
+
+ggplot(estimation[is.finite(estimation$ewma), ], aes(date, ewma)) +
+  geom_line(colour = RISK_PALETTE[1], linewidth = 0.4) +
+  scale_y_continuous(labels = label_percent(accuracy = 0.1)) +
+  labs(x = NULL, y = "Volatilidad diaria estimada")
+```
+
+## EWMA calibrado con los datos
+
+```{r}
+#| label: tbl-ewma-fit
+fit_rmse <- ewma_fit_lambda(estimation$log_return, loss = "rmse")
+fit_ll <- ewma_fit_lambda(estimation$log_return, loss = "loglik")
+
+report_table(
+  data.frame(
+    criterio = c("RMSE", "Log-verosimilitud"),
+    lambda = c(fit_rmse$lambda, fit_ll$lambda),
+    alpha = c(fit_rmse$alpha, fit_ll$alpha)
+  ),
+  caption = "Factor de decaimiento seleccionado bajo cada criterio."
+)
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+Justificación de $\lambda$ y comparación de la velocidad de respuesta frente a
+los promedios móviles. Si los dos criterios discrepan, la discrepancia es
+informativa: el RMSE es simétrico, la verosimilitud penaliza mucho más
+subestimar la volatilidad que sobreestimarla.
+:::
+
+## ARCH / GARCH
+
+```{r}
+#| label: tbl-garch
+#| eval: false
+garch <- fit_garch(estimation$log_return)
+report_table(garch$selection, caption = "Tabla de selección de órdenes.")
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+Identificación del modelo, justificación del orden seleccionado e
+interpretación de los coeficientes: persistencia $\alpha + \beta$, velocidad de
+reversión y significado de una persistencia cercana a uno.
+
+Activar el chunk anterior cuando `rugarch` esté instalado (`renv::restore()`).
+:::
+
+## Evaluación fuera de muestra
+
+```{r}
+#| label: tbl-scores
+#| eval: false
+realised <- realised_volatility(evaluation$log_return)
+
+scores <- rbind(
+  score_volatility(ma_oos, realised, "MA(m*)"),
+  score_volatility(ewma_oos, realised, "EWMA"),
+  score_volatility(ewma_fit_oos, realised, "EWMA calibrado"),
+  score_volatility(garch_oos, realised, "GARCH")
+)
+report_table(scores, caption = "Desempeño fuera de muestra, 2026.")
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+Construir las series fuera de muestra de cada modelo y compararlas contra la
+volatilidad realizada. Responder de forma argumentada:
+
+- ¿Qué modelo captura mejor los periodos de alta volatilidad?
+- ¿Cuál reacciona más rápido a los cambios de mercado?
+- ¿Cuál es más estable en sus estimaciones?
+- ¿Cuál tiende a sobreestimar y cuál a subestimar?
+:::
+
+## Conclusión
+
+::: {.callout-important title="Pendiente de redacción"}
+Comparación general y, desde una perspectiva financiera, qué modelo se usaría y
+por qué.
+:::
+
+## Referencias

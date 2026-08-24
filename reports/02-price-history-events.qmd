@@ -1,0 +1,158 @@
+﻿---
+title: "Precio, caídas y eventos"
+subtitle: "Trayectoria histórica, drawdowns y su atribución a hechos del entorno"
+date: last-modified
+date-format: "D [de] MMMM [de] YYYY"
+---
+
+```{r setup}
+#| include: false
+source("_setup.R")
+```
+
+```{r data}
+#| include: false
+prices <- read_processed("prices_daily")
+returns <- read_processed("returns_daily")
+gdp <- read_processed("gdp_mx")
+
+subject_prices <- prices[prices$ticker == subject(), ]
+subject_returns <- returns[returns$ticker == subject(), ]
+```
+
+## Introducción
+
+::: {.callout-important title="Pendiente de redacción"}
+Qué se examina en esta etapa y por qué: el precio responde a información nueva
+que los inversionistas no controlan ni anticipan, y esa exposición es una parte
+fundamental del riesgo financiero.
+:::
+
+## Exploración de la serie histórica
+
+```{r}
+#| label: fig-price
+#| fig-cap: "Precio ajustado de GAPB desde su listado en la BMV."
+ggplot(subject_prices, aes(date, adjusted)) +
+  geom_line(colour = RISK_PALETTE[1], linewidth = 0.5) +
+  scale_y_continuous(labels = label_dollar(prefix = "$")) +
+  labs(
+    x = NULL, y = "Precio ajustado (MXN)",
+    caption = "Fuente: Yahoo Finance / BMV. Serie ajustada por dividendos y splits."
+  )
+```
+
+```{r}
+#| label: fig-returns
+#| fig-cap: "Rendimientos logarítmicos diarios."
+ggplot(subject_returns, aes(date, log_return)) +
+  geom_line(colour = RISK_PALETTE[1], linewidth = 0.25) +
+  scale_y_continuous(labels = label_percent(accuracy = 1)) +
+  labs(x = NULL, y = "Rendimiento logarítmico diario")
+```
+
+### Máximo *drawdown*
+
+El *drawdown* mide la caída proporcional desde el máximo acumulado hasta la
+fecha:
+
+$$
+DD_t = \frac{S_t}{\max_{s \le t} S_s} - 1
+$$
+
+```{r}
+#| label: tbl-drawdown
+drawdown <- max_drawdown(subject_prices$adjusted, subject_prices$date)
+report_table(drawdown, caption = "Máximo drawdown del periodo completo.")
+```
+
+```{r}
+#| label: fig-drawdown
+#| fig-cap: "Drawdown respecto del máximo acumulado."
+subject_prices$drawdown <- drawdown_series(subject_prices$adjusted)
+ggplot(subject_prices, aes(date, drawdown)) +
+  geom_area(fill = RISK_PALETTE[1], alpha = 0.25) +
+  geom_line(colour = RISK_PALETTE[1], linewidth = 0.4) +
+  scale_y_continuous(labels = label_percent(accuracy = 1)) +
+  labs(x = NULL, y = "Drawdown")
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+Descripción del comportamiento general e identificación de **al menos cinco
+periodos** con movimientos pronunciados, justificados con criterio financiero y
+no sólo visual.
+:::
+
+## Eventos y explicación de los movimientos
+
+::: {.callout-important title="Pendiente de redacción"}
+Para cada periodo identificado: qué ocurrió en el entorno financiero,
+macroeconómico, político o en la propia empresa, y por qué ese hecho es
+relevante para el precio de este activo en particular.
+
+El énfasis está en mostrar que el precio responde a choques e información nueva,
+no en narrar la noticia.
+:::
+
+## Relación con el ciclo económico
+
+```{r}
+#| label: fig-gdp
+#| fig-cap: "Rendimiento anual del activo frente al crecimiento anual del PIB real de México."
+annual <- do.call(rbind, lapply(
+  split(subject_returns, format(subject_returns$date, "%Y")),
+  function(one) {
+    data.frame(
+      year = as.integer(format(one$date[1], "%Y")),
+      asset_return = 100 * (exp(sum(one$log_return)) - 1),
+      stringsAsFactors = FALSE
+    )
+  }
+))
+combined <- merge(annual, gdp[, c("year", "gdp_growth")], by = "year")
+
+long <- rbind(
+  data.frame(year = combined$year, serie = "GAPB", valor = combined$asset_return),
+  data.frame(year = combined$year, serie = "PIB real", valor = combined$gdp_growth)
+)
+
+ggplot(long, aes(year, valor, fill = serie)) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.7) +
+  geom_hline(yintercept = 0, colour = RISK_INK$baseline, linewidth = 0.3) +
+  scale_fill_manual(values = unname(RISK_PALETTE[1:2])) +
+  labs(
+    x = NULL, y = "Variación anual (%)",
+    caption = "Fuentes: Yahoo Finance / BMV y Banco Mundial."
+  )
+```
+
+```{r}
+#| label: tbl-gdp
+report_table(
+  combined,
+  caption = "Rendimiento anual del activo y crecimiento del PIB real.",
+  digits = 2
+)
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+¿El activo se mueve con el ciclo económico, lo amplifica o se desacopla? ¿Qué
+explica las coincidencias y las diferencias?
+:::
+
+## Periodo reciente
+
+::: {.callout-important title="Pendiente de redacción"}
+Eventos del último año —tasas de interés, entorno internacional, cambios
+regulatorios, resultados trimestrales— y cómo se reflejan, o no, en el precio y
+en los rendimientos.
+:::
+
+## Conclusión
+
+::: {.callout-important title="Pendiente de redacción"}
+Síntesis razonada, no resumen: qué enseña este ejercicio sobre el riesgo, la
+incertidumbre y el papel de la información nueva en la formación de precios.
+:::
+
+## Referencias

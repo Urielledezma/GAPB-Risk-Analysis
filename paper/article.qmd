@@ -1,0 +1,128 @@
+---
+title: "Riesgo de mercado en una concesionaria aeroportuaria: precio, volatilidad y Valor en Riesgo de GAPB, 2006-2026"
+author:
+  - name: Francisco Uriel Ledezma Chávez
+  - name: Juan Pablo Morán
+  - name: Isacc Ávila
+  # - name: <pendiente de confirmar>
+date: last-modified
+date-format: "D [de] MMMM [de] YYYY"
+lang: es
+bibliography: ../reports/references.bib
+csl: apa.csl
+format:
+  docx:
+    toc: true
+    number-sections: true
+    highlight-style: github
+  html:
+    toc: true
+    number-sections: true
+    theme: [cosmo, ../reports/_theme.scss]
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| include: false
+source(file.path("..", "R", "utils_io.R"))
+source_lib()
+suppressPackageStartupMessages(library(ggplot2))
+theme_set(theme_risk())
+```
+
+## Resumen {.unnumbered}
+
+> *Entre 150 y 200 palabras. Debe contener el objetivo del trabajo, la
+> metodología principal, los hallazgos clave y la relevancia del análisis para el
+> mercado. Se redacta al final, cuando los resultados están cerrados.*
+
+**Palabras clave:** riesgo de mercado, volatilidad condicional, Valor en Riesgo,
+GARCH, Bolsa Mexicana de Valores.
+
+## Introducción
+
+> *Contexto del activo y del sector, relevancia en el mercado mexicano e
+> historia de cotización en la BMV. Importancia del análisis de precios,
+> volatilidad y riesgo para inversionistas y gestores. Objetivo general y
+> objetivos específicos.*
+
+### Preguntas de investigación
+
+> *Las preguntas que el trabajo responde, formuladas de manera que puedan
+> contestarse con la evidencia que se presenta más adelante.*
+
+## Revisión de literatura
+
+> *Comportamiento de precios en mercados emergentes; modelos de volatilidad
+> condicional; uso del Valor en Riesgo en la gestión de riesgo. La revisión es
+> breve y se conecta con las decisiones metodológicas que se toman después, no
+> con el estado del arte en abstracto.*
+
+El estudio se apoya en la literatura clásica de heterocedasticidad condicional
+[@engle1982; @bollerslev1986], en el marco de RiskMetrics para la estimación de
+volatilidad exponencialmente ponderada [@riskmetrics1996], y en el trabajo sobre
+validación de modelos de riesgo [@kupiec1995; @christoffersen1998] y medidas
+coherentes de riesgo [@artzner1999].
+
+## Metodología
+
+### Datos
+
+> *Fuentes, periodo analizado, frecuencia y variables consideradas.*
+
+```{r data-summary}
+prices <- read_processed("prices_daily")
+returns <- read_processed("returns_daily")
+subject_prices <- prices[prices$ticker == subject(), ]
+
+knitr::kable(
+  data.frame(
+    Emisora = subject(),
+    Inicio = format(min(subject_prices$date)),
+    Fin = format(max(subject_prices$date)),
+    Observaciones = nrow(subject_prices),
+    Frecuencia = "Diaria"
+  ),
+  caption = "Cobertura de la serie analizada."
+)
+```
+
+### Procedimientos
+
+> *Especificación de cada modelo con sus ecuaciones, criterios de selección de
+> parámetros y la partición entre muestra de estimación y periodo de evaluación
+> fuera de muestra.*
+
+## Resultados
+
+### Análisis histórico
+
+### Estadísticos descriptivos
+
+### Simulación del precio
+
+### Modelos de volatilidad
+
+### Valor en Riesgo
+
+## Discusión
+
+> *Los resultados se confrontan con la teoría y con la evidencia previa. Se
+> analizan las diferencias entre volatilidad realizada y estimada, se reconocen
+> los supuestos y las limitaciones del ejercicio, y se discuten las
+> implicaciones para un inversionista en la coyuntura actual.*
+
+## Conclusiones
+
+> *Hallazgo, explicación, implicación y recomendación. Las limitaciones se
+> declaran; un resultado adverso se explica, no se omite.*
+
+## Referencias {.unnumbered}
+
+::: {#refs}
+:::
+
+## Anexos {.unnumbered}

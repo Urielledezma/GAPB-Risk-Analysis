@@ -1,0 +1,77 @@
+---
+title: "Análisis de riesgo de mercado"
+subtitle: "Grupo Aeroportuario del Pacífico, Serie B (BMV: GAPB)"
+date: last-modified
+date-format: "D [de] MMMM [de] YYYY"
+toc: false
+number-sections: false
+---
+
+```{r setup}
+#| include: false
+source("_setup.R")
+```
+
+Este sitio reúne el análisis de riesgo de mercado de **Grupo Aeroportuario del
+Pacífico** y de una cartera de seis emisoras de la Bolsa Mexicana de Valores. El
+trabajo avanza en cinco etapas, de los fundamentos del emisor a un modelo de
+Valor en Riesgo sometido a *backtesting*.
+
+## Estructura del análisis
+
+| Etapa | Pregunta que responde |
+|---|---|
+| [01 · El activo y su negocio](01-asset-profile.qmd) | ¿Qué hace la empresa, cómo se financia y qué riesgos carga por estructura? |
+| [02 · Precio, caídas y eventos](02-price-history-events.qmd) | ¿Cómo se ha comportado el precio, dónde están las caídas y qué hechos las explican? |
+| [03 · Rendimientos, volatilidad y GBM](03-returns-volatility-gbm.qmd) | ¿Son normales los rendimientos? ¿Qué implica proyectar el precio con un movimiento browniano geométrico? |
+| [04 · Modelos de varianza](04-variance-models.qmd) | ¿Qué modelo de volatilidad pronostica mejor fuera de muestra? |
+| [05 · Valor en Riesgo y *Expected Shortfall*](05-value-at-risk.qmd) | ¿Cuál es la exposición a pérdidas de la cartera y sobrevive el modelo al *backtesting*? |
+
+## Universo analizado
+
+```{r universe}
+#| echo: false
+report_table(
+  universe()[, c("ticker", "name", "sector", "industry")],
+  caption = "Emisoras que integran la cartera analizada en la etapa 05."
+)
+```
+
+## Cobertura de datos
+
+```{r coverage}
+#| echo: false
+prices <- read_processed("prices_daily")
+coverage <- do.call(rbind, lapply(split(prices, prices$ticker), function(one) {
+  data.frame(
+    ticker = unique(one$ticker),
+    inicio = format(min(one$date)),
+    fin = format(max(one$date)),
+    observaciones = nrow(one),
+    stringsAsFactors = FALSE
+  )
+}))
+rownames(coverage) <- NULL
+report_table(coverage, caption = "Historia de cotización disponible por emisora.")
+```
+
+## Nota metodológica
+
+Todo el análisis trabaja con rendimientos logarítmicos, aditivos en el tiempo, lo
+que hace exacto —y no aproximado— el escalamiento por horizonte de las etapas 03
+y 05. Los parámetros de cada modelo se estiman con información disponible hasta
+el **31 de diciembre de 2025**; 2026 se reserva como periodo de evaluación fuera
+de muestra.
+
+Los reportes no consultan ninguna API: leen exclusivamente los datos versionados
+en `data/processed/`. Cualquier persona puede clonar el repositorio y reproducir
+cada cifra sin credenciales.
+
+::: {.callout-note collapse="true"}
+## Fuentes de información
+
+Precios diarios y volumen: Yahoo Finance / Bolsa Mexicana de Valores.
+Crecimiento anual del PIB real de México: Banco Mundial.
+Fundamentales corporativos: FactSet, citado como fuente sin redistribución del
+contenido.
+:::
