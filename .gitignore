@@ -1,0 +1,47 @@
+# --- R / RStudio -------------------------------------------------------------
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.Renviron
+
+# --- Credentials -------------------------------------------------------------
+# Never commit. Copy .env.example -> .env and fill it in locally.
+.env
+.env.*
+!.env.example
+
+# --- renv (ignore the library, keep the lockfile) ----------------------------
+renv/library/
+renv/local/
+renv/staging/
+renv/sandbox/
+renv/python/
+
+# --- Quarto ------------------------------------------------------------------
+.quarto/
+/.quarto/
+*_cache/
+/reports/*_files/
+/paper/*_files/
+
+# --- Data --------------------------------------------------------------------
+# data/raw/ holds vendor pulls (FactSet among them) whose redistribution is
+# restricted. It never leaves this machine. data/processed/ IS tracked: it is
+# derived exclusively from public sources and is what makes the reports
+# reproducible without credentials.
+data/raw/*
+!data/raw/.gitkeep
+
+# --- Generated artefacts -----------------------------------------------------
+outputs/*
+!outputs/.gitkeep
+
+# --- OS / editors ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+~$*
