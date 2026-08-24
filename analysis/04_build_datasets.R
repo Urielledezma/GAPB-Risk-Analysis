@@ -14,6 +14,9 @@ main <- function() {
   validate_prices(prices)
 
   returns <- compute_log_returns(prices)
+  # Eight decimals on a daily return near 1e-2 is well past any precision this
+  # analysis can claim, and keeps the committed file small.
+  returns$log_return <- round(returns$log_return, 8)
   write_processed(returns, "returns_daily")
 
   summary_by_ticker <- do.call(

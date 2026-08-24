@@ -18,6 +18,7 @@ main <- function() {
 
   prices <- fetch_universe_prices()
   prices <- drop_unusable_prices(prices)
+  prices <- round_prices(prices)
   validate_prices(prices)
 
   write_processed(prices, "prices_daily")

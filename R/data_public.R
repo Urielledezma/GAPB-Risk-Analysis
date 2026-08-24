@@ -122,6 +122,27 @@ drop_unusable_prices <- function(prices) {
   prices[usable, ]
 }
 
+#' Round a price panel to a sane precision before committing it.
+#'
+#' Yahoo returns adjusted prices to fifteen significant digits, which triples
+#' the size of a file that git stores in full on every refresh. Four decimals is
+#' several orders of magnitude finer than the centavo tick, and the resulting
+#' error in a log return is around 1e-7 against a daily volatility near 2e-2 --
+#' invisible in any figure this project reports.
+#'
+#' @param prices A tidy price data frame.
+#' @param digits Decimal places for price columns.
+#' @return The panel with price columns rounded and volume stored as an integer.
+round_prices <- function(prices, digits = 4) {
+  for (column in intersect(c("open", "high", "low", "close", "adjusted"), names(prices))) {
+    prices[[column]] <- round(prices[[column]], digits)
+  }
+  if ("volume" %in% names(prices)) {
+    prices$volume <- as.integer(round(prices$volume))
+  }
+  prices
+}
+
 #' Validate a price panel before it is written.
 #'
 #' Checks the properties the downstream analysis silently assumes: one row per
