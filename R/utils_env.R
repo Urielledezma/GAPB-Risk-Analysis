@@ -65,17 +65,21 @@ require_env <- function(name, hint = NULL) {
   Sys.getenv(name)
 }
 
+# Every credential the project can use. Names only -- this list is safe to
+# print, and printing it is how a teammate finds out what to put in .env.
+DEFAULT_CREDENTIALS <- c(
+  "FACTSET_USERNAME_SERIAL",
+  "FACTSET_API_KEY",
+  "BANXICO_SIE_TOKEN",
+  "INEGI_API_TOKEN"
+)
+
 #' Report credential availability without disclosing values.
 #'
 #' @param names Environment variable names to check.
 #' @return A data frame with one row per variable: name, whether it is set, and
 #'   its character length. Values are never included.
-env_status <- function(names = c(
-                         "FACTSET_USERNAME_SERIAL",
-                         "FACTSET_API_KEY",
-                         "BANXICO_SIE_TOKEN",
-                         "INEGI_API_TOKEN"
-                       )) {
+env_status <- function(names = DEFAULT_CREDENTIALS) {
   load_env()
   data.frame(
     variable = names,

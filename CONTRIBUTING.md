@@ -81,7 +81,14 @@ is committed as a dataset.
 
 R follows the [tidyverse style guide](https://style.tidyverse.org/): `snake_case`, two
 spaces, 100 characters. `styler::style_dir("R")` and `lintr::lint_dir("R")` settle
-arguments about formatting.
+arguments about formatting, and CI enforces the latter.
+
+Two deviations from the lintr defaults are configured in `.lintr` and are worth
+knowing about. `SNAKE_CASE` is permitted for module-level constants — `RISK_PALETTE`,
+`FACTSET_BASE` — and for nothing else; functions and variables stay `snake_case`. And
+`object_usage_linter` is disabled, because the analytics library is a set of sourced
+files rather than a package: it cannot resolve cross-file references and would report
+every one of them as an undefined global.
 
 Code, comments, documentation and commit messages are in English. Report and article
 prose is in Spanish.
