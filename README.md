@@ -1,5 +1,6 @@
 # Market Risk Analysis — GAPB.MX
 
+[![checks](https://github.com/Urielledezma/Analisis-de-Riesgo/actions/workflows/checks.yml/badge.svg)](https://github.com/Urielledezma/Analisis-de-Riesgo/actions/workflows/checks.yml)
 [![R](https://img.shields.io/badge/R-%3E%3D%204.2-276DC3?logo=r&logoColor=white)](https://www.r-project.org/)
 [![Quarto](https://img.shields.io/badge/Quarto-reports-39729E?logo=quarto&logoColor=white)](https://quarto.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -43,7 +44,7 @@ same pipeline runs unchanged — the repository is intended to be reused.
 ├── analysis/           # Numbered ingest scripts. The only code that touches a network
 ├── config/             # Asset universe and model parameters (YAML, single source of truth)
 ├── reports/            # Quarto sources for the five stage reports
-├── paper/              # Research article
+├── paper/              # Research article (renders to .docx and .html)
 ├── data/
 │   ├── raw/            # Vendor pulls. Local only, never committed
 │   └── processed/      # Public-source datasets. Committed, reproducible
@@ -76,8 +77,11 @@ source("analysis/04_build_datasets.R")
 ```
 
 ```bash
-# 3. Render the reports
-quarto render
+# 3. Render the reports into docs/
+quarto render reports
+
+# 4. Verify the analytics library
+Rscript tests/testthat.R
 ```
 
 Fundamentals ingestion (`analysis/03_ingest_fundamentals.R`) is the one step that
