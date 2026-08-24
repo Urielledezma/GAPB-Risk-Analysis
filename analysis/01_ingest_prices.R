@@ -17,6 +17,7 @@ main <- function() {
   message("History from: ", assets_config()$history_start)
 
   prices <- fetch_universe_prices()
+  prices <- drop_unusable_prices(prices)
   validate_prices(prices)
 
   write_processed(prices, "prices_daily")

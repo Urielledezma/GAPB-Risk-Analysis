@@ -49,19 +49,19 @@ fetch_prices_yahoo <- function(ticker,
 #' the caller decides whether a partial universe is acceptable. A silent partial
 #' download would be worse than a loud one.
 #'
-#' @param tickers Character vector of Yahoo symbols.
+#' @param symbols Character vector of Yahoo symbols.
 #' @param from Start date.
 #' @param to End date.
 #' @param cache_raw Write each untouched download to data/raw/yahoo/.
 #' @return A tidy data frame stacked across tickers, sorted by ticker and date.
-fetch_universe_prices <- function(tickers = tickers(),
+fetch_universe_prices <- function(symbols = tickers(),
                                   from = assets_config()$history_start,
                                   to = Sys.Date(),
                                   cache_raw = TRUE) {
   collected <- list()
   failed <- character(0)
 
-  for (ticker in tickers) {
+  for (ticker in symbols) {
     message("Fetching ", ticker, " ...")
     result <- tryCatch(
       fetch_prices_yahoo(ticker, from = from, to = to),
@@ -94,6 +94,32 @@ fetch_universe_prices <- function(tickers = tickers(),
   prices <- do.call(rbind, collected)
   rownames(prices) <- NULL
   prices[order(prices$ticker, prices$date), ]
+}
+
+#' Drop observations with no usable adjusted price.
+#'
+#' Yahoo returns the occasional row with a missing or zero adjusted close --
+#' typically a holiday or a stale session that made it into the series. Those
+#' rows cannot produce a log return and are removed here rather than being
+#' silently absorbed by an na.rm later, where nobody would ever see them.
+#'
+#' @param prices A tidy price data frame.
+#' @return The panel with unusable rows removed.
+drop_unusable_prices <- function(prices) {
+  usable <- is.finite(prices$adjusted) & prices$adjusted > 0
+  dropped <- prices[!usable, ]
+
+  if (nrow(dropped) > 0) {
+    message(
+      "Dropping ", nrow(dropped), " observation(s) with no usable adjusted price:"
+    )
+    print(
+      dropped[order(dropped$ticker, dropped$date), c("ticker", "date", "close", "adjusted")],
+      row.names = FALSE
+    )
+  }
+
+  prices[usable, ]
 }
 
 #' Validate a price panel before it is written.
