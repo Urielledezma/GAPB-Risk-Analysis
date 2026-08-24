@@ -1,0 +1,26 @@
+# Normalise line endings so the repository is identical across Windows, macOS
+# and the CI runner.
+* text=auto eol=lf
+
+*.R      text eol=lf
+*.qmd    text eol=lf
+*.Rmd    text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.csv    text eol=lf
+*.scss   text eol=lf
+*.bib    text eol=lf
+*.csl    text eol=lf
+*.Rproj  text eol=lf
+
+*.png    binary
+*.jpg    binary
+*.pdf    binary
+*.docx   binary
+*.xlsx   binary
+
+# Keep rendered output and data snapshots out of diff noise and language stats.
+docs/**            linguist-generated=true
+data/processed/**  linguist-generated=true
+renv.lock          linguist-generated=true
