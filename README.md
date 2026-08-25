@@ -7,7 +7,11 @@
 [![Reports](https://img.shields.io/badge/reports-live-brightgreen)](https://urielledezma.github.io/Analisis-de-Riesgo/)
 
 An end-to-end market risk research framework in **R**, applied to **Grupo Aeroportuario
-del Pacífico, Serie B (BMV: GAPB)** and to a six-asset Mexican equity portfolio.
+del Pacífico, Serie B (BMV: GAPB)** and, in the portfolio stage, to a six-asset Mexican
+equity book.
+
+Stages 01 through 04 concern GAPB alone. Stage 05 adds five further BMV issuers, because
+a Value at Risk exercise needs a portfolio and a portfolio needs a covariance matrix.
 
 The project moves from the fundamentals of the issuer to a fully backtested Value at
 Risk model, in five stages: business and financial characterisation, price-path and
@@ -46,8 +50,9 @@ same pipeline runs unchanged — the repository is intended to be reused.
 ├── reports/            # Quarto sources for the five stage reports
 ├── paper/              # Research article (renders to .docx and .html)
 ├── data/
-│   ├── raw/            # Vendor pulls. Local only, never committed
-│   └── processed/      # Public-source datasets. Committed, reproducible
+│   ├── raw/            # Untouched vendor extracts. Never committed
+│   ├── private/        # FactSet-derived datasets. Never committed
+│   └── processed/      # Public-source datasets. Committed, the renderable floor
 ├── outputs/            # Figures, fitted models, scratch. Regenerated, never committed
 ├── docs/               # Rendered site (GitHub Pages source)
 └── tests/testthat/     # Unit tests for the analytics library
@@ -70,10 +75,13 @@ cd Analisis-de-Riesgo
 install.packages("renv")
 renv::restore()
 
-# 2. Refresh the datasets from public sources (optional — snapshots are committed)
-source("analysis/01_ingest_prices.R")
-source("analysis/02_ingest_macro.R")
+# 2. With a FactSet key: confirm entitlement, then ingest from the vendor
+source("analysis/00_probe_factset.R")
+source("analysis/01_ingest_prices.R")     # add --universe for stage 05
+source("analysis/03_ingest_fundamentals.R")
 source("analysis/04_build_datasets.R")
+
+# Without a key, skip step 2 entirely — the committed snapshot renders as is.
 ```
 
 ```bash
@@ -89,19 +97,28 @@ requires credentials. See [Data sources](#data-sources) below.
 
 ---
 
-## Reproducibility contract
+## Data sourcing and reproducibility
 
-**Reports never call an API.** Scripts in `analysis/` fetch from the network and write to
-`data/processed/`; the Quarto sources in `reports/` read from `data/processed/` and
-nothing else.
+**FactSet is the primary source.** Every price series and all fundamentals are requested
+from FactSet first. Yahoo Finance / BMV is a fallback for an unentitled key or an
+outage — never a preference. The ladder lives in one place, `R/data_sources.R`, and
+nothing else in the project knows where a price came from.
 
-Three things follow from that single rule, and they are the reason it exists:
+Every fallback is announced, every row carries a `source` column, and a provenance
+manifest records which vendor served which ticker. A run that quietly degraded and a run
+that used FactSet throughout must never look alike.
 
-- Anyone can clone the repository and render every report with no credentials at all.
-- Results are pinned to a dataset that is versioned in git, so a re-render months later
-  reproduces the same numbers rather than silently picking up revised vendor data.
-- Restricted vendor content never has to enter the repository to make the analysis
-  verifiable.
+**Reports never call an API.** Scripts in `analysis/` fetch and write; the Quarto sources
+in `reports/` read and nothing else. That separation is what pins a reported figure to a
+fixed dataset rather than to whatever a vendor is serving on the day of a re-render.
+
+**Vendor output is not committed.** FactSet's terms restrict redistribution, and that
+restriction attaches to the content rather than to who holds a key — so FactSet-derived
+datasets live in `data/private/`, which is untracked. The tracked snapshot in
+`data/processed/` comes from public sources alone and exists as the floor that keeps the
+repository renderable. `read_dataset()` prefers the vendor copy when it is present, so a
+teammate with a key sees FactSet numbers and a reader without one still sees a rendered
+report.
 
 Random draws (Monte Carlo VaR, GBM path simulation) are seeded from `config/params.yml`.
 
@@ -109,19 +126,29 @@ Random draws (Monte Carlo VaR, GBM path simulation) are seeded from `config/para
 
 ## Data sources
 
-| Source | Used for | Access | Committed? |
-|---|---|---|---|
-| Yahoo Finance / BMV | Daily OHLCV for the six-asset universe, full quotation history | Public, via `quantmod` | Yes — `data/processed/` |
-| Banxico SIE | Reference rates, FX | Free API token | Yes — derived series only |
-| INEGI | Mexican GDP growth, quarterly and annual | Free API token | Yes — derived series only |
-| FactSet | Company fundamentals, quarterly EPS, leverage and margin ratios | Entitled API key | **No** |
+| Source | Role | Used for | Access | Committed? |
+|---|---|---|---|---|
+| **FactSet** | **Primary** | Daily prices, quarterly EPS, margins, leverage ratios | Entitled API key | **No** |
+| Yahoo Finance / BMV | Fallback | Daily OHLCV, full quotation history | Public, via `quantmod` | Yes — `data/processed/` |
+| World Bank | Primary | Mexican annual real GDP growth | Public, no token | Yes |
+| Banxico SIE | Optional | Reference rate, FX | Free token | Yes — derived series only |
+| INEGI | Optional | Quarterly GDP | Free token | Yes — derived series only |
 
-**FactSet content is not redistributed.** FactSet data is pulled locally into
-`data/raw/factset/`, which is excluded from version control. Figures and ratios derived
-from it appear in the reports with the source cited, as any research note would cite a
-data vendor, but the underlying extracts stay on the analyst's machine. The pipeline is
-designed so that an unentitled account degrades to a clear error at the fundamentals
-step and leaves everything else working.
+**FactSet content is cited, never redistributed.** Vendor extracts land in
+`data/raw/factset/` and vendor-derived datasets in `data/private/`, both excluded from
+version control. Figures derived from them appear in the reports with the source cited,
+as any research note cites a data vendor.
+
+Before relying on the FactSet path, settle entitlement and the response schema in one
+cheap call:
+
+```bash
+Rscript analysis/00_probe_factset.R
+```
+
+It reports whether the credentials authenticate (401) as distinct from whether the
+account is entitled (403), prints the field names the endpoints actually return, and
+confirms the identifier convention in `config/assets.yml`.
 
 Credentials are read from `~/.secrets/api.env` first, then from a project-local `.env`,
 which takes precedence. Copy `.env.example` to `.env` to configure. Neither file is ever
