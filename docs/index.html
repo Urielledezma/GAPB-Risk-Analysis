@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Análisis de riesgo de mercado – Análisis de Riesgo · GAPB</title>
+<title>Análisis de Riesgo · GAPB</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -75,7 +75,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -134,7 +134,19 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#estructura-del-análisis" id="toc-estructura-del-análisis" class="nav-link active" data-scroll-target="#estructura-del-análisis"><span class="header-section-number">1</span> Estructura del análisis</a></li>
+  <li><a href="#universo-analizado" id="toc-universo-analizado" class="nav-link" data-scroll-target="#universo-analizado"><span class="header-section-number">2</span> Universo analizado</a></li>
+  <li><a href="#cobertura-de-datos" id="toc-cobertura-de-datos" class="nav-link" data-scroll-target="#cobertura-de-datos"><span class="header-section-number">3</span> Cobertura de datos</a></li>
+  <li><a href="#procedencia-de-los-datos" id="toc-procedencia-de-los-datos" class="nav-link" data-scroll-target="#procedencia-de-los-datos"><span class="header-section-number">4</span> Procedencia de los datos</a></li>
+  <li><a href="#nota-metodológica" id="toc-nota-metodológica" class="nav-link" data-scroll-target="#nota-metodológica"><span class="header-section-number">5</span> Nota metodológica</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/Analisis-de-Riesgo/blob/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -165,8 +177,8 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Este sitio reúne el análisis de riesgo de mercado de <strong>Grupo Aeroportuario del Pacífico</strong> y de una cartera de seis emisoras de la Bolsa Mexicana de Valores. El trabajo avanza en cinco etapas, de los fundamentos del emisor a un modelo de Valor en Riesgo sometido a <em>backtesting</em>.</p>
-<section id="estructura-del-análisis" class="level2">
-<h2 class="anchored" data-anchor-id="estructura-del-análisis">Estructura del análisis</h2>
+<section id="estructura-del-análisis" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="estructura-del-análisis"><span class="header-section-number">1</span> Estructura del análisis</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -198,8 +210,8 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="universo-analizado" class="level2">
-<h2 class="anchored" data-anchor-id="universo-analizado">Universo analizado</h2>
+<section id="universo-analizado" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="universo-analizado"><span class="header-section-number">2</span> Universo analizado</h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -260,8 +272,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
-<section id="cobertura-de-datos" class="level2">
-<h2 class="anchored" data-anchor-id="cobertura-de-datos">Cobertura de datos</h2>
+<section id="cobertura-de-datos" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="cobertura-de-datos"><span class="header-section-number">3</span> Cobertura de datos</h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -316,10 +328,74 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
-<section id="nota-metodológica" class="level2">
-<h2 class="anchored" data-anchor-id="nota-metodológica">Nota metodológica</h2>
+<section id="procedencia-de-los-datos" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="procedencia-de-los-datos"><span class="header-section-number">4</span> Procedencia de los datos</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Fuente efectiva de cada serie de precios en este render.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ticker</th>
+<th style="text-align: left;">source</th>
+<th style="text-align: left;">rows</th>
+<th style="text-align: left;">first</th>
+<th style="text-align: left;">last</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ALSEA.MX</td>
+<td style="text-align: left;">yahoo</td>
+<td style="text-align: left;">6,747</td>
+<td style="text-align: left;">2000-01-18</td>
+<td style="text-align: left;">2026-08-21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BBAJIOO.MX</td>
+<td style="text-align: left;">yahoo</td>
+<td style="text-align: left;">2,315</td>
+<td style="text-align: left;">2017-06-08</td>
+<td style="text-align: left;">2026-08-21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GAPB.MX</td>
+<td style="text-align: left;">yahoo</td>
+<td style="text-align: left;">5,153</td>
+<td style="text-align: left;">2006-02-27</td>
+<td style="text-align: left;">2026-08-21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GMEXICOB.MX</td>
+<td style="text-align: left;">yahoo</td>
+<td style="text-align: left;">6,758</td>
+<td style="text-align: left;">2000-01-03</td>
+<td style="text-align: left;">2026-08-21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ORBIA.MX</td>
+<td style="text-align: left;">yahoo</td>
+<td style="text-align: left;">6,758</td>
+<td style="text-align: left;">2000-01-03</td>
+<td style="text-align: left;">2026-08-21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">WALMEX.MX</td>
+<td style="text-align: left;">yahoo</td>
+<td style="text-align: left;">5,976</td>
+<td style="text-align: left;">2003-01-01</td>
+<td style="text-align: left;">2026-08-21</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>La fuente primaria de precios y fundamentales es <strong>FactSet</strong>. Cuando la clave no está disponible o el endpoint no está habilitado, el pipeline recurre a Yahoo Finance / BMV y lo declara explícitamente: la tabla anterior refleja de dónde provino cada serie en este render, no de dónde debería provenir.</p>
+</section>
+<section id="nota-metodológica" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="nota-metodológica"><span class="header-section-number">5</span> Nota metodológica</h2>
 <p>Todo el análisis trabaja con rendimientos logarítmicos, aditivos en el tiempo, lo que hace exacto —y no aproximado— el escalamiento por horizonte de las etapas 03 y 05. Los parámetros de cada modelo se estiman con información disponible hasta el <strong>31 de diciembre de 2025</strong>; 2026 se reserva como periodo de evaluación fuera de muestra.</p>
-<p>Los reportes no consultan ninguna API: leen exclusivamente los datos versionados en <code>data/processed/</code>. Cualquier persona puede clonar el repositorio y reproducir cada cifra sin credenciales.</p>
+<p>Ningún reporte consulta una API durante el render: los scripts de <code>analysis/</code> descargan y escriben, y los reportes únicamente leen. Esa separación es lo que permite que cada cifra sea reproducible a partir de un conjunto de datos fijo en lugar de depender de lo que un proveedor esté sirviendo el día de la reconstrucción.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -332,7 +408,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Precios diarios y volumen: Yahoo Finance / Bolsa Mexicana de Valores. Crecimiento anual del PIB real de México: Banco Mundial. Fundamentales corporativos: FactSet, citado como fuente sin redistribución del contenido.</p>
+<p>Precios diarios, volumen y fundamentales corporativos: <strong>FactSet</strong>, citado como fuente sin redistribución del contenido. Fuente de respaldo para precios: Yahoo Finance / Bolsa Mexicana de Valores. Crecimiento anual del PIB real de México: Banco Mundial.</p>
 </div>
 </div>
 </div>
@@ -754,7 +830,7 @@ ul.task-list li input[type="checkbox"] {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/Analisis-de-Riesgo/blob/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/Analisis-de-Riesgo/blob/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Fuentes de mercado: Yahoo Finance / BMV · Macro: Banco Mundial</p>
 </div>
