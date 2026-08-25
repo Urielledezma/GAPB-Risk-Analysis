@@ -10,14 +10,21 @@ source(file.path("R", "utils_io.R"))
 source_lib()
 
 main <- function() {
-  prices <- read_processed("prices_daily")
+  prices <- read_dataset("prices_daily")
   validate_prices(prices)
 
   returns <- compute_log_returns(prices)
   # Eight decimals on a daily return near 1e-2 is well past any precision this
   # analysis can claim, and keeps the committed file small.
   returns$log_return <- round(returns$log_return, 8)
-  write_processed(returns, "returns_daily")
+
+  # The derived series inherits the licence of the prices it came from, and
+  # compute_log_returns() has already carried the per-row source across.
+  if ("source" %in% names(returns) && any(returns$source == "factset")) {
+    write_private(returns, "returns_daily")
+  } else {
+    write_processed(returns, "returns_daily")
+  }
 
   summary_by_ticker <- do.call(
     rbind,

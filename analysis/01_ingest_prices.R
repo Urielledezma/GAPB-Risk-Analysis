@@ -1,37 +1,61 @@
 # 01 — Daily price ingestion
 #
-# Downloads the full quotation history for every asset in config/assets.yml and
-# writes the validated panel to data/processed/prices_daily.csv.
+# Runs the source ladder in R/data_sources.R: FactSet first, the public source
+# only if FactSet cannot answer. Where the result is written depends on where it
+# came from, and that routing is the whole point of this script:
 #
-# Requires a network connection. Requires no credentials.
+#   any FactSet rows  ->  data/private/  (untracked, licence-restricted)
+#   public rows only  ->  data/processed/ (tracked, the reproducibility floor)
 #
-#   Rscript analysis/01_ingest_prices.R
+# By default it fetches the subject asset alone, which is all stages 01 to 04
+# read. Pass the full universe when preparing stage 05:
+#
+#   Rscript analysis/01_ingest_prices.R              # GAPB only
+#   Rscript analysis/01_ingest_prices.R --universe   # all six, for stage 05
 
 source(file.path("R", "utils_io.R"))
 source_lib()
 
 library(quantmod)
+library(httr2)
 
-main <- function() {
-  message("Universe: ", paste(tickers(), collapse = ", "))
-  message("History from: ", assets_config()$history_start)
+main <- function(symbols = NULL) {
+  load_env()
 
-  prices <- fetch_universe_prices()
+  if (is.null(symbols)) {
+    symbols <- if ("--universe" %in% commandArgs(trailingOnly = TRUE)) {
+      tickers()
+    } else {
+      subject()
+    }
+  }
+
+  message("Requesting: ", paste(symbols, collapse = ", "))
+  message(
+    "Source ladder: ", assets_config()$sources$primary,
+    " then ", assets_config()$sources$fallback
+  )
+
+  prices <- fetch_prices_for(symbols)
   prices <- drop_unusable_prices(prices)
   prices <- round_prices(prices)
   validate_prices(prices)
 
-  write_processed(prices, "prices_daily")
+  message("")
+  manifest <- record_provenance(prices)
 
-  coverage <- stats::aggregate(
-    date ~ ticker,
-    data = prices,
-    FUN = function(d) paste(min(d), "to", max(d))
-  )
-  names(coverage) <- c("ticker", "coverage")
-  print(coverage, row.names = FALSE)
+  # Licence, not processing stage, decides the destination.
+  if (any(prices$source == "factset")) {
+    write_private(prices, "prices_daily")
+    message(
+      "\nVendor data is not committed. The tracked snapshot in data/processed/ ",
+      "is refreshed separately by analysis/05_refresh_public_snapshot.R."
+    )
+  } else {
+    write_processed(prices, "prices_daily")
+  }
 
-  invisible(prices)
+  invisible(list(prices = prices, provenance = manifest))
 }
 
 main()
