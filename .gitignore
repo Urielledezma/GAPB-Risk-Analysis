@@ -26,12 +26,20 @@ renv/python/
 /paper/*_files/
 
 # --- Data --------------------------------------------------------------------
-# data/raw/ holds vendor pulls (FactSet among them) whose redistribution is
-# restricted. It never leaves this machine. data/processed/ IS tracked: it is
-# derived exclusively from public sources and is what makes the reports
-# reproducible without credentials.
+# Three tiers, and the tier is decided by the licence of the source, not by how
+# far the data has been processed.
+#
+#   data/raw/       untouched vendor extracts. Never tracked.
+#   data/private/   datasets DERIVED from a vendor whose licence forbids
+#                   redistribution. Never tracked. This is what the reports read
+#                   when a FactSet key is present.
+#   data/processed/ datasets derived exclusively from public sources. TRACKED,
+#                   deliberately, so the repository renders for anyone.
 data/raw/*
 !data/raw/.gitkeep
+data/private/*
+!data/private/.gitkeep
+!data/private/README.md
 
 # --- Generated artefacts -----------------------------------------------------
 outputs/*

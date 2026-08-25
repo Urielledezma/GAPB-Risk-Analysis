@@ -5,15 +5,36 @@
 # 05 and the reports all read from this file. Repointing the pipeline at a
 # different universe is an edit here and nothing more.
 #
+# TWO SCOPES, and the distinction matters:
+#
+#   subject   GAPB.MX. The issuer under analysis. Stages 01 through 04 -- the
+#             business profile, the price and event history, the return
+#             distribution and the variance models -- concern this asset and no
+#             other. Every report keys off subject().
+#
+#   universe  Six issuers. Stage 05 builds a portfolio holding an equal amount
+#             in each and needs the covariance between them for the parametric
+#             VaR and the minimum-VaR optimisation. The other five exist for
+#             that stage alone; nothing before it touches them.
+#
 # factset_id values follow FactSet's <ticker>-<region> convention and are
-# provisional until confirmed against an authenticated call. Yahoo symbols are
-# the operative ones -- they drive every committed dataset.
+# provisional until confirmed by analysis/00_probe_factset.R against an
+# entitled key. The yahoo symbols drive the fallback path only.
 
-subject: GAPB.MX # Primary asset. Stages 01-04 analyse this issuer.
+subject: GAPB.MX
 
 history_start: "2000-01-01" # Loaders take whatever exists from this date onward.
 currency: MXN
 exchange: BMV
+
+# Source ladder for market data. FactSet is the live path; the public source is
+# a fallback for an unentitled key or an outage, never a preference.
+sources:
+  primary: factset
+  fallback: yahoo
+  # Fail loudly instead of silently falling back. Set to true only when the
+  # fallback is genuinely acceptable for the run at hand.
+  allow_fallback: true
 
 universe:
   - ticker: GAPB.MX

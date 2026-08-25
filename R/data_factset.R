@@ -179,40 +179,108 @@ fetch_factset_fundamentals <- function(ids = asset_meta()$factset_id,
   out
 }
 
+# Field-name candidates for the Prices response.
+#
+# The parser reads whichever of these the API actually returns rather than
+# assuming one shape. FactSet's documented field names have moved between
+# endpoint versions, and guessing wrong here produces a column of NA that looks
+# like missing data instead of a mapping error. analysis/00_probe_factset.R
+# prints the real keys; once they are confirmed, narrow these lists.
+FACTSET_PRICE_FIELDS <- list(
+  date = c("date", "priceDate"),
+  close = c("price", "priceClose", "closePrice"),
+  open = c("priceOpen", "openPrice", "open"),
+  high = c("priceHigh", "highPrice", "high"),
+  low = c("priceLow", "lowPrice", "low"),
+  volume = c("volume", "tradeVolume"),
+  currency = c("currency", "currencyCode"),
+  id = c("requestId", "fsymId", "id")
+)
+
+#' Pull the first field present from a response row.
+#'
+#' @param row A parsed JSON object.
+#' @param candidates Field names to try, in order of preference.
+#' @param default Value when none is present.
+#' @return The value found, or the default.
+pick_field <- function(row, candidates, default = NA) {
+  for (name in candidates) {
+    if (!is.null(row[[name]])) {
+      return(row[[name]])
+    }
+  }
+  default
+}
+
 #' Daily prices from FactSet.
 #'
-#' Not used by the committed datasets -- those come from public sources so the
-#' repository reproduces without credentials. This exists as a cross-check on
-#' the public price series and for universes Yahoo does not cover.
+#' The primary market data path. Returns the same tidy schema as the public
+#' loader so the two are interchangeable downstream, with a source column so
+#' every row records where it came from.
+#'
+#' A caveat that matters for every return in this project: `adjust` controls
+#' split and spin-off adjustment, not dividend adjustment. Until the probe
+#' confirms which series the entitled endpoint returns, `adjusted` mirrors the
+#' close and the total-return treatment is an open question rather than a
+#' settled one. Getting this wrong understates long-horizon returns without
+#' changing volatility much, which makes it hard to notice.
 #'
 #' @param ids FactSet identifiers.
+#' @param tickers_out Tickers to label the rows with, aligned with ids.
 #' @param start Start date.
 #' @param end End date.
-#' @return A tidy data frame: id, date, price, currency.
+#' @param adjust Split and spin-off adjustment mode.
+#' @return A tidy data frame matching the public loader's schema.
 fetch_factset_prices <- function(ids = asset_meta()$factset_id,
+                                 tickers_out = asset_meta()$ticker,
                                  start = assets_config()$history_start,
-                                 end = format(Sys.Date(), "%Y-%m-%d")) {
+                                 end = format(Sys.Date(), "%Y-%m-%d"),
+                                 adjust = "SPLIT_SPINOFF") {
   body <- factset_get(
     c("factset-prices", "v1", "prices"),
     list(
       ids = paste(ids, collapse = ","),
       startDate = format(as.Date(start), "%Y-%m-%d"),
       endDate = format(as.Date(end), "%Y-%m-%d"),
-      frequency = "D"
+      frequency = "D",
+      adjust = adjust
     )
   )
 
-  rows <- lapply(body$data, function(row) {
+  observations <- body$data
+  if (is.null(observations) || length(observations) == 0) {
+    stop(
+      "FactSet returned no prices for ", paste(ids, collapse = ", "), ".\n",
+      "  Confirm the identifiers in config/assets.yml with ",
+      "analysis/00_probe_factset.R.",
+      call. = FALSE
+    )
+  }
+
+  id_to_ticker <- stats::setNames(tickers_out, ids)
+
+  rows <- lapply(observations, function(row) {
+    id <- as.character(pick_field(row, FACTSET_PRICE_FIELDS$id, NA_character_))
+    close <- as.numeric(pick_field(row, FACTSET_PRICE_FIELDS$close, NA_real_))
+
     data.frame(
-      id = row$requestId %||% NA_character_,
-      date = as.Date(row$date),
-      price = if (is.null(row$price)) NA_real_ else as.numeric(row$price),
-      currency = row$currency %||% NA_character_,
+      date = as.Date(substr(as.character(
+        pick_field(row, FACTSET_PRICE_FIELDS$date, NA_character_)
+      ), 1, 10)),
+      ticker = unname(id_to_ticker[id]) %||% id,
+      open = as.numeric(pick_field(row, FACTSET_PRICE_FIELDS$open, NA_real_)),
+      high = as.numeric(pick_field(row, FACTSET_PRICE_FIELDS$high, NA_real_)),
+      low = as.numeric(pick_field(row, FACTSET_PRICE_FIELDS$low, NA_real_)),
+      close = close,
+      adjusted = close,
+      volume = as.numeric(pick_field(row, FACTSET_PRICE_FIELDS$volume, NA_real_)),
+      source = "factset",
       stringsAsFactors = FALSE
     )
   })
 
   out <- do.call(rbind, rows)
+  out <- out[!is.na(out$date), ]
   write_raw(out, "factset", "prices.csv")
-  out[order(out$id, out$date), ]
+  out[order(out$ticker, out$date), ]
 }

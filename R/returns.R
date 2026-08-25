@@ -26,12 +26,18 @@ compute_log_returns <- function(prices, price_col = params()$conventions$price_f
     if (length(price) < 2) {
       return(NULL)
     }
-    data.frame(
+    out <- data.frame(
       date = one$date[-1],
       ticker = one$ticker[-1],
       log_return = diff(log(price)),
       stringsAsFactors = FALSE
     )
+    # Provenance travels with the derived series: a return computed from vendor
+    # prices is vendor-derived and carries the same redistribution restriction.
+    if ("source" %in% names(one)) {
+      out$source <- one$source[-1]
+    }
+    out
   })
 
   out <- do.call(rbind, Filter(Negate(is.null), rows))

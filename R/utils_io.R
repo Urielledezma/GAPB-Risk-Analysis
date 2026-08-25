@@ -115,6 +115,69 @@ read_processed <- function(name, date_cols = "date") {
   data
 }
 
+#' Write a vendor-derived dataset to data/private/.
+#'
+#' Same shape as write_processed(), different destination and different rules.
+#' data/private/ is excluded from version control because what lands there is
+#' derived from a source whose licence forbids redistribution. It is analysis
+#' output, not a raw extract, and it is what the reports read when it exists.
+#'
+#' @param data A data frame.
+#' @param name File name, with or without the .csv extension.
+#' @return Invisibly, the path written.
+write_private <- function(data, name) {
+  stopifnot(is.data.frame(data))
+  if (!grepl("\\.csv$", name)) {
+    name <- paste0(name, ".csv")
+  }
+  path <- proj_path("data", "private", name)
+  ensure_dir(dirname(path))
+  utils::write.csv(data, path, row.names = FALSE, fileEncoding = "UTF-8", na = "")
+  message("Wrote ", nrow(data), " rows to data/private/", name, " (untracked)")
+  invisible(path)
+}
+
+#' Read a dataset, preferring the vendor-derived copy.
+#'
+#' This is the function the reports call, and it encodes the whole arrangement
+#' in four lines: if a FactSet-derived dataset exists locally it wins; otherwise
+#' the committed public snapshot is used. A reader with a key sees vendor
+#' numbers, a reader without one still sees a rendered report, and neither has
+#' to configure anything.
+#'
+#' @param name File name, with or without the .csv extension.
+#' @param date_cols Columns to parse as Date.
+#' @param quiet Suppress the note about which copy was used.
+#' @return A data frame, with a "source_file" attribute recording the origin.
+read_dataset <- function(name, date_cols = "date", quiet = FALSE) {
+  if (!grepl("\\.csv$", name)) {
+    name <- paste0(name, ".csv")
+  }
+
+  private_path <- proj_path("data", "private", name)
+  if (file.exists(private_path)) {
+    data <- utils::read.csv(private_path, stringsAsFactors = FALSE, encoding = "UTF-8")
+    for (column in intersect(date_cols, names(data))) {
+      data[[column]] <- as.Date(data[[column]])
+    }
+    if (!quiet) {
+      message("Using data/private/", name, " (vendor-derived).")
+    }
+    attr(data, "source_file") <- file.path("data", "private", name)
+    return(data)
+  }
+
+  data <- read_processed(name, date_cols = date_cols)
+  if (!quiet) {
+    message(
+      "Using data/processed/", name, " (public snapshot). ",
+      "Run analysis/01_ingest_prices.R with a FactSet key for vendor data."
+    )
+  }
+  attr(data, "source_file") <- file.path("data", "processed", name)
+  data
+}
+
 #' Write an untouched vendor extract to data/raw/.
 #'
 #' data/raw/ is excluded from version control. Anything written here stays on

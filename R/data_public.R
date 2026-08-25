@@ -1,8 +1,13 @@
-# Public market data.
+# Public market data -- the fallback source.
 #
-# Daily OHLCV for the universe, from Yahoo Finance. No credentials required,
-# which is the point: everything committed under data/processed/ is derived from
-# this source, so the reports reproduce for anyone who clones the repository.
+# Daily OHLCV from Yahoo Finance. FactSet is the primary path (see
+# R/data_factset.R and R/data_sources.R); this loader runs when a key is absent,
+# unentitled, or the vendor is unreachable.
+#
+# It is not merely a spare tyre. Because it needs no credentials, it is also the
+# only source whose output can be committed to a public repository, which makes
+# it the reproducibility floor: anyone can clone the project and render every
+# report, and the FactSet numbers override it wherever a key is present.
 #
 # The adjusted close is the series every return calculation uses. The unadjusted
 # close is carried alongside it so that price-level narratives can quote the
@@ -39,6 +44,7 @@ fetch_prices_yahoo <- function(ticker,
     close = as.numeric(quantmod::Cl(series)),
     adjusted = as.numeric(quantmod::Ad(series)),
     volume = as.numeric(quantmod::Vo(series)),
+    source = "yahoo",
     stringsAsFactors = FALSE
   )
 }
