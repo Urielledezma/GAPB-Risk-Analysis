@@ -57,7 +57,10 @@ probe_endpoint <- function(label, path, query) {
 main <- function() {
   load_env()
 
-  cat("Credential status (names and lengths only):\n")
+  cat("Credential files searched:\n")
+  print(env_paths(), row.names = FALSE)
+
+  cat("\nCredential status (names and lengths only):\n")
   print(env_status(c("FACTSET_USERNAME_SERIAL", "FACTSET_API_KEY")), row.names = FALSE)
 
   if (!all(env_status(c("FACTSET_USERNAME_SERIAL", "FACTSET_API_KEY"))$set)) {

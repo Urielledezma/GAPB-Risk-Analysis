@@ -150,9 +150,20 @@ It reports whether the credentials authenticate (401) as distinct from whether t
 account is entitled (403), prints the field names the endpoints actually return, and
 confirms the identifier convention in `config/assets.yml`.
 
-Credentials are read from `~/.secrets/api.env` first, then from a project-local `.env`,
-which takes precedence. Copy `.env.example` to `.env` to configure. Neither file is ever
-committed.
+Credentials are read from a machine-wide `.secrets/api.env` first, then from a
+project-local `.env`, which takes precedence. Copy `.env.example` to `.env` to configure;
+neither file is ever committed. To see which paths are searched on your machine and
+whether they were found:
+
+```r
+source("R/utils_io.R"); source_lib(); env_paths()
+```
+
+The home directory is resolved from `USERPROFILE`/`HOME` rather than through `~`. On
+Windows, R expands the tilde via `R_USER`, which commonly points at a OneDrive-synced
+Documents folder — so `~/.secrets` would both miss the real file and place any secret
+written there into cloud storage. A unit test asserts the resolved path is not inside a
+synced folder.
 
 ---
 

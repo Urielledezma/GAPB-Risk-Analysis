@@ -18,6 +18,8 @@ library(httr2)
 main <- function() {
   load_env()
 
+  print(env_paths(), row.names = FALSE)
+
   status <- env_status(c("FACTSET_USERNAME_SERIAL", "FACTSET_API_KEY"))
   print(status, row.names = FALSE)
 
