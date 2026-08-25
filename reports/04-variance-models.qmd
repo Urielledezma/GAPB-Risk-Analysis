@@ -12,7 +12,7 @@ source("_setup.R")
 
 ```{r data}
 #| include: false
-returns <- read_processed("returns_daily")
+returns <- read_dataset("returns_daily")
 subject_returns <- returns[returns$ticker == subject(), ]
 
 estimation <- in_sample(subject_returns)

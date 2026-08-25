@@ -1,4 +1,4 @@
----
+﻿---
 title: "Análisis de riesgo de mercado"
 subtitle: "Grupo Aeroportuario del Pacífico, Serie B (BMV: GAPB)"
 date: last-modified
@@ -41,7 +41,7 @@ report_table(
 
 ```{r coverage}
 #| echo: false
-prices <- read_processed("prices_daily")
+prices <- read_dataset("prices_daily")
 coverage <- do.call(rbind, lapply(split(prices, prices$ticker), function(one) {
   data.frame(
     ticker = unique(one$ticker),
@@ -55,6 +55,30 @@ rownames(coverage) <- NULL
 report_table(coverage, caption = "Historia de cotización disponible por emisora.")
 ```
 
+## Procedencia de los datos
+
+```{r provenance}
+#| echo: false
+manifest_path <- sub("prices_daily", "prices_provenance", attr(prices, "source_file"))
+if (file.exists(proj_path(manifest_path))) {
+  manifest <- utils::read.csv(proj_path(manifest_path), stringsAsFactors = FALSE)
+  report_table(
+    manifest[, c("ticker", "source", "rows", "first", "last")],
+    caption = "Fuente efectiva de cada serie de precios en este render."
+  )
+} else {
+  report_table(
+    unique(prices[, c("ticker", "source")]),
+    caption = "Fuente efectiva de cada serie de precios en este render."
+  )
+}
+```
+
+La fuente primaria de precios y fundamentales es **FactSet**. Cuando la clave no
+está disponible o el endpoint no está habilitado, el pipeline recurre a Yahoo
+Finance / BMV y lo declara explícitamente: la tabla anterior refleja de dónde
+provino cada serie en este render, no de dónde debería provenir.
+
 ## Nota metodológica
 
 Todo el análisis trabaja con rendimientos logarítmicos, aditivos en el tiempo, lo
@@ -63,15 +87,17 @@ y 05. Los parámetros de cada modelo se estiman con información disponible hast
 el **31 de diciembre de 2025**; 2026 se reserva como periodo de evaluación fuera
 de muestra.
 
-Los reportes no consultan ninguna API: leen exclusivamente los datos versionados
-en `data/processed/`. Cualquier persona puede clonar el repositorio y reproducir
-cada cifra sin credenciales.
+Ningún reporte consulta una API durante el render: los scripts de `analysis/`
+descargan y escriben, y los reportes únicamente leen. Esa separación es lo que
+permite que cada cifra sea reproducible a partir de un conjunto de datos fijo en
+lugar de depender de lo que un proveedor esté sirviendo el día de la
+reconstrucción.
 
 ::: {.callout-note collapse="true"}
 ## Fuentes de información
 
-Precios diarios y volumen: Yahoo Finance / Bolsa Mexicana de Valores.
-Crecimiento anual del PIB real de México: Banco Mundial.
-Fundamentales corporativos: FactSet, citado como fuente sin redistribución del
-contenido.
+Precios diarios, volumen y fundamentales corporativos: **FactSet**, citado como
+fuente sin redistribución del contenido. Fuente de respaldo para precios: Yahoo
+Finance / Bolsa Mexicana de Valores. Crecimiento anual del PIB real de México:
+Banco Mundial.
 :::

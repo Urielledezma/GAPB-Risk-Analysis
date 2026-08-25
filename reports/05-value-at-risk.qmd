@@ -12,8 +12,8 @@ source("_setup.R")
 
 ```{r data}
 #| include: false
-prices <- read_processed("prices_daily")
-returns <- read_processed("returns_daily")
+prices <- read_dataset("prices_daily")
+returns <- read_dataset("returns_daily")
 
 matrix_returns <- returns_matrix(returns)
 portfolio <- build_portfolio(prices)

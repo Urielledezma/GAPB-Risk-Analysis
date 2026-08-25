@@ -9,10 +9,12 @@ authors:
   - given-names: Francisco Uriel
     family-names: Ledezma Chávez
     email: urielledezma7@gmail.com
+  - given-names: Jorge Isaac
+    family-names: López Ávila
   - given-names: Juan Pablo
-    family-names: Morán
-  - given-names: Isacc
-    family-names: Ávila
+    family-names: Morán Errejón
+  - given-names: Santiago
+    family-names: Álvarez Tostado Estrada
 repository-code: "https://github.com/Urielledezma/Analisis-de-Riesgo"
 url: "https://urielledezma.github.io/Analisis-de-Riesgo/"
 abstract: >-

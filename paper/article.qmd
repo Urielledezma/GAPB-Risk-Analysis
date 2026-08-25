@@ -2,9 +2,9 @@
 title: "Riesgo de mercado en una concesionaria aeroportuaria: precio, volatilidad y Valor en Riesgo de GAPB, 2006-2026"
 author:
   - name: Francisco Uriel Ledezma Chávez
-  - name: Juan Pablo Morán
-  - name: Isacc Ávila
-  # - name: <pendiente de confirmar>
+  - name: Jorge Isaac López Ávila
+  - name: Juan Pablo Morán Errejón
+  - name: Santiago Álvarez Tostado Estrada
 date: last-modified
 date-format: "D [de] MMMM [de] YYYY"
 lang: es
@@ -74,8 +74,8 @@ coherentes de riesgo [@artzner1999].
 > *Fuentes, periodo analizado, frecuencia y variables consideradas.*
 
 ```{r data-summary}
-prices <- read_processed("prices_daily")
-returns <- read_processed("returns_daily")
+prices <- read_dataset("prices_daily")
+returns <- read_dataset("returns_daily")
 subject_prices <- prices[prices$ticker == subject(), ]
 
 knitr::kable(
