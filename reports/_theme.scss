@@ -1,0 +1,98 @@
+/*-- scss:defaults --*/
+
+// Site chrome, matched to the chart ink tokens in R/plots.R so the rendered
+// figures sit on the same surface as the prose around them. The site commits to
+// a single light surface: the figures are static images, and a dark toggle
+// would leave them light-on-dark.
+
+$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", sans-serif !default;
+$font-family-monospace: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace !default;
+
+$body-bg: #ffffff;
+$body-color: #0b0b0b;
+$link-color: #2a78d6;
+
+$primary: #2a78d6;
+$secondary: #52514e;
+$muted: #898781;
+$gridline: #e1e0d9;
+$baseline: #c3c2b7;
+
+$font-size-root: 16px;
+$toc-color: #52514e;
+$toc-active-border: #2a78d6;
+
+/*-- scss:rules --*/
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: #0b0b0b;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  border-bottom: 1px solid $gridline;
+  padding-bottom: 0.3rem;
+  margin-top: 2.5rem;
+}
+
+// Tables carry the relief the chart palette's contrast warning obligates, so
+// they have to be genuinely readable rather than an afterthought.
+table {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.92rem;
+}
+
+thead th {
+  border-bottom: 1.5px solid $baseline;
+  color: #0b0b0b;
+  font-weight: 600;
+}
+
+tbody td {
+  border-top: 1px solid $gridline;
+}
+
+// Wide tables and figures scroll inside their own container. The page body
+// never scrolls horizontally.
+.table-responsive,
+.cell-output-display {
+  overflow-x: auto;
+}
+
+figure figcaption,
+.figure-caption {
+  color: $muted;
+  font-size: 0.85rem;
+}
+
+blockquote {
+  border-left: 3px solid $primary;
+  color: $secondary;
+  padding-left: 1rem;
+}
+
+code {
+  color: #184f95;
+  background: #f6f6f4;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+}
+
+// Equations are load-bearing in stages 03 to 05 and should not be cramped.
+.math.display {
+  margin: 1.4rem 0;
+  overflow-x: auto;
+}

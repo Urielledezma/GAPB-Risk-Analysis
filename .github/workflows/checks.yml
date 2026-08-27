@@ -1,0 +1,82 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    # Deliberately narrow. This job installs only what the unit tests need --
+    # testthat, yaml, and the two packages the statistics are cross-checked
+    # against -- rather than restoring the full lockfile. rugarch and nloptr
+    # compile from source and would turn a two-minute check into a fifteen-
+    # minute one; the tests that need them skip cleanly when they are absent.
+    # Rendering the site in CI waits until there is a reason for it.
+    runs-on: ubuntu-latest
+    name: unit tests
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::testthat
+            any::yaml
+            any::moments
+            any::tseries
+
+      - name: Run unit tests
+        run: Rscript tests/testthat.R
+
+  lint:
+    runs-on: ubuntu-latest
+    name: lint
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: any::lintr
+
+      - name: Lint the analytics library
+        run: Rscript -e 'lintr::lint_dir("R")'
+        env:
+          LINTR_ERROR_ON_LINT: true
+
+  secrets:
+    runs-on: ubuntu-latest
+    name: no committed secrets
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # A .env in the tree is the failure mode with real consequences, and it
+      # costs nothing to check for on every push.
+      - name: Fail if a credential file is tracked
+        run: |
+          if git ls-files --error-unmatch .env >/dev/null 2>&1; then
+            echo "::error::.env is tracked. Remove it from the index and rotate the credentials."
+            exit 1
+          fi
+          if git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v '\.env\.example$'; then
+            echo "::error::A credential file is tracked."
+            exit 1
+          fi
+          echo "No credential files tracked."

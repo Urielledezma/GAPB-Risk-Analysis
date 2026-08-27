@@ -1,0 +1,108 @@
+# Asset universe.
+#
+# The single source of truth for every ticker in the project. No symbol is
+# hard-coded anywhere else: ingest scripts, the portfolio construction in stage
+# 05 and the reports all read from this file. Repointing the pipeline at a
+# different universe is an edit here and nothing more.
+#
+# TWO SCOPES, and the distinction matters:
+#
+#   subject   GAPB.MX. The issuer under analysis. Stages 01 through 04 -- the
+#             business profile, the price and event history, the return
+#             distribution and the variance models -- concern this asset and no
+#             other. Every report keys off subject().
+#
+#   universe  Six issuers. Stage 05 builds a portfolio holding an equal amount
+#             in each and needs the covariance between them for the parametric
+#             VaR and the minimum-VaR optimisation. The other five exist for
+#             that stage alone; nothing before it touches them.
+#
+# factset_id values follow FactSet's <ticker>-<region> convention and are
+# provisional until confirmed by analysis/00_probe_factset.R against an
+# entitled key. The yahoo symbols drive the fallback path only.
+
+subject: GAPB.MX
+
+history_start: "2000-01-01" # Loaders take whatever exists from this date onward.
+currency: MXN
+exchange: BMV
+
+# Source ladder for market data. FactSet is the live path; the public source is
+# a fallback for an unentitled key or an outage, never a preference.
+sources:
+  primary: factset
+  fallback: yahoo
+  # Fail loudly instead of silently falling back. Set to true only when the
+  # fallback is genuinely acceptable for the run at hand.
+  allow_fallback: true
+
+universe:
+  - ticker: GAPB.MX
+    name: Grupo Aeroportuario del Pacífico, S.A.B. de C.V.
+    series: B
+    sector: Industrials
+    industry: Transportation Infrastructure
+    factset_id: GAPB-MX
+
+  - ticker: WALMEX.MX
+    name: Wal-Mart de México, S.A.B. de C.V.
+    series: "*"
+    sector: Consumer Staples
+    industry: Consumer Staples Distribution & Retail
+    factset_id: WALMEX-MX
+
+  - ticker: GMEXICOB.MX
+    name: Grupo México, S.A.B. de C.V.
+    series: B
+    sector: Materials
+    industry: Metals & Mining
+    factset_id: GMEXICOB-MX
+
+  - ticker: ORBIA.MX
+    name: Orbia Advance Corporation, S.A.B. de C.V.
+    series: "*"
+    sector: Materials
+    industry: Chemicals
+    factset_id: ORBIA-MX
+
+  - ticker: ALSEA.MX
+    name: Alsea, S.A.B. de C.V.
+    series: "*"
+    sector: Consumer Discretionary
+    industry: Hotels, Restaurants & Leisure
+    factset_id: ALSEA-MX
+
+  - ticker: BBAJIOO.MX
+    name: Banco del Bajío, S.A., Institución de Banca Múltiple
+    series: O
+    sector: Financials
+    industry: Banks
+    factset_id: BBAJIOO-MX
+
+# Macroeconomic series used in stage 02.
+#
+# The annual GDP series comes from the World Bank, which needs no token, so the
+# stage 02 GDP comparison reproduces for anyone. INEGI is the optional
+# higher-resolution source for the quarterly series and requires a free token.
+macro:
+  gdp_annual:
+    provider: worldbank
+    # Real GDP growth, annual %, Mexico.
+    country: MEX
+    indicator: NY.GDP.MKTP.KD.ZG
+    label: Crecimiento anual del PIB real de México
+  gdp_quarterly:
+    provider: inegi
+    # Real GDP, seasonally adjusted, quarterly (INEGI BIE indicator id).
+    # Provisional: confirm against the BIE catalogue before relying on it.
+    indicator: "494262"
+    label: PIB real trimestral de México
+  reference_rate:
+    provider: banxico
+    # Overnight interbank funding rate (Banxico SIE series id).
+    series: SF61745
+    label: Tasa objetivo Banco de México
+  fx_usdmxn:
+    provider: banxico
+    series: SF43718
+    label: Tipo de cambio FIX USD/MXN

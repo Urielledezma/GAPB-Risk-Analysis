@@ -1,0 +1,226 @@
+﻿---
+title: "Valor en Riesgo y *Expected Shortfall*"
+subtitle: "Cartera de seis emisoras: estimación, backtesting y optimización"
+date: last-modified
+date-format: "D [de] MMMM [de] YYYY"
+---
+
+```{r setup}
+#| include: false
+source("_setup.R")
+```
+
+```{r data}
+#| include: false
+prices <- read_dataset("prices_daily")
+returns <- read_dataset("returns_daily")
+
+matrix_returns <- returns_matrix(returns)
+portfolio <- build_portfolio(prices)
+portfolio_r <- portfolio_returns(matrix_returns, portfolio$weights)
+```
+
+## Introducción
+
+::: {.callout-important title="Pendiente de redacción"}
+Qué se estima y con qué propósito.
+:::
+
+## Construcción de la cartera
+
+La cartera invierte `r fmt_mxn(params()$var$position_mxn)` en cada una de las
+seis emisoras. Son pesos iguales en **monto**, no en número de acciones: las
+seis cotizan a niveles de precio muy distintos y una cartera de cien acciones de
+cada una sería una apuesta concentrada en la más cara.
+
+```{r}
+#| label: tbl-portfolio
+report_table(
+  portfolio$holdings,
+  caption = paste0("Composición inicial al ", portfolio$as_of, ".")
+)
+```
+
+El valor inicial de la cartera es $S_0 =$ `r fmt_mxn(portfolio$value)`.
+
+## VaR no paramétrico: simulación histórica
+
+El cuantil se lee directamente de la distribución empírica, sin suponer ninguna
+forma funcional, de modo que las colas pesadas y la asimetría se arrastran tal
+como la muestra las exhibe.
+
+```{r}
+#| label: tbl-var-hist
+grid <- expand.grid(
+  confidence = params()$var$confidence,
+  horizon = params()$var$horizons_days
+)
+hist_var <- do.call(rbind, lapply(seq_len(nrow(grid)), function(i) {
+  var_historical(portfolio_r, grid$confidence[i], grid$horizon[i], portfolio$value)
+}))
+report_table(hist_var, caption = "VaR por simulación histórica.", digits = 2)
+```
+
+```{r}
+#| label: fig-var
+#| fig-cap: "Distribución de pérdidas y ganancias diarias de la cartera, con el VaR a un día."
+pnl <- portfolio$value * (exp(portfolio_r) - 1)
+cuts <- vapply(params()$var$confidence, function(c) {
+  -var_historical(portfolio_r, c, 1, portfolio$value)$var_currency
+}, numeric(1))
+cut_labels <- data.frame(
+  confidence = paste0(100 * params()$var$confidence, "%"),
+  value = cuts,
+  stringsAsFactors = FALSE
+)
+
+ggplot(data.frame(pnl = pnl), aes(pnl)) +
+  geom_histogram(bins = 100, fill = RISK_PALETTE[1], alpha = 0.7) +
+  geom_vline(
+    data = cut_labels, aes(xintercept = value, colour = confidence),
+    linewidth = 0.6
+  ) +
+  scale_colour_manual(values = unname(RISK_PALETTE[c(2, 4, 6)])) +
+  scale_x_continuous(labels = label_dollar(prefix = "$")) +
+  labs(
+    x = "Pérdida / ganancia diaria (MXN)", y = "Frecuencia",
+    caption = "Líneas verticales: VaR a un día por nivel de confianza."
+  )
+```
+
+## VaR paramétrico
+
+Bajo normalidad, con $\Sigma$ la matriz de covarianzas y $w$ el vector de pesos:
+
+$$
+\sigma_p = \sqrt{w' \Sigma\, w}
+\qquad
+\text{VaR}_{h} = S_0\left(1 - e^{\,z_{1-c}\,\sigma_p\sqrt{h}}\right)
+$$
+
+El escalamiento por $\sqrt{h}$ supone independencia serial: la varianza crece
+linealmente en el tiempo y la desviación estándar con su raíz.
+
+```{r}
+#| label: tbl-var-param
+covariance <- covariance_matrix(matrix_returns)
+sigma_p <- portfolio_sigma(portfolio$weights, covariance)
+
+param_var <- do.call(rbind, lapply(seq_len(nrow(grid)), function(i) {
+  var_parametric(sigma_p, grid$confidence[i], grid$horizon[i], portfolio$value)
+}))
+report_table(param_var, caption = "VaR paramétrico (varianza-covarianza).", digits = 2)
+```
+
+```{r}
+#| label: tbl-cov
+report_table(
+  as.data.frame(round(stats::cov2cor(covariance), 3)),
+  caption = "Matriz de correlaciones de los últimos seis meses."
+)
+```
+
+## Backtesting
+
+Cada día se estima el VaR con la ventana previa únicamente, de modo que la serie
+es lo que el modelo habría reportado ese día. Estimarlo sobre la muestra completa
+y contar excepciones contra esa misma muestra no es un *backtest*.
+
+La prueba de cobertura incondicional de Kupiec contrasta el número observado de
+excepciones contra el esperado:
+
+$$
+LR = -2\ln\frac{(1-p)^{\,n-x}\,p^{\,x}}{(1-\hat\pi)^{\,n-x}\,\hat\pi^{\,x}} \;\sim\; \chi^2_{1}
+$$
+
+```{r}
+#| label: tbl-backtest
+confidence <- 0.99
+rolling_hist <- rolling_var(portfolio_r, confidence, method = "historical")
+rolling_param <- rolling_var(portfolio_r, confidence, method = "parametric")
+
+backtest <- rbind(
+  cbind(metodo = "Histórico", backtest_var(portfolio_r, rolling_hist, confidence)),
+  cbind(metodo = "Paramétrico", backtest_var(portfolio_r, rolling_param, confidence))
+)
+report_table(backtest, caption = "Backtesting del VaR a un día al 99%.")
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+Comparación de excepciones observadas contra esperadas y evaluación del
+desempeño. Demasiadas pocas excepciones reprueban la prueba igual que
+demasiadas: un modelo que nunca se excede no es conservador, está mal calibrado
+y es caro.
+:::
+
+## Optimización de la cartera
+
+```{r}
+#| label: tbl-optimisation
+#| eval: false
+optimal <- optimise_min_var(matrix_returns)
+
+comparison <- compare_allocations(
+  matrix_returns,
+  list(
+    "Pesos iguales" = portfolio$weights,
+    "VaR mínimo" = optimal$weights
+  ),
+  value = portfolio$value
+)
+report_table(comparison, caption = "Cartera equiponderada frente a la de VaR mínimo.", digits = 2)
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+Comparación de composiciones y análisis del cambio en riesgo y diversificación.
+Activar el chunk cuando `nloptr` esté instalado (`renv::restore()`).
+:::
+
+## VaR individual y *Expected Shortfall*
+
+```{r}
+#| label: tbl-individual
+position <- params()$var$position_mxn
+subject_returns <- returns[returns$ticker == subject(), "log_return"]
+
+individual <- var_monte_carlo(
+  subject_returns,
+  confidence = params()$var$monte_carlo$confidence,
+  horizon = 1,
+  value = position
+)
+report_table(
+  individual,
+  caption = paste0("VaR y ES al 99% por Monte Carlo sobre una posición de ", fmt_mxn(position), " en ", subject(), "."),
+  digits = 2
+)
+```
+
+El *Expected Shortfall* es la pérdida promedio condicionada a haber rebasado el
+VaR:
+
+$$
+\text{ES}_c = \mathbb{E}\left[\,L \mid L \ge \text{VaR}_c\,\right]
+$$
+
+Donde el VaR dice cuánto se pierde antes de entrar al peor 1%, el ES dice cuánto
+se pierde dentro de ese 1% — la pregunta que el VaR es estructuralmente incapaz
+de responder.
+
+## Análisis e interpretación
+
+::: {.callout-important title="Pendiente de redacción"}
+- ¿Qué diferencias hay entre el VaR paramétrico y el no paramétrico?
+- ¿Cuál captura mejor los eventos extremos?
+- ¿Cuál es más conservador?
+- ¿Qué implica elegir un modelo que subestima el riesgo?
+- ¿Qué arroja el *backtesting* y qué se concluye de ello?
+:::
+
+## Conclusiones
+
+::: {.callout-important title="Pendiente de redacción"}
+Comparación de metodologías y justificación de cuál se usaría en la práctica.
+:::
+
+## Referencias

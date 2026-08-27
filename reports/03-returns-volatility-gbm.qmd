@@ -1,0 +1,196 @@
+﻿---
+title: "Rendimientos, volatilidad y movimiento browniano geométrico"
+subtitle: "Distribución empírica, pruebas de normalidad y proyección del precio"
+date: last-modified
+date-format: "D [de] MMMM [de] YYYY"
+---
+
+```{r setup}
+#| include: false
+source("_setup.R")
+```
+
+```{r data}
+#| include: false
+prices <- read_dataset("prices_daily")
+returns <- read_dataset("returns_daily")
+
+subject_prices <- prices[prices$ticker == subject(), ]
+subject_returns <- returns[returns$ticker == subject(), ]
+
+sample_returns <- in_sample(subject_returns)
+sample_prices <- in_sample(subject_prices)
+```
+
+## Introducción
+
+::: {.callout-important title="Pendiente de redacción"}
+Propósito del análisis y estructura del documento.
+:::
+
+## Metodología
+
+El rendimiento logarítmico diario se define como
+
+$$
+r_t = \ln\!\left(\frac{S_t}{S_{t-1}}\right)
+$$
+
+Los rendimientos logarítmicos son aditivos en el tiempo, propiedad que hace
+exacto el escalamiento por horizonte. Bajo el supuesto de independencia serial,
+la media y la volatilidad se anualizan como
+
+$$
+\mu_{\text{anual}} = 252\,\mu_{\text{diario}}
+\qquad
+\sigma_{\text{anual}} = \sqrt{252}\,\sigma_{\text{diario}}
+$$
+
+## Rendimientos y volatilidad
+
+### Periodo completo de estimación
+
+```{r}
+#| label: tbl-moments
+report_table(
+  return_moments(sample_returns$log_return),
+  caption = "Momentos de la muestra de estimación (2021-2025)."
+)
+```
+
+### Estimación año por año
+
+```{r}
+#| label: tbl-moments-annual
+report_table(
+  return_moments_by_year(sample_returns),
+  caption = "Media y volatilidad, diarias y anualizadas, por año."
+)
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+¿Hay cambios estructurales? ¿Años con volatilidad particularmente elevada?
+¿Periodos de mayor riesgo, y a qué corresponden?
+:::
+
+## Pruebas estadísticas
+
+### Normalidad
+
+El estadístico de Jarque-Bera contrasta conjuntamente el tercer y cuarto momento
+contra los de una normal:
+
+$$
+JB = \frac{n}{6}\left(S^2 + \frac{(K-3)^2}{4}\right) \;\sim\; \chi^2_{2}
+$$
+
+```{r}
+#| label: tbl-jb
+jb <- jarque_bera_table(list(
+  "Rendimientos" = sample_returns$log_return,
+  "Precio" = sample_prices$adjusted,
+  "Logaritmo del precio" = log(sample_prices$adjusted)
+))
+report_table(jb, caption = "Prueba de Jarque-Bera sobre las tres series.")
+```
+
+```{r}
+#| label: fig-distribution
+#| fig-cap: "Distribución empírica de los rendimientos diarios frente a la normal ajustada."
+mu <- mean(sample_returns$log_return)
+sigma <- sd(sample_returns$log_return)
+
+ggplot(sample_returns, aes(log_return)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 80,
+                 fill = RISK_PALETTE[1], alpha = 0.7) +
+  stat_function(fun = dnorm, args = list(mean = mu, sd = sigma),
+                colour = RISK_PALETTE[2], linewidth = 0.7) +
+  scale_x_continuous(labels = label_percent(accuracy = 1)) +
+  labs(
+    x = "Rendimiento logarítmico diario", y = "Densidad",
+    caption = "Barra: distribución empírica. Línea: normal con la media y la desviación de la muestra."
+  )
+```
+
+### Media igual a cero
+
+$$
+t = \frac{\bar{r}}{s/\sqrt{n}} \;\sim\; t_{\,n-1}
+$$
+
+```{r}
+#| label: tbl-ttest
+report_table(
+  mean_zero_test(sample_returns$log_return),
+  caption = "Prueba t de media diaria igual a cero."
+)
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+Interpretación en términos de eficiencia de mercado. No rechazar la hipótesis de
+media cero es el resultado interesante, no el decepcionante.
+:::
+
+## Modelo con parámetros diarios
+
+El movimiento browniano geométrico postula
+
+$$
+dS_t = \mu S_t\,dt + \sigma S_t\,dW_t
+$$
+
+cuya solución, por el lema de Itô, es
+
+$$
+S_t = S_0 \exp\!\left[\left(\mu - \tfrac{\sigma^2}{2}\right)t + \sigma W_t\right]
+$$
+
+de modo que $\ln S_t$ es normal y $S_t$ es lognormal. El intervalo de confianza
+se construye sobre los cuantiles de la lognormal, no como una banda simétrica
+alrededor de la media: el precio no puede ser negativo y su distribución es
+asimétrica a la derecha.
+
+```{r}
+#| label: tbl-gbm-daily
+gbm <- gbm_params(sample_returns$log_return)
+s0 <- sample_prices$adjusted[which.max(sample_prices$date)]
+
+report_table(
+  gbm_projection(s0, gbm$nu_daily, gbm$sigma_daily, params()$gbm$horizons_days),
+  caption = "Proyección con parámetros diarios. Horizonte en días hábiles."
+)
+```
+
+## Modelo con parámetros anuales
+
+```{r}
+#| label: tbl-gbm-annual
+horizons_years <- params()$gbm$horizons_months / 12
+
+report_table(
+  gbm_projection(s0, gbm$nu_annual, gbm$sigma_annual, horizons_years),
+  caption = "Proyección con parámetros anualizados. Horizonte en años."
+)
+```
+
+::: {.callout-important title="Pendiente de redacción"}
+Cómo se amplifica la incertidumbre al ampliar el horizonte: el ancho del
+intervalo crece con $\sqrt{t}$ mientras el valor esperado crece con $t$.
+:::
+
+## Discusión
+
+::: {.callout-important title="Pendiente de redacción"}
+¿Son normales los rendimientos? ¿Es el precio normal o lognormal? ¿Qué implica
+suponer normalidad al modelar riesgo, y qué riesgos introduce ese supuesto en la
+toma de decisiones? La respuesta debe apoyarse en los estadísticos calculados
+arriba, no en la teoría general.
+:::
+
+## Conclusiones
+
+::: {.callout-important title="Pendiente de redacción"}
+Síntesis de hallazgos y validez del modelo teórico frente a los datos.
+:::
+
+## Referencias

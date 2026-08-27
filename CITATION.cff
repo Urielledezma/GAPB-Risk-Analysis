@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+title: >-
+  Market Risk Analysis of Grupo Aeroportuario del Pacífico (BMV: GAPB),
+  2006-2026
+message: >-
+  If you use this repository or its methodology, please cite it as below.
+type: software
+authors:
+  - given-names: Francisco Uriel
+    family-names: Ledezma Chávez
+    email: urielledezma7@gmail.com
+  - given-names: Jorge Isaac
+    family-names: López Ávila
+  - given-names: Juan Pablo
+    family-names: Morán Errejón
+  - given-names: Santiago
+    family-names: Álvarez Tostado Estrada
+repository-code: "https://github.com/Urielledezma/Analisis-de-Riesgo"
+url: "https://urielledezma.github.io/Analisis-de-Riesgo/"
+abstract: >-
+  An end-to-end market risk research framework in R, applied to Grupo
+  Aeroportuario del Pacífico and to a six-asset Mexican equity portfolio.
+  Covers issuer characterisation, price-path and event attribution, return
+  distribution testing and geometric Brownian motion projection, conditional
+  variance models (moving average, EWMA, data-driven EWMA and ARCH/GARCH), and
+  portfolio Value at Risk and Expected Shortfall with backtesting and
+  minimum-VaR optimisation. The analytics are configuration-driven and reusable
+  against any equity universe.
+keywords:
+  - market risk
+  - value at risk
+  - expected shortfall
+  - conditional volatility
+  - GARCH
+  - geometric Brownian motion
+  - emerging markets
+  - Bolsa Mexicana de Valores
+  - R
+license: MIT
+version: 0.1.0
+date-released: "2026-08-24"
