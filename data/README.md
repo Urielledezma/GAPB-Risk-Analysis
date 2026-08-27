@@ -35,6 +35,34 @@ against. `read_dataset()` prefers `private/` when it exists and falls back to
 `processed/`, so a teammate with a key sees vendor numbers and a reader without one
 still sees a rendered report — neither configures anything.
 
+### Current state of the FactSet path, 2026-08-27
+
+Every request returns HTTP 401 with the body `Authentication Failed`, so the ladder is
+falling through to the public source on every run and the tracked snapshot is what the
+reports are built on. What has been ruled out, by measurement rather than by reading:
+
+- **The client.** The Basic credential is `username-serial:key`, base64-encoded into an
+  `Authorization` header, which is exactly the scheme FactSet documents. The
+  username-serial matches the account shown in the portal character for character, and
+  the key is 40 ASCII characters with no whitespace or quoting damage.
+- **The URL.** The OpenAPI definition on the portal names
+  `https://api.factset.com/content` as the production server and
+  `/factset-prices/v1/prices` as the path. `FACTSET_BASE` and the path components in
+  `R/data_factset.R` are identical to both.
+- **The IP allowlist.** The calling machine's egress address was added to the key's IP
+  Range, the portal confirmed the update, and reopening the dialog shows it persisted.
+  The 401 did not change, then or two minutes later.
+- **The status code as evidence.** A correct key, a key with one character altered, a
+  wrong username-serial, garbage credentials and no credentials at all all return the
+  same 401 and the same body. The status therefore identifies nothing on its own, which
+  is why the loader now prints the calling address alongside it.
+
+What remains is entitlement. The Prices API page in the portal offers only "Try for
+Free", which links to `/contact` rather than to any self-service activation, and the
+account's onboarding banner sits at "API Trial STEP 1/3". Adding API entitlements to
+`ITESO_MX-2363015` is something the FactSet account team does; it cannot be done from
+the Developer Portal, and no change on this side will move it.
+
 ---
 
 ## Datasets
