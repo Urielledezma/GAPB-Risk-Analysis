@@ -92,3 +92,39 @@ test_that("a price frame without provenance still computes returns", {
   expect_false("source" %in% names(returns))
   expect_equal(nrow(returns), 4)
 })
+
+# --- INEGI request contract ---------------------------------------------------
+# INEGI answers every malformed request with the same ErrorCode 100, so the only
+# defence against a silently wrong series is validating the request before it
+# leaves. Measured 2026-08-27: area "00" is national, and "0700" -- which several
+# third-party examples use -- returns nothing for any indicator on either bank.
+
+test_that("the quarterly GDP spec names a data bank and the national area", {
+  spec <- assets_config()$macro$gdp_quarterly
+
+  expect_equal(spec$provider, "inegi")
+  expect_true(spec$bank %in% c("BIE", "BISE"))
+  expect_equal(spec$geography, "00")
+  expect_true(nzchar(spec$indicator))
+})
+
+test_that("fetch_inegi_indicator rejects an unknown data bank before the network", {
+  expect_error(fetch_inegi_indicator("1002000001", bank = "BIEE"), "should be one of")
+})
+
+test_that("the INEGI error helper explains ErrorCode 100 and leaks no token", {
+  payload <- '["ErrorInfo:No se encontraron resultados","ErrorCode:100"]'
+  response <- httr2::response(
+    status_code = 400,
+    headers = list(`content-type` = "application/json"),
+    body = charToRaw(payload)
+  )
+  lines <- inegi_error_body(response)
+
+  expect_true(any(grepl("ErrorCode:100", lines, fixed = TRUE)))
+  expect_true(any(grepl("BIE vs BISE", lines, fixed = TRUE)))
+  expect_false(any(grepl(
+    Sys.getenv("INEGI_API_TOKEN", unset = "no-token-set"), lines,
+    fixed = TRUE
+  )))
+})

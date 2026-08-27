@@ -104,12 +104,49 @@ fetch_banxico_series <- function(series,
   out[order(out$date), ]
 }
 
-#' An INEGI BIE indicator.
+#' Turn an INEGI error payload into actionable message lines.
 #'
-#' @param indicator BIE indicator id.
-#' @param geography INEGI geographic area code. 0700 is the national total.
-#' @return A data frame with period, date and value.
-fetch_inegi_indicator <- function(indicator, geography = "0700") {
+#' INEGI answers a bad request with HTTP 400 and a JSON array of strings whose
+#' ErrorCode is 100 ("No se encontraron resultados") regardless of the actual
+#' fault, so the raw payload never says which part of the request was wrong.
+#' The URL carries the token in a path segment and is therefore never echoed.
+#'
+#' @param response An httr2 response.
+#' @return A character vector of message lines.
+inegi_error_body <- function(response) {
+  detail <- tryCatch(
+    paste(unlist(httr2::resp_body_json(response, simplifyVector = TRUE)),
+          collapse = "; "),
+    error = function(e) "no parseable error payload"
+  )
+  c(
+    detail,
+    paste(
+      "ErrorCode 100 is INEGI's catch-all. Check, in order: the data bank",
+      "(BIE vs BISE), the geographic area (national is \"00\"), then the",
+      "indicator id in the Constructor de consultas."
+    )
+  )
+}
+
+#' An INEGI indicator.
+#'
+#' The national geographic area is "00". The value "0700" appears in some
+#' third-party examples and returns ErrorCode 100 for every indicator, on both
+#' data banks — it is not a valid area code for this endpoint.
+#'
+#' Measured against this account on 2026-08-27: BISE answers for arbitrary
+#' indicator ids, while BIE returns ErrorCode 100 for every id tried, including
+#' the ids published in INEGI's own and third-party documentation, and for every
+#' language / recency / area combination. Treat a BIE failure as an entitlement
+#' problem on the token, not as a wrong indicator id.
+#'
+#' @param indicator Indicator id, taken from INEGI's Constructor de consultas.
+#' @param geography INEGI geographic area code. "00" is the national total.
+#' @param bank Data bank: "BIE" (economic, quarterly) or "BISE" (indicator bank).
+#' @return A data frame with date, period and value.
+fetch_inegi_indicator <- function(indicator, geography = "00", bank = "BIE") {
+  bank <- match.arg(bank, c("BIE", "BISE"))
   token <- require_env(
     "INEGI_API_TOKEN",
     "Request one free at https://www.inegi.org.mx/servicios/api_indicadores.html"
@@ -117,9 +154,10 @@ fetch_inegi_indicator <- function(indicator, geography = "0700") {
 
   response <- httr2::request(INEGI_BASE) |>
     httr2::req_url_path_append(
-      "INDICATOR", indicator, "es", geography, "false", "BIE", "2.0", token
+      "INDICATOR", indicator, "es", geography, "false", bank, "2.0", token
     ) |>
     httr2::req_url_query(type = "json") |>
+    httr2::req_error(body = inegi_error_body) |>
     httr2::req_retry(max_tries = 3) |>
     httr2::req_timeout(60) |>
     httr2::req_perform() |>
