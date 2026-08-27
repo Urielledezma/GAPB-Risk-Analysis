@@ -34,6 +34,28 @@ FACTSET_FUNDAMENTAL_METRICS <- c(
   "FF_ASSETS"        # Total assets
 )
 
+#' The public address FactSet sees this machine as.
+#'
+#' An API key is bound to an IP allowlist, and a request from an address outside
+#' it is refused with the same undiscriminating 401 as a wrong key -- measured
+#' 2026-08-27: a correct key, a corrupted key, a wrong serial and no credentials
+#' at all all return HTTP 401 with the body "Authentication Failed". The address
+#' is therefore the first thing to check, and on a dynamic or campus connection
+#' it changes without warning.
+#'
+#' @return The address as a string, or NA if it cannot be determined.
+factset_caller_ip <- function() {
+  tryCatch(
+    {
+      response <- httr2::request("https://api.ipify.org") |>
+        httr2::req_timeout(15) |>
+        httr2::req_perform()
+      trimws(httr2::resp_body_string(response))
+    },
+    error = function(e) NA_character_
+  )
+}
+
 #' Build an authenticated FactSet request.
 #'
 #' @param path Path components below the content root.
@@ -80,9 +102,18 @@ factset_get <- function(path, query = list()) {
   status <- httr2::resp_status(response)
 
   if (status == 401) {
+    address <- factset_caller_ip()
     stop(
-      "FactSet rejected the credentials (401).\n",
-      "  Check FACTSET_USERNAME_SERIAL and FACTSET_API_KEY in .env.",
+      "FactSet refused the request (401, \"Authentication Failed\").\n",
+      "  This one status covers two unrelated faults and does not say which:\n",
+      "    1. the calling address is outside the key's IP Range allowlist;\n",
+      "    2. the key or the username-serial is wrong or has been regenerated.\n",
+      "  This machine is currently seen as ",
+      if (is.na(address)) "an address that could not be determined" else address,
+      ".\n",
+      "  Confirm that address falls inside the IP Range on the key at\n",
+      "  https://developer.factset.com/api-authentication before touching the\n",
+      "  credentials -- a dynamic or campus connection changes it without notice.",
       call. = FALSE
     )
   }
