@@ -1,277 +1,282 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Francisco Uriel Ledezma Chávez" />
+  <title>El activo y su negocio</title>
+  <style>
 
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>El activo y su negocio – Análisis de Riesgo · GAPB</title>
-<style>
-/* Default styles provided by pandoc.
-** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-*/
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
 div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
+
+ul.task-list[class]{list-style: none;}
 ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
-  vertical-align: middle;
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
 }
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+.hanging-indent div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+div.csl-left-margin {
+min-width:2em;
+float:left;
 }
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+} </style>
+  <style>
+:root { --ink: #20252b; --muted: #65707c; --line: #dfe4e8; --accent: #1769aa; }
+html { color: var(--ink); background: #fff; font-family: "Segoe UI", Arial, sans-serif; }
+body { max-width: 1120px; margin: 0 auto; padding: 3rem 4rem 5rem; line-height: 1.62; }
+h1 { color: #102a43; font-size: 2.35rem; line-height: 1.12; margin-bottom: .35rem; }
+h2 { color: #173f5f; border-bottom: 1px solid var(--line); padding-bottom: .35rem; margin-top: 2.7rem; }
+h3 { color: #24557a; margin-top: 2rem; }
+p { max-width: 82ch; }
+a { color: var(--accent); }
+#TOC { border-left: 4px solid var(--accent); background: #f4f7f9; padding: 1rem 1.5rem; margin: 2rem 0 3rem; }
+#TOC ul { columns: 2; column-gap: 2rem; }
+table { width: 100%; border-collapse: collapse; margin: 1.2rem 0 2rem; font-size: .92rem; }
+caption { text-align: left; font-weight: 600; color: #173f5f; margin-bottom: .45rem; }
+th { background: #edf3f7; text-align: left; }
+th, td { border-bottom: 1px solid var(--line); padding: .55rem .65rem; vertical-align: top; }
+img { max-width: 100%; height: auto; }
+figure { margin: 2rem 0; }
+figcaption { color: var(--muted); font-size: .9rem; }
+.callout-note { border-left: 4px solid var(--accent); background: #f4f7f9; padding: .8rem 1.2rem; }
+blockquote { color: var(--muted); border-left: 3px solid var(--line); padding-left: 1rem; }
+code { background: #f3f5f7; padding: .1rem .25rem; }
+@media (max-width: 760px) { body { padding: 1.5rem; } #TOC ul { columns: 1; } }
+@media print { body { max-width: none; padding: 0; font-size: 10.5pt; } #TOC { break-after: page; } a { color: inherit; } }
 </style>
-
-
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7173d61469f149d5c696e9284a9ed522.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3774daf6b75428cfdcf6670490171c72.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
-  "language": {
-    "search-no-results-text": "No se han encontrado resultados",
-    "search-matching-documents-text": "documentos encontrados",
-    "search-copy-link-title": "Copiar el enlace en la búsqueda",
-    "search-hide-matches-text": "Ocultar resultados adicionales",
-    "search-more-match-text": "resultado adicional en este documento",
-    "search-more-matches-text": "resultados adicionales en este documento",
-    "search-clear-button-title": "Borrar",
-    "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancelar",
-    "search-submit-button-title": "Enviar",
-    "search-label": "Buscar"
-  }
-}</script>
-<style>html{ scroll-behavior: smooth; }</style>
-
-
 </head>
-
-<body class="nav-fixed quarto-light">
-
-<div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Análisis de Riesgo · GAPB</span>
-    </a>
-  </div>
-            <div id="quarto-search" class="" title="Buscar"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Inicio</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="./01-asset-profile.html" aria-current="page"> 
-<span class="menu-text">01 · Activo</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./02-price-history-events.html"> 
-<span class="menu-text">02 · Precio y eventos</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./03-returns-volatility-gbm.html"> 
-<span class="menu-text">03 · Rendimientos</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./04-variance-models.html"> 
-<span class="menu-text">04 · Volatilidad</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./05-value-at-risk.html"> 
-<span class="menu-text">05 · VaR</span></a>
-  </li>  
-</ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/Urielledezma/Analisis-de-Riesgo"> <i class="bi bi-github" role="img" aria-label="Repositorio en GitHub">
-</i> 
-<span class="menu-text"></span></a>
-  </li>  
-</ul>
-          </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-</div>
-      </div> <!-- /container-fluid -->
-    </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
-<!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">En esta página</h2>
-   
-  <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
-  <li><a href="#descripción-general-del-activo-y-del-negocio" id="toc-descripción-general-del-activo-y-del-negocio" class="nav-link" data-scroll-target="#descripción-general-del-activo-y-del-negocio"><span class="header-section-number">2</span> Descripción general del activo y del negocio</a></li>
-  <li><a href="#análisis-de-estados-financieros" id="toc-análisis-de-estados-financieros" class="nav-link" data-scroll-target="#análisis-de-estados-financieros"><span class="header-section-number">3</span> Análisis de estados financieros</a></li>
-  <li><a href="#indicadores-financieros-clave" id="toc-indicadores-financieros-clave" class="nav-link" data-scroll-target="#indicadores-financieros-clave"><span class="header-section-number">4</span> Indicadores financieros clave</a></li>
-  <li><a href="#utilidad-por-acción" id="toc-utilidad-por-acción" class="nav-link" data-scroll-target="#utilidad-por-acción"><span class="header-section-number">5</span> Utilidad por acción</a></li>
-  <li><a href="#dividendos-y-splits" id="toc-dividendos-y-splits" class="nav-link" data-scroll-target="#dividendos-y-splits"><span class="header-section-number">6</span> Dividendos y <em>splits</em></a></li>
-  <li><a href="#identificación-de-riesgos" id="toc-identificación-de-riesgos" class="nav-link" data-scroll-target="#identificación-de-riesgos"><span class="header-section-number">7</span> Identificación de riesgos</a></li>
-  <li><a href="#conclusión" id="toc-conclusión" class="nav-link" data-scroll-target="#conclusión"><span class="header-section-number">8</span> Conclusión</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">9</span> Referencias</a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/Analisis-de-Riesgo/blob/main/01-asset-profile.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
-    </div>
-<!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
+<body>
+<header id="title-block-header">
 <h1 class="title">El activo y su negocio</h1>
-<p class="subtitle lead">Caracterización del emisor, estructura financiera y taxonomía de riesgos</p>
-</div>
-
-
-
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Fecha de publicación</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">27 de agosto de 2026</p>
-    </div>
-  </div>
-  
-    
-  </div>
-  
-
-
+<p class="subtitle">Grupo Aeroportuario del Pacífico · BMV: GAPB</p>
+<p class="author">Francisco Uriel Ledezma Chávez</p>
+<p class="date">1 de septiembre de 2026</p>
 </header>
-
-
-<section id="introducción" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">1</span> Introducción</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Síntesis de lo que se presenta en esta etapa: qué se caracteriza, con qué información y a qué conclusión se llega.</p>
-</div>
-</div>
-</section>
-<section id="descripción-general-del-activo-y-del-negocio" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="descripción-general-del-activo-y-del-negocio"><span class="header-section-number">2</span> Descripción general del activo y del negocio</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>El objetivo de este apartado es <strong>dimensionar</strong> la empresa, no enumerarla. Los siguientes elementos son insumos para ese argumento:</p>
+<nav id="TOC" role="doc-toc">
 <ul>
-<li>giro y función principal;</li>
-<li>inicio de operaciones y evolución;</li>
-<li>líneas de negocio y su peso relativo;</li>
-<li>presencia geográfica;</li>
-<li>marcas, subsidiarias y activos concesionados;</li>
-<li>plantilla aproximada;</li>
-<li>infraestructura clave;</li>
-<li>competidores y posición de mercado;</li>
-<li>eventos recientes relevantes.</li>
+<li><a href="#introducción" id="toc-introducción"><span class="toc-section-number">1</span> Introducción</a></li>
+<li><a href="#descripción-general-del-activo-y-del-negocio" id="toc-descripción-general-del-activo-y-del-negocio"><span class="toc-section-number">2</span> Descripción general del activo y del
+negocio</a></li>
+<li><a href="#análisis-de-estados-financieros" id="toc-análisis-de-estados-financieros"><span class="toc-section-number">3</span> Análisis de estados
+financieros</a></li>
+<li><a href="#indicadores-financieros-clave" id="toc-indicadores-financieros-clave"><span class="toc-section-number">4</span> Indicadores financieros
+clave</a></li>
+<li><a href="#utilidad-por-acción" id="toc-utilidad-por-acción"><span class="toc-section-number">5</span> Utilidad por acción</a></li>
+<li><a href="#dividendos-y-splits" id="toc-dividendos-y-splits"><span class="toc-section-number">6</span> Dividendos y
+<em>splits</em></a></li>
+<li><a href="#identificación-de-riesgos" id="toc-identificación-de-riesgos"><span class="toc-section-number">7</span> Identificación de riesgos</a></li>
+<li><a href="#conclusión" id="toc-conclusión"><span class="toc-section-number">8</span> Conclusión</a></li>
+<li><a href="#referencias" id="toc-referencias">Referencias</a></li>
 </ul>
-<p>Cada afirmación se respalda con reporte trimestral, informe anual o documento oficial de la BMV, citado con <code>@clave</code> contra <code>references.bib</code>.</p>
+</nav>
+<h2 data-number="1" id="introducción"><span class="header-section-number">1</span> Introducción</h2>
+<p>Esta primera etapa caracteriza a Grupo Aeroportuario del Pacífico,
+S.A.B. de C.V. (GAP) antes de modelar el riesgo de mercado de su acción
+serie B. El análisis combina la estructura económica del negocio con
+resultados consolidados de 2023 a 2025, indicadores de rentabilidad y
+apalancamiento, utilidad trimestral por ADS y política de dividendos. La
+lectura conjunta muestra una concesionaria con alta generación operativa
+y crecimiento, aunque expuesta a regulación tarifaria, tráfico aéreo,
+deuda y grandes compromisos de inversión.</p>
+<div class="callout-note" title="Criterio de fuentes">
+<p>ITESO confirmó que la licencia institucional de FactSet no incluye
+acceso por API. El repositorio acepta exportaciones manuales de FactSet
+en <code>data/raw/factset/manual/</code> y las conserva fuera de Git; en
+su ausencia, esta versión usa estados de resultados publicados por GAP
+ante la SEC y una serie pública de EPS. El informe nunca consulta una
+API durante el renderizado.</p>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<caption>Identificación del emisor analizado.</caption>
+<h2 data-number="2" id="descripción-general-del-activo-y-del-negocio"><span class="header-section-number">2</span> Descripción general del activo y
+del negocio</h2>
+<p>GAP administra infraestructura aeroportuaria bajo concesión: doce
+aeropuertos en México y los aeropuertos de Montego Bay y Kingston en
+Jamaica. Sus activos principales incluyen Guadalajara, Tijuana, Los
+Cabos y Puerto Vallarta, de modo que el portafolio combina tráfico de
+negocios, manufactura fronteriza y turismo internacional. La sociedad
+surgió del proceso de privatización aeroportuaria de 1998, inició la
+operación del paquete Pacífico en 1999 y cotiza desde 2006 en la BMV
+mediante GAPB y en Nueva York mediante el ADS PAC <span class="citation" data-cites="gap20f2025">(Grupo Aeroportuario del Pacífico,
+2026a)</span>.</p>
+<table>
+<caption>Identificación bursátil del emisor analizado.</caption>
 <colgroup>
-<col style="width: 6%">
-<col style="width: 41%">
-<col style="width: 5%">
-<col style="width: 10%">
-<col style="width: 25%">
-<col style="width: 9%">
+<col style="width: 6%" />
+<col style="width: 41%" />
+<col style="width: 5%" />
+<col style="width: 10%" />
+<col style="width: 25%" />
+<col style="width: 9%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th style="text-align: left;">ticker</th>
 <th style="text-align: left;">name</th>
 <th style="text-align: left;">series</th>
@@ -281,9 +286,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">GAPB.MX</td>
-<td style="text-align: left;">Grupo Aeroportuario del Pacífico, S.A.B. de C.V.</td>
+<td style="text-align: left;">Grupo Aeroportuario del Pacífico, S.A.B.
+de C.V.</td>
 <td style="text-align: left;">B</td>
 <td style="text-align: left;">Industrials</td>
 <td style="text-align: left;">Transportation Infrastructure</td>
@@ -291,538 +297,393 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
+<p>El ingreso económico se divide en servicios aeronáuticos —tarifas a
+pasajeros, aerolíneas y operadores— y no aeronáuticos —arrendamientos,
+alimentos y bebidas, estacionamientos, salas VIP, tiendas, publicidad,
+hotelería y carga—. En 2025 la mezcla, excluyendo la contabilidad de
+construcción de IFRIC 12, fue aproximadamente 70% aeronáutica y 30% no
+aeronáutica; esta diversificación reduce la dependencia de una sola
+tarifa, pero no elimina la dependencia del flujo de pasajeros. Los
+catorce aeropuertos atendieron 63.7 millones de pasajeros en 2025, 2.5%
+más que en 2024, y la plantilla cerró el ejercicio con aproximadamente
+3,506 colaboradores <span class="citation" data-cites="gap4q2025 gap20f2025">(Grupo Aeroportuario del Pacífico,
+2026b, 2026a)</span>.</p>
+<p>La posición competitiva proviene menos de una marca de consumo que de
+la exclusividad geográfica y la vida remanente de las concesiones. ASUR
+y OMA son los comparables mexicanos más cercanos, mientras que
+aeropuertos alternativos, carreteras y cambios en la oferta de las
+aerolíneas condicionan la demanda local. El evento corporativo más
+relevante posterior al cierre fue la combinación con Cross Border Xpress
+y activos de asistencia técnica, efectiva en mayo de 2026; amplía el
+ecosistema de Tijuana, pero también emitió acciones nuevas y abre un
+riesgo de integración que no pertenece todavía a las cifras 2025
+analizadas aquí.</p>
+<h2 data-number="3" id="análisis-de-estados-financieros"><span class="header-section-number">3</span> Análisis de estados
+financieros</h2>
+<p>IFRIC 12 obliga a reconocer como ingreso la construcción y mejora de
+activos concesionados junto con un costo equivalente. Como ese renglón
+infla ingreso y costo sin representar venta recurrente ni margen
+económico, se presentan dos bases: ingreso reportado y <strong>ingreso
+operativo</strong>, definido como la suma de servicios aeronáuticos y no
+aeronáuticos <span class="citation" data-cites="gap4q2024 gap4q2025">(Grupo Aeroportuario del Pacífico,
+2025b, 2026b)</span>.</p>
+<table>
+<caption>Resultados consolidados, millones de pesos
+corrientes.</caption>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 23%" />
+<col style="width: 17%" />
+<col style="width: 8%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Año</th>
+<th style="text-align: left;">Ingreso reportado</th>
+<th style="text-align: left;">Ingreso operativo</th>
+<th style="text-align: left;">Utilidad operativa</th>
+<th style="text-align: left;">Utilidad neta</th>
+<th style="text-align: left;">EBITDA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">2,023</td>
+<td style="text-align: left;">33,224</td>
+<td style="text-align: left;">25,433</td>
+<td style="text-align: left;">15,139</td>
+<td style="text-align: left;">9,690</td>
+<td style="text-align: left;">17,684</td>
+</tr>
+<tr>
+<td style="text-align: left;">2,024</td>
+<td style="text-align: left;">33,614</td>
+<td style="text-align: left;">26,782</td>
+<td style="text-align: left;">15,051</td>
+<td style="text-align: left;">8,875</td>
+<td style="text-align: left;">18,112</td>
+</tr>
+<tr>
+<td style="text-align: left;">2,025</td>
+<td style="text-align: left;">41,409</td>
+<td style="text-align: left;">32,526</td>
+<td style="text-align: left;">17,580</td>
+<td style="text-align: left;">10,001</td>
+<td style="text-align: left;">21,332</td>
+</tr>
+</tbody>
+</table>
+<p>El ingreso operativo aumentó de $25,432.8 millones en 2023 a
+$32,525.9 millones en 2025, una expansión acumulada de 27.9%. El avance
+de 2025 fue especialmente fuerte: 21.4% frente a 2024, apoyado por
+recuperación de tráfico, ajuste de tarifas, depreciación del peso sobre
+los ingresos jamaiquinos y consolidación de carga y zona franca. La
+utilidad neta creció 12.7% en ese último año, menos que el ingreso,
+señal de que la escala adicional llegó acompañada de mayor costo
+financiero, depreciación y gasto operativo <span class="citation" data-cites="gap4q2025">(Grupo Aeroportuario del Pacífico,
+2026b)</span>.</p>
+<div class="figure" style="text-align: center">
+<img role="img" aria-label="Márgenes consolidados bajo base reportada y base operativa sin IFRIC 12." src="data:image/png;base64,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" alt="Márgenes consolidados bajo base reportada y base operativa sin IFRIC 12." />
+<p class="caption">
+Márgenes consolidados bajo base reportada y base operativa sin IFRIC 12.
+</p>
+</div>
+<table>
+<caption>Márgenes comparables por ejercicio.</caption>
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 20%" />
+<col style="width: 18%" />
+<col style="width: 20%" />
+<col style="width: 16%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Año</th>
+<th style="text-align: left;">Servicios sin IFRIC 12</th>
+<th style="text-align: left;">Operativo reportado</th>
+<th style="text-align: left;">Operativo sin IFRIC 12</th>
+<th style="text-align: left;">Neto sin IFRIC 12</th>
+<th style="text-align: left;">EBITDA sin IFRIC 12</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">2,023</td>
+<td style="text-align: left;">82.8%</td>
+<td style="text-align: left;">45.6%</td>
+<td style="text-align: left;">59.5%</td>
+<td style="text-align: left;">38.1%</td>
+<td style="text-align: left;">69.5%</td>
+</tr>
+<tr>
+<td style="text-align: left;">2,024</td>
+<td style="text-align: left;">80.3%</td>
+<td style="text-align: left;">44.8%</td>
+<td style="text-align: left;">56.2%</td>
+<td style="text-align: left;">33.1%</td>
+<td style="text-align: left;">67.6%</td>
+</tr>
+<tr>
+<td style="text-align: left;">2,025</td>
+<td style="text-align: left;">80.0%</td>
+<td style="text-align: left;">42.5%</td>
+<td style="text-align: left;">54.0%</td>
+<td style="text-align: left;">30.7%</td>
+<td style="text-align: left;">65.6%</td>
+</tr>
+</tbody>
+</table>
+<p>GAP no presenta un subtotal IFRS de utilidad bruta. Por ello,
+“servicios sin IFRIC 12” es un proxy explícito: ingreso operativo menos
+costo de servicios, dividido entre ingreso operativo; no incluye todavía
+impuestos a la concesión, asistencia técnica, depreciación ni otros
+costos operativos.</p>
+<p>El margen EBITDA sin IFRIC 12 permaneció elevado, pero descendió de
+69.5% en 2023 a 65.6% en 2025. El margen operativo comparable siguió el
+mismo patrón, de 59.5% a 54.0%; por tanto, el crecimiento no debe
+confundirse con expansión de eficiencia. La empresa conserva poder de
+generación de caja propio de una infraestructura concesionada, aunque su
+programa de inversión y la nueva escala presionan costos antes de que
+toda la capacidad produzca ingresos.</p>
+<h2 data-number="4" id="indicadores-financieros-clave"><span class="header-section-number">4</span> Indicadores financieros
+clave</h2>
+<table>
+<caption>Indicadores clave al cierre de 2025.</caption>
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 6%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Indicador</th>
+<th style="text-align: left;">Valor</th>
+<th style="text-align: left;">Lectura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">ROE</td>
+<td style="text-align: left;">40.4%</td>
+<td style="text-align: left;">Rentabilidad elevada sobre el capital
+contable promedio.</td>
+</tr>
+<tr>
+<td style="text-align: left;">ROA</td>
+<td style="text-align: left;">11.8%</td>
+<td style="text-align: left;">Los activos producen una utilidad de doble
+dígito.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Deuda / capital</td>
+<td style="text-align: left;">2.13x</td>
+<td style="text-align: left;">La deuda equivale a más de dos veces el
+capital.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Deuda / EBITDA</td>
+<td style="text-align: left;">2.48x</td>
+<td style="text-align: left;">Cobertura operativa holgada, pero sensible
+a tasas y tráfico.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Deuda neta / EBITDA</td>
+<td style="text-align: left;">1.99x</td>
+<td style="text-align: left;">La caja reduce el apalancamiento económico
+por debajo de 2x.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Margen EBITDA sin IFRIC 12</td>
+<td style="text-align: left;">65.6%</td>
+<td style="text-align: left;">Amplio colchón antes de intereses,
+impuestos y depreciación.</td>
+</tr>
+</tbody>
+</table>
+<p>El ROE de 40.4% es atractivo, pero está amplificado por una
+estructura en la que la deuda representa 2.13 veces el capital. En
+contraste, la deuda neta equivale a 1.99 veces EBITDA, nivel
+administrable para la generación operativa actual. La lectura correcta
+no es “bajo riesgo”: GAP puede servir su deuda en el escenario base,
+pero una interrupción de tráfico o un aumento persistente de tasas se
+transmitiría con rapidez al flujo disponible para inversión y
+dividendos.</p>
+<h2 data-number="5" id="utilidad-por-acción"><span class="header-section-number">5</span> Utilidad por acción</h2>
+<p>La serie trimestral corresponde al ADS <strong>PAC</strong> cotizado
+en Nueva York, denominado en dólares y equivalente a diez acciones serie
+B; se usa porque ofrece una historia trimestral homogénea para el mismo
+derecho económico. No se mezcla con el precio de GAPB ni se convierte a
+pesos, ya que hacerlo introduciría el tipo de cambio dentro de una
+medida de desempeño operativo <span class="citation" data-cites="alphaquerypac marketbeatpac">(AlphaQuery, 2026; MarketBeat,
+2026)</span>.</p>
+<div class="figure" style="text-align: center">
+<img role="img" aria-label="Utilidad diluida trimestral por ADS PAC, dólares por ADS." src="data:image/png;base64,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" alt="Utilidad diluida trimestral por ADS PAC, dólares por ADS." />
+<p class="caption">
+Utilidad diluida trimestral por ADS PAC, dólares por ADS.
+</p>
+</div>
+<table>
+<caption>EPS diluido trimestral del ADS PAC, USD.</caption>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">year</th>
+<th style="text-align: left;">T1</th>
+<th style="text-align: left;">T2</th>
+<th style="text-align: left;">T3</th>
+<th style="text-align: left;">T4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">2,019</td>
+<td style="text-align: left;">1.30</td>
+<td style="text-align: left;">1.18</td>
+<td style="text-align: left;">1.23</td>
+<td style="text-align: left;">1.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">2,020</td>
+<td style="text-align: left;">1.63</td>
+<td style="text-align: left;">-0.45</td>
+<td style="text-align: left;">0.22</td>
+<td style="text-align: left;">0.30</td>
+</tr>
+<tr>
+<td style="text-align: left;">9</td>
+<td style="text-align: left;">2,021</td>
+<td style="text-align: left;">0.97</td>
+<td style="text-align: left;">1.26</td>
+<td style="text-align: left;">1.73</td>
+<td style="text-align: left;">1.70</td>
+</tr>
+<tr>
+<td style="text-align: left;">13</td>
+<td style="text-align: left;">2,022</td>
+<td style="text-align: left;">2.29</td>
+<td style="text-align: left;">2.32</td>
+<td style="text-align: left;">2.60</td>
+<td style="text-align: left;">1.67</td>
+</tr>
+<tr>
+<td style="text-align: left;">17</td>
+<td style="text-align: left;">2,023</td>
+<td style="text-align: left;">2.72</td>
+<td style="text-align: left;">2.87</td>
+<td style="text-align: left;">2.90</td>
+<td style="text-align: left;">2.55</td>
+</tr>
+<tr>
+<td style="text-align: left;">21</td>
+<td style="text-align: left;">2,024</td>
+<td style="text-align: left;">2.88</td>
+<td style="text-align: left;">2.55</td>
+<td style="text-align: left;">2.74</td>
+<td style="text-align: left;">2.14</td>
+</tr>
+<tr>
+<td style="text-align: left;">25</td>
+<td style="text-align: left;">2,025</td>
+<td style="text-align: left;">2.72</td>
+<td style="text-align: left;">2.70</td>
+<td style="text-align: left;">2.86</td>
+<td style="text-align: left;">1.64</td>
+</tr>
+</tbody>
+</table>
+<p>La ruptura de la serie ocurre en el segundo trimestre de 2020, cuando
+el EPS fue negativo por las restricciones de movilidad. La recuperación
+posterior es visible y, desde 2022, todos los trimestres permanecen
+positivos; sin embargo, el descenso a USD 1.64 en 4T25 frente a USD 2.86
+en 3T25 confirma estacionalidad y sensibilidad del resultado financiero.
+Para las etapas de mercado interesa menos el nivel aislado que la
+capacidad de estos cambios para alterar expectativas y volatilidad.</p>
+<h2 data-number="6" id="dividendos-y-splits"><span class="header-section-number">6</span> Dividendos y <em>splits</em></h2>
+<p>La política de GAP distribuye efectivo excedente después de conservar
+un saldo mínimo equivalente a dos meses de gastos operativos y servicio
+de deuda de corto plazo. La asamblea de abril de 2025 aprobó un
+dividendo total de MXN 16.84 por acción, pagado en dos exhibiciones; la
+frecuencia, por tanto, depende de la asamblea y de la liquidez, no de un
+dividendo trimestral rígido <span class="citation" data-cites="gapdividend2025">(Grupo Aeroportuario del Pacífico,
+2025a)</span>. Esa flexibilidad protege inversión y deuda, aunque vuelve
+el retorno total sensible a decisiones corporativas y al ciclo de
+CAPEX.</p>
+<p>No se identificaron <em>splits</em> de GAPB desde su listado en 2006
+en los informes revisados. Sí existe una relación fija de un ADS PAC por
+diez acciones serie B, que no debe confundirse con un <em>split</em>.
+Las siguientes etapas utilizarán precio ajustado por distribuciones y
+eventos corporativos; esta distinción evita que un dividendo aparezca
+falsamente como pérdida económica.</p>
+<h2 data-number="7" id="identificación-de-riesgos"><span class="header-section-number">7</span> Identificación de riesgos</h2>
+<p><strong>Riesgo regulatorio y de concesión.</strong> La tarifa máxima,
+los derechos de concesión y los programas maestros de desarrollo
+dependen de autoridades mexicanas y jamaiquinas. Una modificación
+unilateral cambia ingresos permitidos o CAPEX obligatorio y, por ello,
+afecta directamente la valuación.</p>
+<p><strong>Riesgo de tráfico y concentración.</strong> Los ingresos
+dependen de pasajeros, rutas y capacidad de aerolíneas; choques
+sanitarios, recesión, problemas de motores o quiebras de operadores
+reducen simultáneamente ingreso aeronáutico y consumo comercial. La
+concentración en Guadalajara, Tijuana y destinos turísticos aumenta la
+exposición a eventos regionales y estacionales.</p>
+<p><strong>Riesgo macrofinanciero.</strong> Tasas altas encarecen una
+deuda de MXN 53.0 mil millones, mientras que la depreciación del peso
+eleva la traducción de Jamaica pero también puede encarecer obligaciones
+o insumos en dólares. Inflación, crecimiento del PIB y tipo de cambio
+deben reaparecer como variables de contexto en la etapa 02.</p>
+<p><strong>Riesgo de ejecución e integración.</strong> El CAPEX 2025 de
+MXN 12.4 mil millones y la integración posterior de CBX requieren
+disciplina operativa. Retrasos, sobrecostos o capacidad que tarde en
+madurar comprimirían márgenes y flujo libre; la emisión de acciones
+asociada, además, introduce dilución para el accionista.</p>
+<p><strong>Riesgo climático, de seguridad y tecnológico.</strong>
+Huracanes, sismos, fallas de infraestructura, ciberataques o incidentes
+de seguridad pueden interrumpir un activo que no puede trasladarse.
+Aunque seguros y redundancias contienen la pérdida, no eliminan cierres,
+daño reputacional ni menor tráfico.</p>
+<h2 data-number="8" id="conclusión"><span class="header-section-number">8</span> Conclusión</h2>
+<p>GAP llega al cierre de 2025 como una concesionaria en expansión: el
+ingreso operativo creció 27.9% en dos años, el EBITDA alcanzó MXN 21.3
+mil millones y la deuda neta se mantuvo cerca de 2.0 veces EBITDA. La
+contrapartida es una compresión gradual de márgenes, deuda superior a
+dos veces el capital y un ciclo intenso de inversión, a lo que se suma
+la integración de CBX en 2026. En consecuencia, GAPB combina calidad de
+infraestructura y flujo recurrente con riesgos discretos capaces de
+producir saltos en precio; regulación, tráfico, tasas, tipo de cambio e
+integración serán los ejes que deberán contrastarse con la historia
+bursátil en la siguiente etapa.</p>
+<h2 class="unnumbered" id="referencias">Referencias</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-alphaquerypac" class="csl-entry" role="listitem">
+AlphaQuery. (2026). <em>Grupo Aeroportuario del Pacífico: Earnings
+History</em>. <a href="https://www.alphaquery.com/stock/PAC/earnings-history">https://www.alphaquery.com/stock/PAC/earnings-history</a>
+</div>
+<div id="ref-gapdividend2025" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2025a). <em>Pago de la segunda y
+última exhibición del dividendo aprobado en 2025</em>. <a href="https://www.aeropuertosgap.com.mx/es/comunicados-generales/4934-anuncio-fecha-dividendo-2025-julio.html">https://www.aeropuertosgap.com.mx/es/comunicados-generales/4934-anuncio-fecha-dividendo-2025-julio.html</a>
+</div>
+<div id="ref-gap4q2024" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2025b). <em>Resultados consolidados
+del cuarto trimestre de 2024</em>. Grupo Aeroportuario del Pacífico. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000117184325001044/f6k_022525.htm">https://www.sec.gov/Archives/edgar/data/1347557/000117184325001044/f6k_022525.htm</a>
+</div>
+<div id="ref-gap20f2025" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2026a). <em>Annual Report 2025, Form
+20-F</em>. U.S. Securities; Exchange Commission. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000119312526161714/pac-20251231.htm">https://www.sec.gov/Archives/edgar/data/1347557/000119312526161714/pac-20251231.htm</a>
+</div>
+<div id="ref-gap4q2025" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2026b). <em>Resultados consolidados
+del cuarto trimestre de 2025</em>. Grupo Aeroportuario del Pacífico. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000117184326001035/f6k_022426.htm">https://www.sec.gov/Archives/edgar/data/1347557/000117184326001035/f6k_022426.htm</a>
+</div>
+<div id="ref-marketbeatpac" class="csl-entry" role="listitem">
+MarketBeat. (2026). <em>Grupo Aeroportuario del Pacífico Earnings
+History</em>. <a href="https://www.marketbeat.com/stocks/NYSE/PAC/earnings/">https://www.marketbeat.com/stocks/NYSE/PAC/earnings/</a>
 </div>
 </div>
-</section>
-<section id="análisis-de-estados-financieros" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="análisis-de-estados-financieros"><span class="header-section-number">3</span> Análisis de estados financieros</h2>
-<p>Los fundamentales provienen de FactSet y no se versionan en este repositorio. Para reproducir este apartado se requiere una clave con entitlements de API:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"../analysis/03_ingest_fundamentals.R"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Ingresos, márgenes bruto, operativo y neto de los últimos tres ejercicios, con la definición de cada margen y su interpretación económica. Nivel de endeudamiento y estructura de capital.</p>
-<p>Reportar cifras no es analizarlas: cada movimiento relevante debe tener una explicación en términos del negocio.</p>
-</div>
-</div>
-</section>
-<section id="indicadores-financieros-clave" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="indicadores-financieros-clave"><span class="header-section-number">4</span> Indicadores financieros clave</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>ROE, ROA, deuda/capital, deuda/EBITDA y margen EBITDA, con el dato más reciente. Para cada indicador: definición, valor, y qué dice sobre este negocio en particular.</p>
-</div>
-</div>
-</section>
-<section id="utilidad-por-acción" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="utilidad-por-acción"><span class="header-section-number">5</span> Utilidad por acción</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Evolución trimestral del EPS de 2019 a 2025 y su estabilidad en el tiempo.</p>
-</div>
-</div>
-</section>
-<section id="dividendos-y-splits" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="dividendos-y-splits"><span class="header-section-number">6</span> Dividendos y <em>splits</em></h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Política de dividendos, su frecuencia, y cualquier cambio relevante. <em>Splits</em> históricos, fechas y proporciones, y su efecto sobre la serie de precios ajustada que utilizan las etapas siguientes.</p>
-</div>
-</div>
-</section>
-<section id="identificación-de-riesgos" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="identificación-de-riesgos"><span class="header-section-number">7</span> Identificación de riesgos</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Riesgos operativos, macroeconómicos y financieros del emisor, argumentados en términos de cómo cada uno se transmite al precio de la acción.</p>
-<p>Este apartado es el puente conceptual hacia las etapas cuantitativas: lo que aquí se identifique como fuente de riesgo debe reaparecer en la etapa 02 como evento y en las etapas 03 a 05 como volatilidad medida.</p>
-</div>
-</div>
-</section>
-<section id="conclusión" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="conclusión"><span class="header-section-number">8</span> Conclusión</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Caracterización integrada del negocio —sólido, en expansión o en consolidación— sostenida por la evidencia de los apartados anteriores, y el perfil de riesgo que cabría esperar observar después en el precio.</p>
-</div>
-</div>
-</section>
-<section id="referencias" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="referencias"><span class="header-section-number">9</span> Referencias</h2>
-
-
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
-    }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copiado");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copiado");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
-    }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
-    });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
-    }
-      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
-      var isInternal = (href) => {
-          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-      }
-      // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-      for (var i=0; i<links.length; i++) {
-        const link = links[i];
-        if (!isInternal(link.href)) {
-          // undo the damage that might have been done by quarto-nav.js in the case of
-          // links that we want to consider external
-          if (link.dataset.originalHref !== undefined) {
-            link.href = link.dataset.originalHref;
-          }
-            // target, if specified
-            link.setAttribute("target", "_blank");
-            if (link.getAttribute("rel") === null) {
-              link.setAttribute("rel", "noopener");
-            }
-        }
-      }
-    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-      const config = {
-        allowHTML: true,
-        maxWidth: 500,
-        delay: 100,
-        arrow: false,
-        appendTo: function(el) {
-            return el.parentElement;
-        },
-        interactive: true,
-        interactiveBorder: 10,
-        theme: 'quarto',
-        placement: 'bottom-start',
-      };
-      if (contentFn) {
-        config.content = contentFn;
-      }
-      if (onTriggerFn) {
-        config.onTrigger = onTriggerFn;
-      }
-      if (onUntriggerFn) {
-        config.onUntrigger = onUntriggerFn;
-      }
-      window.tippy(el, config); 
-    }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
-      });
-    }
-    const xrefs = window.document.querySelectorAll('a.quarto-xref');
-    const processXRef = (id, note) => {
-      // Strip column container classes
-      const stripColumnClz = (el) => {
-        el.classList.remove("page-full", "page-columns");
-        if (el.children) {
-          for (const child of el.children) {
-            stripColumnClz(child);
-          }
-        }
-      }
-      stripColumnClz(note)
-      if (id === null || id.startsWith('sec-')) {
-        // Special case sections, only their first couple elements
-        const container = document.createElement("div");
-        if (note.children && note.children.length > 2) {
-          container.appendChild(note.children[0].cloneNode(true));
-          for (let i = 1; i < note.children.length; i++) {
-            const child = note.children[i];
-            if (child.tagName === "P" && child.innerText === "") {
-              continue;
-            } else {
-              container.appendChild(child.cloneNode(true));
-              break;
-            }
-          }
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(container);
-          }
-          return container.innerHTML
-        } else {
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(note);
-          }
-          return note.innerHTML;
-        }
-      } else {
-        // Remove any anchor links if they are present
-        const anchorLink = note.querySelector('a.anchorjs-link');
-        if (anchorLink) {
-          anchorLink.remove();
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        if (note.classList.contains("callout")) {
-          return note.outerHTML;
-        } else {
-          return note.innerHTML;
-        }
-      }
-    }
-    for (var i=0; i<xrefs.length; i++) {
-      const xref = xrefs[i];
-      tippyHover(xref, undefined, function(instance) {
-        instance.disable();
-        let url = xref.getAttribute('href');
-        let hash = undefined; 
-        if (url.startsWith('#')) {
-          hash = url;
-        } else {
-          try { hash = new URL(url).hash; } catch {}
-        }
-        if (hash) {
-          const id = hash.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note !== null) {
-            try {
-              const html = processXRef(id, note.cloneNode(true));
-              instance.setContent(html);
-            } finally {
-              instance.enable();
-              instance.show();
-            }
-          } else {
-            // See if we can fetch this
-            fetch(url.split('#')[0])
-            .then(res => res.text())
-            .then(html => {
-              const parser = new DOMParser();
-              const htmlDoc = parser.parseFromString(html, "text/html");
-              const note = htmlDoc.getElementById(id);
-              if (note !== null) {
-                const html = processXRef(id, note);
-                instance.setContent(html);
-              } 
-            }).finally(() => {
-              instance.enable();
-              instance.show();
-            });
-          }
-        } else {
-          // See if we can fetch a full url (with no hash to target)
-          // This is a special case and we should probably do some content thinning / targeting
-          fetch(url)
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.querySelector('main.content');
-            if (note !== null) {
-              // This should only happen for chapter cross references
-              // (since there is no id in the URL)
-              // remove the first header
-              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-                note.children[0].remove();
-              }
-              const html = processXRef(null, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
-        }
-      }, function(instance) {
-      });
-    }
-        let selectedAnnoteEl;
-        const selectorForAnnotation = ( cell, annotation) => {
-          let cellAttr = 'data-code-cell="' + cell + '"';
-          let lineAttr = 'data-code-annotation="' +  annotation + '"';
-          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-          return selector;
-        }
-        const selectCodeLines = (annoteEl) => {
-          const doc = window.document;
-          const targetCell = annoteEl.getAttribute("data-target-cell");
-          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-          const lineIds = lines.map((line) => {
-            return targetCell + "-" + line;
-          })
-          let top = null;
-          let height = null;
-          let parent = null;
-          if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
-            }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
-            }
-            selectedAnnoteEl = annoteEl;
-          }
-        };
-        const unselectCodeLines = () => {
-          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-          elementsIds.forEach((elId) => {
-            const div = window.document.getElementById(elId);
-            if (div) {
-              div.remove();
-            }
-          });
-          selectedAnnoteEl = undefined;
-        };
-          // Handle positioning of the toggle
-      window.addEventListener(
-        "resize",
-        throttle(() => {
-          elRect = undefined;
-          if (selectedAnnoteEl) {
-            selectCodeLines(selectedAnnoteEl);
-          }
-        }, 10)
-      );
-      function throttle(fn, ms) {
-      let throttle = false;
-      let timer;
-        return (...args) => {
-          if(!throttle) { // first call gets through
-              fn.apply(this, args);
-              throttle = true;
-          } else { // all the others get throttled
-              if(timer) clearTimeout(timer); // cancel #2
-              timer = setTimeout(() => {
-                fn.apply(this, args);
-                timer = throttle = false;
-              }, ms);
-          }
-        };
-      }
-        // Attach click handler to the DT
-        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-        for (const annoteDlNode of annoteDls) {
-          annoteDlNode.addEventListener('click', (event) => {
-            const clickedEl = event.target;
-            if (clickedEl !== selectedAnnoteEl) {
-              unselectCodeLines();
-              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-              if (activeEl) {
-                activeEl.classList.remove('code-annotation-active');
-              }
-              selectCodeLines(clickedEl);
-              clickedEl.classList.add('code-annotation-active');
-            } else {
-              // Unselect the line
-              unselectCodeLines();
-              clickedEl.classList.remove('code-annotation-active');
-            }
-          });
-        }
-    const findCites = (el) => {
-      const parentEl = el.parentElement;
-      if (parentEl) {
-        const cites = parentEl.dataset.cites;
-        if (cites) {
-          return {
-            el,
-            cites: cites.split(' ')
-          };
-        } else {
-          return findCites(el.parentElement)
-        }
-      } else {
-        return undefined;
-      }
-    };
-    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-    for (var i=0; i<bibliorefs.length; i++) {
-      const ref = bibliorefs[i];
-      const citeInfo = findCites(ref);
-      if (citeInfo) {
-        tippyHover(citeInfo.el, function() {
-          var popup = window.document.createElement('div');
-          citeInfo.cites.forEach(function(cite) {
-            var citeDiv = window.document.createElement('div');
-            citeDiv.classList.add('hanging-indent');
-            citeDiv.classList.add('csl-entry');
-            var biblioDiv = window.document.getElementById('ref-' + cite);
-            if (biblioDiv) {
-              citeDiv.innerHTML = biblioDiv.innerHTML;
-            }
-            popup.appendChild(citeDiv);
-          });
-          return popup.innerHTML;
-        });
-      }
-    }
-  });
-  </script>
-</div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p>Licencia MIT · el contenido de terceros conserva los términos de su proveedor.</p>
-</div>   
-    <div class="nav-footer-center">
-      &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/Analisis-de-Riesgo/blob/main/01-asset-profile.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
-    <div class="nav-footer-right">
-<p>Fuentes de mercado: Yahoo Finance / BMV · Macro: Banco Mundial</p>
-</div>
-  </div>
-</footer>
-
-
-
-
-<script src="site_libs/quarto-html/zenscroll-min.js"></script>
-</body></html>
+</body>
+</html>

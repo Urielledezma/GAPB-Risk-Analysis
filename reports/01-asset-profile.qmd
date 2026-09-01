@@ -1,6 +1,8 @@
 ---
 title: "El activo y su negocio"
-subtitle: "Caracterización del emisor, estructura financiera y taxonomía de riesgos"
+subtitle: "Grupo Aeroportuario del Pacífico · BMV: GAPB"
+author:
+  - "Francisco Uriel Ledezma Chávez"
 date: last-modified
 date-format: "D [de] MMMM [de] YYYY"
 ---
@@ -8,100 +10,301 @@ date-format: "D [de] MMMM [de] YYYY"
 ```{r setup}
 #| include: false
 source("_setup.R")
+
+fundamentals <- read_dataset("fundamentals_annual", date_cols = character(0))
+eps <- read_dataset("eps_quarterly", date_cols = "period_end")
+validate_fundamentals_annual(fundamentals)
+validate_eps_quarterly(eps)
+
+latest <- fundamentals[fundamentals$year == max(fundamentals$year), ]
+previous <- fundamentals[fundamentals$year == max(fundamentals$year) - 1, ]
+fundamentals$reported_operating_margin <-
+  fundamentals$operating_income_mxn_m / fundamentals$revenue_reported_mxn_m
+fundamentals$service_margin_ex_ifric <-
+  1 - fundamentals$cost_services_mxn_m / fundamentals$revenue_operating_mxn_m
+fundamentals$operating_margin_ex_ifric <-
+  fundamentals$operating_income_mxn_m / fundamentals$revenue_operating_mxn_m
+fundamentals$net_margin_ex_ifric <-
+  fundamentals$net_income_mxn_m / fundamentals$revenue_operating_mxn_m
+fundamentals$ebitda_margin_ex_ifric <-
+  fundamentals$ebitda_mxn_m / fundamentals$revenue_operating_mxn_m
 ```
 
 ## Introducción
 
-::: {.callout-important title="Pendiente de redacción"}
-Síntesis de lo que se presenta en esta etapa: qué se caracteriza, con qué
-información y a qué conclusión se llega.
+Esta primera etapa caracteriza a Grupo Aeroportuario del Pacífico, S.A.B. de
+C.V. (GAP) antes de modelar el riesgo de mercado de su acción serie B. El
+análisis combina la estructura económica del negocio con resultados
+consolidados de 2023 a 2025, indicadores de rentabilidad y apalancamiento,
+utilidad trimestral por ADS y política de dividendos. La lectura conjunta
+muestra una concesionaria con alta generación operativa y crecimiento, aunque
+expuesta a regulación tarifaria, tráfico aéreo, deuda y grandes compromisos de
+inversión.
+
+::: {.callout-note title="Criterio de fuentes"}
+ITESO confirmó que la licencia institucional de FactSet no incluye acceso por
+API. El repositorio acepta exportaciones manuales de FactSet en
+`data/raw/factset/manual/` y las conserva fuera de Git; en su ausencia, esta
+versión usa estados de resultados publicados por GAP ante la SEC y una serie
+pública de EPS. El informe nunca consulta una API durante el renderizado.
 :::
 
 ## Descripción general del activo y del negocio
 
-::: {.callout-important title="Pendiente de redacción"}
-El objetivo de este apartado es **dimensionar** la empresa, no enumerarla. Los
-siguientes elementos son insumos para ese argumento:
-
-- giro y función principal;
-- inicio de operaciones y evolución;
-- líneas de negocio y su peso relativo;
-- presencia geográfica;
-- marcas, subsidiarias y activos concesionados;
-- plantilla aproximada;
-- infraestructura clave;
-- competidores y posición de mercado;
-- eventos recientes relevantes.
-
-Cada afirmación se respalda con reporte trimestral, informe anual o documento
-oficial de la BMV, citado con `@clave` contra `references.bib`.
-:::
+GAP administra infraestructura aeroportuaria bajo concesión: doce aeropuertos
+en México y los aeropuertos de Montego Bay y Kingston en Jamaica. Sus activos
+principales incluyen Guadalajara, Tijuana, Los Cabos y Puerto Vallarta, de modo
+que el portafolio combina tráfico de negocios, manufactura fronteriza y turismo
+internacional. La sociedad surgió del proceso de privatización aeroportuaria de
+1998, inició la operación del paquete Pacífico en 1999 y cotiza desde 2006 en la
+BMV mediante GAPB y en Nueva York mediante el ADS PAC [@gap20f2025].
 
 ```{r asset-metadata}
 #| echo: false
 report_table(
   asset_meta(),
-  caption = "Identificación del emisor analizado."
+  caption = "Identificación bursátil del emisor analizado."
 )
 ```
 
+El ingreso económico se divide en servicios aeronáuticos —tarifas a pasajeros,
+aerolíneas y operadores— y no aeronáuticos —arrendamientos, alimentos y
+bebidas, estacionamientos, salas VIP, tiendas, publicidad, hotelería y carga—.
+En 2025 la mezcla, excluyendo la contabilidad de construcción de IFRIC 12, fue
+aproximadamente 70% aeronáutica y 30% no aeronáutica; esta diversificación
+reduce la dependencia de una sola tarifa, pero no elimina la dependencia del
+flujo de pasajeros. Los catorce aeropuertos atendieron 63.7 millones de
+pasajeros en 2025, 2.5% más que en 2024, y la plantilla cerró el ejercicio con
+aproximadamente 3,506 colaboradores [@gap4q2025; @gap20f2025].
+
+La posición competitiva proviene menos de una marca de consumo que de la
+exclusividad geográfica y la vida remanente de las concesiones. ASUR y OMA son
+los comparables mexicanos más cercanos, mientras que aeropuertos alternativos,
+carreteras y cambios en la oferta de las aerolíneas condicionan la demanda
+local. El evento corporativo más relevante posterior al cierre fue la
+combinación con Cross Border Xpress y activos de asistencia técnica, efectiva
+en mayo de 2026; amplía el ecosistema de Tijuana, pero también emitió acciones
+nuevas y abre un riesgo de integración que no pertenece todavía a las cifras
+2025 analizadas aquí.
+
 ## Análisis de estados financieros
 
-Los fundamentales provienen de FactSet y no se versionan en este repositorio.
-Para reproducir este apartado se requiere una clave con entitlements de API:
+IFRIC 12 obliga a reconocer como ingreso la construcción y mejora de activos
+concesionados junto con un costo equivalente. Como ese renglón infla ingreso y
+costo sin representar venta recurrente ni margen económico, se presentan dos
+bases: ingreso reportado y **ingreso operativo**, definido como la suma de
+servicios aeronáuticos y no aeronáuticos [@gap4q2024; @gap4q2025].
 
-```r
-source("../analysis/03_ingest_fundamentals.R")
+```{r tbl-financials}
+#| echo: false
+financial_table <- data.frame(
+  Año = fundamentals$year,
+  `Ingreso reportado` = fundamentals$revenue_reported_mxn_m,
+  `Ingreso operativo` = fundamentals$revenue_operating_mxn_m,
+  `Utilidad operativa` = fundamentals$operating_income_mxn_m,
+  `Utilidad neta` = fundamentals$net_income_mxn_m,
+  EBITDA = fundamentals$ebitda_mxn_m,
+  check.names = FALSE
+)
+report_table(
+  financial_table,
+  caption = "Resultados consolidados, millones de pesos corrientes.",
+  digits = 1
+)
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-Ingresos, márgenes bruto, operativo y neto de los últimos tres ejercicios, con
-la definición de cada margen y su interpretación económica. Nivel de
-endeudamiento y estructura de capital.
+El ingreso operativo aumentó de $25,432.8 millones en 2023 a $32,525.9 millones
+en 2025, una expansión acumulada de 27.9%. El avance de 2025 fue especialmente
+fuerte: 21.4% frente a 2024, apoyado por recuperación de tráfico, ajuste de
+tarifas, depreciación del peso sobre los ingresos jamaiquinos y consolidación
+de carga y zona franca. La utilidad neta creció 12.7% en ese último año, menos
+que el ingreso, señal de que la escala adicional llegó acompañada de mayor
+costo financiero, depreciación y gasto operativo [@gap4q2025].
 
-Reportar cifras no es analizarlas: cada movimiento relevante debe tener una
-explicación en términos del negocio.
-:::
+```{r fig-margins}
+#| echo: false
+#| fig-cap: "Márgenes consolidados bajo base reportada y base operativa sin IFRIC 12."
+margin_data <- rbind(
+  data.frame(year = fundamentals$year, margin = "Operativo reportado",
+             value = fundamentals$reported_operating_margin),
+  data.frame(year = fundamentals$year, margin = "Servicios sin IFRIC 12",
+             value = fundamentals$service_margin_ex_ifric),
+  data.frame(year = fundamentals$year, margin = "Operativo sin IFRIC 12",
+             value = fundamentals$operating_margin_ex_ifric),
+  data.frame(year = fundamentals$year, margin = "Neto sin IFRIC 12",
+             value = fundamentals$net_margin_ex_ifric),
+  data.frame(year = fundamentals$year, margin = "EBITDA sin IFRIC 12",
+             value = fundamentals$ebitda_margin_ex_ifric)
+)
+
+ggplot(margin_data, aes(year, value, colour = margin, group = margin)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = fundamentals$year) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  scale_colour_manual(values = RISK_PALETTE[1:5]) +
+  labs(x = NULL, y = NULL, colour = NULL,
+       caption = "Fuente: resultados 4T24 y 4T25 de GAP.")
+```
+
+```{r tbl-margins}
+#| echo: false
+margin_table <- data.frame(
+  Año = fundamentals$year,
+  `Servicios sin IFRIC 12` = fmt_pct(fundamentals$service_margin_ex_ifric, 1),
+  `Operativo reportado` = fmt_pct(fundamentals$reported_operating_margin, 1),
+  `Operativo sin IFRIC 12` = fmt_pct(fundamentals$operating_margin_ex_ifric, 1),
+  `Neto sin IFRIC 12` = fmt_pct(fundamentals$net_margin_ex_ifric, 1),
+  `EBITDA sin IFRIC 12` = fmt_pct(fundamentals$ebitda_margin_ex_ifric, 1),
+  check.names = FALSE
+)
+report_table(margin_table, caption = "Márgenes comparables por ejercicio.")
+```
+
+GAP no presenta un subtotal IFRS de utilidad bruta. Por ello, “servicios sin
+IFRIC 12” es un proxy explícito: ingreso operativo menos costo de servicios,
+dividido entre ingreso operativo; no incluye todavía impuestos a la concesión,
+asistencia técnica, depreciación ni otros costos operativos.
+
+El margen EBITDA sin IFRIC 12 permaneció elevado, pero descendió de 69.5% en
+2023 a 65.6% en 2025. El margen operativo comparable siguió el mismo patrón,
+de 59.5% a 54.0%; por tanto, el crecimiento no debe confundirse con expansión
+de eficiencia. La empresa conserva poder de generación de caja propio de una
+infraestructura concesionada, aunque su programa de inversión y la nueva escala
+presionan costos antes de que toda la capacidad produzca ingresos.
 
 ## Indicadores financieros clave
 
-::: {.callout-important title="Pendiente de redacción"}
-ROE, ROA, deuda/capital, deuda/EBITDA y margen EBITDA, con el dato más reciente.
-Para cada indicador: definición, valor, y qué dice sobre este negocio en
-particular.
-:::
+```{r tbl-ratios}
+#| echo: false
+ratios <- data.frame(
+  Indicador = c("ROE", "ROA", "Deuda / capital", "Deuda / EBITDA",
+                "Deuda neta / EBITDA", "Margen EBITDA sin IFRIC 12"),
+  Valor = c(
+    fmt_pct(latest$net_income_mxn_m /
+              mean(c(previous$total_equity_mxn_m, latest$total_equity_mxn_m)), 1),
+    fmt_pct(latest$net_income_mxn_m /
+              mean(c(previous$total_assets_mxn_m, latest$total_assets_mxn_m)), 1),
+    paste0(round(latest$total_debt_mxn_m / latest$total_equity_mxn_m, 2), "x"),
+    paste0(round(latest$total_debt_mxn_m / latest$ebitda_mxn_m, 2), "x"),
+    paste0(round((latest$total_debt_mxn_m - latest$cash_mxn_m) /
+                   latest$ebitda_mxn_m, 2), "x"),
+    fmt_pct(latest$ebitda_mxn_m / latest$revenue_operating_mxn_m, 1)
+  ),
+  Lectura = c(
+    "Rentabilidad elevada sobre el capital contable promedio.",
+    "Los activos producen una utilidad de doble dígito.",
+    "La deuda equivale a más de dos veces el capital.",
+    "Cobertura operativa holgada, pero sensible a tasas y tráfico.",
+    "La caja reduce el apalancamiento económico por debajo de 2x.",
+    "Amplio colchón antes de intereses, impuestos y depreciación."
+  )
+)
+report_table(ratios, caption = "Indicadores clave al cierre de 2025.")
+```
+
+El ROE de 40.4% es atractivo, pero está amplificado por una estructura en la que
+la deuda representa 2.13 veces el capital. En contraste, la deuda neta equivale
+a 1.99 veces EBITDA, nivel administrable para la generación operativa actual.
+La lectura correcta no es “bajo riesgo”: GAP puede servir su deuda en el
+escenario base, pero una interrupción de tráfico o un aumento persistente de
+tasas se transmitiría con rapidez al flujo disponible para inversión y
+dividendos.
 
 ## Utilidad por acción
 
-::: {.callout-important title="Pendiente de redacción"}
-Evolución trimestral del EPS de 2019 a 2025 y su estabilidad en el tiempo.
-:::
+La serie trimestral corresponde al ADS **PAC** cotizado en Nueva York, denominado
+en dólares y equivalente a diez acciones serie B; se usa porque ofrece una
+historia trimestral homogénea para el mismo derecho económico. No se mezcla con
+el precio de GAPB ni se convierte a pesos, ya que hacerlo introduciría el tipo
+de cambio dentro de una medida de desempeño operativo [@alphaquerypac;
+@marketbeatpac].
+
+```{r fig-eps}
+#| echo: false
+#| fig-cap: "Utilidad diluida trimestral por ADS PAC, dólares por ADS."
+ggplot(eps, aes(period_end, diluted_eps)) +
+  geom_hline(yintercept = 0, colour = RISK_INK$baseline, linewidth = 0.4) +
+  geom_line(colour = RISK_PALETTE[1], linewidth = 0.8) +
+  geom_point(colour = RISK_PALETTE[1], size = 1.7) +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  labs(x = NULL, y = "USD por ADS",
+       caption = "Fuentes: AlphaQuery, Macrotrends y MarketBeat; ver manifest de datos.")
+```
+
+```{r tbl-eps}
+#| echo: false
+eps_wide <- reshape(
+  eps[, c("year", "quarter", "diluted_eps")],
+  idvar = "year", timevar = "quarter", direction = "wide"
+)
+names(eps_wide) <- sub("diluted_eps\\.", "", names(eps_wide))
+report_table(eps_wide, caption = "EPS diluido trimestral del ADS PAC, USD.", digits = 2)
+```
+
+La ruptura de la serie ocurre en el segundo trimestre de 2020, cuando el EPS
+fue negativo por las restricciones de movilidad. La recuperación posterior es
+visible y, desde 2022, todos los trimestres permanecen positivos; sin embargo,
+el descenso a USD 1.64 en 4T25 frente a USD 2.86 en 3T25 confirma estacionalidad
+y sensibilidad del resultado financiero. Para las etapas de mercado interesa
+menos el nivel aislado que la capacidad de estos cambios para alterar
+expectativas y volatilidad.
 
 ## Dividendos y *splits*
 
-::: {.callout-important title="Pendiente de redacción"}
-Política de dividendos, su frecuencia, y cualquier cambio relevante. *Splits*
-históricos, fechas y proporciones, y su efecto sobre la serie de precios
-ajustada que utilizan las etapas siguientes.
-:::
+La política de GAP distribuye efectivo excedente después de conservar un saldo
+mínimo equivalente a dos meses de gastos operativos y servicio de deuda de
+corto plazo. La asamblea de abril de 2025 aprobó un dividendo total de MXN 16.84
+por acción, pagado en dos exhibiciones; la frecuencia, por tanto, depende de la
+asamblea y de la liquidez, no de un dividendo trimestral rígido
+[@gapdividend2025]. Esa flexibilidad protege inversión y deuda, aunque vuelve el
+retorno total sensible a decisiones corporativas y al ciclo de CAPEX.
+
+No se identificaron *splits* de GAPB desde su listado en 2006 en los informes
+revisados. Sí existe una relación fija de un ADS PAC por diez acciones serie B,
+que no debe confundirse con un *split*. Las siguientes etapas utilizarán precio
+ajustado por distribuciones y eventos corporativos; esta distinción evita que
+un dividendo aparezca falsamente como pérdida económica.
 
 ## Identificación de riesgos
 
-::: {.callout-important title="Pendiente de redacción"}
-Riesgos operativos, macroeconómicos y financieros del emisor, argumentados en
-términos de cómo cada uno se transmite al precio de la acción.
+**Riesgo regulatorio y de concesión.** La tarifa máxima, los derechos de
+concesión y los programas maestros de desarrollo dependen de autoridades
+mexicanas y jamaiquinas. Una modificación unilateral cambia ingresos permitidos
+o CAPEX obligatorio y, por ello, afecta directamente la valuación.
 
-Este apartado es el puente conceptual hacia las etapas cuantitativas: lo que
-aquí se identifique como fuente de riesgo debe reaparecer en la etapa 02 como
-evento y en las etapas 03 a 05 como volatilidad medida.
-:::
+**Riesgo de tráfico y concentración.** Los ingresos dependen de pasajeros,
+rutas y capacidad de aerolíneas; choques sanitarios, recesión, problemas de
+motores o quiebras de operadores reducen simultáneamente ingreso aeronáutico y
+consumo comercial. La concentración en Guadalajara, Tijuana y destinos
+turísticos aumenta la exposición a eventos regionales y estacionales.
+
+**Riesgo macrofinanciero.** Tasas altas encarecen una deuda de MXN 53.0 mil
+millones, mientras que la depreciación del peso eleva la traducción de Jamaica
+pero también puede encarecer obligaciones o insumos en dólares. Inflación,
+crecimiento del PIB y tipo de cambio deben reaparecer como variables de contexto
+en la etapa 02.
+
+**Riesgo de ejecución e integración.** El CAPEX 2025 de MXN 12.4 mil millones y
+la integración posterior de CBX requieren disciplina operativa. Retrasos,
+sobrecostos o capacidad que tarde en madurar comprimirían márgenes y flujo libre;
+la emisión de acciones asociada, además, introduce dilución para el accionista.
+
+**Riesgo climático, de seguridad y tecnológico.** Huracanes, sismos, fallas de
+infraestructura, ciberataques o incidentes de seguridad pueden interrumpir un
+activo que no puede trasladarse. Aunque seguros y redundancias contienen la
+pérdida, no eliminan cierres, daño reputacional ni menor tráfico.
 
 ## Conclusión
 
-::: {.callout-important title="Pendiente de redacción"}
-Caracterización integrada del negocio —sólido, en expansión o en consolidación—
-sostenida por la evidencia de los apartados anteriores, y el perfil de riesgo
-que cabría esperar observar después en el precio.
-:::
+GAP llega al cierre de 2025 como una concesionaria en expansión: el ingreso
+operativo creció 27.9% en dos años, el EBITDA alcanzó MXN 21.3 mil millones y la
+deuda neta se mantuvo cerca de 2.0 veces EBITDA. La contrapartida es una
+compresión gradual de márgenes, deuda superior a dos veces el capital y un ciclo
+intenso de inversión, a lo que se suma la integración de CBX en 2026. En
+consecuencia, GAPB combina calidad de infraestructura y flujo recurrente con
+riesgos discretos capaces de producir saltos en precio; regulación, tráfico,
+tasas, tipo de cambio e integración serán los ejes que deberán contrastarse con
+la historia bursátil en la siguiente etapa.
 
 ## Referencias
