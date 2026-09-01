@@ -75,11 +75,13 @@ cd Analisis-de-Riesgo
 install.packages("renv")
 renv::restore()
 
-# 2. With a FactSet key: confirm entitlement, then ingest from the vendor
-source("analysis/00_probe_factset.R")
+# 2. Refresh public prices and derived datasets
 source("analysis/01_ingest_prices.R")     # add --universe for stage 05
-source("analysis/03_ingest_fundamentals.R")
 source("analysis/04_build_datasets.R")
+
+# Optional: normalize manual FactSet exports after placing them in
+# data/raw/factset/manual/
+source("analysis/03_ingest_fundamentals.R")
 
 # Without a key, skip step 2 entirely — the committed snapshot renders as is.
 ```
@@ -92,17 +94,17 @@ quarto render reports
 Rscript tests/testthat.R
 ```
 
-Fundamentals ingestion (`analysis/03_ingest_fundamentals.R`) is the one step that
-requires credentials. See [Data sources](#data-sources) below.
+The committed public snapshot renders without credentials. See
+[Data sources](#data-sources) below for the manual FactSet override.
 
 ---
 
 ## Data sourcing and reproducibility
 
-**FactSet is the primary source.** Every price series and all fundamentals are requested
-from FactSet first. Yahoo Finance / BMV is a fallback for an unentitled key or an
-outage — never a preference. The ladder lives in one place, `R/data_sources.R`, and
-nothing else in the project knows where a price came from.
+**FactSet is the preferred licensed source, but ITESO has no API entitlement.** Prices
+therefore use the public Yahoo Finance / BMV path and fundamentals use cited GAP/SEC
+filings unless a teammate supplies a manual FactSet export. The source ladder lives in
+`R/data_sources.R`; both paths produce the same report schemas.
 
 Every fallback is announced, every row carries a `source` column, and a provenance
 manifest records which vendor served which ticker. A run that quietly degraded and a run
@@ -117,8 +119,8 @@ restriction attaches to the content rather than to who holds a key — so FactSe
 datasets live in `data/private/`, which is untracked. The tracked snapshot in
 `data/processed/` comes from public sources alone and exists as the floor that keeps the
 repository renderable. `read_dataset()` prefers the vendor copy when it is present, so a
-teammate with a key sees FactSet numbers and a reader without one still sees a rendered
-report.
+teammate with a normalized manual export sees FactSet numbers and a reader without one
+still sees a rendered report.
 
 Random draws (Monte Carlo VaR, GBM path simulation) are seeded from `config/params.yml`.
 
@@ -128,8 +130,9 @@ Random draws (Monte Carlo VaR, GBM path simulation) are seeded from `config/para
 
 | Source | Role | Used for | Access | Committed? |
 |---|---|---|---|---|
-| **FactSet** | **Primary** | Daily prices, quarterly EPS, margins, leverage ratios | Entitled API key | **No** |
-| Yahoo Finance / BMV | Fallback | Daily OHLCV, full quotation history | Public, via `quantmod` | Yes — `data/processed/` |
+| **FactSet workstation** | Manual licensed override | Fundamentals and market data exported by a licensed teammate | Manual export; no ITESO API entitlement | **No** |
+| GAP / SEC filings | Primary | Annual fundamentals, margins, leverage ratios | Public | Yes — curated snapshot |
+| Yahoo Finance / BMV | Primary public path | Daily OHLCV, full quotation history | Public, via `quantmod` | Yes — `data/processed/` |
 | World Bank | Primary | Mexican annual real GDP growth | Public, no token | Yes |
 | Banxico SIE | Optional | Reference rate, FX | Free token | Yes — derived series only |
 | INEGI | Optional | Quarterly GDP | Free token | Yes — derived series only |
@@ -139,16 +142,8 @@ Random draws (Monte Carlo VaR, GBM path simulation) are seeded from `config/para
 version control. Figures derived from them appear in the reports with the source cited,
 as any research note cites a data vendor.
 
-Before relying on the FactSet path, settle entitlement and the response schema in one
-cheap call:
-
-```bash
-Rscript analysis/00_probe_factset.R
-```
-
-It reports whether the credentials authenticate (401) as distinct from whether the
-account is entitled (403), prints the field names the endpoints actually return, and
-confirms the identifier convention in `config/assets.yml`.
+The historical API probe remains under `analysis/00_probe_factset.R` for diagnostic
+reference, but it is not part of the production ingest path under the current licence.
 
 Credentials are read from a machine-wide `.secrets/api.env` first, then from a
 project-local `.env`, which takes precedence. Copy `.env.example` to `.env` to configure;
