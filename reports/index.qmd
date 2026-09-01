@@ -74,10 +74,10 @@ if (file.exists(proj_path(manifest_path))) {
 }
 ```
 
-La fuente primaria de precios y fundamentales es **FactSet**. Cuando la clave no
-está disponible o el endpoint no está habilitado, el pipeline recurre a Yahoo
-Finance / BMV y lo declara explícitamente: la tabla anterior refleja de dónde
-provino cada serie en este render, no de dónde debería provenir.
+La licencia institucional de FactSet no incluye acceso por API. Por ello, los
+precios usan la ruta pública Yahoo Finance / BMV y los fundamentales usan
+reportes GAP/SEC, salvo que exista una exportación manual de FactSet validada en
+`data/private/`. La tabla anterior refleja la fuente efectiva de este render.
 
 ## Nota metodológica
 
@@ -96,8 +96,8 @@ reconstrucción.
 ::: {.callout-note collapse="true"}
 ## Fuentes de información
 
-Precios diarios, volumen y fundamentales corporativos: **FactSet**, citado como
-fuente sin redistribución del contenido. Fuente de respaldo para precios: Yahoo
-Finance / Bolsa Mexicana de Valores. Crecimiento anual del PIB real de México:
-Banco Mundial.
+Precios diarios y volumen: Yahoo Finance / Bolsa Mexicana de Valores.
+Fundamentales corporativos: reportes de GAP ante la SEC, con FactSet como
+sobrescritura manual licenciada cuando esté disponible. Crecimiento anual del
+PIB real de México: Banco Mundial.
 :::

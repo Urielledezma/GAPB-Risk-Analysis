@@ -63,6 +63,19 @@ main <- function() {
   cat("\nCredential status (names and lengths only):\n")
   print(env_status(c("FACTSET_USERNAME_SERIAL", "FACTSET_API_KEY")), row.names = FALSE)
 
+  # The key is bound to an IP allowlist, and an address outside it is refused
+  # with the same 401 as a wrong key. Print it before anything else so that the
+  # cheapest explanation is the first one on screen.
+  address <- factset_caller_ip()
+  cat(
+    "\nThis machine is seen by FactSet as: ",
+    if (is.na(address)) "could not be determined" else address,
+    "\n  It must fall inside the IP Range on the key. On a campus or dynamic\n",
+    "  connection it changes without notice, so re-check it after moving\n",
+    "  networks.\n",
+    sep = ""
+  )
+
   if (!all(env_status(c("FACTSET_USERNAME_SERIAL", "FACTSET_API_KEY"))$set)) {
     stop(
       "FactSet credentials are not configured. Copy .env.example to .env first.",

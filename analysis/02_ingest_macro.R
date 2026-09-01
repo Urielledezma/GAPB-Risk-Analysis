@@ -52,9 +52,16 @@ main <- function() {
   }
 
   # --- Optional: INEGI quarterly GDP ----------------------------------------
+  spec <- macro$gdp_quarterly
   quarterly <- fetch_optional(
     "INEGI quarterly GDP",
-    function() fetch_inegi_indicator(macro$gdp_quarterly$indicator)
+    function() {
+      fetch_inegi_indicator(
+        spec$indicator,
+        geography = spec$geography %||% "00",
+        bank = spec$bank %||% "BIE"
+      )
+    }
   )
   if (!is.null(quarterly)) {
     write_processed(quarterly, "gdp_mx_quarterly")
