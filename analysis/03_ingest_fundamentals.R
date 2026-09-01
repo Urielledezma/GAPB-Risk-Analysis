@@ -1,61 +1,46 @@
-# 03 — Company fundamentals ingestion (FactSet)
+# 03 — Manual FactSet fundamentals ingestion
 #
-# The one step in the pipeline that requires credentials, and the one whose
-# output is never committed. Extracts land in data/raw/factset/, which is
-# excluded from version control, because FactSet content is cited but not
-# redistributed.
+# ITESO's FactSet licence includes workstation access but no API entitlement.
+# Export the two report tables from FactSet, map them to the documented schemas
+# below and place them in data/raw/factset/manual/. This script validates and
+# normalizes them into data/private/, which remains untracked. Reports prefer
+# those private files and otherwise use the cited public snapshot.
 #
-# Without an entitled key this script stops with a named error and changes
-# nothing. Every other stage of the pipeline continues to work.
+# Required files:
+#   fundamentals_annual.csv — FUNDAMENTALS_ANNUAL_COLUMNS
+#   eps_quarterly.csv        — EPS_QUARTERLY_COLUMNS
 #
 #   Rscript analysis/03_ingest_fundamentals.R
 
 source(file.path("R", "utils_io.R"))
 source_lib()
 
-library(httr2)
-
 main <- function() {
-  load_env()
+  input_dir <- proj_path("data", "raw", "factset", "manual")
+  annual_path <- file.path(input_dir, "fundamentals_annual.csv")
+  eps_path <- file.path(input_dir, "eps_quarterly.csv")
 
-  print(env_paths(), row.names = FALSE)
-
-  status <- env_status(c("FACTSET_USERNAME_SERIAL", "FACTSET_API_KEY"))
-  print(status, row.names = FALSE)
-
-  if (!all(status$set)) {
+  missing <- c(annual_path, eps_path)[!file.exists(c(annual_path, eps_path))]
+  if (length(missing) > 0) {
     stop(
-      "FactSet credentials are not configured.\n",
-      "  Copy .env.example to .env and fill in FACTSET_USERNAME_SERIAL and ",
-      "FACTSET_API_KEY.\n",
-      "  Every other step of the pipeline runs without them.",
+      "Missing manual FactSet export(s):\n  ",
+      paste(missing, collapse = "\n  "),
+      "\nUse the column contracts in R/data_fundamentals.R.",
       call. = FALSE
     )
   }
 
-  # Settle entitlement before pulling anything substantial. A Workstation
-  # licence does not imply API access, and finding that out on a large request
-  # wastes both time and quota.
-  message("Checking entitlement ...")
-  factset_ping()
+  annual <- utils::read.csv(annual_path, stringsAsFactors = FALSE, encoding = "UTF-8")
+  eps <- utils::read.csv(eps_path, stringsAsFactors = FALSE, encoding = "UTF-8")
+  eps$period_end <- as.Date(eps$period_end)
 
-  meta <- asset_meta()
-  message("Fetching quarterly fundamentals for ", meta$name, " (", meta$factset_id, ") ...")
+  annual <- normalize_manual_factset_annual(annual)
+  validate_eps_quarterly(eps)
 
-  fundamentals <- fetch_factset_fundamentals(
-    ids = meta$factset_id,
-    start = "2019-01-01",
-    end = params()$sample$end,
-    periodicity = "QTR"
-  )
-
-  message(
-    "Wrote ", nrow(fundamentals), " observations to data/raw/factset/fundamentals.csv ",
-    "(untracked, by design)."
-  )
-  print(utils::head(fundamentals, 10), row.names = FALSE)
-
-  invisible(fundamentals)
+  write_private(annual, "fundamentals_annual.csv")
+  write_private(eps[, EPS_QUARTERLY_COLUMNS], "eps_quarterly.csv")
+  message("Manual FactSet fundamentals are ready for report rendering.")
+  invisible(list(annual = annual, eps = eps))
 }
 
 main()
