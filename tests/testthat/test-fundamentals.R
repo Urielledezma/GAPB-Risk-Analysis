@@ -54,7 +54,7 @@ test_that("manual FactSet snapshots are marked private and validated", {
     source_url = NA_character_
   )
 
-  normalized <- normalize_manual_factset_annual(annual)
+  normalized <- normalize_factset_annual(annual)
 
   expect_identical(normalized$source, "FactSet manual export")
   expect_true(all(is.na(normalized$source_url)))

@@ -33,6 +33,7 @@ jobs:
           packages: |
             any::testthat
             any::yaml
+            any::httr2
             any::moments
             any::tseries
 

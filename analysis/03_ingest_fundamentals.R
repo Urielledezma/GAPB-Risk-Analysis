@@ -34,7 +34,7 @@ main <- function() {
   eps <- utils::read.csv(eps_path, stringsAsFactors = FALSE, encoding = "UTF-8")
   eps$period_end <- as.Date(eps$period_end)
 
-  annual <- normalize_manual_factset_annual(annual)
+  annual <- normalize_factset_annual(annual)
   validate_eps_quarterly(eps)
 
   write_private(annual, "fundamentals_annual.csv")

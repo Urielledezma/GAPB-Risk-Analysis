@@ -53,7 +53,7 @@ validate_eps_quarterly <- function(data) {
 #'
 #' @param data A data frame already mapped to the project schema.
 #' @return The validated columns in canonical order.
-normalize_manual_factset_annual <- function(data) {
+normalize_factset_annual <- function(data) {
   validate_fundamentals_annual(data)
   data[, FUNDAMENTALS_ANNUAL_COLUMNS, drop = FALSE]
 }
