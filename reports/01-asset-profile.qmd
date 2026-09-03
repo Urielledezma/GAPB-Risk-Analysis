@@ -2,7 +2,10 @@
 title: "El activo y su negocio"
 subtitle: "Grupo Aeroportuario del Pacífico · BMV: GAPB"
 author:
+  - "Santiago Álvarez Tostado Estrada"
   - "Francisco Uriel Ledezma Chávez"
+  - "Jorge Isaac López Ávila"
+  - "Juan Pablo Morán Errejón"
 date: last-modified
 date-format: "D [de] MMMM [de] YYYY"
 ---
@@ -29,6 +32,13 @@ fundamentals$net_margin_ex_ifric <-
 fundamentals$ebitda_margin_ex_ifric <-
   fundamentals$ebitda_mxn_m / fundamentals$revenue_operating_mxn_m
 ```
+
+<dl class="report-meta" aria-label="Ficha técnica del reporte">
+<div><dt>Fuente de datos</dt><dd>GAP / SEC y serie pública de EPS; FactSet manual si está disponible</dd></div>
+<div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>
+<div><dt>Moneda</dt><dd>MXN millones; EPS en USD por ADS</dd></div>
+<div><dt>Periodo cubierto</dt><dd>Estados 2023–2025; EPS 1T19–4T25</dd></div>
+</dl>
 
 ## Introducción
 
@@ -59,7 +69,10 @@ internacional. La sociedad surgió del proceso de privatización aeroportuaria d
 1998, inició la operación del paquete Pacífico en 1999 y cotiza desde 2006 en la
 BMV mediante GAPB y en Nueva York mediante el ADS PAC [@gap20f2025].
 
-```{r asset-metadata}
+La @tbl-asset-metadata sintetiza la identificación bursátil utilizada en el
+análisis.
+
+```{r tbl-asset-metadata}
 #| echo: false
 report_table(
   asset_meta(),
@@ -95,8 +108,12 @@ costo sin representar venta recurrente ni margen económico, se presentan dos
 bases: ingreso reportado y **ingreso operativo**, definido como la suma de
 servicios aeronáuticos y no aeronáuticos [@gap4q2024; @gap4q2025].
 
+La @tbl-financials presenta ambas bases y evita interpretar el ingreso de
+construcción como una venta recurrente.
+
 ```{r tbl-financials}
 #| echo: false
+#| tbl-cap: "Resultados consolidados, millones de pesos corrientes."
 financial_table <- data.frame(
   Año = fundamentals$year,
   `Ingreso reportado` = fundamentals$revenue_reported_mxn_m,
@@ -108,7 +125,6 @@ financial_table <- data.frame(
 )
 report_table(
   financial_table,
-  caption = "Resultados consolidados, millones de pesos corrientes.",
   digits = 1
 )
 ```
@@ -149,6 +165,7 @@ ggplot(margin_data, aes(year, value, colour = margin, group = margin)) +
 
 ```{r tbl-margins}
 #| echo: false
+#| tbl-cap: "Márgenes comparables por ejercicio."
 margin_table <- data.frame(
   Año = fundamentals$year,
   `Servicios sin IFRIC 12` = fmt_pct(fundamentals$service_margin_ex_ifric, 1),
@@ -158,13 +175,20 @@ margin_table <- data.frame(
   `EBITDA sin IFRIC 12` = fmt_pct(fundamentals$ebitda_margin_ex_ifric, 1),
   check.names = FALSE
 )
-report_table(margin_table, caption = "Márgenes comparables por ejercicio.")
+report_table(margin_table)
 ```
+
+La @fig-margins muestra la trayectoria y la @tbl-margins conserva los valores
+exactos que sostienen la comparación entre ejercicios.
+
+::: {.semantic-block .semantic-assumption}
+<span class="semantic-label">Supuesto metodológico</span>
 
 GAP no presenta un subtotal IFRS de utilidad bruta. Por ello, “servicios sin
 IFRIC 12” es un proxy explícito: ingreso operativo menos costo de servicios,
 dividido entre ingreso operativo; no incluye todavía impuestos a la concesión,
 asistencia técnica, depreciación ni otros costos operativos.
+:::
 
 El margen EBITDA sin IFRIC 12 permaneció elevado, pero descendió de 69.5% en
 2023 a 65.6% en 2025. El margen operativo comparable siguió el mismo patrón,
@@ -175,8 +199,12 @@ presionan costos antes de que toda la capacidad produzca ingresos.
 
 ## Indicadores financieros clave
 
+La @tbl-ratios concentra rentabilidad, apalancamiento y capacidad de cobertura
+al cierre del ejercicio.
+
 ```{r tbl-ratios}
 #| echo: false
+#| tbl-cap: "Indicadores clave al cierre de 2025."
 ratios <- data.frame(
   Indicador = c("ROE", "ROA", "Deuda / capital", "Deuda / EBITDA",
                 "Deuda neta / EBITDA", "Margen EBITDA sin IFRIC 12"),
@@ -200,7 +228,7 @@ ratios <- data.frame(
     "Amplio colchón antes de intereses, impuestos y depreciación."
   )
 )
-report_table(ratios, caption = "Indicadores clave al cierre de 2025.")
+report_table(ratios)
 ```
 
 El ROE de 40.4% es atractivo, pero está amplificado por una estructura en la que
@@ -220,6 +248,9 @@ el precio de GAPB ni se convierte a pesos, ya que hacerlo introduciría el tipo
 de cambio dentro de una medida de desempeño operativo [@alphaquerypac;
 @marketbeatpac].
 
+La @fig-eps permite observar la ruptura y recuperación de la serie, mientras
+que la @tbl-eps conserva el detalle trimestral utilizado en la lectura.
+
 ```{r fig-eps}
 #| echo: false
 #| fig-cap: "Utilidad diluida trimestral por ADS PAC, dólares por ADS."
@@ -234,12 +265,14 @@ ggplot(eps, aes(period_end, diluted_eps)) +
 
 ```{r tbl-eps}
 #| echo: false
+#| tbl-cap: "EPS diluido trimestral del ADS PAC, USD."
 eps_wide <- reshape(
   eps[, c("year", "quarter", "diluted_eps")],
   idvar = "year", timevar = "quarter", direction = "wide"
 )
 names(eps_wide) <- sub("diluted_eps\\.", "", names(eps_wide))
-report_table(eps_wide, caption = "EPS diluido trimestral del ADS PAC, USD.", digits = 2)
+row.names(eps_wide) <- NULL
+report_table(eps_wide, digits = 2)
 ```
 
 La ruptura de la serie ocurre en el segundo trimestre de 2020, cuando el EPS
@@ -268,6 +301,9 @@ un dividendo aparezca falsamente como pérdida económica.
 
 ## Identificación de riesgos
 
+::: {.semantic-block .semantic-risk}
+<span class="semantic-label">Riesgo</span>
+
 **Riesgo regulatorio y de concesión.** La tarifa máxima, los derechos de
 concesión y los programas maestros de desarrollo dependen de autoridades
 mexicanas y jamaiquinas. Una modificación unilateral cambia ingresos permitidos
@@ -294,6 +330,7 @@ la emisión de acciones asociada, además, introduce dilución para el accionist
 infraestructura, ciberataques o incidentes de seguridad pueden interrumpir un
 activo que no puede trasladarse. Aunque seguros y redundancias contienen la
 pérdida, no eliminan cierres, daño reputacional ni menor tráfico.
+:::
 
 ## Conclusión
 

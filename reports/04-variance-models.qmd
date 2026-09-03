@@ -1,6 +1,11 @@
 ﻿---
 title: "Modelos de varianza"
 subtitle: "Promedios móviles, EWMA, EWMA calibrado y ARCH/GARCH, evaluados fuera de muestra"
+author:
+  - "Santiago Álvarez Tostado Estrada"
+  - "Francisco Uriel Ledezma Chávez"
+  - "Jorge Isaac López Ávila"
+  - "Juan Pablo Morán Errejón"
 date: last-modified
 date-format: "D [de] MMMM [de] YYYY"
 ---
@@ -9,6 +14,13 @@ date-format: "D [de] MMMM [de] YYYY"
 #| include: false
 source("_setup.R")
 ```
+
+<dl class="report-meta" aria-label="Ficha técnica del reporte">
+<div><dt>Fuente de datos</dt><dd>Yahoo Finance / BMV</dd></div>
+<div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>
+<div><dt>Moneda</dt><dd>Rendimientos y volatilidad en escala decimal</dd></div>
+<div><dt>Periodo cubierto</dt><dd>27 de febrero de 2006–26 de agosto de 2026</dd></div>
+</dl>
 
 ```{r data}
 #| include: false
@@ -52,6 +64,8 @@ con datos hasta el **31 de diciembre de 2025** y se evalúan sobre 2026.
 
 ## Promedios móviles
 
+La @fig-ma compara la respuesta de las distintas ventanas móviles.
+
 ```{r}
 #| label: fig-ma
 #| fig-cap: "Volatilidad estimada con distintas ventanas móviles."
@@ -79,6 +93,8 @@ de cómo cambia la estimación conforme se amplía la ventana.
 
 ## EWMA
 
+La @fig-ewma muestra la trayectoria estimada con el factor de RiskMetrics.
+
 ```{r}
 #| label: fig-ewma
 #| fig-cap: "EWMA con el factor de decaimiento de RiskMetrics."
@@ -92,6 +108,8 @@ ggplot(estimation[is.finite(estimation$ewma), ], aes(date, ewma)) +
 ```
 
 ## EWMA calibrado con los datos
+
+La @tbl-ewma-fit compara los parámetros seleccionados por cada criterio.
 
 ```{r}
 #| label: tbl-ewma-fit

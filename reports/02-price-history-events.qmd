@@ -1,6 +1,11 @@
 ﻿---
 title: "Precio, caídas y eventos"
 subtitle: "Trayectoria histórica, drawdowns y su atribución a hechos del entorno"
+author:
+  - "Santiago Álvarez Tostado Estrada"
+  - "Francisco Uriel Ledezma Chávez"
+  - "Jorge Isaac López Ávila"
+  - "Juan Pablo Morán Errejón"
 date: last-modified
 date-format: "D [de] MMMM [de] YYYY"
 ---
@@ -9,6 +14,13 @@ date-format: "D [de] MMMM [de] YYYY"
 #| include: false
 source("_setup.R")
 ```
+
+<dl class="report-meta" aria-label="Ficha técnica del reporte">
+<div><dt>Fuente de datos</dt><dd>Yahoo Finance / BMV y Banco Mundial</dd></div>
+<div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>
+<div><dt>Moneda</dt><dd>MXN por acción; rendimientos adimensionales</dd></div>
+<div><dt>Periodo cubierto</dt><dd>27 de febrero de 2006–26 de agosto de 2026</dd></div>
+</dl>
 
 ```{r data}
 #| include: false
@@ -29,6 +41,9 @@ fundamental del riesgo financiero.
 :::
 
 ## Exploración de la serie histórica
+
+La @fig-price presenta la trayectoria ajustada del activo y la @fig-returns
+muestra los rendimientos diarios que sostienen el análisis de riesgo.
 
 ```{r}
 #| label: fig-price
@@ -55,6 +70,9 @@ ggplot(subject_returns, aes(date, log_return)) +
 
 El *drawdown* mide la caída proporcional desde el máximo acumulado hasta la
 fecha:
+
+La @tbl-drawdown resume el episodio extremo y la @fig-drawdown muestra su
+evolución respecto del máximo acumulado.
 
 $$
 DD_t = \frac{S_t}{\max_{s \le t} S_s} - 1
@@ -95,6 +113,9 @@ no en narrar la noticia.
 :::
 
 ## Relación con el ciclo económico
+
+La @fig-gdp compara ambas series y la @tbl-gdp conserva los valores anuales
+utilizados en la lectura del ciclo.
 
 ```{r}
 #| label: fig-gdp

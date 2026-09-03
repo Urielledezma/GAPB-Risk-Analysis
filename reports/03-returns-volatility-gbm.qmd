@@ -1,6 +1,11 @@
 ﻿---
 title: "Rendimientos, volatilidad y movimiento browniano geométrico"
 subtitle: "Distribución empírica, pruebas de normalidad y proyección del precio"
+author:
+  - "Santiago Álvarez Tostado Estrada"
+  - "Francisco Uriel Ledezma Chávez"
+  - "Jorge Isaac López Ávila"
+  - "Juan Pablo Morán Errejón"
 date: last-modified
 date-format: "D [de] MMMM [de] YYYY"
 ---
@@ -9,6 +14,13 @@ date-format: "D [de] MMMM [de] YYYY"
 #| include: false
 source("_setup.R")
 ```
+
+<dl class="report-meta" aria-label="Ficha técnica del reporte">
+<div><dt>Fuente de datos</dt><dd>Yahoo Finance / BMV</dd></div>
+<div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>
+<div><dt>Moneda</dt><dd>MXN por acción; rendimientos adimensionales</dd></div>
+<div><dt>Periodo cubierto</dt><dd>27 de febrero de 2006–26 de agosto de 2026</dd></div>
+</dl>
 
 ```{r data}
 #| include: false
@@ -48,6 +60,9 @@ $$
 
 ## Rendimientos y volatilidad
 
+La @tbl-moments resume la muestra completa y la @tbl-moments-annual permite
+comparar los cambios entre años.
+
 ### Periodo completo de estimación
 
 ```{r}
@@ -79,6 +94,9 @@ report_table(
 
 El estadístico de Jarque-Bera contrasta conjuntamente el tercer y cuarto momento
 contra los de una normal:
+
+La @tbl-jb formaliza el contraste y la @fig-distribution permite comparar la
+densidad empírica con la normal ajustada.
 
 $$
 JB = \frac{n}{6}\left(S^2 + \frac{(K-3)^2}{4}\right) \;\sim\; \chi^2_{2}
@@ -118,6 +136,8 @@ $$
 t = \frac{\bar{r}}{s/\sqrt{n}} \;\sim\; t_{\,n-1}
 $$
 
+La @tbl-ttest reporta la estimación y la decisión estadística correspondiente.
+
 ```{r}
 #| label: tbl-ttest
 report_table(
@@ -150,6 +170,8 @@ se construye sobre los cuantiles de la lognormal, no como una banda simétrica
 alrededor de la media: el precio no puede ser negativo y su distribución es
 asimétrica a la derecha.
 
+La @tbl-gbm-daily presenta las proyecciones construidas con parámetros diarios.
+
 ```{r}
 #| label: tbl-gbm-daily
 gbm <- gbm_params(sample_returns$log_return)
@@ -162,6 +184,8 @@ report_table(
 ```
 
 ## Modelo con parámetros anuales
+
+La @tbl-gbm-annual expresa la misma proyección en horizontes anuales.
 
 ```{r}
 #| label: tbl-gbm-annual
