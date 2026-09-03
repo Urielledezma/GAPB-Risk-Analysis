@@ -45,6 +45,16 @@ params <- function() {
   load_config("params.yml")
 }
 
+#' The SEC filings manifest.
+#'
+#' Maps every reporting period to the filing that supplies it, so the sourcing
+#' of a figure is configuration rather than something buried in a script.
+#'
+#' @return A named list, as parsed from config/filings.yml.
+filings_config <- function() {
+  load_config("filings.yml")
+}
+
 #' The full asset universe as a data frame.
 #'
 #' @return One row per asset, with ticker, name, series, sector, industry and

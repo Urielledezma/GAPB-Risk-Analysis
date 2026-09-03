@@ -1,0 +1,79 @@
+# GAP filings on SEC EDGAR — the provenance manifest.
+#
+# Every fundamental figure in stage 01 comes from one of the documents listed
+# here. The manifest is the single source of truth for *which* filing supplies
+# *which* period; analysis/06_ingest_gap_filings.R only executes it.
+#
+# Keeping the mapping in configuration rather than in the script is what makes
+# the sourcing auditable: a reader who doubts a quarter can open the accession
+# named beside it and read the number off the page.
+#
+# GAP is a foreign private issuer, so there is no 10-Q and no quarterly XBRL.
+# The annual figures come from the 20-F, the quarterly ones from the 6-K
+# earnings releases, and the two are reconciled against each other on every run.
+
+cik: "1347557"
+
+# --------------------------------------------------------------------------
+# Annual — one filing, three fiscal years, one accounting basis.
+#
+# The FY2025 20-F states 2023, 2024 and 2025 side by side, so the whole annual
+# panel is internally consistent. Stitching three separate 20-Fs together would
+# have mixed figures from before and after each restatement.
+# --------------------------------------------------------------------------
+annual:
+  accession: "0001193125-26-161714"
+  # EDGAR renders each statement of the filing as its own small table.
+  balance_sheet: "R2.htm"
+  income_statement: "R3.htm"
+  years: [2025, 2024, 2023]
+  label: "GAP Form 20-F 2025"
+  url: "https://www.sec.gov/Archives/edgar/data/1347557/000119312526161714/pac-20251231.htm"
+
+# --------------------------------------------------------------------------
+# Quarterly — one release per quarter, 1Q19 through 4Q25.
+#
+# `column` selects which of the two periods a release prints:
+#
+#   current   the quarter the release reports. This is the default and the
+#             preferred reading, because it carries the share count that was
+#             actually outstanding at the time.
+#   prior     the year-earlier comparative. Used once, for 1Q19: that release
+#             (0000903423-19-000201) published its financial tables as scanned
+#             images, so there is no machine-readable primary copy of it. The
+#             1Q20 release restates 1Q19 against the same 561,000,000 shares,
+#             so nothing is distorted by taking it from there.
+#
+# GAP restates comparatives against the current share count whenever it has
+# repurchased stock, which is why a quarter is read from its own release
+# wherever one exists.
+# --------------------------------------------------------------------------
+quarterly:
+  - { year: 2019, quarter: "T1", accession: "0001171843-20-003098", document: "f6k_043020.htm", column: "prior",   label: "GAP 1Q20 results", filed: "2020-04-30" }
+  - { year: 2019, quarter: "T2", accession: "0001387131-19-005349", document: "pac-6k_072519.htm", column: "current", label: "GAP 2Q19 results", filed: "2019-07-26" }
+  - { year: 2019, quarter: "T3", accession: "0001171843-19-006783", document: "f6k_102419.htm", column: "current", label: "GAP 3Q19 results", filed: "2019-10-24" }
+  - { year: 2019, quarter: "T4", accession: "0001171843-20-001154", document: "f6k_022020.htm", column: "current", label: "GAP 4Q19 results", filed: "2020-02-21" }
+  - { year: 2020, quarter: "T1", accession: "0001171843-20-003098", document: "f6k_043020.htm", column: "current", label: "GAP 1Q20 results", filed: "2020-04-30" }
+  - { year: 2020, quarter: "T2", accession: "0001171843-20-005193", document: "f6k_072420.htm", column: "current", label: "GAP 2Q20 results", filed: "2020-07-24" }
+  - { year: 2020, quarter: "T3", accession: "0001171843-20-007373", document: "f6k_102920.htm", column: "current", label: "GAP 3Q20 results", filed: "2020-10-29" }
+  - { year: 2020, quarter: "T4", accession: "0001171843-21-001312", document: "f6k_022521.htm", column: "current", label: "GAP 4Q20 results", filed: "2021-02-25" }
+  - { year: 2021, quarter: "T1", accession: "0001171843-21-002925", document: "f6k_042921.htm", column: "current", label: "GAP 1Q21 results", filed: "2021-04-29" }
+  - { year: 2021, quarter: "T2", accession: "0001171843-21-005241", document: "f6k_072921.htm", column: "current", label: "GAP 2Q21 results", filed: "2021-07-29" }
+  - { year: 2021, quarter: "T3", accession: "0001171843-21-007221", document: "f6k_102821.htm", column: "current", label: "GAP 3Q21 results", filed: "2021-10-28" }
+  - { year: 2021, quarter: "T4", accession: "0001171843-22-001279", document: "f6k_022322.htm", column: "current", label: "GAP 4Q21 results", filed: "2022-02-23" }
+  - { year: 2022, quarter: "T1", accession: "0001171843-22-002785", document: "f6k_042522.htm", column: "current", label: "GAP 1Q22 results", filed: "2022-04-26" }
+  - { year: 2022, quarter: "T2", accession: "0001171843-22-004984", document: "f6k_072522.htm", column: "current", label: "GAP 2Q22 results", filed: "2022-07-26" }
+  - { year: 2022, quarter: "T3", accession: "0001171843-22-006691", document: "f6k_102122.htm", column: "current", label: "GAP 3Q22 results", filed: "2022-10-24" }
+  - { year: 2022, quarter: "T4", accession: "0001171843-23-001064", document: "f6k_022123.htm", column: "current", label: "GAP 4Q22 results", filed: "2023-02-21" }
+  - { year: 2023, quarter: "T1", accession: "0001171843-23-002347", document: "f6k_041723.htm", column: "current", label: "GAP 1Q23 results", filed: "2023-04-18" }
+  - { year: 2023, quarter: "T2", accession: "0001171843-23-004621", document: "f6k_072523.htm", column: "current", label: "GAP 2Q23 results", filed: "2023-07-25" }
+  - { year: 2023, quarter: "T3", accession: "0001171843-23-006348", document: "f6k_102423.htm", column: "current", label: "GAP 3Q23 results", filed: "2023-10-24" }
+  - { year: 2023, quarter: "T4", accession: "0001171843-24-000992", document: "f6k_022724.htm", column: "current", label: "GAP 4Q23 results", filed: "2024-02-27" }
+  - { year: 2024, quarter: "T1", accession: "0001171843-24-002132", document: "f6k_042324.htm", column: "current", label: "GAP 1Q24 results", filed: "2024-04-23" }
+  - { year: 2024, quarter: "T2", accession: "0001171843-24-004071", document: "f6k_072324.htm", column: "current", label: "GAP 2Q24 results", filed: "2024-07-23" }
+  - { year: 2024, quarter: "T3", accession: "0001171843-24-005730", document: "f6k_102224.htm", column: "current", label: "GAP 3Q24 results", filed: "2024-10-22" }
+  - { year: 2024, quarter: "T4", accession: "0001171843-25-001044", document: "f6k_022525.htm", column: "current", label: "GAP 4Q24 results", filed: "2025-02-25" }
+  - { year: 2025, quarter: "T1", accession: "0001171843-25-002566", document: "f6k_042925.htm", column: "current", label: "GAP 1Q25 results", filed: "2025-04-29" }
+  - { year: 2025, quarter: "T2", accession: "0001171843-25-004593", document: "f6k_072225.htm", column: "current", label: "GAP 2Q25 results", filed: "2025-07-22" }
+  - { year: 2025, quarter: "T3", accession: "0001171843-25-006536", document: "f6k_102125.htm", column: "current", label: "GAP 3Q25 results", filed: "2025-10-21" }
+  - { year: 2025, quarter: "T4", accession: "0001171843-26-001035", document: "f6k_022426.htm", column: "current", label: "GAP 4Q25 results", filed: "2026-02-24" }
