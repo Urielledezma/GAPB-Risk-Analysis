@@ -46,7 +46,7 @@ same pipeline runs unchanged — the repository is intended to be reused.
 .
 ├── R/                  # Analytics library — returns, tests, GBM, variance models, VaR
 ├── analysis/           # Numbered ingest scripts. The only code that touches a network
-├── config/             # Asset universe and model parameters (YAML, single source of truth)
+├── config/             # Asset universe, model parameters and the SEC filings manifest
 ├── reports/            # Quarto sources for the five stage reports
 ├── paper/              # Research article (renders to .docx and .html)
 ├── data/
@@ -83,12 +83,8 @@ in [Ingest scripts](#ingest-scripts) below.
 
 **3. Render the reports into `docs/`.** Open the project in RStudio and use the
 **Render** button on a single report, or the Build pane → **Render Website** to rebuild
-all six pages. From a terminal the equivalent is `quarto render reports`.
-
-> **Windows ARM64.** R has no native ARM build, so R x64 runs under emulation and exits
-> with `-1073741819` (`ACCESS_VIOLATION`) *after* writing its output; Quarto reads that
-> code as a failure and discards the result. Render from RStudio, which does not check
-> the process exit code. Unaffected on Windows x86-64, Linux and macOS.
+all six pages. From a terminal the equivalent is `quarto render reports`, which is the
+path this project is built and verified on.
 
 **4. Verify the analytics library.** From the R console:
 
@@ -144,7 +140,7 @@ Random draws (Monte Carlo VaR, GBM path simulation) are seeded from `config/para
 
 ## Ingest scripts
 
-Six numbered scripts live in `analysis/`. They are the only code in the repository that
+Seven numbered scripts live in `analysis/`. They are the only code in the repository that
 touches a network. Reports never call any of them: they read `data/processed/` and
 nothing else.
 
@@ -156,6 +152,7 @@ nothing else.
 | `03_ingest_fundamentals.R` | `fundamentals_annual` | See note below | Only after a licensed teammate places FactSet exports in `data/raw/factset/manual/`. |
 | `04_build_datasets.R` | `returns_daily` and other derived sets | No | **Always last.** It rebuilds everything downstream of the raw ingests. |
 | `05_refresh_public_snapshot.R` | `prices_daily`, `prices_provenance` | No | Only when extending the coverage window. See the warning below. |
+| `06_ingest_gap_filings.R` | `fundamentals_annual`, `eps_quarterly` | No | Whenever a new GAP filing extends the window. Reads `config/filings.yml`, the provenance manifest naming the accession behind every period, and rebuilds both datasets from the documents themselves. |
 
 ### Order
 
@@ -165,8 +162,13 @@ wrote. A typical refresh from RStudio's R console:
 ```r
 source("analysis/05_refresh_public_snapshot.R")   # or 01, see below
 source("analysis/02_ingest_macro.R")
+source("analysis/06_ingest_gap_filings.R")        # independent of the price path
 source("analysis/04_build_datasets.R")            # always last
 ```
+
+`06` sits before `04` by convention rather than by dependency: it writes the fundamentals
+datasets, which nothing downstream derives from, so its position only has to respect the
+rule that `04` runs last. It is also the one ingest that is safe to run on its own.
 
 ### `01` versus `05`
 
@@ -211,7 +213,7 @@ The `FACTSET_*` variables in `.env.example` belong to the historical API probe i
 | Source | Role | Used for | Access | Committed? |
 |---|---|---|---|---|
 | **FactSet workstation** | Manual licensed override | Fundamentals and market data exported by a licensed teammate | Manual export; no ITESO API entitlement | **No** |
-| GAP / SEC filings | Primary | Annual fundamentals, margins, leverage ratios | Public | Yes — curated snapshot |
+| GAP / SEC filings | Primary | Annual fundamentals, margins, leverage, quarterly EPS | Public, via `analysis/06_…` | Yes — rebuilt from the filings |
 | Yahoo Finance / BMV | Primary public path | Daily OHLCV, full quotation history | Public, via `quantmod` | Yes — `data/processed/` |
 | World Bank | Primary | Mexican annual real GDP growth | Public, no token | Yes |
 | Banxico SIE | Optional | Reference rate, FX | Free token | Yes — derived series only |
@@ -261,7 +263,7 @@ synced folder.
 ## Conventions
 
 - `snake_case` for objects and functions; functions live in `R/`, never in a report.
-- Ingest scripts are numbered by pipeline stage: `analysis/00_…` through `analysis/05_…`.
+- Ingest scripts are numbered by pipeline stage: `analysis/00_…` through `analysis/06_…`.
 - Parameters are never hard-coded in a report. They come from `config/params.yml`.
 - Tickers are never hard-coded either. They come from `config/assets.yml`.
 - Code, documentation and commit messages in English; report and article prose in Spanish.
