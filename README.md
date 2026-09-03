@@ -74,34 +74,33 @@ cd Analisis-de-Riesgo
 # 1. Restore the pinned dependency set
 install.packages("renv")
 renv::restore()
-
-# 2. Refresh public prices and derived datasets
-source("analysis/01_ingest_prices.R")   # universe read from config/assets.yml
-source("analysis/04_build_datasets.R")
-
-# Optional: normalize manual FactSet exports after placing them in
-# data/raw/factset/manual/
-source("analysis/03_ingest_fundamentals.R")
-
-# Step 2 is optional. The committed snapshot in data/processed/ renders as is,
-# and only the Banxico and INEGI series need a free token.
 ```
 
+**2. Refreshing the data is optional.** The committed snapshot in `data/processed/`
+renders every report as is, with no credentials and no network. Only run the ingest
+scripts when the coverage window genuinely needs extending, and follow the order given
+in [Ingest scripts](#ingest-scripts) below.
+
 **3. Render the reports into `docs/`.** Open the project in RStudio and use the
-**Render** button on any report, or run `quarto render reports` from a terminal.
+**Render** button on a single report, or the Build pane → **Render Website** to rebuild
+all six pages. From a terminal the equivalent is `quarto render reports`.
 
 > **Windows ARM64.** R has no native ARM build, so R x64 runs under emulation and exits
 > with `-1073741819` (`ACCESS_VIOLATION`) *after* writing its output; Quarto reads that
 > code as a failure and discards the result. Render from RStudio, which does not check
 > the process exit code. Unaffected on Windows x86-64, Linux and macOS.
 
-```bash
-# Optional: one portable HTML file, when an academic portal requires it.
-# For submission copies only, not for the GitHub Pages site.
-quarto render reports/01-asset-profile.qmd --profile submission
+**4. Verify the analytics library.** From the R console:
 
-# 4. Verify the analytics library
-Rscript tests/testthat.R
+```r
+testthat::test_dir("tests/testthat")   # or Rscript tests/testthat.R from a terminal
+```
+
+**Optional: one portable HTML file**, when an academic portal requires it. For
+submission copies only, never for the GitHub Pages site:
+
+```r
+quarto::quarto_render("reports/01-asset-profile.qmd", profile = "submission")
 ```
 
 See [Data sources](#data-sources) below for the manual FactSet override.
@@ -140,6 +139,70 @@ teammate with a normalized manual export sees FactSet numbers and a reader witho
 still sees a rendered report.
 
 Random draws (Monte Carlo VaR, GBM path simulation) are seeded from `config/params.yml`.
+
+---
+
+## Ingest scripts
+
+Six numbered scripts live in `analysis/`. They are the only code in the repository that
+touches a network. Reports never call any of them: they read `data/processed/` and
+nothing else.
+
+| Script | Writes to `data/processed/` | Needs a token? | When to run |
+|---|---|---|---|
+| `00_probe_factset.R` | nothing | FactSet | Diagnostic only. Not part of the production path under the current licence. |
+| `01_ingest_prices.R` | `prices_daily`, `prices_provenance` | No | Normal price ingest. Follows the source ladder, so it prefers a vendor copy when one exists. |
+| `02_ingest_macro.R` | `gdp_mx` (required), `rates_mx` and `gdp_mx_quarterly` (optional) | Banxico / INEGI, both optional | Whenever macro series need refreshing. Without a token the optional series are skipped with a message and the run continues. |
+| `03_ingest_fundamentals.R` | `fundamentals_annual` | See note below | Only after a licensed teammate places FactSet exports in `data/raw/factset/manual/`. |
+| `04_build_datasets.R` | `returns_daily` and other derived sets | No | **Always last.** It rebuilds everything downstream of the raw ingests. |
+| `05_refresh_public_snapshot.R` | `prices_daily`, `prices_provenance` | No | Only when extending the coverage window. See the warning below. |
+
+### Order
+
+`04_build_datasets.R` runs last, because it derives from whatever the other scripts
+wrote. A typical refresh from RStudio's R console:
+
+```r
+source("analysis/05_refresh_public_snapshot.R")   # or 01, see below
+source("analysis/02_ingest_macro.R")
+source("analysis/04_build_datasets.R")            # always last
+```
+
+### `01` versus `05`
+
+Both write the daily price series, and the difference matters.
+
+`01_ingest_prices.R` follows the source ladder and will prefer a vendor copy when one is
+available, so its output can differ between machines.
+
+`05_refresh_public_snapshot.R` deliberately bypasses that ladder and pulls the public
+source only, across the full universe. Its output is the **tracked** snapshot in
+`data/processed/` — the floor that keeps the repository renderable for a reader with no
+FactSet access, and the baseline a vendor series can be checked against.
+
+> **Do not run `05` on every ingest.** The committed snapshot changing on every run
+> would turn every pull request into a data diff. Run it when the coverage window needs
+> to be extended, in a commit of its own, and re-render the whole site afterwards —
+> see *Working on a stage* in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### Tokens
+
+None of the reports need credentials: the committed snapshot renders as is. Tokens only
+affect the optional enrichments.
+
+Copy `.env.example` to `.env` and fill in what you have. Both Banxico and INEGI issue
+free tokens instantly, and each teammate should obtain their own rather than share one.
+To see which files are searched on your machine and whether they were found:
+
+```r
+source("R/utils_io.R"); source_lib(); env_paths()
+```
+
+**FactSet is a manual path, not an API path.** ITESO's licence carries no API
+entitlement, so a licensed teammate exports from the workstation by hand into
+`data/raw/factset/manual/`, and `03_ingest_fundamentals.R` normalises those files.
+The `FACTSET_*` variables in `.env.example` belong to the historical API probe in
+`00_probe_factset.R` and are not required by the production path.
 
 ---
 
@@ -198,7 +261,7 @@ synced folder.
 ## Conventions
 
 - `snake_case` for objects and functions; functions live in `R/`, never in a report.
-- Ingest scripts are numbered by pipeline stage: `analysis/01_…` through `analysis/04_…`.
+- Ingest scripts are numbered by pipeline stage: `analysis/00_…` through `analysis/05_…`.
 - Parameters are never hard-coded in a report. They come from `config/params.yml`.
 - Tickers are never hard-coded either. They come from `config/assets.yml`.
 - Code, documentation and commit messages in English; report and article prose in Spanish.
