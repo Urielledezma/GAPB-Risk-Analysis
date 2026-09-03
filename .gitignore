@@ -53,3 +53,6 @@ desktop.ini
 .idea/
 *.swp
 ~$*
+
+# RStudio rewrites this file whenever the project is opened.
+Analisis-de-Riesgo.Rproj
