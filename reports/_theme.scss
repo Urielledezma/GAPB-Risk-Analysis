@@ -1,89 +1,271 @@
 /*-- scss:defaults --*/
 
-// Site chrome, matched to the chart ink tokens in R/plots.R so the rendered
-// figures sit on the same surface as the prose around them. The site commits to
-// a single light surface: the figures are static images, and a dark toggle
-// would leave them light-on-dark.
+// Keep these identical to RISK_INK$surface and RISK_INK$primary in R/plots.R.
+$surface: #ffffff;
+$ink: #0b0b0b;
+$brand-black: #0a0a0d;
+$brand-blue: #00b7ff;
+$brand-gold: #ffb703;
+$brand-scarlet: #ff2020;
+$muted: #5b6472;
 
-$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", sans-serif !default;
-$font-family-monospace: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace !default;
+$font-family-serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+$font-family-sans-serif: Sora, "IBM Plex Sans", Aptos, "Segoe UI", -apple-system, "Helvetica Neue", Arial, sans-serif;
+$font-family-monospace: "IBM Plex Mono", ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace;
+$web-font-path: false;
+$font-family-base: $font-family-serif;
+$headings-font-family: $font-family-sans-serif;
 
-$body-bg: #ffffff;
-$body-color: #0b0b0b;
-$link-color: #2a78d6;
+$body-bg: $surface;
+$body-color: $ink;
+$link-color: #00719d;
+$primary: #00719d;
+$secondary: $muted;
+$success: #00719d;
+$info: #00719d;
+$warning: #8f6400;
+$danger: #b31212;
 
-$primary: #2a78d6;
-$secondary: #52514e;
-$muted: #898781;
+$info-tint: #e6f8ff;
+$success-tint: #e6f8ff;
+$warning-tint: #fff8e6;
+$danger-tint: #fff1f1;
 $gridline: #e1e0d9;
 $baseline: #c3c2b7;
 
 $font-size-root: 16px;
-$toc-color: #52514e;
-$toc-active-border: #2a78d6;
+$toc-color: $secondary;
+$toc-active-border: $info;
 
 /*-- scss:rules --*/
 
 body {
   -webkit-font-smoothing: antialiased;
+  background: $surface;
+  color: $ink;
+  line-height: 1.68;
+}
+
+main.content {
+  margin-inline: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+.navbar,
+.nav-footer,
+.quarto-title-meta,
+table {
+  font-family: $font-family-sans-serif;
 }
 
 h1,
 h2,
 h3,
 h4 {
-  color: #0b0b0b;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  color: $ink;
+  font-weight: 650;
+  letter-spacing: -0.012em;
+}
+
+h1 {
+  letter-spacing: -0.025em;
 }
 
 h2 {
   border-bottom: 1px solid $gridline;
-  padding-bottom: 0.3rem;
-  margin-top: 2.5rem;
+  margin-top: 2.8rem;
+  padding-bottom: 0.35rem;
 }
 
-// Tables carry the relief the chart palette's contrast warning obligates, so
-// they have to be genuinely readable rather than an afterthought.
+a:focus-visible {
+  outline: 3px solid $brand-blue;
+  outline-offset: 3px;
+}
+
+.navbar {
+  background: $brand-black !important;
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link,
+.navbar .navbar-toggler-icon,
+.navbar .quarto-navbar-tools .quarto-navigation-tool {
+  color: $surface !important;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:hover,
+.navbar .nav-link:focus,
+.navbar .navbar-brand:hover,
+.navbar .quarto-navbar-tools .quarto-navigation-tool:hover {
+  color: $brand-blue !important;
+}
+
+// A compact research passport directly below every title.
+.report-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 0.75rem 0 2.25rem;
+  border: 1px solid rgba($brand-blue, 0.55);
+  border-top: 4px solid $brand-blue;
+  background: $info-tint;
+  font-family: $font-family-sans-serif;
+}
+
+.report-meta > div {
+  min-width: 0;
+  padding: 0.8rem 0.9rem;
+  border-right: 1px solid rgba($brand-blue, 0.35);
+}
+
+.report-meta > div:last-child {
+  border-right: 0;
+}
+
+.report-meta dt {
+  margin: 0 0 0.25rem;
+  color: $info;
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.055em;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.report-meta dd {
+  margin: 0;
+  color: $ink;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.semantic-block {
+  margin: 1.5rem 0;
+  padding: 1rem 1.15rem;
+  border-left: 4px solid;
+}
+
+.semantic-label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-family: $font-family-sans-serif;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.semantic-info {
+  border-color: $brand-blue;
+  background: $info-tint;
+}
+
+.semantic-info .semantic-label {
+  color: $info;
+}
+
+.semantic-verified {
+  border-color: $brand-blue;
+  background: $success-tint;
+}
+
+.semantic-verified .semantic-label {
+  color: $success;
+}
+
+.semantic-assumption {
+  border-color: $brand-gold;
+  background: $warning-tint;
+}
+
+.semantic-assumption .semantic-label {
+  color: $warning;
+}
+
+.semantic-risk {
+  border-color: $brand-scarlet;
+  background: $danger-tint;
+}
+
+.semantic-risk .semantic-label {
+  color: $danger;
+}
+
 table {
+  width: 100%;
+  font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
-  font-size: 0.92rem;
+  line-height: 1.4;
 }
 
 thead th {
-  border-bottom: 1.5px solid $baseline;
-  color: #0b0b0b;
-  font-weight: 600;
+  border-bottom: 0;
+  background: $brand-black !important;
+  color: $surface !important;
+  font-weight: 700;
+  vertical-align: bottom;
 }
 
 tbody td {
   border-top: 1px solid $gridline;
 }
 
-// Wide tables and figures scroll inside their own container. The page body
-// never scrolls horizontally.
+.quarto-float-tbl table > tbody > tr:nth-child(even) > *,
+table > tbody > tr:nth-child(even) > * {
+  --bs-table-bg: #f4f7fa;
+  background-color: #f4f7fa !important;
+  box-shadow: none;
+}
+
+td[style*="text-align: right"] {
+  font-family: $font-family-monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+table > tbody > tr.risk-row > * {
+  --bs-table-bg: #fff1f1;
+  background-color: $danger-tint !important;
+}
+
 .table-responsive,
 .cell-output-display {
   overflow-x: auto;
 }
 
+.quarto-figure img,
+figure img,
+div.figure img,
+.cell-output-display img {
+  max-width: 100%;
+  height: auto;
+}
+
 figure figcaption,
-.figure-caption {
+.figure-caption,
+.table-caption,
+caption {
   color: $muted;
-  font-size: 0.85rem;
+  font-family: $font-family-sans-serif;
+  font-size: 0.84rem;
 }
 
 blockquote {
-  border-left: 3px solid $primary;
+  border-left: 3px solid $info;
   color: $secondary;
   padding-left: 1rem;
 }
 
 code {
-  color: #184f95;
-  background: #f6f6f4;
-  padding: 0.1em 0.3em;
   border-radius: 3px;
+  background: #f6f6f4;
+  color: #184f95;
+  padding: 0.1em 0.3em;
 }
 
 pre code {
@@ -91,8 +273,40 @@ pre code {
   padding: 0;
 }
 
-// Equations are load-bearing in stages 03 to 05 and should not be cramped.
 .math.display {
   margin: 1.4rem 0;
   overflow-x: auto;
+}
+
+@media (max-width: 767.98px) {
+  .report-meta {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .report-meta > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .report-meta > div:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba($brand-blue, 0.35);
+  }
+}
+
+@media print {
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body,
+  main.content {
+    background: $surface !important;
+  }
+
+  .semantic-block,
+  .report-meta {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
 }

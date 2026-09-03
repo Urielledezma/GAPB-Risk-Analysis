@@ -39,6 +39,11 @@ website:
 
 format:
   html:
+    grid:
+      sidebar-width: 0px
+      body-width: 1100px
+      margin-width: 320px
+      gutter-width: 1.5rem
     theme: [cosmo, _theme.scss]
     toc: true
     toc-depth: 3
