@@ -6,6 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Santiago Álvarez Tostado Estrada">
+<meta name="author" content="Francisco Uriel Ledezma Chávez">
+<meta name="author" content="Jorge Isaac López Ávila">
+<meta name="author" content="Juan Pablo Morán Errejón">
 
 <title>returns-volatility-gbm – Análisis de Riesgo · GAPB</title>
 <style>
@@ -74,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7173d61469f149d5c696e9284a9ed522.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-1e796f7a7bf16e5eb5298f63857716ad.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3774daf6b75428cfdcf6670490171c72.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-56c9fb2a36a481e37cf6329f2f24e7ca.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -236,11 +240,20 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Autores/as</div>
+    <div class="quarto-title-meta-contents">
+             <p>Santiago Álvarez Tostado Estrada </p>
+             <p>Francisco Uriel Ledezma Chávez </p>
+             <p>Jorge Isaac López Ávila </p>
+             <p>Juan Pablo Morán Errejón </p>
+          </div>
+  </div>
     
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">27 de agosto de 2026</p>
+      <p class="date">2 de septiembre de 2026</p>
     </div>
   </div>
   
@@ -252,6 +265,40 @@ window.Quarto = {
 </header>
 
 
+<dl class="report-meta" aria-label="Ficha técnica del reporte">
+<div>
+<dt>
+Fuente de datos
+</dt>
+<dd>
+Yahoo Finance / BMV
+</dd>
+</div>
+<div>
+<dt>
+Corte financiero
+</dt>
+<dd>
+31 de diciembre de 2025
+</dd>
+</div>
+<div>
+<dt>
+Moneda
+</dt>
+<dd>
+MXN por acción; rendimientos adimensionales
+</dd>
+</div>
+<div>
+<dt>
+Periodo cubierto
+</dt>
+<dd>
+27 de febrero de 2006–26 de agosto de 2026
+</dd>
+</div>
+</dl>
 <section id="introducción" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">1</span> Introducción</h2>
 <div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
@@ -283,6 +330,7 @@ r_t = \ln\!\left(\frac{S_t}{S_{t-1}}\right)
 </section>
 <section id="rendimientos-y-volatilidad" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="rendimientos-y-volatilidad"><span class="header-section-number">3</span> Rendimientos y volatilidad</h2>
+<p>La <a href="#tbl-moments" class="quarto-xref">Tabla&nbsp;1</a> resume la muestra completa y la <a href="#tbl-moments-annual" class="quarto-xref">Tabla&nbsp;2</a> permite comparar los cambios entre años.</p>
 <section id="periodo-completo-de-estimación" class="level3">
 <h3 class="anchored" data-anchor-id="periodo-completo-de-estimación">Periodo completo de estimación</h3>
 <div class="cell" data-layout-align="center">
@@ -301,22 +349,29 @@ Tabla&nbsp;1: Momentos de la muestra de estimación (2021-2025).
 <div aria-describedby="tbl-moments-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 15%">
+<col style="width: 22%">
+<col style="width: 19%">
+<col style="width: 26%">
+</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">n</th>
-<th style="text-align: left;">mean_daily</th>
-<th style="text-align: left;">vol_daily</th>
-<th style="text-align: left;">mean_annual</th>
-<th style="text-align: left;">vol_annual</th>
+<th style="text-align: right;">Observaciones</th>
+<th style="text-align: right;">Media diaria</th>
+<th style="text-align: right;">Volatilidad diaria</th>
+<th style="text-align: right;">Media anualizada</th>
+<th style="text-align: right;">Volatilidad anualizada</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">1,258</td>
-<td style="text-align: left;">0.0008</td>
-<td style="text-align: left;">0.0209</td>
-<td style="text-align: left;">0.2001</td>
-<td style="text-align: left;">0.3322</td>
+<td style="text-align: right;">1,258</td>
+<td style="text-align: right;">0.0008</td>
+<td style="text-align: right;">0.0209</td>
+<td style="text-align: right;">0.2001</td>
+<td style="text-align: right;">0.3322</td>
 </tr>
 </tbody>
 </table>
@@ -344,56 +399,64 @@ Tabla&nbsp;2: Media y volatilidad, diarias y anualizadas, por año.
 <div aria-describedby="tbl-moments-annual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 15%">
+<col style="width: 14%">
+<col style="width: 20%">
+<col style="width: 18%">
+<col style="width: 25%">
+</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">year</th>
-<th style="text-align: left;">n</th>
-<th style="text-align: left;">mean_daily</th>
-<th style="text-align: left;">vol_daily</th>
-<th style="text-align: left;">mean_annual</th>
-<th style="text-align: left;">vol_annual</th>
+<th style="text-align: right;">Año</th>
+<th style="text-align: right;">Observaciones</th>
+<th style="text-align: right;">Media diaria</th>
+<th style="text-align: right;">Volatilidad diaria</th>
+<th style="text-align: right;">Media anualizada</th>
+<th style="text-align: right;">Volatilidad anualizada</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">2,021</td>
-<td style="text-align: left;">253</td>
-<td style="text-align: left;">0.0011</td>
-<td style="text-align: left;">0.0163</td>
-<td style="text-align: left;">0.2895</td>
-<td style="text-align: left;">0.2592</td>
+<td style="text-align: right;">2021</td>
+<td style="text-align: right;">253</td>
+<td style="text-align: right;">0.0011</td>
+<td style="text-align: right;">0.0163</td>
+<td style="text-align: right;">0.2895</td>
+<td style="text-align: right;">0.2592</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">2,022</td>
-<td style="text-align: left;">252</td>
-<td style="text-align: left;">0.0002</td>
-<td style="text-align: left;">0.0218</td>
-<td style="text-align: left;">0.0388</td>
-<td style="text-align: left;">0.3454</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">252</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.0218</td>
+<td style="text-align: right;">0.0388</td>
+<td style="text-align: right;">0.3454</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">2,023</td>
-<td style="text-align: left;">251</td>
-<td style="text-align: left;">0.0005</td>
-<td style="text-align: left;">0.0275</td>
-<td style="text-align: left;">0.1325</td>
-<td style="text-align: left;">0.4369</td>
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">251</td>
+<td style="text-align: right;">0.0005</td>
+<td style="text-align: right;">0.0275</td>
+<td style="text-align: right;">0.1325</td>
+<td style="text-align: right;">0.4369</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">2,024</td>
-<td style="text-align: left;">251</td>
-<td style="text-align: left;">0.0010</td>
-<td style="text-align: left;">0.0198</td>
-<td style="text-align: left;">0.2490</td>
-<td style="text-align: left;">0.3139</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">251</td>
+<td style="text-align: right;">0.0010</td>
+<td style="text-align: right;">0.0198</td>
+<td style="text-align: right;">0.2490</td>
+<td style="text-align: right;">0.3139</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">2,025</td>
-<td style="text-align: left;">251</td>
-<td style="text-align: left;">0.0012</td>
-<td style="text-align: left;">0.0176</td>
-<td style="text-align: left;">0.2903</td>
-<td style="text-align: left;">0.2789</td>
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">251</td>
+<td style="text-align: right;">0.0012</td>
+<td style="text-align: right;">0.0176</td>
+<td style="text-align: right;">0.2903</td>
+<td style="text-align: right;">0.2789</td>
 </tr>
 </tbody>
 </table>
@@ -422,6 +485,7 @@ Tabla&nbsp;2: Media y volatilidad, diarias y anualizadas, por año.
 <section id="normalidad" class="level3">
 <h3 class="anchored" data-anchor-id="normalidad">Normalidad</h3>
 <p>El estadístico de Jarque-Bera contrasta conjuntamente el tercer y cuarto momento contra los de una normal:</p>
+<p>La <a href="#tbl-jb" class="quarto-xref">Tabla&nbsp;3</a> formaliza el contraste y la <a href="#fig-distribution" class="quarto-xref">Figura&nbsp;1</a> permite comparar la densidad empírica con la normal ajustada.</p>
 <p><span class="math display">\[
 JB = \frac{n}{6}\left(S^2 + \frac{(K-3)^2}{4}\right) \;\sim\; \chi^2_{2}
 \]</span></p>
@@ -444,56 +508,56 @@ Tabla&nbsp;3: Prueba de Jarque-Bera sobre las tres series.
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 21%">
-<col style="width: 6%">
-<col style="width: 9%">
-<col style="width: 9%">
+<col style="width: 18%">
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 8%">
 <col style="width: 16%">
 <col style="width: 10%">
-<col style="width: 8%">
-<col style="width: 17%">
+<col style="width: 7%">
+<col style="width: 16%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">series</th>
-<th style="text-align: left;">n</th>
-<th style="text-align: left;">skewness</th>
-<th style="text-align: left;">kurtosis</th>
-<th style="text-align: left;">excess_kurtosis</th>
-<th style="text-align: left;">statistic</th>
-<th style="text-align: left;">p_value</th>
-<th style="text-align: left;">reject_normality</th>
+<th style="text-align: left;">Serie</th>
+<th style="text-align: right;">Observaciones</th>
+<th style="text-align: right;">Asimetría</th>
+<th style="text-align: right;">Curtosis</th>
+<th style="text-align: right;">Exceso de curtosis</th>
+<th style="text-align: right;">Estadístico</th>
+<th style="text-align: right;">Valor p</th>
+<th style="text-align: left;">Rechaza normalidad</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Rendimientos</td>
-<td style="text-align: left;">1,258</td>
-<td style="text-align: left;">-1.1301</td>
-<td style="text-align: left;">23.837</td>
-<td style="text-align: left;">20.8371</td>
-<td style="text-align: left;">23,026.38</td>
-<td style="text-align: left;">0</td>
+<td style="text-align: right;">1,258</td>
+<td style="text-align: right;">-1.1301</td>
+<td style="text-align: right;">23.837</td>
+<td style="text-align: right;">20.8371</td>
+<td style="text-align: right;">23,026.38</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Precio</td>
-<td style="text-align: left;">1,258</td>
-<td style="text-align: left;">0.6767</td>
-<td style="text-align: left;">2.673</td>
-<td style="text-align: left;">-0.3271</td>
-<td style="text-align: left;">101.62</td>
-<td style="text-align: left;">0</td>
+<td style="text-align: right;">1,258</td>
+<td style="text-align: right;">0.6767</td>
+<td style="text-align: right;">2.673</td>
+<td style="text-align: right;">-0.3271</td>
+<td style="text-align: right;">101.62</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Logaritmo del precio</td>
-<td style="text-align: left;">1,258</td>
-<td style="text-align: left;">0.1420</td>
-<td style="text-align: left;">2.349</td>
-<td style="text-align: left;">-0.6513</td>
-<td style="text-align: left;">26.46</td>
-<td style="text-align: left;">0</td>
+<td style="text-align: right;">1,258</td>
+<td style="text-align: right;">0.1420</td>
+<td style="text-align: right;">2.349</td>
+<td style="text-align: right;">-0.6513</td>
+<td style="text-align: right;">26.46</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 </tbody>
@@ -539,6 +603,7 @@ Figura&nbsp;1: Distribución empírica de los rendimientos diarios frente a la n
 <p><span class="math display">\[
 t = \frac{\bar{r}}{s/\sqrt{n}} \;\sim\; t_{\,n-1}
 \]</span></p>
+<p>La <a href="#tbl-ttest" class="quarto-xref">Tabla&nbsp;4</a> reporta la estimación y la decisión estadística correspondiente.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
@@ -556,39 +621,39 @@ Tabla&nbsp;4: Prueba t de media diaria igual a cero.
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 7%">
-<col style="width: 8%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 7%">
+<col style="width: 11%">
+<col style="width: 5%">
+<col style="width: 11%">
 <col style="width: 9%">
-<col style="width: 10%">
+<col style="width: 15%">
+<col style="width: 6%">
 <col style="width: 12%">
-<col style="width: 20%">
+<col style="width: 12%">
+<col style="width: 15%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">n</th>
-<th style="text-align: left;">mean</th>
-<th style="text-align: left;">std_error</th>
-<th style="text-align: left;">statistic</th>
-<th style="text-align: left;">df</th>
-<th style="text-align: left;">p_value</th>
-<th style="text-align: left;">conf_low</th>
-<th style="text-align: left;">conf_high</th>
-<th style="text-align: left;">reject_zero_mean</th>
+<th style="text-align: right;">Observaciones</th>
+<th style="text-align: right;">Media</th>
+<th style="text-align: right;">Error estándar</th>
+<th style="text-align: right;">Estadístico</th>
+<th style="text-align: right;">Grados de libertad</th>
+<th style="text-align: right;">Valor p</th>
+<th style="text-align: right;">Límite inferior</th>
+<th style="text-align: right;">Límite superior</th>
+<th style="text-align: left;">Rechaza media cero</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">1,258</td>
-<td style="text-align: left;">0.0008</td>
-<td style="text-align: left;">0.0006</td>
-<td style="text-align: left;">1.345</td>
-<td style="text-align: left;">1,257</td>
-<td style="text-align: left;">0.1787</td>
-<td style="text-align: left;">-0.0004</td>
-<td style="text-align: left;">0.002</td>
+<td style="text-align: right;">1,258</td>
+<td style="text-align: right;">0.0008</td>
+<td style="text-align: right;">0.0006</td>
+<td style="text-align: right;">1.345</td>
+<td style="text-align: right;">1,257</td>
+<td style="text-align: right;">0.1787</td>
+<td style="text-align: right;">-0.0004</td>
+<td style="text-align: right;">0.002</td>
 <td style="text-align: left;">FALSE</td>
 </tr>
 </tbody>
@@ -624,6 +689,7 @@ dS_t = \mu S_t\,dt + \sigma S_t\,dW_t
 S_t = S_0 \exp\!\left[\left(\mu - \tfrac{\sigma^2}{2}\right)t + \sigma W_t\right]
 \]</span></p>
 <p>de modo que <span class="math inline">\(\ln S_t\)</span> es normal y <span class="math inline">\(S_t\)</span> es lognormal. El intervalo de confianza se construye sobre los cuantiles de la lognormal, no como una banda simétrica alrededor de la media: el precio no puede ser negativo y su distribución es asimétrica a la derecha.</p>
+<p>La <a href="#tbl-gbm-daily" class="quarto-xref">Tabla&nbsp;5</a> presenta las proyecciones construidas con parámetros diarios.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
@@ -644,57 +710,57 @@ Tabla&nbsp;5: Proyección con parámetros diarios. Horizonte en días hábiles.
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 12%">
 <col style="width: 6%">
-<col style="width: 13%">
+<col style="width: 14%">
 <col style="width: 10%">
 <col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 16%">
-<col style="width: 22%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 6%">
+<col style="width: 20%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">horizon</th>
-<th style="text-align: left;">s0</th>
-<th style="text-align: left;">expected</th>
-<th style="text-align: left;">median</th>
-<th style="text-align: left;">lower</th>
-<th style="text-align: left;">upper</th>
-<th style="text-align: left;">confidence</th>
-<th style="text-align: left;">interval_width</th>
+<th style="text-align: right;">Horizonte</th>
+<th style="text-align: right;">Precio inicial (MXN)</th>
+<th style="text-align: right;">Esperado (MXN)</th>
+<th style="text-align: right;">Mediana (MXN)</th>
+<th style="text-align: right;">Límite inferior (MXN)</th>
+<th style="text-align: right;">Límite superior (MXN)</th>
+<th style="text-align: right;">Confianza</th>
+<th style="text-align: right;">Amplitud del intervalo (MXN)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">10</td>
-<td style="text-align: left;">471</td>
-<td style="text-align: left;">475.8</td>
-<td style="text-align: left;">474.8</td>
-<td style="text-align: left;">417.0</td>
-<td style="text-align: left;">540.5</td>
-<td style="text-align: left;">0.95</td>
-<td style="text-align: left;">0.2601</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">471</td>
+<td style="text-align: right;">475.8</td>
+<td style="text-align: right;">474.8</td>
+<td style="text-align: right;">417.0</td>
+<td style="text-align: right;">540.5</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.2601</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">20</td>
-<td style="text-align: left;">471</td>
-<td style="text-align: left;">480.7</td>
-<td style="text-align: left;">478.6</td>
-<td style="text-align: left;">398.4</td>
-<td style="text-align: left;">574.9</td>
-<td style="text-align: left;">0.95</td>
-<td style="text-align: left;">0.3689</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">471</td>
+<td style="text-align: right;">480.7</td>
+<td style="text-align: right;">478.6</td>
+<td style="text-align: right;">398.4</td>
+<td style="text-align: right;">574.9</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.3689</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">40</td>
-<td style="text-align: left;">471</td>
-<td style="text-align: left;">490.5</td>
-<td style="text-align: left;">486.2</td>
-<td style="text-align: left;">375.1</td>
-<td style="text-align: left;">630.2</td>
-<td style="text-align: left;">0.95</td>
-<td style="text-align: left;">0.5246</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">471</td>
+<td style="text-align: right;">490.5</td>
+<td style="text-align: right;">486.2</td>
+<td style="text-align: right;">375.1</td>
+<td style="text-align: right;">630.2</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.5246</td>
 </tr>
 </tbody>
 </table>
@@ -706,6 +772,7 @@ Tabla&nbsp;5: Proyección con parámetros diarios. Horizonte en días hábiles.
 </section>
 <section id="modelo-con-parámetros-anuales" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="modelo-con-parámetros-anuales"><span class="header-section-number">6</span> Modelo con parámetros anuales</h2>
+<p>La <a href="#tbl-gbm-annual" class="quarto-xref">Tabla&nbsp;6</a> expresa la misma proyección en horizontes anuales.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
@@ -725,67 +792,67 @@ Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 5%">
-<col style="width: 13%">
+<col style="width: 6%">
+<col style="width: 14%">
 <col style="width: 10%">
-<col style="width: 8%">
-<col style="width: 11%">
-<col style="width: 16%">
-<col style="width: 22%">
+<col style="width: 9%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 6%">
+<col style="width: 20%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">horizon</th>
-<th style="text-align: left;">s0</th>
-<th style="text-align: left;">expected</th>
-<th style="text-align: left;">median</th>
-<th style="text-align: left;">lower</th>
-<th style="text-align: left;">upper</th>
-<th style="text-align: left;">confidence</th>
-<th style="text-align: left;">interval_width</th>
+<th style="text-align: right;">Horizonte</th>
+<th style="text-align: right;">Precio inicial (MXN)</th>
+<th style="text-align: right;">Esperado (MXN)</th>
+<th style="text-align: right;">Mediana (MXN)</th>
+<th style="text-align: right;">Límite inferior (MXN)</th>
+<th style="text-align: right;">Límite superior (MXN)</th>
+<th style="text-align: right;">Confianza</th>
+<th style="text-align: right;">Amplitud del intervalo (MXN)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">0.25</td>
-<td style="text-align: left;">471</td>
-<td style="text-align: left;">502.1</td>
-<td style="text-align: left;">495.2</td>
-<td style="text-align: left;">357.6</td>
-<td style="text-align: left;">685.7</td>
-<td style="text-align: left;">0.95</td>
-<td style="text-align: left;">0.6626</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">471</td>
+<td style="text-align: right;">502.1</td>
+<td style="text-align: right;">495.2</td>
+<td style="text-align: right;">357.6</td>
+<td style="text-align: right;">685.7</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.6626</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">0.50</td>
-<td style="text-align: left;">471</td>
-<td style="text-align: left;">535.1</td>
-<td style="text-align: left;">520.6</td>
-<td style="text-align: left;">328.5</td>
-<td style="text-align: left;">824.9</td>
-<td style="text-align: left;">0.95</td>
-<td style="text-align: left;">0.9536</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">471</td>
+<td style="text-align: right;">535.1</td>
+<td style="text-align: right;">520.6</td>
+<td style="text-align: right;">328.5</td>
+<td style="text-align: right;">824.9</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.9536</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">0.75</td>
-<td style="text-align: left;">471</td>
-<td style="text-align: left;">570.4</td>
-<td style="text-align: left;">547.3</td>
-<td style="text-align: left;">311.4</td>
-<td style="text-align: left;">961.8</td>
-<td style="text-align: left;">0.95</td>
-<td style="text-align: left;">1.1884</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">471</td>
+<td style="text-align: right;">570.4</td>
+<td style="text-align: right;">547.3</td>
+<td style="text-align: right;">311.4</td>
+<td style="text-align: right;">961.8</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">1.1884</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">1.00</td>
-<td style="text-align: left;">471</td>
-<td style="text-align: left;">608.0</td>
-<td style="text-align: left;">575.3</td>
-<td style="text-align: left;">300.0</td>
-<td style="text-align: left;">1,103.3</td>
-<td style="text-align: left;">0.95</td>
-<td style="text-align: left;">1.3961</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">471</td>
+<td style="text-align: right;">608.0</td>
+<td style="text-align: right;">575.3</td>
+<td style="text-align: right;">300.0</td>
+<td style="text-align: right;">1,103.3</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">1.3961</td>
 </tr>
 </tbody>
 </table>

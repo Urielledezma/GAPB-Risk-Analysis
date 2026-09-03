@@ -6,6 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Santiago Álvarez Tostado Estrada">
+<meta name="author" content="Francisco Uriel Ledezma Chávez">
+<meta name="author" content="Jorge Isaac López Ávila">
+<meta name="author" content="Juan Pablo Morán Errejón">
 
 <title>variance-models – Análisis de Riesgo · GAPB</title>
 <style>
@@ -74,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7173d61469f149d5c696e9284a9ed522.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-1e796f7a7bf16e5eb5298f63857716ad.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3774daf6b75428cfdcf6670490171c72.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-56c9fb2a36a481e37cf6329f2f24e7ca.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -228,11 +232,20 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Autores/as</div>
+    <div class="quarto-title-meta-contents">
+             <p>Santiago Álvarez Tostado Estrada </p>
+             <p>Francisco Uriel Ledezma Chávez </p>
+             <p>Jorge Isaac López Ávila </p>
+             <p>Juan Pablo Morán Errejón </p>
+          </div>
+  </div>
     
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">27 de agosto de 2026</p>
+      <p class="date">2 de septiembre de 2026</p>
     </div>
   </div>
   
@@ -244,6 +257,40 @@ window.Quarto = {
 </header>
 
 
+<dl class="report-meta" aria-label="Ficha técnica del reporte">
+<div>
+<dt>
+Fuente de datos
+</dt>
+<dd>
+Yahoo Finance / BMV
+</dd>
+</div>
+<div>
+<dt>
+Corte financiero
+</dt>
+<dd>
+31 de diciembre de 2025
+</dd>
+</div>
+<div>
+<dt>
+Moneda
+</dt>
+<dd>
+Rendimientos y volatilidad en escala decimal
+</dd>
+</div>
+<div>
+<dt>
+Periodo cubierto
+</dt>
+<dd>
+27 de febrero de 2006–26 de agosto de 2026
+</dd>
+</div>
+</dl>
 <section id="introducción" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">1</span> Introducción</h2>
 <div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
@@ -277,6 +324,7 @@ window.Quarto = {
 </section>
 <section id="promedios-móviles" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="promedios-móviles"><span class="header-section-number">3</span> Promedios móviles</h2>
+<p>La <a href="#fig-ma" class="quarto-xref">Figura&nbsp;1</a> compara la respuesta de las distintas ventanas móviles.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
@@ -325,6 +373,7 @@ Figura&nbsp;1: Volatilidad estimada con distintas ventanas móviles.
 </section>
 <section id="ewma" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="ewma"><span class="header-section-number">4</span> EWMA</h2>
+<p>La <a href="#fig-ewma" class="quarto-xref">Figura&nbsp;2</a> muestra la trayectoria estimada con el factor de RiskMetrics.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
@@ -352,6 +401,7 @@ Figura&nbsp;2: EWMA con el factor de decaimiento de RiskMetrics.
 </section>
 <section id="ewma-calibrado-con-los-datos" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="ewma-calibrado-con-los-datos"><span class="header-section-number">5</span> EWMA calibrado con los datos</h2>
+<p>La <a href="#tbl-ewma-fit" class="quarto-xref">Tabla&nbsp;1</a> compara los parámetros seleccionados por cada criterio.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
@@ -377,21 +427,21 @@ Tabla&nbsp;1: Factor de decaimiento seleccionado bajo cada criterio.
 <table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;">criterio</th>
-<th style="text-align: left;">lambda</th>
-<th style="text-align: left;">alpha</th>
+<th style="text-align: left;">Criterio</th>
+<th style="text-align: right;">Lambda</th>
+<th style="text-align: right;">Alfa</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">RMSE</td>
-<td style="text-align: left;">0.995</td>
-<td style="text-align: left;">0.005</td>
+<td style="text-align: right;">0.995</td>
+<td style="text-align: right;">0.005</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Log-verosimilitud</td>
-<td style="text-align: left;">0.985</td>
-<td style="text-align: left;">0.015</td>
+<td style="text-align: right;">0.985</td>
+<td style="text-align: right;">0.015</td>
 </tr>
 </tbody>
 </table>
