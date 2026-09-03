@@ -1,0 +1,6 @@
+project:
+  output-dir: ../outputs/submission
+
+format:
+  html:
+    embed-resources: true

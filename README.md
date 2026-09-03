@@ -16,8 +16,8 @@ a Value at Risk exercise needs a portfolio and a portfolio needs a covariance ma
 The project moves from the fundamentals of the issuer to a fully backtested Value at
 Risk model, in five stages: business and financial characterisation, price-path and
 event attribution, return distribution and geometric Brownian motion, conditional
-variance models, and portfolio VaR / Expected Shortfall. Each stage renders to a
-standalone report; together they form the basis of a research article.
+variance models, and portfolio VaR / Expected Shortfall. Each stage renders as a page
+of the research site; together they form the basis of a research article.
 
 The analytics are deliberately kept out of the reports and live in `R/` as a small
 library driven by `config/`. Point `config/assets.yml` at a different universe and the
@@ -90,12 +90,24 @@ source("analysis/03_ingest_fundamentals.R")
 # 3. Render the reports into docs/
 quarto render reports
 
+# If an academic portal requires one portable HTML file, render that report
+# explicitly. This profile is for submission copies, not the GitHub Pages site.
+quarto render reports/01-asset-profile.qmd --profile submission
+
 # 4. Verify the analytics library
 Rscript tests/testthat.R
 ```
 
 The committed public snapshot renders without credentials. See
 [Data sources](#data-sources) below for the manual FactSet override.
+
+The regular site build is intentionally multi-file: its HTML pages depend on
+`docs/site_libs/` and on external PNG files such as
+`docs/01-asset-profile_files/figure-html/fig-margins-1.png`. Copy or publish the
+complete `docs/` directory. A loose HTML file will lose styling, scripts and
+figures. Use the `submission` profile with an explicit report path only when the
+academic delivery channel requires one self-contained HTML document; the output is
+written under `outputs/submission/`.
 
 ---
 
@@ -192,7 +204,7 @@ synced folder.
 ## Roadmap
 
 - [x] Repository scaffold, analytics library and report skeletons
-- [ ] Stage 01 — issuer profile and risk taxonomy
+- [x] Etapa 01 — issuer profile and risk taxonomy
 - [ ] Stage 02 — price path, drawdowns and event attribution
 - [ ] Stage 03 — return distribution and GBM projection
 - [ ] Stage 04 — conditional variance models and out-of-sample evaluation
