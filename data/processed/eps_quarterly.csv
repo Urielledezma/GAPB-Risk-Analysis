@@ -1,29 +1,29 @@
-period_end,year,quarter,diluted_eps,currency,instrument,source,source_url
-2019-03-31,2019,T1,1.30,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2019-06-30,2019,T2,1.18,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2019-09-30,2019,T3,1.23,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2019-12-31,2019,T4,1.33,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2020-03-31,2020,T1,1.63,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2020-06-30,2020,T2,-0.45,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2020-09-30,2020,T3,0.22,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2020-12-31,2020,T4,0.30,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2021-03-31,2021,T1,0.97,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2021-06-30,2021,T2,1.26,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2021-09-30,2021,T3,1.73,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2021-12-31,2021,T4,1.70,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2022-03-31,2022,T1,2.29,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2022-06-30,2022,T2,2.32,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2022-09-30,2022,T3,2.60,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2022-12-31,2022,T4,1.67,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2023-03-31,2023,T1,2.72,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2023-06-30,2023,T2,2.87,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2023-09-30,2023,T3,2.90,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2023-12-31,2023,T4,2.55,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2024-03-31,2024,T1,2.88,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2024-06-30,2024,T2,2.55,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2024-09-30,2024,T3,2.74,USD,PAC ADS,Macrotrends,https://www.macrotrends.net/stocks/charts/PAC/grupo-aeroportuario-del-pacifico%2C-sa-de-cv/eps-earnings-per-share-diluted
-2024-12-31,2024,T4,2.14,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2025-03-31,2025,T1,2.72,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2025-06-30,2025,T2,2.70,USD,PAC ADS,AlphaQuery,https://www.alphaquery.com/stock/PAC/earnings-history
-2025-09-30,2025,T3,2.86,USD,PAC ADS,MarketBeat,https://www.marketbeat.com/stocks/NYSE/PAC/earnings/
-2025-12-31,2025,T4,1.64,USD,PAC ADS,MarketBeat,https://www.marketbeat.com/stocks/NYSE/PAC/earnings/
+"period_end","year","quarter","diluted_eps","net_income_mxn_m","comprehensive_income_mxn_m","comprehensive_income_controlling_mxn_m","comprehensive_eps_controlling_mxn","shares_outstanding","usdmxn","usdmxn_implied","reported_eps_mxn","reported_eps_usd_ads","currency","instrument","source","source_url"
+2019-03-31,2019,"T1",2.4912,1397.549,1303.451,1278.285,2.2786,561000000,23.448,23.4474,2.3234,0.9909,"MXN","GAPB","GAP 1Q20 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184320003098/f6k_043020.htm"
+2019-06-30,2019,"T2",2.2524,1263.573,1217.639,1197.876,2.1353,561000000,19.2089,19.2097,2.1705,1.1299,"MXN","GAPB","GAP 2Q19 results","https://www.sec.gov/Archives/edgar/data/1347557/000138713119005349/pac-6k_072519.htm"
+2019-09-30,2019,"T3",2.4291,1362.719,1455.949,1422.642,2.5359,561000000,19.742,19.2088,2.5953,1.3511,"MXN","GAPB","GAP 3Q19 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184319006783/f6k_102419.htm"
+2019-12-31,2019,"T4",2.5506,1430.9,1034.764,1038.222,1.8507,561000000,18.86,18.8599,1.8445,0.978,"MXN","GAPB","GAP 4Q19 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184320001154/f6k_022020.htm"
+2020-03-31,2020,"T1",3.2229,1808.063,3165.172,2971.419,5.2966,561000000,23.448,23.4478,5.642,2.4062,"MXN","GAPB","GAP 1Q20 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184320003098/f6k_043020.htm"
+2020-06-30,2020,"T2",-1.0378,-582.208,-945.996,-916.351,-1.6334,561000000,23.0821,,,,"MXN","GAPB","GAP 2Q20 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184320005193/f6k_072420.htm"
+2020-09-30,2020,"T3",0.6282,352.44,271.715,327.021,0.5829,561000000,22.91,,,,"MXN","GAPB","GAP 3Q20 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184320007373/f6k_102920.htm"
+2020-12-31,2020,"T4",0.6068,340.411,-307.548,-217.446,-0.3876,561000000,19.892,19.8911,-0.5482,-0.2756,"MXN","GAPB","GAP 4Q20 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184321001312/f6k_022521.htm"
+2021-03-31,2021,"T1",1.98,1037.58,1317.205,1304.31,2.489,524038200,20.441,20.4408,2.5136,1.2297,"MXN","GAPB","GAP 1Q21 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184321002925/f6k_042921.htm"
+2021-06-30,2021,"T2",2.7383,1423.973,1300.988,1314.533,2.5278,520024505,19.906,19.9061,2.5018,1.2568,"MXN","GAPB","GAP 2Q21 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184321005241/f6k_072921.htm"
+2021-09-30,2021,"T3",3.4578,1779.726,2014.694,1968.925,3.8253,514705326,20.562,20.5626,3.9143,1.9036,"MXN","GAPB","GAP 3Q21 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184321007221/f6k_102821.htm"
+2021-12-31,2021,"T4",3.5183,1802.434,1957.664,1922.536,3.7527,512301577,20.514,20.5137,3.8213,1.8628,"MXN","GAPB","GAP 4Q21 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184322001279/f6k_022322.htm"
+2022-03-31,2022,"T1",4.559,2327.45,2240.973,2221.946,4.3523,510520111,19.911,19.9111,4.3896,2.2046,"MXN","GAPB","GAP 1Q22 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184322002785/f6k_042522.htm"
+2022-06-30,2022,"T2",4.6501,2364.636,2249.154,2197.523,4.3215,508510018,20.118,20.1183,4.423,2.1985,"MXN","GAPB","GAP 2Q22 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184322004984/f6k_072522.htm"
+2022-09-30,2022,"T3",5.2698,2662.711,2656.734,2597.893,5.1415,505277464,20.115,20.1151,5.2245,2.5973,"MXN","GAPB","GAP 3Q22 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184322006691/f6k_102122.htm"
+2022-12-31,2022,"T4",3.6231,1830.679,1660.067,1646.855,3.2593,505277464,19.496,19.4962,3.2855,1.6852,"MXN","GAPB","GAP 4Q22 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184323001064/f6k_022123.htm"
+2023-03-31,2023,"T1",5.0769,2565.232,2149.911,2146.05,4.2473,505277464,18.025,18.0247,4.2549,2.3606,"MXN","GAPB","GAP 1Q23 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184323002347/f6k_041723.htm"
+2023-06-30,2023,"T2",4.9249,2488.426,2052.013,2047.657,4.0525,505277464,17.1439,17.1438,4.0612,2.3689,"MXN","GAPB","GAP 2Q23 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184323004621/f6k_072523.htm"
+2023-09-30,2023,"T3",4.708,2378.86,2551.44,2499.138,4.9461,505277464,17.4064,17.4064,5.0496,2.901,"MXN","GAPB","GAP 3Q23 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184323006348/f6k_102423.htm"
+2023-12-31,2023,"T4",4.467,2257.084,1956.692,1948.391,3.8561,505277464,16.8998,16.8994,3.8725,2.2915,"MXN","GAPB","GAP 4Q23 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184324000992/f6k_022724.htm"
+2024-03-31,2024,"T1",4.8898,2470.72,2164.162,2132.445,4.2203,505277464,16.5574,16.5575,4.2831,2.5868,"MXN","GAPB","GAP 1Q24 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184324002132/f6k_042324.htm"
+2024-06-30,2024,"T2",4.4584,2252.715,2893.881,2797.956,5.5375,505277464,18.261,16.5572,5.7273,3.4591,"MXN","GAPB","GAP 2Q24 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184324004071/f6k_072324.htm"
+2024-09-30,2024,"T3",3.9242,1982.829,2620.55,2479.858,4.9079,505277464,19.6303,16.5573,5.1864,3.1324,"MXN","GAPB","GAP 3Q24 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184324005730/f6k_102224.htm"
+2024-12-31,2024,"T4",4.293,2169.179,2274.349,2156.908,4.2688,505277464,20.8857,20.8853,4.5012,2.1552,"MXN","GAPB","GAP 4Q24 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184325001044/f6k_022525.htm"
+2025-03-31,2025,"T1",5.6565,2858.116,2814.381,2699.454,5.3425,505277464,20.4582,20.4584,5.57,2.7226,"MXN","GAPB","GAP 1Q25 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184325002566/f6k_042925.htm"
+2025-06-30,2025,"T2",5.2548,2655.135,2234.943,2143.992,4.2432,505277464,18.261,20.4579,4.4232,2.1621,"MXN","GAPB","GAP 2Q25 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184325004593/f6k_072225.htm"
+2025-09-30,2025,"T3",5.3356,2695.98,2457.788,2360.813,4.6723,505277464,18.3442,18.3445,4.8624,2.6506,"MXN","GAPB","GAP 3Q25 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184325006536/f6k_102125.htm"
+2025-12-31,2025,"T4",3.5453,1791.377,1493.256,1429.264,2.8287,505277464,18.0057,18.0058,2.9553,1.6413,"MXN","GAPB","GAP 4Q25 results","https://www.sec.gov/Archives/edgar/data/1347557/000117184326001035/f6k_022426.htm"
