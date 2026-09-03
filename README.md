@@ -62,8 +62,8 @@ same pipeline runs unchanged — the repository is intended to be reused.
 
 ## Quickstart
 
-**Requirements:** R ≥ 4.2, [Quarto](https://quarto.org/docs/get-started/) ≥ 1.4.
-RStudio recommended. No API credentials are needed to reproduce the reports.
+**Requirements:** R ≥ 4.2, [Quarto](https://quarto.org/docs/get-started/) ≥ 1.4,
+RStudio. The committed public snapshot renders without any API credentials.
 
 ```bash
 git clone https://github.com/Urielledezma/Analisis-de-Riesgo.git
@@ -76,30 +76,35 @@ install.packages("renv")
 renv::restore()
 
 # 2. Refresh public prices and derived datasets
-source("analysis/01_ingest_prices.R")     # add --universe for stage 05
+source("analysis/01_ingest_prices.R")   # universe read from config/assets.yml
 source("analysis/04_build_datasets.R")
 
 # Optional: normalize manual FactSet exports after placing them in
 # data/raw/factset/manual/
 source("analysis/03_ingest_fundamentals.R")
 
-# Without a key, skip step 2 entirely — the committed snapshot renders as is.
+# Step 2 is optional. The committed snapshot in data/processed/ renders as is,
+# and only the Banxico and INEGI series need a free token.
 ```
 
-```bash
-# 3. Render the reports into docs/
-quarto render reports
+**3. Render the reports into `docs/`.** Open the project in RStudio and use the
+**Render** button on any report, or run `quarto render reports` from a terminal.
 
-# If an academic portal requires one portable HTML file, render that report
-# explicitly. This profile is for submission copies, not the GitHub Pages site.
+> **Windows ARM64.** R has no native ARM build, so R x64 runs under emulation and exits
+> with `-1073741819` (`ACCESS_VIOLATION`) *after* writing its output; Quarto reads that
+> code as a failure and discards the result. Render from RStudio, which does not check
+> the process exit code. Unaffected on Windows x86-64, Linux and macOS.
+
+```bash
+# Optional: one portable HTML file, when an academic portal requires it.
+# For submission copies only, not for the GitHub Pages site.
 quarto render reports/01-asset-profile.qmd --profile submission
 
 # 4. Verify the analytics library
 Rscript tests/testthat.R
 ```
 
-The committed public snapshot renders without credentials. See
-[Data sources](#data-sources) below for the manual FactSet override.
+See [Data sources](#data-sources) below for the manual FactSet override.
 
 The regular site build is intentionally multi-file: its HTML pages depend on
 `docs/site_libs/` and on external PNG files such as
@@ -204,7 +209,7 @@ synced folder.
 ## Roadmap
 
 - [x] Repository scaffold, analytics library and report skeletons
-- [x] Etapa 01 — issuer profile and risk taxonomy
+- [x] Stage 01 — issuer profile and risk taxonomy
 - [ ] Stage 02 — price path, drawdowns and event attribution
 - [ ] Stage 03 — return distribution and GBM projection
 - [ ] Stage 04 — conditional variance models and out-of-sample evaluation
