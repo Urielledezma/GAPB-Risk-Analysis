@@ -19,7 +19,7 @@ source("_setup.R")
 <dl class="report-meta" aria-label="Ficha técnica del proyecto">
 <div><dt>Fuente de datos</dt><dd>Yahoo Finance / BMV, GAP / SEC y Banco Mundial</dd></div>
 <div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>
-<div><dt>Moneda</dt><dd>MXN; EPS de PAC en USD por ADS</dd></div>
+<div><dt>Moneda</dt><dd>MXN; EPS en MXN por acción serie B</dd></div>
 <div><dt>Periodo cubierto</dt><dd>GAPB: 27 de febrero de 2006–26 de agosto de 2026</dd></div>
 </dl>
 
