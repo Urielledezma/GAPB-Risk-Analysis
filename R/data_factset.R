@@ -61,7 +61,7 @@ factset_request <- function(path) {
 
   request |>
     httr2::req_auth_basic(user, key) |>
-    httr2::req_user_agent("Analisis-de-Riesgo/1.0 (R httr2)") |>
+    httr2::req_user_agent("GAPB-Risk-Analysis/1.0 (R httr2)") |>
     httr2::req_retry(max_tries = 3, backoff = function(i) 2^i) |>
     httr2::req_timeout(90)
 }

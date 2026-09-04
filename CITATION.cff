@@ -15,8 +15,8 @@ authors:
     family-names: Morán Errejón
   - given-names: Santiago
     family-names: Álvarez Tostado Estrada
-repository-code: "https://github.com/Urielledezma/Analisis-de-Riesgo"
-url: "https://urielledezma.github.io/Analisis-de-Riesgo/"
+repository-code: "https://github.com/Urielledezma/GAPB-Risk-Analysis"
+url: "https://urielledezma.github.io/GAPB-Risk-Analysis/"
 abstract: >-
   An end-to-end market risk research framework in R, applied to Grupo
   Aeroportuario del Pacífico and to a six-asset Mexican equity portfolio.

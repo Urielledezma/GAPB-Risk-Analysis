@@ -40,7 +40,7 @@ sec_user_agent <- function() {
   if (nzchar(configured)) {
     return(configured)
   }
-  "Analisis-de-Riesgo academic project (urielledezma7@gmail.com)"
+  "GAPB-Risk-Analysis academic project (urielledezma7@gmail.com)"
 }
 
 #' Download one document from EDGAR, through a local cache.

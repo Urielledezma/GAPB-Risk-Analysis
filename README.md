@@ -1,10 +1,10 @@
 # Market Risk Analysis — GAPB.MX
 
-[![checks](https://github.com/Urielledezma/Analisis-de-Riesgo/actions/workflows/checks.yml/badge.svg)](https://github.com/Urielledezma/Analisis-de-Riesgo/actions/workflows/checks.yml)
+[![checks](https://github.com/Urielledezma/GAPB-Risk-Analysis/actions/workflows/checks.yml/badge.svg)](https://github.com/Urielledezma/GAPB-Risk-Analysis/actions/workflows/checks.yml)
 [![R](https://img.shields.io/badge/R-%3E%3D%204.2-276DC3?logo=r&logoColor=white)](https://www.r-project.org/)
 [![Quarto](https://img.shields.io/badge/Quarto-reports-39729E?logo=quarto&logoColor=white)](https://quarto.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Reports](https://img.shields.io/badge/reports-live-brightgreen)](https://urielledezma.github.io/Analisis-de-Riesgo/)
+[![Reports](https://img.shields.io/badge/reports-live-brightgreen)](https://urielledezma.github.io/GAPB-Risk-Analysis/)
 
 An end-to-end market risk research framework in **R**, applied to **Grupo Aeroportuario
 del Pacífico, Serie B (BMV: GAPB)** and, in the portfolio stage, to a six-asset Mexican
@@ -23,7 +23,7 @@ The analytics are deliberately kept out of the reports and live in `R/` as a sma
 library driven by `config/`. Point `config/assets.yml` at a different universe and the
 same pipeline runs unchanged — the repository is intended to be reused.
 
-**Reports:** <https://urielledezma.github.io/Analisis-de-Riesgo/>
+**Reports:** <https://urielledezma.github.io/GAPB-Risk-Analysis/>
 
 ---
 
@@ -66,8 +66,8 @@ same pipeline runs unchanged — the repository is intended to be reused.
 RStudio. The committed public snapshot renders without any API credentials.
 
 ```bash
-git clone https://github.com/Urielledezma/Analisis-de-Riesgo.git
-cd Analisis-de-Riesgo
+git clone https://github.com/Urielledezma/GAPB-Risk-Analysis.git
+cd GAPB-Risk-Analysis
 ```
 
 ```r

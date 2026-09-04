@@ -3,8 +3,8 @@
 ## Getting set up
 
 ```bash
-git clone https://github.com/Urielledezma/Analisis-de-Riesgo.git
-cd Analisis-de-Riesgo
+git clone https://github.com/Urielledezma/GAPB-Risk-Analysis.git
+cd GAPB-Risk-Analysis
 ```
 
 ```r
