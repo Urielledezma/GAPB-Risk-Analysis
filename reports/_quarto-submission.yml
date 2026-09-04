@@ -1,3 +1,10 @@
+# Submission profile: one self-contained HTML file for an academic portal.
+#
+# `type: default` renders the document on its own, without the website navbar,
+# search and cross-page links, which would be dead ends in a file uploaded on
+# its own. That also switches off the Bootstrap theme, so the document carries
+# its own stylesheet instead -- without the include below it renders naked.
+
 project:
   type: default
   output-dir: ../outputs/submission
@@ -5,3 +12,4 @@ project:
 format:
   html:
     embed-resources: true
+    include-in-header: submission-header.html
