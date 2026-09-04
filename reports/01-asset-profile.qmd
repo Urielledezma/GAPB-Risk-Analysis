@@ -579,6 +579,14 @@ contra la utilidad neta auditada de la Forma 20-F con diferencias inferiores a
 MXN 5 mil (redondeo). La verificación se ejecuta en cada corrida del script de
 ingesta y detiene el proceso si falla.
 
+**Estatus de la serie.** Por esa desviación en el numerador, lo que se obtiene
+es un *proxy* del EPS de la NIC 33 y no un sustituto suyo. Reproduce la
+trayectoria trimestral —que es lo que esta etapa necesita observar— pero su
+nivel queda sesgado al alza en aproximadamente la proporción que representa el
+interés no controlador. El EPS básico y diluido auditado sólo existe con
+periodicidad anual y es el que debe usarse cuando lo que importa es el nivel; la
+@tbl-eps-control confronta las dos medidas año por año.
+
 **Unidad.** Pesos por acción serie B. No se mezcla con precio ni se convierte a
 dólares dentro de la serie principal.
 :::
@@ -588,7 +596,7 @@ La @fig-eps permite observar la ruptura y la recuperación, mientras que la
 
 ```{r fig-eps}
 #| echo: false
-#| fig-cap: "Utilidad trimestral por acción serie B, calculada; pesos por acción."
+#| fig-cap: "Utilidad trimestral por acción serie B (proxy calculado); pesos por acción."
 ggplot(eps, aes(period_end, diluted_eps)) +
   geom_hline(yintercept = 0, colour = RISK_INK$baseline, linewidth = 0.4) +
   geom_line(colour = RISK_PALETTE[1], linewidth = 0.8) +
@@ -600,7 +608,7 @@ ggplot(eps, aes(period_end, diluted_eps)) +
 
 ```{r tbl-eps}
 #| echo: false
-#| tbl-cap: "EPS trimestral calculado, pesos por acción serie B."
+#| tbl-cap: "EPS trimestral (proxy calculado), pesos por acción serie B."
 eps_wide <- reshape(
   eps[, c("year", "quarter", "diluted_eps")],
   idvar = "year", timevar = "quarter", direction = "wide"
@@ -673,8 +681,8 @@ pesos por acción, frente a los `r latest$reported_eps_mxn` pesos que la Forma
 20-F reporta como EPS básico y diluido bajo NIC 33. La diferencia de
 `r round(growth(sum(eps$diluted_eps[eps$year == 2025]), latest$reported_eps_mxn), 2)`%
 es el interés no controlador, y es la magnitud del sesgo al alza de la serie
-trimestral. La serie anual auditada aparece en la @tbl-ratios y en el texto sin
-ese sesgo.
+trimestral. La @tbl-eps-control extiende esa comparación a los tres ejercicios
+auditados.
 
 **Defectos documentales detectados.** El comunicado de 3T20 imprime un cero como
 utilidad integral por acción y el de 2T20 trunca la cifra; en ambos casos el
@@ -683,6 +691,46 @@ valor publicado se marcó como faltante en lugar de propagarse. Además, en 2T24
 declara en la misma nota. Ninguno de estos defectos afecta la serie calculada en
 pesos, que no depende de las cifras por acción publicadas.
 :::
+
+### Control anual contra el EPS auditado
+
+La @tbl-eps-control confronta la serie trimestral con la única utilidad por
+acción que GAP publica bajo la NIC 33: la del estado de resultados anual
+auditado, disponible para 2023, 2024 y 2025 [@gap20f2025]. Es la prueba que
+decide si el proxy trimestral sirve, y cuánto se desvía del nivel correcto.
+
+```{r tbl-eps-control}
+#| echo: false
+#| tbl-cap: "Control anual: EPS auditado bajo NIC 33 contra la suma de los cuatro trimestres calculados."
+quarterly_sum <- vapply(
+  fundamentals$year,
+  function(y) sum(eps$diluted_eps[eps$year == y]),
+  numeric(1)
+)
+eps_bias <- quarterly_sum / fundamentals$reported_eps_mxn - 1
+
+eps_control <- data.frame(
+  Año = fundamentals$year,
+  `EPS auditado NIC 33 (MXN)` = round(fundamentals$reported_eps_mxn, 4),
+  `Suma trimestral, proxy (MXN)` = round(quarterly_sum, 4),
+  `Sesgo del proxy` = fmt_pct(eps_bias, 2),
+  `Interés no controlador` = fmt_pct(nci_share, 2),
+  check.names = FALSE
+)
+report_table(eps_control)
+```
+
+El sesgo es positivo en los tres ejercicios y creciente: de
+`r fmt_pct(eps_bias[1], 2)` en 2023 a `r fmt_pct(eps_bias[3], 2)` en 2025. Su
+causa dominante es el interés no controlador, que la última columna reporta y
+que explica casi toda la brecha; el residuo, de algunas centésimas de punto
+porcentual, proviene del segundo desvío del denominador, porque el proxy divide
+entre las acciones en circulación mientras la NIC 33 divide entre el promedio
+ponderado del periodo. Que ambas columnas se muevan juntas es lo que autoriza a
+usar la serie trimestral: el error no es ruido sino un sesgo identificado, de
+signo conocido y magnitud medible. La consecuencia práctica para el resto del
+análisis es simple: la serie trimestral se lee como trayectoria y la columna
+auditada fija el nivel.
 
 ### Comportamiento de la serie
 
@@ -843,16 +891,17 @@ comprime. El trayecto de 1T20 a 2T20, de `r round(q(2020, "T1"), 2)` a
 elasticidad.
 
 **Concentración de aeropuertos.** El propio emisor advierte que el negocio
-depende en alto grado de los ingresos de cinco aeropuertos. Un cierre prolongado,
-un conflicto laboral o una obra mal ejecutada en Guadalajara o Tijuana no se
-compensa con el resto de la red, porque los activos no son sustituibles entre sí.
+depende en alto grado de los ingresos de cinco aeropuertos [@gap20f2025]. Un
+cierre prolongado, un conflicto laboral o una obra mal ejecutada en Guadalajara
+o Tijuana no se compensa con el resto de la red, porque los activos no son
+sustituibles entre sí.
 
 **Aerolíneas y clientes.** La pérdida o suspensión de operaciones de un cliente
 relevante retira ingreso aeronáutico y consumo comercial de forma simultánea.
 GAP documenta además que las principales aerolíneas domésticas se han negado en
 el pasado a pagar ciertos incrementos tarifarios y podrían volver a hacerlo, y
 que recaudan por cuenta de GAP las tarifas de pasajeros, función que podrían
-dejar de prestar.
+dejar de prestar [@gap20f2025].
 
 **Clima y desastres naturales.** El caso de 4T25 es el ejemplo documentado: el
 huracán Melissa forzó la suspensión de operaciones en Montego Bay entre el 26 de
@@ -864,8 +913,8 @@ la reconstrucción de la infraestructura hotelera de la isla, que GAP no control
 **Ciberseguridad y seguridad física.** Un ataque a los sistemas de información o
 un incidente de seguridad puede interrumpir la operación de un activo que no
 puede trasladarse. GAP señala asimismo que los requisitos de seguridad pueden
-exigir inversiones o gastos adicionales, lo que convierte al riesgo en una
-presión de costos incluso cuando no se materializa el incidente.
+exigir inversiones o gastos adicionales [@gap20f2025], lo que convierte al
+riesgo en una presión de costos incluso cuando no se materializa el incidente.
 
 **Ejecución de CAPEX e integración.** El programa de inversión comprometido bajo
 los Programas Maestros de Desarrollo no es discrecional. Un retraso o sobrecosto
@@ -873,8 +922,9 @@ comprime el margen antes de que la capacidad genere ingreso —fenómeno visible
 la caída del margen operativo de
 `r fmt_pct(first_year$operating_margin_ex_ifric, 1)` a
 `r fmt_pct(latest$operating_margin_ex_ifric, 1)`—, y la integración de CBX añade
-en 2026 un riesgo de ejecución que GAP reconoce explícitamente, junto con la
-dilución de 15.1% que la emisión de acciones supone para el accionista previo.
+en 2026 un riesgo de ejecución que GAP reconoce explícitamente [@gap20f2025],
+junto con la dilución de 15.1% que la emisión de acciones supone para el
+accionista previo [@gapcbx2026].
 :::
 
 ### Riesgos macroeconómicos
@@ -892,32 +942,32 @@ demanda sin que la tarifa haya cambiado.
 **Dependencia de Estados Unidos y política comercial.** GAP declara que su
 negocio es particularmente sensible a las condiciones económicas
 estadounidenses, a la política de ese país hacia México y a la imposición de
-aranceles, que afectaría al negocio de carga. El canal es doble: menos turismo
-emisor y menor actividad de manufactura fronteriza, que es precisamente lo que
-sostiene a Tijuana.
+aranceles, que afectaría al negocio de carga [@gap20f2025]. El canal es doble:
+menos turismo emisor y menor actividad de manufactura fronteriza, que es
+precisamente lo que sostiene a Tijuana.
 
 **Tipo de cambio.** El peso actúa en dos direcciones opuestas. Su depreciación
 eleva la conversión a pesos de los ingresos jamaiquinos —99% de los ingresos de
 Montego Bay y Kingston están denominados en dólares—, pero encarece
 simultáneamente el 74% de sus costos de operación y el 68% de su inversión que
-también están en dólares, así como la totalidad de la deuda de esa subsidiaria.
-El efecto neto sobre el resultado no es de signo determinado y sí introduce
-volatilidad en la traducción.
+también están en dólares, así como la totalidad de la deuda de esa subsidiaria
+[@gap20f2025]. El efecto neto sobre el resultado no es de signo determinado y sí
+introduce volatilidad en la traducción.
 
 **Inflación y tasas.** La inflación se traslada parcialmente a las tarifas
 máximas por la mecánica del régimen quinquenal, con rezago. Las tasas afectan el
 costo de refinanciamiento; GAP advierte además que los cambios en las tasas de
-referencia pueden afectar adversamente sus resultados.
+referencia pueden afectar adversamente sus resultados [@gap20f2025].
 
 **Choques sanitarios y eventos internacionales.** El emisor conserva entre sus
 factores de riesgo las pandemias, epidemias y actos de terrorismo o guerra, con
-impacto sobre el viaje aéreo internacional. La serie de EPS de 2020 es la
-cuantificación disponible de ese escenario.
+impacto sobre el viaje aéreo internacional [@gap20f2025]. La serie de EPS de
+2020 es la cuantificación disponible de ese escenario.
 
 **Jamaica.** Las condiciones económicas y políticas de la isla, su regulación y
-su incidencia delictiva constituyen una categoría de riesgo separada en el 20-F,
-y su relevancia crece conforme el interés no controlador asociado a Montego Bay
-gana peso en el resultado.
+su incidencia delictiva constituyen una categoría de riesgo separada en el 20-F
+[@gap20f2025], y su relevancia crece conforme el interés no controlador asociado
+a Montego Bay gana peso en el resultado.
 :::
 
 ### Riesgos financieros
@@ -935,33 +985,33 @@ separa un ROA de `r fmt_pct(roa, 1)` de un ROE de
 **Refinanciamiento y costo de deuda.** El perfil se alargó en 2025 al sustituir
 vencimientos circulantes por certificados bursátiles de largo plazo, lo que
 reduce el riesgo inmediato pero fija por más tiempo un costo financiero de MXN
-4,458.3 millones anuales. El mecanismo es directo: una tasa más alta al momento
-de refinanciar reduce la utilidad neta sin que el EBITDA se mueva, y por esa vía
-comprime el EPS y el flujo distribuible.
+4,458.3 millones anuales [@gap20f2025]. El mecanismo es directo: una tasa más
+alta al momento de refinanciar reduce la utilidad neta sin que el EBITDA se
+mueva, y por esa vía comprime el EPS y el flujo distribuible.
 
 **Restricciones contractuales.** El emisor señala que las obligaciones de hacer y
 no hacer de sus contratos de deuda pueden limitar su discrecionalidad en ciertas
-decisiones de negocio. Un deterioro del EBITDA que acerque las razones de
-cobertura a sus límites restringiría inversión y distribuciones antes de que
-exista cualquier problema de solvencia.
+decisiones de negocio [@gap20f2025]. Un deterioro del EBITDA que acerque las
+razones de cobertura a sus límites restringiría inversión y distribuciones antes
+de que exista cualquier problema de solvencia.
 
 **Liquidez frente a un CAPEX intensivo.** Con menos de un tercio del CAPEX
 financiado por flujo de operación y un efectivo que cedió
 `r fmt_mxn(previous$cash_mxn_m - latest$cash_mxn_m, 1)` millones durante 2025
 hasta `r fmt_mxn(latest$cash_mxn_m, 1)` millones, GAP depende del acceso continuo
-al mercado de deuda mexicano. Un cierre
-temporal de ese mercado obligaría a elegir entre recortar inversión comprometida
-o suspender la distribución.
+al mercado de deuda mexicano [@gap20f2025]. Un cierre temporal de ese mercado
+obligaría a elegir entre recortar inversión comprometida o suspender la
+distribución.
 
 **Dilución.** La emisión de 89,740,731 acciones por la fusión con CBX reduce en
-15.1% la participación del accionista previo. El efecto sobre el EPS de 2026 es
-mecánico y opera con independencia del desempeño operativo de los activos
-incorporados.
+15.1% la participación del accionista previo [@gapcbx2026]. El efecto sobre el
+EPS de 2026 es mecánico y opera con independencia del desempeño operativo de los
+activos incorporados.
 
 **Recuperabilidad de activos por impuestos diferidos.** GAP mantiene MXN 8,756.3
 millones de impuestos diferidos activos y advierte que su recuperación depende de
-generar utilidades fiscales futuras suficientes; un deterioro prolongado del
-resultado obligaría a castigarlos contra la utilidad del periodo.
+generar utilidades fiscales futuras suficientes [@gap20f2025]; un deterioro
+prolongado del resultado obligaría a castigarlos contra la utilidad del periodo.
 :::
 
 ### Riesgos regulatorios y concesionarios
@@ -984,21 +1034,21 @@ las jamaiquinas en 2033 y 2044; al vencimiento los activos revierten al Estado.
 El valor del emisor es, en rigor, el valor presente de un flujo con horizonte
 finito, y cualquier cambio en la expectativa de prórroga —que no está garantizada
 y queda sujeta a las modificaciones que imponga la autoridad— reprecia el activo.
-GAP advierte además que el gobierno mexicano puede dar por terminadas o readquirir
-las concesiones.
+GAP advierte además que el gobierno mexicano puede dar por terminadas o
+readquirir las concesiones [@gap20f2025].
 
 **Programas Maestros de Desarrollo.** La inversión comprometida por quinquenio es
-obligatoria y se negocia con la autoridad. Una exigencia mayor a la prevista
-eleva el CAPEX sin elevar necesariamente el ingreso permitido, y dado que menos
-de un tercio del CAPEX se autofinancia, se traduce en más deuda.
+obligatoria y se negocia con la autoridad [@gap20f2025]. Una exigencia mayor a
+la prevista eleva el CAPEX sin elevar necesariamente el ingreso permitido, y
+dado que menos de un tercio del CAPEX se autofinancia, se traduce en más deuda.
 
 **Accionista estratégico y gobierno corporativo.** El tenedor de las acciones
 serie BB, equivalentes al 15% del capital, designa directivos y veta decisiones
 como la aprobación de estados financieros, los cambios de capital y el pago de
 dividendos. Un desacuerdo en ese vehículo puede bloquear decisiones de la
-asamblea, y el propio emisor identifica ese bloqueo como riesgo. Tras la fusión
-de mayo de 2026, esos derechos especiales pasaron a los tenedores directos de la
-nueva serie BB.
+asamblea, y el propio emisor identifica ese bloqueo como riesgo [@gap20f2025].
+Tras la fusión de mayo de 2026, esos derechos especiales pasaron a los tenedores
+directos de la nueva serie BB [@gapcbx2026].
 :::
 
 ## Conclusión
