@@ -18,22 +18,6 @@
 
 FACTSET_BASE <- "https://api.factset.com/content"
 
-# Fundamental metrics pulled for the issuer profile. FactSet metric codes are
-# provisional until confirmed against /v2/metrics on an entitled account.
-FACTSET_FUNDAMENTAL_METRICS <- c(
-  "FF_SALES",        # Revenue
-  "FF_GROSS_INC",    # Gross profit
-  "FF_OPER_INC",     # Operating income
-  "FF_NET_INC",      # Net income
-  "FF_EBITDA_OPER",  # EBITDA
-  "FF_EPS_DIL",      # Diluted earnings per share
-  "FF_ROE",          # Return on equity
-  "FF_ROA",          # Return on assets
-  "FF_DEBT",         # Total debt
-  "FF_EQ_TOT",       # Total equity
-  "FF_ASSETS"        # Total assets
-)
-
 #' The public address FactSet sees this machine as.
 #'
 #' An API key is bound to an IP allowlist, and a request from an address outside
@@ -158,56 +142,6 @@ factset_ping <- function(id = asset_meta()$factset_id) {
   n <- length(result$data)
   message("FactSet reachable and entitled. ", n, " observations returned for ", id, ".")
   invisible(TRUE)
-}
-
-#' Quarterly fundamentals for one or more identifiers.
-#'
-#' @param ids FactSet identifiers.
-#' @param metrics Metric codes.
-#' @param start Fiscal period start, YYYY-MM-DD.
-#' @param end Fiscal period end, YYYY-MM-DD.
-#' @param periodicity "QTR" or "ANN".
-#' @return A tidy data frame: id, metric, fiscal_period, fiscal_year, value.
-fetch_factset_fundamentals <- function(ids = asset_meta()$factset_id,
-                                       metrics = FACTSET_FUNDAMENTAL_METRICS,
-                                       start = "2019-01-01",
-                                       end = format(Sys.Date(), "%Y-%m-%d"),
-                                       periodicity = "QTR") {
-  body <- factset_get(
-    c("factset-fundamentals", "v2", "fundamentals"),
-    list(
-      ids = paste(ids, collapse = ","),
-      metrics = paste(metrics, collapse = ","),
-      periodicity = periodicity,
-      fiscalPeriodStart = start,
-      fiscalPeriodEnd = end
-    )
-  )
-
-  observations <- body$data
-  if (is.null(observations) || length(observations) == 0) {
-    stop(
-      "FactSet returned no fundamentals for ", paste(ids, collapse = ", "), ".\n",
-      "  Verify the identifiers in config/assets.yml and the metric codes.",
-      call. = FALSE
-    )
-  }
-
-  rows <- lapply(observations, function(row) {
-    data.frame(
-      id = row$requestId %||% row$fsymId %||% NA_character_,
-      metric = row$metric %||% NA_character_,
-      fiscal_period = row$fiscalPeriod %||% NA_character_,
-      fiscal_year = row$fiscalYear %||% NA_integer_,
-      period_end = row$fiscalEndDate %||% NA_character_,
-      value = if (is.null(row$value)) NA_real_ else as.numeric(row$value),
-      stringsAsFactors = FALSE
-    )
-  })
-
-  out <- do.call(rbind, rows)
-  write_raw(out, "factset", "fundamentals.csv")
-  out
 }
 
 # Field-name candidates for the Prices response.

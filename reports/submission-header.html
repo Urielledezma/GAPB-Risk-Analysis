@@ -1,24 +1,41 @@
 <style>
+  /* Submission stylesheet.
+     Quarto emits the website grid markup even for a standalone render, and
+     _quarto.yml sizes it at body 1100px + margin 320px + gutters (~1470px).
+     Nothing here may cap the page width: an earlier `body { max-width: 1120px }`
+     starved the body column down to ~750px, because the margin column is fixed
+     and the deficit comes out of the prose. Style the ink, not the layout. */
+
   :root { --ink: #20252b; --muted: #65707c; --line: #dfe4e8; --accent: #1769aa; }
-  html { color: var(--ink); background: #fff; font-family: "Segoe UI", Arial, sans-serif; }
-  body { max-width: 1120px; margin: 0 auto; padding: 3rem 4rem 5rem; line-height: 1.62; }
-  h1 { color: #102a43; font-size: 2.35rem; line-height: 1.12; margin-bottom: .35rem; }
+  body { color: var(--ink); background: #fff; line-height: 1.62; }
+  main.content { padding-bottom: 4rem; }
+
+  h1, h2, h3 { line-height: 1.18; }
   h2 { color: #173f5f; border-bottom: 1px solid var(--line); padding-bottom: .35rem; margin-top: 2.7rem; }
   h3 { color: #24557a; margin-top: 2rem; }
-  p { max-width: 82ch; }
   a { color: var(--accent); }
-  #TOC { border-left: 4px solid var(--accent); background: #f4f7f9; padding: 1rem 1.5rem; margin: 2rem 0 3rem; }
-  #TOC ul { columns: 2; column-gap: 2rem; }
-  table { width: 100%; border-collapse: collapse; margin: 1.2rem 0 2rem; font-size: .92rem; }
+
+  /* The table of contents sits in the 320px margin column: keep it single
+     column and let it breathe. It is not a full-width block here. */
+  #TOC { border-left: 3px solid var(--accent); padding-left: .9rem; }
+  #TOC ul { columns: 1; }
+
+  table { border-collapse: collapse; margin: 1.2rem 0 2rem; font-size: .92rem; }
   caption { text-align: left; font-weight: 600; color: #173f5f; margin-bottom: .45rem; }
   th { background: #edf3f7; text-align: left; }
   th, td { border-bottom: 1px solid var(--line); padding: .55rem .65rem; vertical-align: top; }
+
   img { max-width: 100%; height: auto; }
   figure { margin: 2rem 0; }
   figcaption { color: var(--muted); font-size: .9rem; }
-  .callout-note { border-left: 4px solid var(--accent); background: #f4f7f9; padding: .8rem 1.2rem; }
   blockquote { color: var(--muted); border-left: 3px solid var(--line); padding-left: 1rem; }
-  code { background: #f3f5f7; padding: .1rem .25rem; }
-  @media (max-width: 760px) { body { padding: 1.5rem; } #TOC ul { columns: 1; } }
-  @media print { body { max-width: none; padding: 0; font-size: 10.5pt; } #TOC { break-after: page; } a { color: inherit; } }
+
+  /* Printing is the one case where the margin column has nowhere to go. */
+  @media print {
+    #quarto-margin-sidebar, #TOC { display: none; }
+    body { font-size: 10.5pt; }
+    a { color: inherit; text-decoration: none; }
+    h2, h3 { break-after: avoid; }
+    figure, table { break-inside: avoid; }
+  }
 </style>
