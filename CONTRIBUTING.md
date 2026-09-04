@@ -25,19 +25,18 @@ quarto render reports        # full site into docs/
 
 ## Branching
 
-One branch per stage, merged by pull request:
+Work goes straight to `main`. There are no pull requests and no review gate: push a
+piece when it is finished, and pull before you start the next one. With four people on
+six stages that touch mostly separate files, the coordination cost of a branch per
+stage buys less than it charges.
 
-```
-stage/01-asset-profile
-stage/02-price-events
-stage/03-returns-gbm
-stage/04-variance-models
-stage/05-var-es
-stage/06-article
-```
+Branch only when the work can break the site for everyone else: a data refresh, a change
+to `R/` that moves numbers already reported, or an experiment you are not confident in.
+Name it `fix/…`, `chore/…` or `data/…`, merge it yourself once it renders clean, and
+delete it.
 
-Fixes and infrastructure use `fix/…` and `chore/…`. Nothing is committed directly to
-`main`.
+One rule survives from the branch-per-stage model, because it is the one that actually
+bites: **only one person commits `docs/` at a time.** See *Close the stage* below.
 
 ## Commits
 
@@ -71,16 +70,12 @@ is committed as a dataset.
 
 Everything below can be done from RStudio. No terminal is required.
 
-### 1. Start from a clean branch
+### 1. Start from an up-to-date main
 
-Pull first, using the blue arrow in the **Git** pane. Then create the stage branch with
-the purple branch icon → **New Branch**, following the naming in *Branching* above:
-
-```
-stage/02-price-events
-```
-
-Nothing is committed directly to `main`.
+Pull first, using the blue arrow in the **Git** pane. That is the whole ritual, and it is
+not optional: you are committing to `main` alongside three other people, so pulling
+before you begin — and again before you push — is the only thing standing between you
+and a day of work rebuilt on top of a stale copy.
 
 ### 2. Decide whether the data needs refreshing
 
@@ -97,16 +92,16 @@ before touching any report:
 2. Run the ingest scripts from the R console, in the order given in the README.
 3. Inspect the diff on `data/processed/*.csv`. New dates should appear; old rows should
    not disappear. A shrinking file means an incomplete download, not a successful one.
-4. `testthat::test_dir("tests/testthat")` — still 197.
+4. `testthat::test_dir("tests/testthat")` — still 221.
 5. Commit as `data: refresh public snapshot through <yyyy-mm>`.
 6. **Re-render the whole site**, not only the stage being worked on. Build pane →
    **Render Website**. A site with one page on new data and five on old data is worse
    than one that was not refreshed at all.
-7. Commit `docs/` separately, then open the pull request.
+7. Commit `docs/` separately, then merge the branch into `main` and push it.
 
-Only once that is merged does stage work begin, on data that is already settled. Keeping
-the two apart means that if a figure looks wrong, it is immediately clear whether the
-data moved or the analysis did.
+Only once that is on `main` does stage work begin, on data that is already settled.
+Keeping the two apart means that if a figure looks wrong, it is immediately clear
+whether the data moved or the analysis did.
 
 ### 3. Write the stage
 
@@ -134,11 +129,12 @@ Stage the `.qmd` and `references.bib` only. Leave `docs/` for the end.
 ### 5. Close the stage
 
 One person runs Build → **Render Website** and commits the whole of `docs/` in a single
-final commit. Two people committing generated HTML from parallel branches produces a
-conflict in thousands of machine-written lines, which is the one merge conflict worth
-going out of your way to avoid.
+final commit. Two people committing generated HTML from divergent copies of `main`
+produces a conflict in thousands of machine-written lines, which is the one merge
+conflict worth going out of your way to avoid — say in the group chat that you are
+rendering, and pull immediately afterwards.
 
-Then open the pull request and work through the checklist below.
+Then work through the checklist below before you push.
 
 ### 6. Produce a submission copy, if one is required
 
@@ -158,7 +154,9 @@ a disposable artefact: regenerate it on the day you need it. Verify it by copyin
 one file somewhere else and opening it on its own — if the figures render, it is
 self-contained.
 
-## Before opening a pull request
+## Before you push
+
+Nobody is going to catch these for you, so run them yourself.
 
 - [ ] `Rscript tests/testthat.R` passes.
 - [ ] `quarto render reports` completes with no warnings, and `docs/` is committed.
@@ -185,6 +183,10 @@ Code, comments, documentation and commit messages are in English. Report and art
 prose is in Spanish.
 
 ## Reviewing
+
+There is no review gate, so the reading happens in two places instead: on your own diff
+before you push, and on a teammate's commit when a number in it surprises you. Both use
+the same questions.
 
 A review checks the reasoning, not only the syntax. The questions worth asking are
 whether the estimate uses information that would genuinely have been available at the

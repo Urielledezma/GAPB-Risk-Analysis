@@ -160,7 +160,7 @@ provenance <- function(prices) {
 #' which vendor produced the numbers without re-running anything. It follows the
 #' data into data/private/ when the data is vendor-derived -- not because the
 #' manifest is sensitive, but because a tracked file whose contents depend on
-#' who ran the ingest would churn in every pull request.
+#' who ran the ingest would churn in every diff.
 #'
 #' @param prices A tidy price frame.
 #' @param name Manifest file name.

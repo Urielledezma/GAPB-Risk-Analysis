@@ -6,7 +6,7 @@
 # vendor series can be checked against.
 #
 # Run it when extending the coverage window, not on every ingest. The committed
-# snapshot changing on every run would make every pull request a data diff.
+# snapshot changing on every run would make every commit a data diff.
 #
 # Always covers the full universe: the snapshot is the floor for stage 05 as
 # well, and a partial floor is not one.

@@ -183,7 +183,7 @@ source only, across the full universe. Its output is the **tracked** snapshot in
 FactSet access, and the baseline a vendor series can be checked against.
 
 > **Do not run `05` on every ingest.** The committed snapshot changing on every run
-> would turn every pull request into a data diff. Run it when the coverage window needs
+> would turn every commit into a data diff. Run it when the coverage window needs
 > to be extended, in a commit of its own, and re-render the whole site afterwards —
 > see *Working on a stage* in [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -286,8 +286,8 @@ synced folder.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the branching model, commit conventions and
-the review checklist.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the working model, commit conventions and
+the pre-push checklist.
 
 ---
 
