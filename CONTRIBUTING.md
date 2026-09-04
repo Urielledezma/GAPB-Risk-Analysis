@@ -68,7 +68,8 @@ is committed as a dataset.
 
 ## Working on a stage
 
-Everything below can be done from RStudio. No terminal is required.
+Everything below can be done from RStudio, and everything except the optional
+submission copy in step 6 from its GUI panes alone.
 
 ### 1. Start from an up-to-date main
 
@@ -143,11 +144,19 @@ and on external figure directories. It is published through GitHub Pages and is 
 what you upload to an academic portal.
 
 For a single portable HTML file, render the stage explicitly with the `submission`
-profile, from the R console:
+profile. This is the one step in this guide that needs the Terminal pane rather
+than the R console:
 
-```r
-quarto::quarto_render("reports/02-price-history-events.qmd", profile = "submission")
+```bash
+quarto render reports/02-price-history-events.qmd --profile submission
 ```
+
+The `quarto` R package is not recorded in `renv.lock`, so the
+`quarto::quarto_render(..., profile = "submission")` form fails on a fresh clone.
+The profile lives in `reports/_quarto-submission.yml`; the stylesheet it pulls in
+is `reports/submission-header.html`, and that file must not set a page width —
+the theme grid is 1100px of body plus a 320px margin column, and capping the page
+below their sum starves the prose column.
 
 The output lands in `outputs/submission/`, which is gitignored and never committed. It is
 a disposable artefact: regenerate it on the day you need it. Verify it by copying that

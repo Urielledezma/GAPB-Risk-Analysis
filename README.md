@@ -95,9 +95,12 @@ testthat::test_dir("tests/testthat")   # or Rscript tests/testthat.R from a term
 **Optional: one portable HTML file**, when an academic portal requires it. For
 submission copies only, never for the GitHub Pages site:
 
-```r
-quarto::quarto_render("reports/01-asset-profile.qmd", profile = "submission")
+```bash
+quarto render reports/01-asset-profile.qmd --profile submission
 ```
+
+The `quarto` R package is not in the lockfile, so the `quarto::quarto_render()`
+form of this command fails on a fresh clone. Use the CLI above.
 
 See [Data sources](#data-sources) below for the manual FactSet override.
 
