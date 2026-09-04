@@ -11,21 +11,28 @@ if (!exists("%||%", mode = "function")) {
   `%||%` <- function(x, y) if (is.null(x)) y else x
 }
 
-#' Locate the project root by walking up for the .Rproj file.
+# Files that mark the top of a checkout. A .Rproj file cannot be the only
+# marker: RStudio rewrites it on every open, so .gitignore keeps it untracked
+# and a fresh clone -- CI included -- never has one.
+PROJECT_ROOT_MARKERS <- c("renv.lock", ".git")
+
+#' Locate the project root by walking up for a root marker.
 #'
 #' @param start Directory to start from.
 #' @return Absolute path to the project root.
 find_project_root <- function(start = getwd()) {
   path <- normalizePath(start, winslash = "/", mustWork = TRUE)
   repeat {
-    if (length(list.files(path, pattern = "\\.Rproj$")) > 0) {
+    found <- length(list.files(path, pattern = "\\.Rproj$")) > 0 ||
+      any(file.exists(file.path(path, PROJECT_ROOT_MARKERS)))
+    if (found) {
       return(path)
     }
     parent <- dirname(path)
     if (identical(parent, path)) {
       stop(
-        "Could not locate the project root: no .Rproj file found above '",
-        start, "'.",
+        "Could not locate the project root: no .Rproj file, renv.lock or .git ",
+        "found above '", start, "'.",
         call. = FALSE
       )
     }
