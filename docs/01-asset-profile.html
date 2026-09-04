@@ -174,6 +174,7 @@ div.csl-indent {
   <li><a href="#utilidad-por-acción" id="toc-utilidad-por-acción" class="nav-link" data-scroll-target="#utilidad-por-acción"><span class="header-section-number">5</span> Utilidad por acción</a>
   <ul class="collapse">
   <li><a href="#reconciliación-entre-gapb-el-ads-pac-y-las-dos-monedas" id="toc-reconciliación-entre-gapb-el-ads-pac-y-las-dos-monedas" class="nav-link" data-scroll-target="#reconciliación-entre-gapb-el-ads-pac-y-las-dos-monedas">Reconciliación entre GAPB, el ADS PAC y las dos monedas</a></li>
+  <li><a href="#control-anual-contra-el-eps-auditado" id="toc-control-anual-contra-el-eps-auditado" class="nav-link" data-scroll-target="#control-anual-contra-el-eps-auditado">Control anual contra el EPS auditado</a></li>
   <li><a href="#comportamiento-de-la-serie" id="toc-comportamiento-de-la-serie" class="nav-link" data-scroll-target="#comportamiento-de-la-serie">Comportamiento de la serie</a></li>
   </ul></li>
   <li><a href="#dividendos-y-splits" id="toc-dividendos-y-splits" class="nav-link" data-scroll-target="#dividendos-y-splits"><span class="header-section-number">6</span> Dividendos y <em>splits</em></a></li>
@@ -665,6 +666,7 @@ Tabla&nbsp;5: Indicadores financieros clave, fórmula y valor por ejercicio.
 <p><strong>Numerador.</strong> La utilidad neta del trimestre, tomada del estado de resultados de cada comunicado. La NIC 33 pide la utilidad atribuible a los tenedores de acciones ordinarias de la controladora; GAP <strong>no desglosa el interés no controlador de la utilidad neta a nivel trimestral</strong> —sólo lo hace sobre el resultado integral—, por lo que ese desglose no es reconstruible sin inventarlo. La limitación se cuantifica más abajo y es la única concesión metodológica de esta sección.</p>
 <p><strong>Denominador.</strong> No se estima: cada comunicado declara en nota al pie el número de acciones sobre el que calculó sus cifras por acción, y ese es el denominador utilizado. Va de 561,000,000 acciones en 2019–2020 a 505,277,464 desde el tercer trimestre de 2022, una reducción de 9.9% por recompras.</p>
 <p><strong>Validación.</strong> La suma de los cuatro trimestres de 2023, 2024 y 2025 reconcilia contra la utilidad neta auditada de la Forma 20-F con diferencias inferiores a MXN 5 mil (redondeo). La verificación se ejecuta en cada corrida del script de ingesta y detiene el proceso si falla.</p>
+<p><strong>Estatus de la serie.</strong> Por esa desviación en el numerador, lo que se obtiene es un <em>proxy</em> del EPS de la NIC 33 y no un sustituto suyo. Reproduce la trayectoria trimestral —que es lo que esta etapa necesita observar— pero su nivel queda sesgado al alza en aproximadamente la proporción que representa el interés no controlador. El EPS básico y diluido auditado sólo existe con periodicidad anual y es el que debe usarse cuando lo que importa es el nivel; la <a href="#tbl-eps-control" class="quarto-xref">Tabla&nbsp;8</a> confronta las dos medidas año por año.</p>
 <p><strong>Unidad.</strong> Pesos por acción serie B. No se mezcla con precio ni se convierte a dólares dentro de la serie principal.</p>
 </div>
 <p>La <a href="#fig-eps" class="quarto-xref">Figura&nbsp;2</a> permite observar la ruptura y la recuperación, mientras que la <a href="#tbl-eps" class="quarto-xref">Tabla&nbsp;6</a> conserva el detalle trimestral.</p>
@@ -676,7 +678,7 @@ Tabla&nbsp;5: Indicadores financieros clave, fórmula y valor por ejercicio.
 <img src="01-asset-profile_files/figure-html/fig-eps-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-eps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2: Utilidad trimestral por acción serie B, calculada; pesos por acción.
+Figura&nbsp;2: Utilidad trimestral por acción serie B (proxy calculado); pesos por acción.
 </figcaption>
 </figure>
 </div>
@@ -686,7 +688,7 @@ Figura&nbsp;2: Utilidad trimestral por acción serie B, calculada; pesos por acc
 <div id="tbl-eps" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-eps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;6: EPS trimestral calculado, pesos por acción serie B.
+Tabla&nbsp;6: EPS trimestral (proxy calculado), pesos por acción serie B.
 </figcaption>
 <div aria-describedby="tbl-eps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -831,9 +833,68 @@ Tabla&nbsp;7: Reconciliación MXN por acción a USD por ADS, 2025.
 <div class="semantic-block semantic-info">
 <p><span class="semantic-label">Alcance y limitaciones de la serie</span></p>
 <p><strong>Cobertura.</strong> Los veintiocho trimestres de 1T19 a 4T25, sin huecos. Veintisiete proceden del comunicado en que GAP reportó ese trimestre como periodo corriente; 1T19 procede de la columna comparativa del comunicado de 1T20, porque el comunicado original de 1T19 publicó sus tablas como imágenes. Ambos periodos comparten el mismo denominador de 561,000,000 acciones, de modo que la comparabilidad no se ve afectada.</p>
-<p><strong>Interés no controlador.</strong> El EPS calculado usa utilidad neta consolidada. En 2025 la suma de los cuatro trimestres da 19.7922 pesos por acción, frente a los 18.9305 pesos que la Forma 20-F reporta como EPS básico y diluido bajo NIC 33. La diferencia de 4.55% es el interés no controlador, y es la magnitud del sesgo al alza de la serie trimestral. La serie anual auditada aparece en la <a href="#tbl-ratios" class="quarto-xref">Tabla&nbsp;5</a> y en el texto sin ese sesgo.</p>
+<p><strong>Interés no controlador.</strong> El EPS calculado usa utilidad neta consolidada. En 2025 la suma de los cuatro trimestres da 19.7922 pesos por acción, frente a los 18.9305 pesos que la Forma 20-F reporta como EPS básico y diluido bajo NIC 33. La diferencia de 4.55% es el interés no controlador, y es la magnitud del sesgo al alza de la serie trimestral. La <a href="#tbl-eps-control" class="quarto-xref">Tabla&nbsp;8</a> extiende esa comparación a los tres ejercicios auditados.</p>
 <p><strong>Defectos documentales detectados.</strong> El comunicado de 3T20 imprime un cero como utilidad integral por acción y el de 2T20 trunca la cifra; en ambos casos el valor publicado se marcó como faltante en lugar de propagarse. Además, en 2T24, 3T24 y 2T25 GAP convirtió su cifra por ADS a un tipo de cambio distinto del que declara en la misma nota. Ninguno de estos defectos afecta la serie calculada en pesos, que no depende de las cifras por acción publicadas.</p>
 </div>
+</section>
+<section id="control-anual-contra-el-eps-auditado" class="level3">
+<h3 class="anchored" data-anchor-id="control-anual-contra-el-eps-auditado">Control anual contra el EPS auditado</h3>
+<p>La <a href="#tbl-eps-control" class="quarto-xref">Tabla&nbsp;8</a> confronta la serie trimestral con la única utilidad por acción que GAP publica bajo la NIC 33: la del estado de resultados anual auditado, disponible para 2023, 2024 y 2025 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Es la prueba que decide si el proxy trimestral sirve, y cuánto se desvía del nivel correcto.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-eps-control" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-eps-control-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;8: Control anual: EPS auditado bajo NIC 33 contra la suma de los cuatro trimestres calculados.
+</figcaption>
+<div aria-describedby="tbl-eps-control-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 26%">
+<col style="width: 29%">
+<col style="width: 16%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Año</th>
+<th style="text-align: right;">EPS auditado NIC 33 (MXN)</th>
+<th style="text-align: right;">Suma trimestral, proxy (MXN)</th>
+<th style="text-align: right;">Sesgo del proxy</th>
+<th style="text-align: right;">Interés no controlador</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">18.89</td>
+<td style="text-align: right;">19.18</td>
+<td style="text-align: right;">1.54%</td>
+<td style="text-align: right;">1.51%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">17.04</td>
+<td style="text-align: right;">17.57</td>
+<td style="text-align: right;">3.06%</td>
+<td style="text-align: right;">2.97%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">18.93</td>
+<td style="text-align: right;">19.79</td>
+<td style="text-align: right;">4.55%</td>
+<td style="text-align: right;">4.35%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>El sesgo es positivo en los tres ejercicios y creciente: de 1.54% en 2023 a 4.55% en 2025. Su causa dominante es el interés no controlador, que la última columna reporta y que explica casi toda la brecha; el residuo, de algunas centésimas de punto porcentual, proviene del segundo desvío del denominador, porque el proxy divide entre las acciones en circulación mientras la NIC 33 divide entre el promedio ponderado del periodo. Que ambas columnas se muevan juntas es lo que autoriza a usar la serie trimestral: el error no es ruido sino un sesgo identificado, de signo conocido y magnitud medible. La consecuencia práctica para el resto del análisis es simple: la serie trimestral se lee como trayectoria y la columna auditada fija el nivel.</p>
 </section>
 <section id="comportamiento-de-la-serie" class="level3">
 <h3 class="anchored" data-anchor-id="comportamiento-de-la-serie">Comportamiento de la serie</h3>
@@ -848,12 +909,12 @@ Tabla&nbsp;7: Reconciliación MXN por acción a USD por ADS, 2025.
 <section id="dividendos-y-splits" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="dividendos-y-splits"><span class="header-section-number">6</span> Dividendos y <em>splits</em></h2>
 <p>GAP sí distribuye efectivo, y lo hace bajo una política formal de dos componentes: un monto fijo, originalmente de MXN 450 millones en 2005 y creciente cada año, más el excedente de efectivo y equivalentes sobre un saldo mínimo de caja que el consejo determina como necesario para cubrir gastos e inversiones mínimas del ejercicio <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La frecuencia no es trimestral ni automática: la asamblea aprueba un monto anual y el pago se hace en una o más exhibiciones, con lo que el calendario depende de una decisión corporativa y de la liquidez disponible.</p>
-<p>La <a href="#tbl-distributions" class="quarto-xref">Tabla&nbsp;8</a> resume las distribuciones de los tres ejercicios analizados.</p>
+<p>La <a href="#tbl-distributions" class="quarto-xref">Tabla&nbsp;9</a> resume las distribuciones de los tres ejercicios analizados.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-distributions" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;8: Distribuciones a los accionistas, millones de pesos.
+Tabla&nbsp;9: Distribuciones a los accionistas, millones de pesos.
 </figcaption>
 <div aria-describedby="tbl-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -916,11 +977,11 @@ Tabla&nbsp;8: Distribuciones a los accionistas, millones de pesos.
 <div class="semantic-block semantic-risk">
 <p><span class="semantic-label">Riesgo</span></p>
 <p><strong>Tráfico y capacidad.</strong> GAP declara que sus ingresos dependen en alto grado de los volúmenes de pasajeros y carga, determinados por factores fuera de su control <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Una recesión, un alza del precio del combustible o una restricción de crédito a las aerolíneas reduce frecuencias; con costos fijos intactos, el EBITDA cae más que proporcionalmente, la razón deuda neta a EBITDA se deteriora sin que la deuda cambie y el flujo disponible para CAPEX y dividendos se comprime. El trayecto de 1T20 a 2T20, de 3.22 a -1.04 pesos por acción, es la medida empírica de esa elasticidad.</p>
-<p><strong>Concentración de aeropuertos.</strong> El propio emisor advierte que el negocio depende en alto grado de los ingresos de cinco aeropuertos. Un cierre prolongado, un conflicto laboral o una obra mal ejecutada en Guadalajara o Tijuana no se compensa con el resto de la red, porque los activos no son sustituibles entre sí.</p>
-<p><strong>Aerolíneas y clientes.</strong> La pérdida o suspensión de operaciones de un cliente relevante retira ingreso aeronáutico y consumo comercial de forma simultánea. GAP documenta además que las principales aerolíneas domésticas se han negado en el pasado a pagar ciertos incrementos tarifarios y podrían volver a hacerlo, y que recaudan por cuenta de GAP las tarifas de pasajeros, función que podrían dejar de prestar.</p>
+<p><strong>Concentración de aeropuertos.</strong> El propio emisor advierte que el negocio depende en alto grado de los ingresos de cinco aeropuertos <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Un cierre prolongado, un conflicto laboral o una obra mal ejecutada en Guadalajara o Tijuana no se compensa con el resto de la red, porque los activos no son sustituibles entre sí.</p>
+<p><strong>Aerolíneas y clientes.</strong> La pérdida o suspensión de operaciones de un cliente relevante retira ingreso aeronáutico y consumo comercial de forma simultánea. GAP documenta además que las principales aerolíneas domésticas se han negado en el pasado a pagar ciertos incrementos tarifarios y podrían volver a hacerlo, y que recaudan por cuenta de GAP las tarifas de pasajeros, función que podrían dejar de prestar <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
 <p><strong>Clima y desastres naturales.</strong> El caso de 4T25 es el ejemplo documentado: el huracán Melissa forzó la suspensión de operaciones en Montego Bay entre el 26 de octubre y el 1 de noviembre de 2025, los ingresos jamaiquinos cayeron 35.7% en el trimestre y el EPS retrocedió 33.6% respecto del trimestre anterior <span class="citation" data-cites="gap4q2025">(<a href="#ref-gap4q2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026c</a>)</span>. La recuperación depende además de la reconstrucción de la infraestructura hotelera de la isla, que GAP no controla.</p>
-<p><strong>Ciberseguridad y seguridad física.</strong> Un ataque a los sistemas de información o un incidente de seguridad puede interrumpir la operación de un activo que no puede trasladarse. GAP señala asimismo que los requisitos de seguridad pueden exigir inversiones o gastos adicionales, lo que convierte al riesgo en una presión de costos incluso cuando no se materializa el incidente.</p>
-<p><strong>Ejecución de CAPEX e integración.</strong> El programa de inversión comprometido bajo los Programas Maestros de Desarrollo no es discrecional. Un retraso o sobrecosto comprime el margen antes de que la capacidad genere ingreso —fenómeno visible en la caída del margen operativo de 59.5% a 54.0%—, y la integración de CBX añade en 2026 un riesgo de ejecución que GAP reconoce explícitamente, junto con la dilución de 15.1% que la emisión de acciones supone para el accionista previo.</p>
+<p><strong>Ciberseguridad y seguridad física.</strong> Un ataque a los sistemas de información o un incidente de seguridad puede interrumpir la operación de un activo que no puede trasladarse. GAP señala asimismo que los requisitos de seguridad pueden exigir inversiones o gastos adicionales <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>, lo que convierte al riesgo en una presión de costos incluso cuando no se materializa el incidente.</p>
+<p><strong>Ejecución de CAPEX e integración.</strong> El programa de inversión comprometido bajo los Programas Maestros de Desarrollo no es discrecional. Un retraso o sobrecosto comprime el margen antes de que la capacidad genere ingreso —fenómeno visible en la caída del margen operativo de 59.5% a 54.0%—, y la integración de CBX añade en 2026 un riesgo de ejecución que GAP reconoce explícitamente <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>, junto con la dilución de 15.1% que la emisión de acciones supone para el accionista previo <span class="citation" data-cites="gapcbx2026">(<a href="#ref-gapcbx2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026a</a>)</span>.</p>
 </div>
 </section>
 <section id="riesgos-macroeconómicos" class="level3">
@@ -928,11 +989,11 @@ Tabla&nbsp;8: Distribuciones a los accionistas, millones de pesos.
 <div class="semantic-block semantic-risk">
 <p><span class="semantic-label">Riesgo</span></p>
 <p><strong>Actividad económica en México y turismo.</strong> El emisor vincula su negocio al volumen de tráfico aéreo doméstico y, por tanto, al crecimiento y a la situación de seguridad del país <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Los aeropuertos turísticos compiten contra destinos alternativos del Caribe y Estados Unidos, de modo que un deterioro de la percepción de seguridad o de la competitividad relativa del destino desplaza demanda sin que la tarifa haya cambiado.</p>
-<p><strong>Dependencia de Estados Unidos y política comercial.</strong> GAP declara que su negocio es particularmente sensible a las condiciones económicas estadounidenses, a la política de ese país hacia México y a la imposición de aranceles, que afectaría al negocio de carga. El canal es doble: menos turismo emisor y menor actividad de manufactura fronteriza, que es precisamente lo que sostiene a Tijuana.</p>
-<p><strong>Tipo de cambio.</strong> El peso actúa en dos direcciones opuestas. Su depreciación eleva la conversión a pesos de los ingresos jamaiquinos —99% de los ingresos de Montego Bay y Kingston están denominados en dólares—, pero encarece simultáneamente el 74% de sus costos de operación y el 68% de su inversión que también están en dólares, así como la totalidad de la deuda de esa subsidiaria. El efecto neto sobre el resultado no es de signo determinado y sí introduce volatilidad en la traducción.</p>
-<p><strong>Inflación y tasas.</strong> La inflación se traslada parcialmente a las tarifas máximas por la mecánica del régimen quinquenal, con rezago. Las tasas afectan el costo de refinanciamiento; GAP advierte además que los cambios en las tasas de referencia pueden afectar adversamente sus resultados.</p>
-<p><strong>Choques sanitarios y eventos internacionales.</strong> El emisor conserva entre sus factores de riesgo las pandemias, epidemias y actos de terrorismo o guerra, con impacto sobre el viaje aéreo internacional. La serie de EPS de 2020 es la cuantificación disponible de ese escenario.</p>
-<p><strong>Jamaica.</strong> Las condiciones económicas y políticas de la isla, su regulación y su incidencia delictiva constituyen una categoría de riesgo separada en el 20-F, y su relevancia crece conforme el interés no controlador asociado a Montego Bay gana peso en el resultado.</p>
+<p><strong>Dependencia de Estados Unidos y política comercial.</strong> GAP declara que su negocio es particularmente sensible a las condiciones económicas estadounidenses, a la política de ese país hacia México y a la imposición de aranceles, que afectaría al negocio de carga <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. El canal es doble: menos turismo emisor y menor actividad de manufactura fronteriza, que es precisamente lo que sostiene a Tijuana.</p>
+<p><strong>Tipo de cambio.</strong> El peso actúa en dos direcciones opuestas. Su depreciación eleva la conversión a pesos de los ingresos jamaiquinos —99% de los ingresos de Montego Bay y Kingston están denominados en dólares—, pero encarece simultáneamente el 74% de sus costos de operación y el 68% de su inversión que también están en dólares, así como la totalidad de la deuda de esa subsidiaria <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. El efecto neto sobre el resultado no es de signo determinado y sí introduce volatilidad en la traducción.</p>
+<p><strong>Inflación y tasas.</strong> La inflación se traslada parcialmente a las tarifas máximas por la mecánica del régimen quinquenal, con rezago. Las tasas afectan el costo de refinanciamiento; GAP advierte además que los cambios en las tasas de referencia pueden afectar adversamente sus resultados <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
+<p><strong>Choques sanitarios y eventos internacionales.</strong> El emisor conserva entre sus factores de riesgo las pandemias, epidemias y actos de terrorismo o guerra, con impacto sobre el viaje aéreo internacional <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La serie de EPS de 2020 es la cuantificación disponible de ese escenario.</p>
+<p><strong>Jamaica.</strong> Las condiciones económicas y políticas de la isla, su regulación y su incidencia delictiva constituyen una categoría de riesgo separada en el 20-F <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>, y su relevancia crece conforme el interés no controlador asociado a Montego Bay gana peso en el resultado.</p>
 </div>
 </section>
 <section id="riesgos-financieros" class="level3">
@@ -940,11 +1001,11 @@ Tabla&nbsp;8: Distribuciones a los accionistas, millones de pesos.
 <div class="semantic-block semantic-risk">
 <p><span class="semantic-label">Riesgo</span></p>
 <p><strong>Apalancamiento.</strong> GAP advierte que su nivel de deuda podría limitar su capacidad de obtener capital adicional y su margen de reacción ante cambios del entorno <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Con 2.13 veces el capital contable, el apalancamiento amplifica tanto la rentabilidad como la pérdida, y es lo que separa un ROA de 11.8% de un ROE de 42.7%.</p>
-<p><strong>Refinanciamiento y costo de deuda.</strong> El perfil se alargó en 2025 al sustituir vencimientos circulantes por certificados bursátiles de largo plazo, lo que reduce el riesgo inmediato pero fija por más tiempo un costo financiero de MXN 4,458.3 millones anuales. El mecanismo es directo: una tasa más alta al momento de refinanciar reduce la utilidad neta sin que el EBITDA se mueva, y por esa vía comprime el EPS y el flujo distribuible.</p>
-<p><strong>Restricciones contractuales.</strong> El emisor señala que las obligaciones de hacer y no hacer de sus contratos de deuda pueden limitar su discrecionalidad en ciertas decisiones de negocio. Un deterioro del EBITDA que acerque las razones de cobertura a sus límites restringiría inversión y distribuciones antes de que exista cualquier problema de solvencia.</p>
-<p><strong>Liquidez frente a un CAPEX intensivo.</strong> Con menos de un tercio del CAPEX financiado por flujo de operación y un efectivo que cedió $3,012.8 millones durante 2025 hasta $10,453.2 millones, GAP depende del acceso continuo al mercado de deuda mexicano. Un cierre temporal de ese mercado obligaría a elegir entre recortar inversión comprometida o suspender la distribución.</p>
-<p><strong>Dilución.</strong> La emisión de 89,740,731 acciones por la fusión con CBX reduce en 15.1% la participación del accionista previo. El efecto sobre el EPS de 2026 es mecánico y opera con independencia del desempeño operativo de los activos incorporados.</p>
-<p><strong>Recuperabilidad de activos por impuestos diferidos.</strong> GAP mantiene MXN 8,756.3 millones de impuestos diferidos activos y advierte que su recuperación depende de generar utilidades fiscales futuras suficientes; un deterioro prolongado del resultado obligaría a castigarlos contra la utilidad del periodo.</p>
+<p><strong>Refinanciamiento y costo de deuda.</strong> El perfil se alargó en 2025 al sustituir vencimientos circulantes por certificados bursátiles de largo plazo, lo que reduce el riesgo inmediato pero fija por más tiempo un costo financiero de MXN 4,458.3 millones anuales <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. El mecanismo es directo: una tasa más alta al momento de refinanciar reduce la utilidad neta sin que el EBITDA se mueva, y por esa vía comprime el EPS y el flujo distribuible.</p>
+<p><strong>Restricciones contractuales.</strong> El emisor señala que las obligaciones de hacer y no hacer de sus contratos de deuda pueden limitar su discrecionalidad en ciertas decisiones de negocio <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Un deterioro del EBITDA que acerque las razones de cobertura a sus límites restringiría inversión y distribuciones antes de que exista cualquier problema de solvencia.</p>
+<p><strong>Liquidez frente a un CAPEX intensivo.</strong> Con menos de un tercio del CAPEX financiado por flujo de operación y un efectivo que cedió $3,012.8 millones durante 2025 hasta $10,453.2 millones, GAP depende del acceso continuo al mercado de deuda mexicano <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Un cierre temporal de ese mercado obligaría a elegir entre recortar inversión comprometida o suspender la distribución.</p>
+<p><strong>Dilución.</strong> La emisión de 89,740,731 acciones por la fusión con CBX reduce en 15.1% la participación del accionista previo <span class="citation" data-cites="gapcbx2026">(<a href="#ref-gapcbx2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026a</a>)</span>. El efecto sobre el EPS de 2026 es mecánico y opera con independencia del desempeño operativo de los activos incorporados.</p>
+<p><strong>Recuperabilidad de activos por impuestos diferidos.</strong> GAP mantiene MXN 8,756.3 millones de impuestos diferidos activos y advierte que su recuperación depende de generar utilidades fiscales futuras suficientes <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>; un deterioro prolongado del resultado obligaría a castigarlos contra la utilidad del periodo.</p>
 </div>
 </section>
 <section id="riesgos-regulatorios-y-concesionarios" class="level3">
@@ -952,9 +1013,9 @@ Tabla&nbsp;8: Distribuciones a los accionistas, millones de pesos.
 <div class="semantic-block semantic-risk">
 <p><span class="semantic-label">Riesgo</span></p>
 <p><strong>Tarifa máxima.</strong> GAP declara sin ambigüedad que el régimen bajo el cual se fijan las tarifas máximas en México y las tarifas reguladas en Jamaica <strong>no garantiza que la empresa ni ninguno de sus aeropuertos sea rentable</strong>, y que los ajustes de eficiencia exigidos sobre esas tarifas pueden afectar adversamente sus resultados <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Es el riesgo de mayor alcance del emisor: una revisión quinquenal menos favorable reduce el ingreso permitido de forma permanente, sin que el tráfico ni los costos hayan cambiado, y se traslada íntegra al valor presente del negocio. El mismo régimen prevé sanciones si se excede la tarifa máxima al cierre de un año.</p>
-<p><strong>Vida y reversión de la concesión.</strong> Las concesiones mexicanas vencen en 2048 y las jamaiquinas en 2033 y 2044; al vencimiento los activos revierten al Estado. El valor del emisor es, en rigor, el valor presente de un flujo con horizonte finito, y cualquier cambio en la expectativa de prórroga —que no está garantizada y queda sujeta a las modificaciones que imponga la autoridad— reprecia el activo. GAP advierte además que el gobierno mexicano puede dar por terminadas o readquirir las concesiones.</p>
-<p><strong>Programas Maestros de Desarrollo.</strong> La inversión comprometida por quinquenio es obligatoria y se negocia con la autoridad. Una exigencia mayor a la prevista eleva el CAPEX sin elevar necesariamente el ingreso permitido, y dado que menos de un tercio del CAPEX se autofinancia, se traduce en más deuda.</p>
-<p><strong>Accionista estratégico y gobierno corporativo.</strong> El tenedor de las acciones serie BB, equivalentes al 15% del capital, designa directivos y veta decisiones como la aprobación de estados financieros, los cambios de capital y el pago de dividendos. Un desacuerdo en ese vehículo puede bloquear decisiones de la asamblea, y el propio emisor identifica ese bloqueo como riesgo. Tras la fusión de mayo de 2026, esos derechos especiales pasaron a los tenedores directos de la nueva serie BB.</p>
+<p><strong>Vida y reversión de la concesión.</strong> Las concesiones mexicanas vencen en 2048 y las jamaiquinas en 2033 y 2044; al vencimiento los activos revierten al Estado. El valor del emisor es, en rigor, el valor presente de un flujo con horizonte finito, y cualquier cambio en la expectativa de prórroga —que no está garantizada y queda sujeta a las modificaciones que imponga la autoridad— reprecia el activo. GAP advierte además que el gobierno mexicano puede dar por terminadas o readquirir las concesiones <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
+<p><strong>Programas Maestros de Desarrollo.</strong> La inversión comprometida por quinquenio es obligatoria y se negocia con la autoridad <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Una exigencia mayor a la prevista eleva el CAPEX sin elevar necesariamente el ingreso permitido, y dado que menos de un tercio del CAPEX se autofinancia, se traduce en más deuda.</p>
+<p><strong>Accionista estratégico y gobierno corporativo.</strong> El tenedor de las acciones serie BB, equivalentes al 15% del capital, designa directivos y veta decisiones como la aprobación de estados financieros, los cambios de capital y el pago de dividendos. Un desacuerdo en ese vehículo puede bloquear decisiones de la asamblea, y el propio emisor identifica ese bloqueo como riesgo <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Tras la fusión de mayo de 2026, esos derechos especiales pasaron a los tenedores directos de la nueva serie BB <span class="citation" data-cites="gapcbx2026">(<a href="#ref-gapcbx2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026a</a>)</span>.</p>
 </div>
 </section>
 </section>
