@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -13,9 +13,6 @@
 
 <title>El activo y su negocio – Análisis de Riesgo · GAPB</title>
 <style>
-/* Default styles provided by pandoc.
-** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -57,16 +54,15 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-1e796f7a7bf16e5eb5298f63857716ad.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-8b03d5e0b9f575736ff961f99966e527.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-56c9fb2a36a481e37cf6329f2f24e7ca.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-8c63c3e55c9d928fa9b9e192c27b7bb7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -81,7 +77,7 @@ div.csl-indent {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "No se han encontrado resultados",
+    "search-no-results-text": "Sin resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
@@ -99,7 +95,7 @@ div.csl-indent {
 
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -216,7 +212,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">3 de septiembre de 2026</p>
+      <p class="date">5 de septiembre de 2026</p>
     </div>
   </div>
   
@@ -258,40 +254,209 @@ MXN millones; EPS en MXN por acción serie B
 Periodo cubierto
 </dt>
 <dd>
-Estados 2023–2025; EPS 1T19–4T25
+Estados 2023–2025; EPS 1T19–4T25; tráfico 2024–2025
 </dd>
 </div>
 </dl>
 <section id="introducción" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">1</span> Introducción</h2>
-<p>Esta primera etapa caracteriza a Grupo Aeroportuario del Pacífico, S.A.B. de C.V. (GAP) antes de modelar el riesgo de mercado de su acción serie B. El análisis combina la estructura económica del negocio con resultados consolidados de 2023 a 2025, indicadores de rentabilidad y apalancamiento, utilidad trimestral por acción y política de distribuciones. La lectura conjunta muestra una concesionaria con alta generación operativa y crecimiento, aunque expuesta a regulación tarifaria, tráfico aéreo, deuda y grandes compromisos de inversión.</p>
+<p>Esta primera etapa caracteriza a Grupo Aeroportuario del Pacífico, S.A.B. de C.V. (GAP) antes de modelar el riesgo de mercado de su acción serie B. El análisis combina la estructura económica del negocio con resultados consolidados de 2023 a 2025, indicadores de rentabilidad y apalancamiento, utilidad trimestral por acción y política de distribuciones. La lectura conjunta muestra una concesionaria con alta generación operativa y crecimiento, aunque expuesta a regulación tarifaria, tráfico aéreo, deuda y grandes compromisos de inversión. El análisis se contrasta además con ASUR y OMA, las dos concesionarias comparables del mercado mexicano, para separar lo que corresponde al sector de lo que corresponde a las decisiones financieras de este emisor en particular.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Criterio de fuentes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Criterio de fuentes
+Criterio de fuentes
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>ITESO confirmó que la licencia institucional de FactSet no incluye acceso por API. El repositorio acepta exportaciones manuales de FactSet en <code>data/raw/factset/manual/</code> y las conserva fuera de Git; en su ausencia, cada cifra de este reporte se reconstruye desde el documento primario que la publica. Los estados anuales provienen de la Forma 20-F de 2025 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>, que presenta 2023, 2024 y 2025 sobre una misma base contable, y la serie trimestral proviene de los veintiocho comunicados de resultados que GAP presentó ante la SEC entre 2019 y 2026. El manifiesto <code>config/filings.yml</code> registra qué documento sustenta cada periodo y <code>analysis/06_ingest_gap_filings.R</code> reconstruye ambos conjuntos de datos; el informe nunca consulta una API durante el renderizado.</p>
+<p>Tres bloques de cifras quedan fuera de ese pipeline y se transcriben directamente del documento que las publica, por lo que llevan su fuente señalada en el propio chunk: el estado de flujos de efectivo y el desglose de ingreso, costo y resultado financiero, tomados de los estados financieros en XBRL de la misma Forma 20-F; el tráfico por aeropuerto, tomado del comunicado de diciembre de 2025 <span class="citation" data-cites="gaptraffic2025dec">(<a href="#ref-gaptraffic2025dec" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026d</a>)</span>; y las cifras de ASUR y OMA, tomadas de sus respectivas Formas 20-F de 2025 <span class="citation" data-cites="asur20f2025 oma20f2025">(<a href="#ref-oma20f2025" role="doc-biblioref">Grupo Aeroportuario del Centro Norte, 2026</a>; <a href="#ref-asur20f2025" role="doc-biblioref">Grupo Aeroportuario del Sureste, 2026</a>)</span>. Ninguna de ellas se recalcula.</p>
 </div>
 </div>
 </section>
 <section id="descripción-general-del-activo-y-del-negocio" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="descripción-general-del-activo-y-del-negocio"><span class="header-section-number">2</span> Descripción general del activo y del negocio</h2>
 <p>GAP administra infraestructura aeroportuaria bajo concesión y su negocio consiste en cobrar por el uso de un espacio que no puede replicarse ni trasladarse. Opera doce aeropuertos en el occidente y noroeste de México —entre ellos Guadalajara, Tijuana, Puerto Vallarta, Los Cabos, La Paz y Manzanillo— y los aeropuertos de Montego Bay y Kingston en Jamaica. La sociedad surgió del proceso de privatización aeroportuaria de 1998, cotiza desde febrero de 2006 en la Bolsa Mexicana de Valores mediante GAPB y en Nueva York mediante el ADS PAC, incorporó Montego Bay en 2015 mediante la compra de la sociedad controladora de MBJ Airports y tomó el control de Kingston en octubre de 2019 <span class="citation" data-cites="gap20f2025 gapcbx2026">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>, <a href="#ref-gapcbx2026" role="doc-biblioref">2026a</a>)</span>.</p>
-<p>La <a href="#tbl-asset-metadata" class="quarto-xref">Tabla&nbsp;1</a> sintetiza la identificación bursátil utilizada en el análisis.</p>
+<p>El origen conviene precisarlo porque fija la escala del sector. El proceso de 1998 no privatizó la totalidad de la red estatal: de los aeropuertos que administraba Aeropuertos y Servicios Auxiliares, <strong>treinta y cinco</strong> se repartieron en cuatro grupos —GAP con doce, OMA con trece, ASUR con nueve y el Aeropuerto Internacional de la Ciudad de México aparte— <span class="citation" data-cites="gapquienes2025">(<a href="#ref-gapquienes2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2025b</a>)</span>. Los derechos de la concesión mexicana entraron en vigor el 1 de noviembre de 1998 por un plazo de cincuenta años <span class="citation" data-cites="gapconcesion1998">(<a href="#ref-gapconcesion1998" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2006</a>)</span>, de donde procede el vencimiento de 2048. El domicilio social de la sociedad está en Guadalajara, Jalisco <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
+<p>La red no es homogénea, y su composición es la primera fuente de riesgo del activo. La <a href="#tbl-airports" class="quarto-xref">Tabla&nbsp;1</a> desagrega el tráfico terminal de 2025 por aeropuerto.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-airports" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-airports-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;1: Red de aeropuertos: pasajeros terminales en miles y vencimiento de la concesión.
+</figcaption>
+<div aria-describedby="tbl-airports-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 21%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 13%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Aeropuerto</th>
+<th style="text-align: left;">Plaza</th>
+<th style="text-align: right;">Pax 2025</th>
+<th style="text-align: right;">Pax 2024</th>
+<th style="text-align: right;">Var. anual</th>
+<th style="text-align: right;">% de la red</th>
+<th style="text-align: left;">Vencimiento</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Guadalajara</td>
+<td style="text-align: left;">Jalisco</td>
+<td style="text-align: right;">18,696.6</td>
+<td style="text-align: right;">17,848.7</td>
+<td style="text-align: right;">4.8%</td>
+<td style="text-align: right;">29.4%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tijuana</td>
+<td style="text-align: left;">Baja California</td>
+<td style="text-align: right;">12,650.0</td>
+<td style="text-align: right;">12,545.8</td>
+<td style="text-align: right;">0.8%</td>
+<td style="text-align: right;">19.9%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Los Cabos</td>
+<td style="text-align: left;">Baja California Sur</td>
+<td style="text-align: right;">7,529.9</td>
+<td style="text-align: right;">7,488.1</td>
+<td style="text-align: right;">0.6%</td>
+<td style="text-align: right;">11.8%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Puerto Vallarta</td>
+<td style="text-align: left;">Jalisco</td>
+<td style="text-align: right;">6,947.7</td>
+<td style="text-align: right;">6,803.5</td>
+<td style="text-align: right;">2.1%</td>
+<td style="text-align: right;">10.9%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Montego Bay</td>
+<td style="text-align: left;">Jamaica</td>
+<td style="text-align: right;">4,469.1</td>
+<td style="text-align: right;">5,057.1</td>
+<td style="text-align: right;">-11.6%</td>
+<td style="text-align: right;">7.0%</td>
+<td style="text-align: left;">mar-2034</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Guanajuato (Bajío)</td>
+<td style="text-align: left;">Guanajuato</td>
+<td style="text-align: right;">3,301.5</td>
+<td style="text-align: right;">3,169.0</td>
+<td style="text-align: right;">4.2%</td>
+<td style="text-align: right;">5.2%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hermosillo</td>
+<td style="text-align: left;">Sonora</td>
+<td style="text-align: right;">2,203.1</td>
+<td style="text-align: right;">2,156.7</td>
+<td style="text-align: right;">2.2%</td>
+<td style="text-align: right;">3.5%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kingston</td>
+<td style="text-align: left;">Jamaica</td>
+<td style="text-align: right;">1,841.2</td>
+<td style="text-align: right;">1,777.2</td>
+<td style="text-align: right;">3.6%</td>
+<td style="text-align: right;">2.9%</td>
+<td style="text-align: left;">oct-2044</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Morelia</td>
+<td style="text-align: left;">Michoacán</td>
+<td style="text-align: right;">1,508.1</td>
+<td style="text-align: right;">1,304.6</td>
+<td style="text-align: right;">15.6%</td>
+<td style="text-align: right;">2.4%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">La Paz</td>
+<td style="text-align: left;">Baja California Sur</td>
+<td style="text-align: right;">1,337.6</td>
+<td style="text-align: right;">1,206.0</td>
+<td style="text-align: right;">10.9%</td>
+<td style="text-align: right;">2.1%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mexicali</td>
+<td style="text-align: left;">Baja California</td>
+<td style="text-align: right;">1,272.1</td>
+<td style="text-align: right;">1,034.1</td>
+<td style="text-align: right;">23%</td>
+<td style="text-align: right;">2.0%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aguascalientes</td>
+<td style="text-align: left;">Aguascalientes</td>
+<td style="text-align: right;">984.1</td>
+<td style="text-align: right;">961.8</td>
+<td style="text-align: right;">2.3%</td>
+<td style="text-align: right;">1.5%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Los Mochis</td>
+<td style="text-align: left;">Sinaloa</td>
+<td style="text-align: right;">713.6</td>
+<td style="text-align: right;">585.2</td>
+<td style="text-align: right;">21.9%</td>
+<td style="text-align: right;">1.1%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Manzanillo</td>
+<td style="text-align: left;">Colima</td>
+<td style="text-align: right;">231.2</td>
+<td style="text-align: right;">218.4</td>
+<td style="text-align: right;">5.9%</td>
+<td style="text-align: right;">0.4%</td>
+<td style="text-align: left;">2048</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Tres lecturas se desprenden de la <a href="#tbl-airports" class="quarto-xref">Tabla&nbsp;1</a>. La primera es la concentración: los cinco aeropuertos mayores —Guadalajara, Tijuana, Los Cabos, Puerto Vallarta y Montego Bay— reúnen 79.0% del tráfico, y sólo Guadalajara y Tijuana explican 49.2%. Cuando el propio emisor advierte que su negocio depende en alto grado de cinco aeropuertos <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>, la tabla pone la cifra a esa advertencia: no es una figura retórica del apartado de riesgos sino la estructura real del activo.</p>
+<p>La segunda es que el crecimiento de 2025 no fue homogéneo. Los aeropuertos de ciudad media avanzaron a doble dígito —Mexicali 23%, Los Mochis 21.9%, Morelia 15.6%— mientras los grandes crecieron poco y Montego Bay retrocedió 11.6%. Como el avance se concentró donde el tráfico es pequeño y la caída ocurrió en el quinto activo de la red, el resultado agregado fue de apenas 2.5%: el volumen no fue el motor del año, lo que confirma que el crecimiento del ingreso provino del precio.</p>
+<p>La tercera es el horizonte. Doce concesiones vencen simultáneamente en 2048 y las dos jamaiquinas antes; Montego Bay, que aporta 7.0% del tráfico, tiene el vencimiento más próximo de toda la red.</p>
+<p>La <a href="#tbl-asset-metadata" class="quarto-xref">Tabla&nbsp;2</a> sintetiza la identificación bursátil utilizada en el análisis.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-asset-metadata" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-asset-metadata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;1: Identificación bursátil del emisor analizado.
+Tabla&nbsp;2: Identificación bursátil del emisor analizado.
 </figcaption>
 <div aria-describedby="tbl-asset-metadata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 6%">
 <col style="width: 38%">
@@ -326,26 +491,113 @@ Tabla&nbsp;1: Identificación bursátil del emisor analizado.
 </figure>
 </div>
 </div>
-<p>Lo que sostiene el valor de este activo no es una marca de consumo sino el plazo remanente de sus títulos de concesión, ya que al vencimiento los activos revierten al Estado. Las doce concesiones mexicanas vencen en 2048 y admiten prórroga por hasta cincuenta años adicionales, sujeta a la aceptación de las modificaciones que imponga la autoridad; la concesión de Montego Bay vence en 2033 sin opción de prórroga pactada y la de Kingston en 2044 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Esa asimetría importa: la vida remanente mexicana es de más de dos décadas, mientras que el activo jamaiquino de mayor tamaño tiene un horizonte considerablemente más corto.</p>
+<p>Lo que sostiene el valor de este activo no es una marca de consumo sino el plazo remanente de sus títulos de concesión, ya que al vencimiento los activos revierten al Estado. Las doce concesiones mexicanas vencen en 2048 y admiten prórroga por hasta cincuenta años adicionales, sujeta a la aceptación de las modificaciones que imponga la autoridad; la concesión de Montego Bay vence en marzo de 2034 —un año más que el plazo original de treinta, tras la enmienda de julio de 2024— y la de Kingston en octubre de 2044 <span class="citation" data-cites="gap20f2025 gapjamaica2024">(<a href="#ref-gapjamaica2024" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2024a</a>, <a href="#ref-gap20f2025" role="doc-biblioref">2026b</a>)</span>. Esa misma enmienda redujo la cuota de concesión de Kingston de 62.01% a 53.22% de los ingresos brutos, con efecto retroactivo a septiembre de 2023: casi nueve puntos porcentuales de margen sobre el activo jamaiquino menor. La asimetría de plazos importa: la vida remanente mexicana supera las dos décadas, mientras que el activo jamaiquino de mayor tamaño tiene un horizonte considerablemente más corto.</p>
 <p>El ingreso económico se divide en servicios aeronáuticos —tarifas a pasajeros, aerolíneas y operadores, sujetas a una tarifa máxima regulada— y no aeronáuticos —arrendamientos, alimentos y bebidas, estacionamientos, salas VIP, tiendas, publicidad, hotelería y carga, que no están sujetos a esa tarifa—. En 2025 la mezcla, excluyendo la contabilidad de construcción de IFRIC 12, fue de 70% aeronáutica y 30% no aeronáutica. Esa diversificación reduce la dependencia de una sola tarifa pero no la del flujo de pasajeros, porque el ingreso comercial también se origina en quien cruza la terminal. Los catorce aeropuertos atendieron 63.7 millones de pasajeros en 2025, 2.5% más que en 2024, y el ingreso aeronáutico y no aeronáutico por pasajero subió 18.5%, hasta MXN 510.7; el avance del ingreso, por tanto, provino más del precio que del volumen <span class="citation" data-cites="gap4q2025">(<a href="#ref-gap4q2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026c</a>)</span>.</p>
 <p>La escala del negocio se mide mejor por su balance que por su plantilla: GAP cerró 2025 con $88,140 millones de activos y aproximadamente 3,506 colaboradores, de los cuales 3,341 corresponden a los aeropuertos mexicanos y 165 a Montego Bay <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La intensidad de capital, y no la intensidad de trabajo, es la característica económica dominante.</p>
-<p>La posición competitiva proviene de la exclusividad geográfica. Cada aeropuerto es monopolio local en su plaza, de modo que la competencia relevante no ocurre entre terminales cercanas sino entre destinos: el propio 20-F identifica como competidores de Puerto Vallarta, Los Cabos, La Paz, Manzanillo y Montego Bay a otros destinos vacacionales —Acapulco, Cancún, Hawái, Puerto Rico, Florida, Cuba y República Dominicana— y no a un aeropuerto rival <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. En el mercado bursátil mexicano los comparables son ASUR y OMA, que operan bajo el mismo régimen concesionario y de tarifa máxima.</p>
-<p>Dos dependencias estructurales conviene fijar desde ahora. La primera es regulatoria: la tarifa máxima aplicable a los servicios aeronáuticos se fija por quinquenio, y las tarifas del periodo 2025–2029 entraron en vigor en marzo de 2025; además, cada concesionaria mexicana paga al Estado un derecho equivalente al 9.0% de sus ingresos brutos <span class="citation" data-cites="gap20f2025 gap4q2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>, <a href="#ref-gap4q2025" role="doc-biblioref">2026c</a>)</span>. La segunda es accionaria: Aeropuertos Mexicanos del Pacífico mantenía las acciones serie BB, equivalentes al 15% del capital, con derecho a designar directivos y a vetar decisiones como la aprobación de estados financieros, los cambios de capital y el pago de dividendos <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
+<p>La posición competitiva proviene de la exclusividad geográfica. Cada aeropuerto es monopolio local en su plaza, de modo que la competencia relevante no ocurre entre terminales cercanas sino entre destinos: el propio 20-F identifica como competidores de Puerto Vallarta, Los Cabos, La Paz, Manzanillo y Montego Bay a otros destinos vacacionales —Acapulco, Cancún, Hawái, Puerto Rico, Florida, Cuba y República Dominicana— y no a un aeropuerto rival <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. En el mercado bursátil mexicano los comparables son ASUR y OMA, surgidos del mismo proceso de 1998 y sujetos al mismo régimen de tarifa máxima. La <a href="#tbl-peers" class="quarto-xref">Tabla&nbsp;3</a> los coloca lado a lado sobre el ejercicio 2025, con el ingreso depurado de IFRIC 12 en las tres emisoras para que los márgenes sean comparables.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-peers" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-peers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;3: GAP frente a sus comparables bursátiles, ejercicio 2025. El ingreso operativo excluye la construcción de IFRIC 12 en las tres emisoras.
+</figcaption>
+<div aria-describedby="tbl-peers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Concepto</th>
+<th style="text-align: left;">GAP</th>
+<th style="text-align: right;">ASUR</th>
+<th style="text-align: right;">OMA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Pasajeros (millones)</td>
+<td style="text-align: left;">63.7</td>
+<td style="text-align: right;">71.6</td>
+<td style="text-align: right;">28.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aeropuertos</td>
+<td style="text-align: left;">14</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ingreso operativo (MXN m)</td>
+<td style="text-align: left;">$32,525.9</td>
+<td style="text-align: right;">29,887.1</td>
+<td style="text-align: right;">13,651.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EBITDA (MXN m)</td>
+<td style="text-align: left;">$21,332.1</td>
+<td style="text-align: right;">20,256.3</td>
+<td style="text-align: right;">10,166.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Margen EBITDA</td>
+<td style="text-align: left;">65.6%</td>
+<td style="text-align: right;">67.8%</td>
+<td style="text-align: right;">74.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Utilidad neta (MXN m)</td>
+<td style="text-align: left;">$10,000.6</td>
+<td style="text-align: right;">10,924.7</td>
+<td style="text-align: right;">5,365.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Deuda financiera (MXN m)</td>
+<td style="text-align: left;">$52,997.1</td>
+<td style="text-align: right;">27,486.6</td>
+<td style="text-align: right;">13,428.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Deuda neta / EBITDA</td>
+<td style="text-align: left;">1.99x</td>
+<td style="text-align: right;">0.81x</td>
+<td style="text-align: right;">1.03x</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Deuda / capital</td>
+<td style="text-align: left;">2.13x</td>
+<td style="text-align: right;">0.59x</td>
+<td style="text-align: right;">1.18x</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ROE de la controladora</td>
+<td style="text-align: left;">42.7%</td>
+<td style="text-align: right;">26.5%</td>
+<td style="text-align: right;">47.4%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>La <a href="#tbl-peers" class="quarto-xref">Tabla&nbsp;3</a> precisa qué significa “comparable”. En generación operativa las tres emisoras juegan en la misma liga —márgenes EBITDA entre 65% y 75%, propios de un activo concesionado— y GAP queda en el extremo bajo de ese rango pese a ser la segunda por tráfico. Donde la separación es nítida es en el balance: con 2.13 veces de deuda sobre capital y 1.99 veces EBITDA de deuda neta, GAP está sensiblemente más apalancada que ASUR, que opera casi sin deuda neta, y que OMA <span class="citation" data-cites="asur20f2025 oma20f2025">(<a href="#ref-oma20f2025" role="doc-biblioref">Grupo Aeroportuario del Centro Norte, 2026</a>; <a href="#ref-asur20f2025" role="doc-biblioref">Grupo Aeroportuario del Sureste, 2026</a>)</span>. El contraste con ASUR es el más informativo porque su escala es parecida: atiende más pasajeros que GAP con un ingreso operativo menor, y aun así financia su expansión sin recurrir al pasivo en la misma proporción. La diferencia no está, por tanto, en el negocio ni en el régimen regulatorio, que son los mismos, sino en la decisión de estructura financiera: el apalancamiento de GAP es una elección de la administración, no una condición del sector. Ese es el rasgo que la etapa cuantitativa debería encontrar traducido en una volatilidad mayor que la de sus pares.</p>
+<p>Conviene una advertencia de comparabilidad. Las tres emisoras construyen su razón de apalancamiento con criterios distintos: OMA incluye los pasivos por arrendamiento de la NIIF 16 en su deuda neta y ASUR no, pese a mantener MXN 8,115.1 millones de ellos por la operación de San Juan; homogeneizando el criterio, ASUR pasaría de 0.81 a aproximadamente 1.21 veces. Las cifras del cuadro se presentan como cada emisora las reporta, y la comparación de fondo —GAP claramente más apalancada que ambas— se sostiene con cualquiera de los dos criterios. El conteo de pasajeros de ASUR tampoco es homogéneo: excluye tránsito en México y Colombia pero lo incluye en Puerto Rico <span class="citation" data-cites="asur20f2025">(<a href="#ref-asur20f2025" role="doc-biblioref">Grupo Aeroportuario del Sureste, 2026</a>)</span>.</p>
+<p>Dos dependencias estructurales conviene fijar desde ahora. La primera es regulatoria: la tarifa máxima aplicable a los servicios aeronáuticos se fija por quinquenio, y las tarifas del periodo 2025–2029 se aplican desde el 1 de enero de 2025 <span class="citation" data-cites="gappmd2024">(<a href="#ref-gappmd2024" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2024b</a>)</span>; además, cada concesionaria mexicana paga al Estado un derecho equivalente al 9.0% de sus ingresos brutos <span class="citation" data-cites="gap20f2025 gap4q2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>, <a href="#ref-gap4q2025" role="doc-biblioref">2026c</a>)</span>. La segunda es accionaria: Aeropuertos Mexicanos del Pacífico mantenía las acciones serie BB, equivalentes al 15% del capital, con derecho a designar directivos y a vetar decisiones como la aprobación de estados financieros, los cambios de capital y el pago de dividendos <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
 <p>El evento corporativo más relevante posterior al cierre analizado es la combinación con Cross Border Xpress y la internalización de los servicios de asistencia técnica, aprobada por la asamblea del 11 de diciembre de 2025 y concluida el 7 de mayo de 2026 mediante la protocolización del convenio de fusión. GAP emitió 89,740,731 acciones netas nuevas, con lo que su capital pasó a 595,018,195 acciones —519,226,576 de la serie B y 75,791,619 de la serie BB—, adquirió el 25% restante de CBX hasta consolidar el 100% e inició la consolidación financiera de esos negocios en mayo de 2026 <span class="citation" data-cites="gapcbx2026">(<a href="#ref-gapcbx2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026a</a>)</span>. La operación amplía el ecosistema de Tijuana y elimina la comisión de asistencia técnica, que en 2025 costó MXN 971.8 millones, pero diluye al accionista existente en 15.1% del capital resultante y abre un riesgo de integración. Nada de ello pertenece todavía a las cifras de 2025 que se analizan aquí, y por eso se trata como hecho posterior y no como parte del ejercicio.</p>
 </section>
 <section id="análisis-de-estados-financieros" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="análisis-de-estados-financieros"><span class="header-section-number">3</span> Análisis de estados financieros</h2>
 <p>IFRIC 12 obliga a reconocer como ingreso la construcción y mejora de activos concesionados junto con un costo equivalente. Como ese renglón infla ingreso y costo sin representar venta recurrente ni margen económico, se presentan dos bases: ingreso reportado y <strong>ingreso operativo</strong>, definido como la suma de servicios aeronáuticos y no aeronáuticos <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
-<p>La <a href="#tbl-financials" class="quarto-xref">Tabla&nbsp;2</a> presenta ambas bases y evita interpretar el ingreso de construcción como una venta recurrente.</p>
+<p>La <a href="#tbl-financials" class="quarto-xref">Tabla&nbsp;4</a> presenta ambas bases y evita interpretar el ingreso de construcción como una venta recurrente.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-financials" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-financials-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;2: Resultados consolidados, millones de pesos corrientes.
+Tabla&nbsp;4: Resultados consolidados, millones de pesos corrientes.
 </figcaption>
 <div aria-describedby="tbl-financials-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 4%">
 <col style="width: 17%">
@@ -401,6 +653,68 @@ Tabla&nbsp;2: Resultados consolidados, millones de pesos corrientes.
 </figure>
 </div>
 </div>
+<p>La <a href="#tbl-revenue-mix" class="quarto-xref">Tabla&nbsp;5</a> descompone ese ingreso operativo en sus dos fuentes.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-revenue-mix" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-revenue-mix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;5: Composición del ingreso, millones de pesos corrientes.
+</figcaption>
+<div aria-describedby="tbl-revenue-mix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 21%">
+<col style="width: 26%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Año</th>
+<th style="text-align: right;">Aeronáutico</th>
+<th style="text-align: right;">No aeronáutico</th>
+<th style="text-align: right;">Construcción IFRIC 12</th>
+<th style="text-align: right;">No aeronáutico / operativo</th>
+<th style="text-align: right;">Derecho de concesión</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">19,267</td>
+<td style="text-align: right;">6,165</td>
+<td style="text-align: right;">7,791</td>
+<td style="text-align: right;">24.2%</td>
+<td style="text-align: right;">2,533</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">19,110</td>
+<td style="text-align: right;">7,672</td>
+<td style="text-align: right;">6,832</td>
+<td style="text-align: right;">28.6%</td>
+<td style="text-align: right;">2,667</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">22,822</td>
+<td style="text-align: right;">9,704</td>
+<td style="text-align: right;">8,883</td>
+<td style="text-align: right;">29.8%</td>
+<td style="text-align: right;">3,818</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>La <a href="#tbl-revenue-mix" class="quarto-xref">Tabla&nbsp;5</a> contiene el hallazgo más favorable del periodo, y matiza el riesgo regulatorio que se describe más adelante. El ingreso no aeronáutico creció 57.4% entre 2023 y 2025 frente a 18.4% del aeronáutico, con lo que su peso en el ingreso operativo pasó de 24.2% a 29.8%. La mezcla se está desplazando hacia el componente <strong>no sujeto a tarifa máxima</strong>, donde GAP fija precios con libertad. Es una diversificación real frente a la revisión quinquenal, aunque acotada: el ingreso comercial también depende del pasajero que cruza la terminal, de modo que reduce la exposición a la tarifa pero no la exposición al tráfico.</p>
+<p>La última columna registra un movimiento en sentido contrario. El derecho de concesión, fijado en 9.0% de los ingresos brutos, creció 50.7% en dos años, muy por encima del 27.9% del ingreso operativo. La diferencia se explica porque la base gravable son los ingresos brutos, que incluyen la construcción de IFRIC 12, y ese renglón saltó en 2025. Es un costo regulatorio que crece con una base que no representa venta económica, y contribuye a la compresión de márgenes que se documenta enseguida.</p>
 <p>El ingreso operativo aumentó de $25,432.8 millones en 2023 a $32,525.9 millones en 2025, una expansión acumulada de 27.9%. El avance de 2025 fue especialmente fuerte, 21.4% frente a 2024, apoyado en la entrada en vigor de las tarifas máximas del quinquenio 2025–2029, la apertura de rutas y la depreciación del peso sobre los ingresos jamaiquinos. La utilidad neta creció 12.7% en ese mismo año, mucho menos que el ingreso, señal de que la escala adicional llegó acompañada de mayor costo financiero, depreciación y gasto operativo <span class="citation" data-cites="gap4q2025">(<a href="#ref-gap4q2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026c</a>)</span>.</p>
 <p>Conviene separar desde aquí la utilidad consolidada de la que corresponde al accionista de GAPB. El interés no controlador —la participación de 25.5% de Vantage Airport Group en Montego Bay y de 48.5% de los accionistas de GWTC— absorbió 1.5% del resultado en 2023 y 4.4% en 2025 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La brecha se ha triplicado en dos años y, por pequeña que parezca, es la diferencia entre una utilidad consolidada y una utilidad del dueño.</p>
 <section id="márgenes" class="level3">
@@ -430,11 +744,11 @@ Figura&nbsp;1: Márgenes consolidados bajo base reportada y base operativa sin I
 <div id="tbl-margins" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-margins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3: Márgenes comparables por ejercicio.
+Tabla&nbsp;6: Márgenes comparables por ejercicio.
 </figcaption>
 <div aria-describedby="tbl-margins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 5%">
 <col style="width: 14%">
@@ -485,20 +799,20 @@ Tabla&nbsp;3: Márgenes comparables por ejercicio.
 </figure>
 </div>
 </div>
-<p>La <a href="#fig-margins" class="quarto-xref">Figura&nbsp;1</a> muestra la trayectoria y la <a href="#tbl-margins" class="quarto-xref">Tabla&nbsp;3</a> conserva los valores exactos. Los cinco márgenes descienden de forma simultánea y ordenada, lo que descarta que se trate de una partida aislada. El margen bruto proxy cayó de 82.8% a 80.0%, el operativo comparable de 59.5% a 54.0% y el de EBITDA de 69.5% a 65.6%. La compresión se acentúa conforme se desciende por el estado de resultados: el margen neto perdió 7.4 puntos porcentuales frente a los 2.7 del bruto, y esa diferencia es precisamente lo que aportan la depreciación de la nueva capacidad y el costo financiero de haberla construido. El crecimiento del ingreso, por tanto, no debe confundirse con expansión de eficiencia: GAP conserva un poder de generación de caja propio de una infraestructura concesionada, pero su programa de inversión presiona los costos antes de que toda la capacidad produzca ingresos.</p>
+<p>La <a href="#fig-margins" class="quarto-xref">Figura&nbsp;1</a> muestra la trayectoria y la <a href="#tbl-margins" class="quarto-xref">Tabla&nbsp;6</a> conserva los valores exactos. Los cinco márgenes descienden de forma simultánea y ordenada, lo que descarta que se trate de una partida aislada. El margen bruto proxy cayó de 82.8% a 80.0%, el operativo comparable de 59.5% a 54.0% y el de EBITDA de 69.5% a 65.6%. La compresión se acentúa conforme se desciende por el estado de resultados: el margen neto perdió 7.4 puntos porcentuales frente a los 2.7 del bruto, y esa diferencia es precisamente lo que aportan la depreciación de la nueva capacidad y el costo financiero de haberla construido. El crecimiento del ingreso, por tanto, no debe confundirse con expansión de eficiencia: GAP conserva un poder de generación de caja propio de una infraestructura concesionada, pero su programa de inversión presiona los costos antes de que toda la capacidad produzca ingresos.</p>
 </section>
 <section id="endeudamiento-y-estructura-de-capital" class="level3">
 <h3 class="anchored" data-anchor-id="endeudamiento-y-estructura-de-capital">Endeudamiento y estructura de capital</h3>
-<p>La deuda financiera se define como la suma de los préstamos bancarios y certificados bursátiles de corto plazo, los préstamos bancarios de largo plazo y los certificados bursátiles de largo plazo. Excluye pasivos por arrendamiento —MXN 95.9 millones en 2025, inmateriales—, cuentas por pagar, depósitos en garantía y pasivos por impuestos diferidos, que no son financiamiento oneroso. La <a href="#tbl-leverage" class="quarto-xref">Tabla&nbsp;4</a> compara los tres ejercicios.</p>
+<p>La deuda financiera se define como la suma de los préstamos bancarios y certificados bursátiles de corto plazo, los préstamos bancarios de largo plazo y los certificados bursátiles de largo plazo. Excluye pasivos por arrendamiento —MXN 95.9 millones en 2025, inmateriales—, cuentas por pagar, depósitos en garantía y pasivos por impuestos diferidos, que no son financiamiento oneroso. La <a href="#tbl-leverage" class="quarto-xref">Tabla&nbsp;7</a> compara los tres ejercicios.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-leverage" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-leverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4: Estructura de capital y apalancamiento, millones de pesos.
+Tabla&nbsp;7: Estructura de capital y apalancamiento, millones de pesos.
 </figcaption>
 <div aria-describedby="tbl-leverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 4%">
 <col style="width: 8%">
@@ -566,28 +880,87 @@ Tabla&nbsp;4: Estructura de capital y apalancamiento, millones de pesos.
 </div>
 <p>Entre 2023 y 2025 la deuda financiera creció 30.6% mientras el capital contable lo hizo 18.6%, de modo que la estructura sí cambió: la razón deuda a capital pasó de 1.94 a 2.13 veces. La deuda neta avanzó todavía más rápido, 39.4%, porque el efectivo terminó el bienio prácticamente donde lo empezó —$10,055.2 millones en 2023 frente a $10,453.2 en 2025— después de haber acumulado $13,466.0 millones al cierre de 2024 y de ceder $3,012.8 millones durante 2025 con el pago del dividendo. La caja, en otras palabras, no financió la expansión: la absorbió la distribución. Medida contra la generación operativa, en cambio, la carga se movió poco: la deuda neta equivale a 1.99 veces EBITDA frente a 1.73 veces en 2023, porque el EBITDA creció casi al ritmo del pasivo.</p>
 <p>El movimiento más informativo ocurre dentro de la deuda y no en su total. En 2024 el vencimiento circulante llegó a $13,982.9 millones, y en 2025 descendió a $9,024.8 mientras los certificados bursátiles de largo plazo subieron de MXN 29,903.7 a MXN 39,026.1 millones <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Lo que ocurrió, por tanto, no fue desapalancamiento sino refinanciamiento: GAP sustituyó vencimientos próximos por deuda bursátil larga, alargó el perfil y redujo el riesgo de refinanciamiento inmediato a cambio de fijar por más tiempo un costo financiero que en 2025 ascendió a MXN 4,458.3 millones.</p>
-<p>La pregunta de fondo —con qué se financia el crecimiento— tiene respuesta documental. La inversión en activos concesionados totalizó MXN 10,042.5 millones en 2023, MXN 7,393.2 en 2024 y MXN 11,012.0 en 2025, y <strong>sólo 26.2%, 28.9% y 29.9% de ese CAPEX se financió con flujo de operación</strong>; el resto provino de emisiones de certificados bursátiles de largo plazo y préstamos bancarios <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La expansión de GAP se está financiando con deuda, no con generación interna ni con capital nuevo, y ese hecho explica simultáneamente el alza del pasivo, la compresión del margen neto y el descenso del efectivo.</p>
+<p>La pregunta de fondo —con qué se financia el crecimiento— tiene respuesta documental, y conviene formularla con cuidado porque la respuesta intuitiva es incorrecta. La <a href="#tbl-cashflow" class="quarto-xref">Tabla&nbsp;8</a> reconstruye el origen y la aplicación del efectivo.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-cashflow" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cashflow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;8: Origen y aplicación del flujo de efectivo, millones de pesos.
+</figcaption>
+<div aria-describedby="tbl-cashflow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Concepto</th>
+<th style="text-align: right;">2023</th>
+<th style="text-align: right;">2024</th>
+<th style="text-align: right;">2025</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Flujo neto de operación</td>
+<td style="text-align: right;">13,935</td>
+<td style="text-align: right;">16,674</td>
+<td style="text-align: right;">18,250</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversión en activos y equipo</td>
+<td style="text-align: right;">-10,444</td>
+<td style="text-align: right;">-7,845</td>
+<td style="text-align: right;">-12,397</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Intereses pagados</td>
+<td style="text-align: right;">-4,004</td>
+<td style="text-align: right;">-4,217</td>
+<td style="text-align: right;">-4,987</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dividendos y reducción de capital</td>
+<td style="text-align: right;">-7,634</td>
+<td style="text-align: right;">-7,143</td>
+<td style="text-align: right;">-9,068</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Faltante cubierto con deuda</td>
+<td style="text-align: right;">-8,148</td>
+<td style="text-align: right;">-2,530</td>
+<td style="text-align: right;">-8,203</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>El flujo de operación <strong>cubre el CAPEX con holgura en los tres ejercicios</strong>: 133.4% en 2023, 212.5% en 2024 y 147.2% en 2025 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La inversión, por tanto, no es lo que obliga a endeudarse, y sería un error leer el alza del pasivo como síntoma de una operación incapaz de autofinanciarse.</p>
+<p>Lo que abre el faltante es lo que viene después del CAPEX. Los intereses de la deuda ya contratada consumieron $4,987.4 millones en 2025 —GAP los clasifica en actividades de financiamiento, no de operación, por lo que no están descontados del primer renglón— y las distribuciones a los accionistas absorbieron $9,068.4 millones más. Sumadas ambas partidas a la inversión, el requerimiento supera al flujo generado y la diferencia, $8,203.1 millones en 2025, se cubre con emisiones de certificados bursátiles y préstamos bancarios.</p>
+<p>La distinción no es de matiz. Un negocio que no puede financiar su inversión con su operación tiene un problema de rentabilidad; GAP no lo tiene. Lo que tiene es una política de distribución que reparte prácticamente toda la utilidad mientras el programa de inversión sigue corriendo, y esa decisión —no la debilidad del flujo— explica simultáneamente el alza del pasivo, el descenso del efectivo y un capital contable que apenas crece pese a utilidades sostenidas. Es también, por eso mismo, una palanca reversible: el consejo puede moderar la distribución sin incumplir obligación alguna ni renunciar a un peso de inversión comprometida. Que el apalancamiento de GAP sea reversible por decisión propia importa para el perfil de riesgo tanto como su nivel.</p>
+<p>El ejercicio 2024 confirma la mecánica al mostrar el caso menos tenso. El CAPEX cayó a $7,845.0 millones, el flujo de operación creció, y el faltante se redujo a menos de un tercio del de los otros dos años. No fue una mejora operativa sino una pausa de inversión, y el efectivo aumentó en consecuencia.</p>
 <p>Para el accionista, el apalancamiento actúa como amplificador en ambos sentidos. Con una deuda de 2.13 veces el capital, una variación del resultado operativo se traduce en una variación proporcionalmente mayor del resultado neto, lo que eleva la rentabilidad en el escenario base y también la sensibilidad a cualquier choque. Tres variables concentran esa sensibilidad. Un aumento de tasas encarece la porción por refinanciar y el costo de las emisiones futuras, sin afectar de inmediato la deuda ya colocada a tasa fija. Una caída de tráfico reduce el ingreso aeronáutico con costos fijos prácticamente intactos, de modo que el EBITDA cae más que proporcionalmente y la razón deuda neta a EBITDA se deteriora sin que la deuda haya cambiado. Y una depreciación del peso, que favorece la conversión de los ingresos jamaiquinos —99% de los ingresos de Montego Bay y Kingston están denominados en dólares—, encarece a la vez la deuda de esa subsidiaria, que está íntegramente en dólares <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
 </section>
 </section>
 <section id="indicadores-financieros-clave" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="indicadores-financieros-clave"><span class="header-section-number">4</span> Indicadores financieros clave</h2>
-<p>La <a href="#tbl-ratios" class="quarto-xref">Tabla&nbsp;5</a> presenta los indicadores exigidos con su fórmula y su valor para los tres ejercicios, de modo que el nivel más reciente pueda leerse contra su propia tendencia y no de manera aislada.</p>
+<p>La <a href="#tbl-ratios" class="quarto-xref">Tabla&nbsp;9</a> presenta los indicadores exigidos con su fórmula y su valor para los tres ejercicios, de modo que el nivel más reciente pueda leerse contra su propia tendencia y no de manera aislada.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-ratios" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ratios-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;5: Indicadores financieros clave, fórmula y valor por ejercicio.
+Tabla&nbsp;9: Indicadores financieros clave, fórmula y valor por ejercicio.
 </figcaption>
 <div aria-describedby="tbl-ratios-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 16%">
-<col style="width: 67%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
+<col style="width: 19%">
+<col style="width: 66%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -641,6 +1014,13 @@ Tabla&nbsp;5: Indicadores financieros clave, fórmula y valor por ejercicio.
 <td style="text-align: right;">67.6%</td>
 <td style="text-align: right;">65.6%</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;">Cobertura de intereses</td>
+<td style="text-align: left;">EBITDA / gasto financiero del ejercicio</td>
+<td style="text-align: left;">5.14x</td>
+<td style="text-align: right;">4.41x</td>
+<td style="text-align: right;">4.78x</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -655,6 +1035,7 @@ Tabla&nbsp;5: Indicadores financieros clave, fórmula y valor por ejercicio.
 <p><strong>Deuda / capital.</strong> El numerador es la deuda financiera onerosa definida arriba, no el pasivo total; el denominador es el capital contable total, incluido el interés no controlador, para que numerador y denominador cubran la misma entidad. En 2025 alcanza 2.13 veces. Por cada peso de los accionistas hay más de dos de deuda, nivel alto en términos absolutos pero habitual en concesionarias con flujos contractuales estables.</p>
 <p><strong>Deuda / EBITDA.</strong> Aproxima en cuántos años de generación operativa podría liquidarse la deuda. EBITDA se define como utilidad de operación más depreciación y amortización; IFRIC 12 no lo afecta, porque el ingreso y el costo de construcción se cancelan entre sí. En 2025 la razón es 2.48 veces, con 1.99 veces en términos netos de efectivo. Es el indicador que mejor resume la capacidad de servicio: holgado en el escenario base, pero directamente expuesto a cualquier caída del tráfico, ya que el denominador es lo que se contrae en un choque mientras el numerador permanece fijo.</p>
 <p><strong>Margen EBITDA.</strong> El denominador es el ingreso operativo sin IFRIC 12 y no el ingreso reportado, porque incluir la construcción de activos concesionados —ingreso que llega acompañado de un costo idéntico— reduciría mecánicamente el margen sin que nada económico hubiera cambiado. Sobre esa base el margen es 65.6% en 2025; sobre ingreso reportado sería 51.5%, y la brecha entre ambas cifras es exactamente el artefacto contable que la definición evita.</p>
+<p><strong>Cobertura de intereses.</strong> Mide cuántas veces la generación operativa del ejercicio alcanza para pagar el costo financiero del mismo periodo. Es el complemento necesario de deuda a EBITDA: aquella razón dice cuánta deuda hay respecto del flujo, ésta dice si el flujo alcanza para sostenerla mientras tanto. El EBITDA cubre 4.78 veces el gasto financiero de 2025, frente a 5.14 veces en 2023, con un mínimo de 4.41 veces en 2024. El nivel es holgado y no sugiere tensión de servicio en el escenario base, pero la trayectoria desciende y su causa está identificada: el gasto financiero creció 29.6% en dos años, más rápido que el EBITDA, 20.6%. Es además el indicador que primero se deterioraría ante un choque de tráfico, porque el numerador es la variable cíclica mientras el denominador está contractualmente fijado.</p>
 <p>La lectura conjunta no es “bajo riesgo”. GAP puede servir su deuda en el escenario base y su rentabilidad sobre capital es elevada, pero ambas cosas descansan sobre el mismo hecho: una estructura financiera apalancada sobre un flujo regulado. Una interrupción de tráfico o un aumento persistente de tasas se transmitiría con rapidez al flujo disponible para inversión y distribuciones.</p>
 </section>
 <section id="utilidad-por-acción" class="level2" data-number="5">
@@ -666,10 +1047,10 @@ Tabla&nbsp;5: Indicadores financieros clave, fórmula y valor por ejercicio.
 <p><strong>Numerador.</strong> La utilidad neta del trimestre, tomada del estado de resultados de cada comunicado. La NIC 33 pide la utilidad atribuible a los tenedores de acciones ordinarias de la controladora; GAP <strong>no desglosa el interés no controlador de la utilidad neta a nivel trimestral</strong> —sólo lo hace sobre el resultado integral—, por lo que ese desglose no es reconstruible sin inventarlo. La limitación se cuantifica más abajo y es la única concesión metodológica de esta sección.</p>
 <p><strong>Denominador.</strong> No se estima: cada comunicado declara en nota al pie el número de acciones sobre el que calculó sus cifras por acción, y ese es el denominador utilizado. Va de 561,000,000 acciones en 2019–2020 a 505,277,464 desde el tercer trimestre de 2022, una reducción de 9.9% por recompras.</p>
 <p><strong>Validación.</strong> La suma de los cuatro trimestres de 2023, 2024 y 2025 reconcilia contra la utilidad neta auditada de la Forma 20-F con diferencias inferiores a MXN 5 mil (redondeo). La verificación se ejecuta en cada corrida del script de ingesta y detiene el proceso si falla.</p>
-<p><strong>Estatus de la serie.</strong> Por esa desviación en el numerador, lo que se obtiene es un <em>proxy</em> del EPS de la NIC 33 y no un sustituto suyo. Reproduce la trayectoria trimestral —que es lo que esta etapa necesita observar— pero su nivel queda sesgado al alza en aproximadamente la proporción que representa el interés no controlador. El EPS básico y diluido auditado sólo existe con periodicidad anual y es el que debe usarse cuando lo que importa es el nivel; la <a href="#tbl-eps-control" class="quarto-xref">Tabla&nbsp;8</a> confronta las dos medidas año por año.</p>
+<p><strong>Estatus de la serie.</strong> Por esa desviación en el numerador, lo que se obtiene es un <em>proxy</em> del EPS de la NIC 33 y no un sustituto suyo. Reproduce la trayectoria trimestral —que es lo que esta etapa necesita observar— pero su nivel queda sesgado al alza en aproximadamente la proporción que representa el interés no controlador. El EPS básico y diluido auditado sólo existe con periodicidad anual y es el que debe usarse cuando lo que importa es el nivel; la <a href="#tbl-eps-control" class="quarto-xref">Tabla&nbsp;12</a> confronta las dos medidas año por año.</p>
 <p><strong>Unidad.</strong> Pesos por acción serie B. No se mezcla con precio ni se convierte a dólares dentro de la serie principal.</p>
 </div>
-<p>La <a href="#fig-eps" class="quarto-xref">Figura&nbsp;2</a> permite observar la ruptura y la recuperación, mientras que la <a href="#tbl-eps" class="quarto-xref">Tabla&nbsp;6</a> conserva el detalle trimestral.</p>
+<p>La <a href="#fig-eps" class="quarto-xref">Figura&nbsp;2</a> permite observar la ruptura y la recuperación, mientras que la <a href="#tbl-eps" class="quarto-xref">Tabla&nbsp;10</a> conserva el detalle trimestral.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-eps" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -688,11 +1069,11 @@ Figura&nbsp;2: Utilidad trimestral por acción serie B (proxy calculado); pesos 
 <div id="tbl-eps" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-eps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;6: EPS trimestral (proxy calculado), pesos por acción serie B.
+Tabla&nbsp;10: EPS trimestral (proxy calculado), pesos por acción serie B.
 </figcaption>
 <div aria-describedby="tbl-eps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">Año</th>
@@ -761,16 +1142,16 @@ Tabla&nbsp;6: EPS trimestral (proxy calculado), pesos por acción serie B.
 </div>
 <section id="reconciliación-entre-gapb-el-ads-pac-y-las-dos-monedas" class="level3">
 <h3 class="anchored" data-anchor-id="reconciliación-entre-gapb-el-ads-pac-y-las-dos-monedas">Reconciliación entre GAPB, el ADS PAC y las dos monedas</h3>
-<p>Cada ADS de PAC representa diez acciones serie B, relación fija desde el listado de 2006 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La conversión encadena dos pasos que conviene no confundir: primero la relación de instrumentos, que es un factor constante de diez, y después la conversión de moneda, que es variable. Para el cuarto trimestre de 2025, el EPS calculado de 3.5453 pesos por acción equivale a 35.453 pesos por ADS y, al tipo de cambio de cierre de MXN 18.0057 por dólar que GAP declara en ese comunicado, a 1.969 dólares por ADS. La <a href="#tbl-eps-ads" class="quarto-xref">Tabla&nbsp;7</a> muestra la cadena completa para 2025.</p>
+<p>Cada ADS de PAC representa diez acciones serie B, relación fija desde el listado de 2006 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La conversión encadena dos pasos que conviene no confundir: primero la relación de instrumentos, que es un factor constante de diez, y después la conversión de moneda, que es variable. Para el cuarto trimestre de 2025, el EPS calculado de 3.5453 pesos por acción equivale a 35.453 pesos por ADS y, al tipo de cambio de cierre de MXN 18.0057 por dólar que GAP declara en ese comunicado, a 1.969 dólares por ADS. La <a href="#tbl-eps-ads" class="quarto-xref">Tabla&nbsp;11</a> muestra la cadena completa para 2025.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-eps-ads" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-eps-ads-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;7: Reconciliación MXN por acción a USD por ADS, 2025.
+Tabla&nbsp;11: Reconciliación MXN por acción a USD por ADS, 2025.
 </figcaption>
 <div aria-describedby="tbl-eps-ads-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 7%">
 <col style="width: 20%">
@@ -829,26 +1210,26 @@ Tabla&nbsp;7: Reconciliación MXN por acción a USD por ADS, 2025.
 </figure>
 </div>
 </div>
-<p>Las dos últimas columnas de la <a href="#tbl-eps-ads" class="quarto-xref">Tabla&nbsp;7</a> no coinciden, y la diferencia no es un error de cálculo sino la suma de los tres efectos que la consigna pide separar. El <strong>efecto de instrumento</strong> es el factor diez y es exacto. El <strong>efecto cambiario</strong> desplaza la serie en dólares con independencia de la operación: en 2024, por ejemplo, el EPS en pesos del tercer trimestre cayó 12% frente al segundo, pero medido en dólares por ADS la caída fue de 18.1%, porque el peso se depreció de MXN 18.26 a MXN 19.63 por dólar en el intervalo. El <strong>efecto operativo</strong>, que es el que interesa para evaluar el negocio, sólo es visible en la serie en pesos. A ello se añade que la cifra publicada por GAP mide el resultado integral y no la utilidad neta. Ésa es la razón de fondo para usar pesos por acción serie B como serie principal: es la única de las tres que no mezcla desempeño con tipo de cambio ni utilidad con resultado integral.</p>
+<p>Las dos últimas columnas de la <a href="#tbl-eps-ads" class="quarto-xref">Tabla&nbsp;11</a> no coinciden, y la diferencia no es un error de cálculo sino la suma de los tres efectos que la consigna pide separar. El <strong>efecto de instrumento</strong> es el factor diez y es exacto. El <strong>efecto cambiario</strong> desplaza la serie en dólares con independencia de la operación: en 2024, por ejemplo, el EPS en pesos del tercer trimestre cayó 12% frente al segundo, pero medido en dólares por ADS la caída fue de 18.1%, porque el peso se depreció de MXN 18.26 a MXN 19.63 por dólar en el intervalo. El <strong>efecto operativo</strong>, que es el que interesa para evaluar el negocio, sólo es visible en la serie en pesos. A ello se añade que la cifra publicada por GAP mide el resultado integral y no la utilidad neta. Ésa es la razón de fondo para usar pesos por acción serie B como serie principal: es la única de las tres que no mezcla desempeño con tipo de cambio ni utilidad con resultado integral.</p>
 <div class="semantic-block semantic-info">
 <p><span class="semantic-label">Alcance y limitaciones de la serie</span></p>
 <p><strong>Cobertura.</strong> Los veintiocho trimestres de 1T19 a 4T25, sin huecos. Veintisiete proceden del comunicado en que GAP reportó ese trimestre como periodo corriente; 1T19 procede de la columna comparativa del comunicado de 1T20, porque el comunicado original de 1T19 publicó sus tablas como imágenes. Ambos periodos comparten el mismo denominador de 561,000,000 acciones, de modo que la comparabilidad no se ve afectada.</p>
-<p><strong>Interés no controlador.</strong> El EPS calculado usa utilidad neta consolidada. En 2025 la suma de los cuatro trimestres da 19.7922 pesos por acción, frente a los 18.9305 pesos que la Forma 20-F reporta como EPS básico y diluido bajo NIC 33. La diferencia de 4.55% es el interés no controlador, y es la magnitud del sesgo al alza de la serie trimestral. La <a href="#tbl-eps-control" class="quarto-xref">Tabla&nbsp;8</a> extiende esa comparación a los tres ejercicios auditados.</p>
+<p><strong>Interés no controlador.</strong> El EPS calculado usa utilidad neta consolidada. En 2025 la suma de los cuatro trimestres da 19.7922 pesos por acción, frente a los 18.9305 pesos que la Forma 20-F reporta como EPS básico y diluido bajo NIC 33. La diferencia de 4.55% es el interés no controlador, y es la magnitud del sesgo al alza de la serie trimestral. La <a href="#tbl-eps-control" class="quarto-xref">Tabla&nbsp;12</a> extiende esa comparación a los tres ejercicios auditados.</p>
 <p><strong>Defectos documentales detectados.</strong> El comunicado de 3T20 imprime un cero como utilidad integral por acción y el de 2T20 trunca la cifra; en ambos casos el valor publicado se marcó como faltante en lugar de propagarse. Además, en 2T24, 3T24 y 2T25 GAP convirtió su cifra por ADS a un tipo de cambio distinto del que declara en la misma nota. Ninguno de estos defectos afecta la serie calculada en pesos, que no depende de las cifras por acción publicadas.</p>
 </div>
 </section>
 <section id="control-anual-contra-el-eps-auditado" class="level3">
 <h3 class="anchored" data-anchor-id="control-anual-contra-el-eps-auditado">Control anual contra el EPS auditado</h3>
-<p>La <a href="#tbl-eps-control" class="quarto-xref">Tabla&nbsp;8</a> confronta la serie trimestral con la única utilidad por acción que GAP publica bajo la NIC 33: la del estado de resultados anual auditado, disponible para 2023, 2024 y 2025 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Es la prueba que decide si el proxy trimestral sirve, y cuánto se desvía del nivel correcto.</p>
+<p>La <a href="#tbl-eps-control" class="quarto-xref">Tabla&nbsp;12</a> confronta la serie trimestral con la única utilidad por acción que GAP publica bajo la NIC 33: la del estado de resultados anual auditado, disponible para 2023, 2024 y 2025 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Es la prueba que decide si el proxy trimestral sirve, y cuánto se desvía del nivel correcto.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-eps-control" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-eps-control-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;8: Control anual: EPS auditado bajo NIC 33 contra la suma de los cuatro trimestres calculados.
+Tabla&nbsp;12: Control anual: EPS auditado bajo NIC 33 contra la suma de los cuatro trimestres calculados.
 </figcaption>
 <div aria-describedby="tbl-eps-control-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 5%">
 <col style="width: 26%">
@@ -909,16 +1290,16 @@ Tabla&nbsp;8: Control anual: EPS auditado bajo NIC 33 contra la suma de los cuat
 <section id="dividendos-y-splits" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="dividendos-y-splits"><span class="header-section-number">6</span> Dividendos y <em>splits</em></h2>
 <p>GAP sí distribuye efectivo, y lo hace bajo una política formal de dos componentes: un monto fijo, originalmente de MXN 450 millones en 2005 y creciente cada año, más el excedente de efectivo y equivalentes sobre un saldo mínimo de caja que el consejo determina como necesario para cubrir gastos e inversiones mínimas del ejercicio <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La frecuencia no es trimestral ni automática: la asamblea aprueba un monto anual y el pago se hace en una o más exhibiciones, con lo que el calendario depende de una decisión corporativa y de la liquidez disponible.</p>
-<p>La <a href="#tbl-distributions" class="quarto-xref">Tabla&nbsp;9</a> resume las distribuciones de los tres ejercicios analizados.</p>
+<p>La <a href="#tbl-distributions" class="quarto-xref">Tabla&nbsp;13</a> resume las distribuciones de los tres ejercicios analizados.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-distributions" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;9: Distribuciones a los accionistas, millones de pesos.
+Tabla&nbsp;13: Distribuciones a los accionistas, millones de pesos.
 </figcaption>
 <div aria-describedby="tbl-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 4%">
 <col style="width: 20%">
@@ -965,8 +1346,55 @@ Tabla&nbsp;9: Distribuciones a los accionistas, millones de pesos.
 </div>
 </div>
 <p>Hubo dos cambios relevantes en el periodo, y ninguno está en el monto. El primero es la <strong>figura jurídica</strong>. En 2023 y 2025 GAP distribuyó dividendos —MXN 7,498.3 y MXN 8,508.9 millones respectivamente—, pero en 2024 entregó MXN 7,003.1 millones mediante una <strong>reducción de capital</strong> de MXN 13.86 por acción, aprobada en la asamblea del 25 de abril de 2024, y no como dividendo <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Esa sustitución explica que el capital social contable cayera de MXN 8,197.5 a MXN 1,194.4 millones entre 2023 y 2024, y tiene consecuencias fiscales distintas para el accionista, ya que las distribuciones que no califican como dividendo siguen un régimen impositivo propio.</p>
-<p>El segundo es la <strong>cadencia</strong>. El dividendo de 2023, de MXN 14.84 por acción aprobado el 13 de abril, se pagó en cuatro exhibiciones trimestrales de MXN 3.71 repartidas de mayo a diciembre; la reducción de capital de 2024 y el dividendo de 2025 se liquidaron en dos exhibiciones cada uno <span class="citation" data-cites="gap20f2025 gapdividend2025">(<a href="#ref-gapdividend2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2025</a>, <a href="#ref-gap20f2025" role="doc-biblioref">2026b</a>)</span>. El emisor concentró el desembolso en menos fechas y en la primera mitad del año, lo que es consistente con un ejercicio en el que la caja debía sostener además un programa de inversión creciente.</p>
-<p>La interacción con el resto de la estructura financiera es directa y ya quedó cuantificada. GAP distribuyó MXN 8,508.9 millones en 2025 mientras invertía MXN 11,012.0 millones en CAPEX y financiaba con flujo operativo menos de un tercio de esa inversión. En otras palabras, la política de distribución compite con el programa de inversión por el mismo flujo, y el diferencial se cubre con deuda. Eso es coherente con el descenso del efectivo, con el alza de la deuda neta y con un capital contable que apenas crece pese a utilidades sostenidas. La flexibilidad de la política protege la inversión y el servicio de deuda —el consejo puede reducir la distribución sin incumplir nada—, pero vuelve el retorno total del accionista sensible a decisiones corporativas y al ciclo de CAPEX.</p>
+<p>El segundo es la <strong>cadencia</strong>. El dividendo de 2023, de MXN 14.84 por acción aprobado el 13 de abril, se pagó en cuatro exhibiciones trimestrales de MXN 3.71 repartidas de mayo a diciembre; la reducción de capital de 2024 y el dividendo de 2025 se liquidaron en dos exhibiciones cada uno <span class="citation" data-cites="gap20f2025 gapdividend2025">(<a href="#ref-gapdividend2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2025a</a>, <a href="#ref-gap20f2025" role="doc-biblioref">2026b</a>)</span>. El emisor concentró el desembolso en menos fechas y en la primera mitad del año, lo que es consistente con un ejercicio en el que la caja debía sostener además un programa de inversión creciente.</p>
+<p>La interacción con el resto de la estructura financiera es directa y ya quedó cuantificada. GAP distribuyó MXN 8,508.9 millones en 2025 mientras invertía MXN $12,396.9 millones en CAPEX y pagaba $4,987.4 millones de intereses, contra un flujo de operación de $18,249.7 millones. En otras palabras, la política de distribución compite con el programa de inversión por el mismo flujo, y el diferencial se cubre con deuda. Eso es coherente con el descenso del efectivo, con el alza de la deuda neta y con un capital contable que apenas crece pese a utilidades sostenidas. La flexibilidad de la política protege la inversión y el servicio de deuda —el consejo puede reducir la distribución sin incumplir nada—, pero vuelve el retorno total del accionista sensible a decisiones corporativas y al ciclo de CAPEX.</p>
+<p>La <a href="#tbl-payout" class="quarto-xref">Tabla&nbsp;14</a> mide la distribución contra la utilidad que efectivamente pertenece al accionista de GAPB.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-payout" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-payout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;14: Distribuciones contra la utilidad del accionista controlador.
+</figcaption>
+<div aria-describedby="tbl-payout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Año</th>
+<th style="text-align: right;">Distribuido</th>
+<th style="text-align: right;">Utilidad de la controladora</th>
+<th style="text-align: right;">Razón de distribución</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">7,498</td>
+<td style="text-align: right;">9,543</td>
+<td style="text-align: right;">78.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">7,003</td>
+<td style="text-align: right;">8,612</td>
+<td style="text-align: right;">81.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">8,509</td>
+<td style="text-align: right;">9,565</td>
+<td style="text-align: right;">89.0%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>La razón sube de 78.6% en 2023 a 89.0% en 2025: GAP entrega prácticamente toda la utilidad del dueño. Leído junto con la <a href="#tbl-cashflow" class="quarto-xref">Tabla&nbsp;8</a>, el cuadro cierra el argumento de la sección anterior. Repartir cerca del total de la utilidad mientras el programa de inversión sigue corriendo obliga a que el balance absorba la diferencia, y es la razón de que el capital contable apenas crezca pese a resultados sostenidos.</p>
+<p>A la distribución se añade un segundo canal de retorno que el análisis no ha nombrado todavía. En la misma asamblea en que aprueba el dividendo, GAP autoriza un fondo de recompra de acciones —MXN 2,500 millones en la asamblea del 22 de abril de 2026, monto que sustituye la parte no ejercida del autorizado el año previo <span class="citation" data-cites="gapagm2026">(<a href="#ref-gapagm2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026e</a>)</span>—. Es una autorización que se renueva cada ejercicio, no un programa permanente, y es el mecanismo que produjo la reducción de 9.9% en el número de acciones que documenta la sección anterior. Para el análisis de riesgo importa porque es la parte discrecional del retorno: a diferencia del dividendo aprobado en asamblea, la recompra puede suspenderse sin decisión societaria adicional, y es lo primero que cede si el flujo se estrecha.</p>
+<p>El ejercicio siguiente al analizado confirma la trayectoria. La asamblea del 22 de abril de 2026 aprobó un dividendo de MXN 20.80 por acción <span class="citation" data-cites="gapagm2026">(<a href="#ref-gapagm2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026e</a>)</span>, un incremento de 23.5% frente al de 2025. La prensa financiera estimó ese dividendo en un rendimiento aproximado de 5% sobre el precio de la acción al momento del anuncio <span class="citation" data-cites="axis2026">(<a href="#ref-axis2026" role="doc-biblioref">Axis Negocios, 2026</a>)</span>; conviene tomar esa cifra como referencia de mercado y no como dato del emisor, porque GAP no publica rendimiento alguno en sus comunicados y el resultado depende por completo de la fecha de precio que se elija. La etapa siguiente, que trabajará sobre la serie de precios, permitirá calcularlo con una fecha de corte declarada.</p>
 <p>Sobre <em>splits</em>, la evidencia documental es negativa y explícita: la Forma 20-F de 2025 no registra ninguna división ni consolidación de acciones, y la revisión de los informes anuales y comunicados del periodo no encuentra ninguna desde el listado de 2006 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Los dos hechos que sí modificaron el número de acciones son de otra naturaleza y no deben confundirse con un <em>split</em>: las recompras, que redujeron el capital de 561,000,000 a 505,277,464 acciones entre 2020 y 2022, y la emisión de 89,740,731 acciones de mayo de 2026 por la fusión con CBX <span class="citation" data-cites="gapcbx2026">(<a href="#ref-gapcbx2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026a</a>)</span>. Tampoco es un <em>split</em> la relación de un ADS por diez acciones serie B, que es la razón de conversión del certificado de depósito y ha permanecido fija. Las etapas siguientes utilizarán precio ajustado por distribuciones y eventos corporativos, distinción que evita que un dividendo o una reducción de capital aparezcan como pérdida económica.</p>
 </section>
 <section id="identificación-de-riesgos" class="level2" data-number="7">
@@ -979,6 +1407,7 @@ Tabla&nbsp;9: Distribuciones a los accionistas, millones de pesos.
 <p><strong>Tráfico y capacidad.</strong> GAP declara que sus ingresos dependen en alto grado de los volúmenes de pasajeros y carga, determinados por factores fuera de su control <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Una recesión, un alza del precio del combustible o una restricción de crédito a las aerolíneas reduce frecuencias; con costos fijos intactos, el EBITDA cae más que proporcionalmente, la razón deuda neta a EBITDA se deteriora sin que la deuda cambie y el flujo disponible para CAPEX y dividendos se comprime. El trayecto de 1T20 a 2T20, de 3.22 a -1.04 pesos por acción, es la medida empírica de esa elasticidad.</p>
 <p><strong>Concentración de aeropuertos.</strong> El propio emisor advierte que el negocio depende en alto grado de los ingresos de cinco aeropuertos <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Un cierre prolongado, un conflicto laboral o una obra mal ejecutada en Guadalajara o Tijuana no se compensa con el resto de la red, porque los activos no son sustituibles entre sí.</p>
 <p><strong>Aerolíneas y clientes.</strong> La pérdida o suspensión de operaciones de un cliente relevante retira ingreso aeronáutico y consumo comercial de forma simultánea. GAP documenta además que las principales aerolíneas domésticas se han negado en el pasado a pagar ciertos incrementos tarifarios y podrían volver a hacerlo, y que recaudan por cuenta de GAP las tarifas de pasajeros, función que podrían dejar de prestar <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
+<p><strong>Disponibilidad de flota.</strong> El ejercicio 2024 documenta este riesgo sin necesidad de escenario hipotético. Las inspecciones preventivas de los motores Pratt &amp; Whitney de la familia A320neo y A321neo inmovilizaron parte de las flotas de Volaris y VivaAerobus, con lo que la oferta de asientos se contrajo sin que la demanda ni la tarifa hubieran cambiado. El tráfico total de GAP cayó 2.1% ese año y el segmento doméstico mexicano —donde operan esas dos aerolíneas— retrocedió 5.3%, mientras el internacional avanzó 2.3% <span class="citation" data-cites="gaptraffic2024dec gap4q2024">(<a href="#ref-gaptraffic2024dec" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2025c</a>, <a href="#ref-gap4q2024" role="doc-biblioref">2025d</a>)</span>. Es la ilustración más limpia de por qué el riesgo de aerolíneas no se agota en la solvencia del cliente: una decisión técnica de un fabricante de motores, sobre la que ni GAP ni sus aerolíneas tienen control, se transmitió al tráfico de la concesionaria en cuestión de trimestres.</p>
 <p><strong>Clima y desastres naturales.</strong> El caso de 4T25 es el ejemplo documentado: el huracán Melissa forzó la suspensión de operaciones en Montego Bay entre el 26 de octubre y el 1 de noviembre de 2025, los ingresos jamaiquinos cayeron 35.7% en el trimestre y el EPS retrocedió 33.6% respecto del trimestre anterior <span class="citation" data-cites="gap4q2025">(<a href="#ref-gap4q2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026c</a>)</span>. La recuperación depende además de la reconstrucción de la infraestructura hotelera de la isla, que GAP no controla.</p>
 <p><strong>Ciberseguridad y seguridad física.</strong> Un ataque a los sistemas de información o un incidente de seguridad puede interrumpir la operación de un activo que no puede trasladarse. GAP señala asimismo que los requisitos de seguridad pueden exigir inversiones o gastos adicionales <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>, lo que convierte al riesgo en una presión de costos incluso cuando no se materializa el incidente.</p>
 <p><strong>Ejecución de CAPEX e integración.</strong> El programa de inversión comprometido bajo los Programas Maestros de Desarrollo no es discrecional. Un retraso o sobrecosto comprime el margen antes de que la capacidad genere ingreso —fenómeno visible en la caída del margen operativo de 59.5% a 54.0%—, y la integración de CBX añade en 2026 un riesgo de ejecución que GAP reconoce explícitamente <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>, junto con la dilución de 15.1% que la emisión de acciones supone para el accionista previo <span class="citation" data-cites="gapcbx2026">(<a href="#ref-gapcbx2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026a</a>)</span>.</p>
@@ -1003,7 +1432,7 @@ Tabla&nbsp;9: Distribuciones a los accionistas, millones de pesos.
 <p><strong>Apalancamiento.</strong> GAP advierte que su nivel de deuda podría limitar su capacidad de obtener capital adicional y su margen de reacción ante cambios del entorno <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Con 2.13 veces el capital contable, el apalancamiento amplifica tanto la rentabilidad como la pérdida, y es lo que separa un ROA de 11.8% de un ROE de 42.7%.</p>
 <p><strong>Refinanciamiento y costo de deuda.</strong> El perfil se alargó en 2025 al sustituir vencimientos circulantes por certificados bursátiles de largo plazo, lo que reduce el riesgo inmediato pero fija por más tiempo un costo financiero de MXN 4,458.3 millones anuales <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. El mecanismo es directo: una tasa más alta al momento de refinanciar reduce la utilidad neta sin que el EBITDA se mueva, y por esa vía comprime el EPS y el flujo distribuible.</p>
 <p><strong>Restricciones contractuales.</strong> El emisor señala que las obligaciones de hacer y no hacer de sus contratos de deuda pueden limitar su discrecionalidad en ciertas decisiones de negocio <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Un deterioro del EBITDA que acerque las razones de cobertura a sus límites restringiría inversión y distribuciones antes de que exista cualquier problema de solvencia.</p>
-<p><strong>Liquidez frente a un CAPEX intensivo.</strong> Con menos de un tercio del CAPEX financiado por flujo de operación y un efectivo que cedió $3,012.8 millones durante 2025 hasta $10,453.2 millones, GAP depende del acceso continuo al mercado de deuda mexicano <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Un cierre temporal de ese mercado obligaría a elegir entre recortar inversión comprometida o suspender la distribución.</p>
+<p><strong>Liquidez frente a un CAPEX intensivo.</strong> Aunque el flujo de operación cubre la inversión, no alcanza a cubrirla junto con los intereses y las distribuciones: el faltante fue de $8,203.1 millones en 2025 y el efectivo cedió $3,012.8 millones ese año hasta $10,453.2 millones. Mientras esa combinación se mantenga, GAP depende del acceso continuo al mercado de deuda mexicano <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Un cierre temporal de ese mercado obligaría a elegir entre recortar inversión comprometida y suspender la distribución, y la segunda es la variable que la administración puede mover sin incumplir nada.</p>
 <p><strong>Dilución.</strong> La emisión de 89,740,731 acciones por la fusión con CBX reduce en 15.1% la participación del accionista previo <span class="citation" data-cites="gapcbx2026">(<a href="#ref-gapcbx2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026a</a>)</span>. El efecto sobre el EPS de 2026 es mecánico y opera con independencia del desempeño operativo de los activos incorporados.</p>
 <p><strong>Recuperabilidad de activos por impuestos diferidos.</strong> GAP mantiene MXN 8,756.3 millones de impuestos diferidos activos y advierte que su recuperación depende de generar utilidades fiscales futuras suficientes <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>; un deterioro prolongado del resultado obligaría a castigarlos contra la utilidad del periodo.</p>
 </div>
@@ -1013,8 +1442,8 @@ Tabla&nbsp;9: Distribuciones a los accionistas, millones de pesos.
 <div class="semantic-block semantic-risk">
 <p><span class="semantic-label">Riesgo</span></p>
 <p><strong>Tarifa máxima.</strong> GAP declara sin ambigüedad que el régimen bajo el cual se fijan las tarifas máximas en México y las tarifas reguladas en Jamaica <strong>no garantiza que la empresa ni ninguno de sus aeropuertos sea rentable</strong>, y que los ajustes de eficiencia exigidos sobre esas tarifas pueden afectar adversamente sus resultados <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Es el riesgo de mayor alcance del emisor: una revisión quinquenal menos favorable reduce el ingreso permitido de forma permanente, sin que el tráfico ni los costos hayan cambiado, y se traslada íntegra al valor presente del negocio. El mismo régimen prevé sanciones si se excede la tarifa máxima al cierre de un año.</p>
-<p><strong>Vida y reversión de la concesión.</strong> Las concesiones mexicanas vencen en 2048 y las jamaiquinas en 2033 y 2044; al vencimiento los activos revierten al Estado. El valor del emisor es, en rigor, el valor presente de un flujo con horizonte finito, y cualquier cambio en la expectativa de prórroga —que no está garantizada y queda sujeta a las modificaciones que imponga la autoridad— reprecia el activo. GAP advierte además que el gobierno mexicano puede dar por terminadas o readquirir las concesiones <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
-<p><strong>Programas Maestros de Desarrollo.</strong> La inversión comprometida por quinquenio es obligatoria y se negocia con la autoridad <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Una exigencia mayor a la prevista eleva el CAPEX sin elevar necesariamente el ingreso permitido, y dado que menos de un tercio del CAPEX se autofinancia, se traduce en más deuda.</p>
+<p><strong>Vida y reversión de la concesión.</strong> Las concesiones mexicanas vencen en 2048 y las jamaiquinas en 2034 y 2044; al vencimiento los activos revierten al Estado. El valor del emisor es, en rigor, el valor presente de un flujo con horizonte finito, y cualquier cambio en la expectativa de prórroga —que no está garantizada y queda sujeta a las modificaciones que imponga la autoridad— reprecia el activo. GAP advierte además que el gobierno mexicano puede dar por terminadas o readquirir las concesiones <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
+<p><strong>Programas Maestros de Desarrollo.</strong> La inversión comprometida por quinquenio es obligatoria y se negocia con la autoridad <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Una exigencia mayor a la prevista eleva el CAPEX sin elevar necesariamente el ingreso permitido. Como el flujo de operación ya se reparte entre inversión, intereses y distribuciones sin alcanzar para las tres, cualquier exigencia adicional de inversión se traduce en más deuda o en una distribución menor.</p>
 <p><strong>Accionista estratégico y gobierno corporativo.</strong> El tenedor de las acciones serie BB, equivalentes al 15% del capital, designa directivos y veta decisiones como la aprobación de estados financieros, los cambios de capital y el pago de dividendos. Un desacuerdo en ese vehículo puede bloquear decisiones de la asamblea, y el propio emisor identifica ese bloqueo como riesgo <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Tras la fusión de mayo de 2026, esos derechos especiales pasaron a los tenedores directos de la nueva serie BB <span class="citation" data-cites="gapcbx2026">(<a href="#ref-gapcbx2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026a</a>)</span>.</p>
 </div>
 </section>
@@ -1023,7 +1452,7 @@ Tabla&nbsp;9: Distribuciones a los accionistas, millones de pesos.
 <h2 data-number="8" class="anchored" data-anchor-id="conclusión"><span class="header-section-number">8</span> Conclusión</h2>
 <p>GAP llega al cierre de 2025 como un negocio sólido en su operación y en expansión en su balance, pero la solidez y la expansión tienen orígenes distintos y conviene no confundirlos.</p>
 <p>La solidez es estructural y procede del modelo de negocio. Catorce concesiones con exclusividad geográfica, vigentes hasta 2048 en México, generan un ingreso contractual que en 2025 alcanzó $32,525.9 millones y sostuvo un margen EBITDA de 65.6%, nivel que casi ninguna industria no regulada alcanza. La diversificación es real aunque parcial: la mezcla aeronáutica y no aeronáutica reparte la dependencia entre tarifa regulada y consumo comercial, y la presencia en México y Jamaica separa dos ciclos turísticos; pero ambas patas descansan sobre la misma variable, el pasajero que cruza la terminal, de modo que la diversificación atenúa la volatilidad sin eliminar el factor común. La rentabilidad lo confirma: un ROA de 11.8% indica que el activo, por sí mismo, es productivo.</p>
-<p>La expansión, en cambio, está financiada. El ingreso operativo creció 27.9% en dos años y el EBITDA alcanzó $21,332.1 millones, pero la inversión que lo hizo posible se cubrió en menos de un tercio con flujo de operación; el resto vino de deuda. De ahí que el pasivo financiero creciera 30.6% frente a 18.6% del capital, que la razón deuda a capital pasara de 1.94 a 2.13 veces, y que la deuda neta se situara en 1.99 veces EBITDA. El ROE de 42.7% debe leerse en ese marco: es alto no porque la operación rinda extraordinariamente —el ROA muestra que no—, sino porque el capital contable se mantiene reducido por distribuciones sostenidas mientras el activo se financia con pasivo. La respuesta a si GAP está en expansión o en consolidación es, entonces, que está en expansión operativa y en consolidación financiera simultáneas: crece la capacidad y se alarga el perfil de la deuda, sin que el balance se desapalanque.</p>
+<p>La expansión, en cambio, está financiada. El ingreso operativo creció 27.9% en dos años y el EBITDA alcanzó $21,332.1 millones, y el flujo de operación cubrió la inversión con holgura en los tres ejercicios. Lo que el flujo no alcanzó a cubrir fue la inversión <em>más</em> los intereses <em>más</em> las distribuciones, y ese faltante —$8,203.1 millones sólo en 2025— se financió con deuda. De ahí que el pasivo financiero creciera 30.6% frente a 18.6% del capital, que la razón deuda a capital pasara de 1.94 a 2.13 veces, y que la deuda neta se situara en 1.99 veces EBITDA. El ROE de 42.7% debe leerse en ese marco: es alto no porque la operación rinda extraordinariamente —el ROA muestra que no—, sino porque el capital contable se mantiene reducido por distribuciones sostenidas mientras el activo se financia con pasivo. La respuesta a si GAP está en expansión o en consolidación es, entonces, que está en expansión operativa y en consolidación financiera simultáneas: crece la capacidad y se alarga el perfil de la deuda, sin que el balance se desapalanque.</p>
 <p>El resto de la evidencia apunta en la misma dirección. Los márgenes se comprimieron de forma ordenada en los cinco niveles medidos, y la compresión es mayor cuanto más abajo del estado de resultados se mire, lo que identifica a la depreciación y al costo financiero de la nueva capacidad como su causa. El EPS trimestral, calculado desde los estados primarios, muestra una rentabilidad por acción hoy superior a la previa a la pandemia —media de 4.66 pesos desde 2022 frente a 2.43 en 2019— pero con un coeficiente de variación 2.5 veces mayor, y buena parte de la mejora por acción procede de una reducción de 9.9% en el número de acciones, no de la operación. La política de distribuciones, que cambió de dividendo a reducción de capital en 2024 y volvió al dividendo en 2025, compite con el CAPEX por el mismo flujo y explica tanto el descenso del efectivo como la persistencia del apalancamiento.</p>
 <p><strong>Perfil de riesgo esperado para el precio de GAPB.</strong> De todo lo anterior se desprende una hipótesis contrastable, no un pronóstico de precio. Cabe esperar un activo de <strong>volatilidad moderada en régimen normal y con propensión a saltos discretos</strong>, es decir una distribución de rendimientos con colas más pesadas que la normal y con volatilidad agrupada por periodos. El fundamento es que el flujo subyacente es contractual y regulado, lo que ancla el comportamiento cotidiano —como muestra el coeficiente de variación de 5.3% de 2019—, pero la estructura de costos fijos y el apalancamiento de 2.13 veces convierten cualquier choque de tráfico en una variación amplificada del resultado. Los detonantes de esos saltos están identificados y son de naturaleza discreta más que continua: una revisión tarifaria quinquenal desfavorable, un choque sanitario o climático como los ya observados en 2020 y en 4T25, un cambio en la política comercial estadounidense hacia México, un movimiento abrupto del tipo de cambio o de las tasas, y en 2026 la integración de CBX con su dilución de 15.1%. Cabe esperar además cierta asimetría: los choques negativos golpean el tráfico de inmediato, mientras que las mejoras tarifarias se acumulan con rezago quinquenal.</p>
 <p>Esa caracterización es exactamente la hipótesis que la etapa siguiente debe poner a prueba sobre la historia bursátil de GAPB. Si es correcta, los rendimientos rechazarán la normalidad, la volatilidad mostrará agrupamiento y un modelo de varianza condicional superará a una desviación estándar constante; si no lo es, el diagnóstico fundamental de este reporte deberá revisarse.</p>
@@ -1036,8 +1465,32 @@ Tabla&nbsp;9: Distribuciones a los accionistas, millones de pesos.
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">9 Referencias</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-axis2026" class="csl-entry" role="listitem">
+Axis Negocios. (2026). <em><span>GAP</span> propone dividendo de 20.80 pesos, con rendimiento de 5%</em>. <a href="https://www.axisnegocios.com/breves.phtml?id=146835">https://www.axisnegocios.com/breves.phtml?id=146835</a>
+</div>
+<div id="ref-oma20f2025" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Centro Norte. (2026). <em>Forma 20-F, ejercicio 2025</em>. Presentación ante la <span>SEC</span>. <a href="https://www.sec.gov/Archives/edgar/data/1378239/000110465926051987/omab-20251231x20f.htm">https://www.sec.gov/Archives/edgar/data/1378239/000110465926051987/omab-20251231x20f.htm</a>
+</div>
+<div id="ref-gapconcesion1998" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2006). <em>Concession Agreement, Aeropuerto de Guadalajara, <span>S.A.</span> de <span>C.V.</span></em> Anexo 10.1 ante la <span>SEC</span>. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000104746906001295/a2167078zex-10_1.htm">https://www.sec.gov/Archives/edgar/data/1347557/000104746906001295/a2167078zex-10_1.htm</a>
+</div>
+<div id="ref-gapjamaica2024" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2024a). <em><span>GAP</span> Announces Amendments to the Concession Agreement of Jamaican Airports</em>. Comunicado a inversionistas, GlobeNewswire. <a href="https://www.globenewswire.com/news-release/2024/07/26/2919899/0/en/Grupo-Aeroportuario-del-Pacifico-Announces-Amendments-to-the-Concession-Agreement-of-Jamaican-Airports.html">https://www.globenewswire.com/news-release/2024/07/26/2919899/0/en/Grupo-Aeroportuario-del-Pacifico-Announces-Amendments-to-the-Concession-Agreement-of-Jamaican-Airports.html</a>
+</div>
+<div id="ref-gappmd2024" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2024b). <em><span>GAP</span> Announces Master Development Program and Maximum Tariffs for Its Mexican Airports for the 2025–2029 Period</em>. Forma 6-K ante la <span>SEC</span>. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000117184324004947/f6k_082724.htm">https://www.sec.gov/Archives/edgar/data/1347557/000117184324004947/f6k_082724.htm</a>
+</div>
 <div id="ref-gapdividend2025" class="csl-entry" role="listitem">
-Grupo Aeroportuario del Pacífico. (2025). <em>Pago de la segunda y última exhibición del dividendo aprobado en 2025</em>. <a href="https://www.aeropuertosgap.com.mx/es/comunicados-generales/4934-anuncio-fecha-dividendo-2025-julio.html">https://www.aeropuertosgap.com.mx/es/comunicados-generales/4934-anuncio-fecha-dividendo-2025-julio.html</a>
+Grupo Aeroportuario del Pacífico. (2025a). <em>Pago de la segunda y última exhibición del dividendo aprobado en 2025</em>. <a href="https://www.aeropuertosgap.com.mx/es/comunicados-generales/4934-anuncio-fecha-dividendo-2025-julio.html">https://www.aeropuertosgap.com.mx/es/comunicados-generales/4934-anuncio-fecha-dividendo-2025-julio.html</a>
+</div>
+<div id="ref-gapquienes2025" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2025b). <em>¿Quiénes somos? Grupo <span>GAP</span></em>. Sitio corporativo. <a href="https://www.aeropuertosgap.com.mx/es/173-grupo/1-quienes-somos.html">https://www.aeropuertosgap.com.mx/es/173-grupo/1-quienes-somos.html</a>
+</div>
+<div id="ref-gaptraffic2024dec" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2025c). <em><span>GAP</span> Reports in December 2024 a Passenger Traffic Increase of 2.9% Compared to 2023</em>. Comunicado de tráfico, GlobeNewswire. <a href="https://www.globenewswire.com/news-release/2025/01/06/3005044/0/en/Grupo-Aeroportuario-del-Pacifico-Reports-in-December-2024-a-Passenger-Traffic-Increase-of-2-9-Compared-to-2023.html">https://www.globenewswire.com/news-release/2025/01/06/3005044/0/en/Grupo-Aeroportuario-del-Pacifico-Reports-in-December-2024-a-Passenger-Traffic-Increase-of-2-9-Compared-to-2023.html</a>
+</div>
+<div id="ref-gap4q2024" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2025d). <em><span>GAP</span> Announces Results for the Fourth Quarter of 2024</em>. Comunicado de resultados, GlobeNewswire. <a href="https://www.globenewswire.com/news-release/2025/02/25/3031645/0/en/Grupo-Aeroportuario-Del-Pacifico-Announces-Results-for-the-Fourth-Quarter-of-2024.html">https://www.globenewswire.com/news-release/2025/02/25/3031645/0/en/Grupo-Aeroportuario-Del-Pacifico-Announces-Results-for-the-Fourth-Quarter-of-2024.html</a>
 </div>
 <div id="ref-gapcbx2026" class="csl-entry" role="listitem">
 Grupo Aeroportuario del Pacífico. (2026a). <em>Announces Completion of Business Combination Process of <span>CBX</span> and the Provision of Technical Assistance Services</em> [Form 6-K]. U.S. Securities; Exchange Commission. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000117184326003120/f6k_050726.htm">https://www.sec.gov/Archives/edgar/data/1347557/000117184326003120/f6k_050726.htm</a>
@@ -1048,250 +1501,252 @@ Grupo Aeroportuario del Pacífico. (2026b). <em>Annual Report 2025, Form 20-F</e
 <div id="ref-gap4q2025" class="csl-entry" role="listitem">
 Grupo Aeroportuario del Pacífico. (2026c). <em>Resultados consolidados del cuarto trimestre de 2025</em>. Grupo Aeroportuario del Pacífico. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000117184326001035/f6k_022426.htm">https://www.sec.gov/Archives/edgar/data/1347557/000117184326001035/f6k_022426.htm</a>
 </div>
+<div id="ref-gaptraffic2025dec" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2026d). <em><span>GAP</span> Reports a Passenger Traffic Increase in December 2025 of 0.1% Compared to 2024</em>. Comunicado de tráfico, GlobeNewswire. <a href="https://www.globenewswire.com/news-release/2026/01/06/3214165/0/en/Grupo-Aeroportuario-del-Pacifico-Reports-a-Passenger-Traffic-Increase-in-December-2025-of-0-1-Compared-to-2024.html">https://www.globenewswire.com/news-release/2026/01/06/3214165/0/en/Grupo-Aeroportuario-del-Pacifico-Reports-a-Passenger-Traffic-Increase-in-December-2025-of-0-1-Compared-to-2024.html</a>
+</div>
+<div id="ref-gapagm2026" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2026e). <em>Resoluciones adoptadas en la Asamblea General Anual Ordinaria de Accionistas 2026</em>. Sitio corporativo, Asamblea de Accionistas. <a href="https://www.aeropuertosgap.com.mx/es/asamblea-de-accionistas/5056-asamblea-de-accionistas-2026-abril.html">https://www.aeropuertosgap.com.mx/es/asamblea-de-accionistas/5056-asamblea-de-accionistas-2026-abril.html</a>
+</div>
+<div id="ref-asur20f2025" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Sureste. (2026). <em>Forma 20-F, ejercicio 2025</em>. Presentación ante la <span>SEC</span>. <a href="https://www.sec.gov/Archives/edgar/data/1123452/000110465926044448/asurb-20251231x20f.htm">https://www.sec.gov/Archives/edgar/data/1123452/000110465926044448/asurb-20251231x20f.htm</a>
+</div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
     }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copiado");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copiado");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
     }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
-      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
-      var isInternal = (href) => {
-          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-      }
-      // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-      for (var i=0; i<links.length; i++) {
-        const link = links[i];
-        if (!isInternal(link.href)) {
-          // undo the damage that might have been done by quarto-nav.js in the case of
-          // links that we want to consider external
-          if (link.dataset.originalHref !== undefined) {
-            link.href = link.dataset.originalHref;
-          }
-            // target, if specified
-            link.setAttribute("target", "_blank");
-            if (link.getAttribute("rel") === null) {
-              link.setAttribute("rel", "noopener");
-            }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
         }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
       }
-    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-      const config = {
-        allowHTML: true,
-        maxWidth: 500,
-        delay: 100,
-        arrow: false,
-        appendTo: function(el) {
-            return el.parentElement;
-        },
-        interactive: true,
-        interactiveBorder: 10,
-        theme: 'quarto',
-        placement: 'bottom-start',
-      };
-      if (contentFn) {
-        config.content = contentFn;
-      }
-      if (onTriggerFn) {
-        config.onTrigger = onTriggerFn;
-      }
-      if (onUntriggerFn) {
-        config.onUntrigger = onUntriggerFn;
-      }
-      window.tippy(el, config); 
     }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
-      });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
     }
-    const xrefs = window.document.querySelectorAll('a.quarto-xref');
-    const processXRef = (id, note) => {
-      // Strip column container classes
-      const stripColumnClz = (el) => {
-        el.classList.remove("page-full", "page-columns");
-        if (el.children) {
-          for (const child of el.children) {
-            stripColumnClz(child);
-          }
-        }
-      }
-      stripColumnClz(note)
-      if (id === null || id.startsWith('sec-')) {
-        // Special case sections, only their first couple elements
-        const container = document.createElement("div");
-        if (note.children && note.children.length > 2) {
-          container.appendChild(note.children[0].cloneNode(true));
-          for (let i = 1; i < note.children.length; i++) {
-            const child = note.children[i];
-            if (child.tagName === "P" && child.innerText === "") {
-              continue;
-            } else {
-              container.appendChild(child.cloneNode(true));
-              break;
-            }
-          }
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(container);
-          }
-          return container.innerHTML
-        } else {
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(note);
-          }
-          return note.innerHTML;
-        }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
       } else {
-        // Remove any anchor links if they are present
-        const anchorLink = note.querySelector('a.anchorjs-link');
-        if (anchorLink) {
-          anchorLink.remove();
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
         }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        if (note.classList.contains("callout")) {
-          return note.outerHTML;
-        } else {
-          return note.innerHTML;
-        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
       }
     }
-    for (var i=0; i<xrefs.length; i++) {
-      const xref = xrefs[i];
-      tippyHover(xref, undefined, function(instance) {
-        instance.disable();
-        let url = xref.getAttribute('href');
-        let hash = undefined; 
-        if (url.startsWith('#')) {
-          hash = url;
-        } else {
-          try { hash = new URL(url).hash; } catch {}
-        }
-        if (hash) {
-          const id = hash.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note !== null) {
-            try {
-              const html = processXRef(id, note.cloneNode(true));
-              instance.setContent(html);
-            } finally {
-              instance.enable();
-              instance.show();
-            }
-          } else {
-            // See if we can fetch this
-            fetch(url.split('#')[0])
-            .then(res => res.text())
-            .then(html => {
-              const parser = new DOMParser();
-              const htmlDoc = parser.parseFromString(html, "text/html");
-              const note = htmlDoc.getElementById(id);
-              if (note !== null) {
-                const html = processXRef(id, note);
-                instance.setContent(html);
-              } 
-            }).finally(() => {
-              instance.enable();
-              instance.show();
-            });
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
           }
         } else {
-          // See if we can fetch a full url (with no hash to target)
-          // This is a special case and we should probably do some content thinning / targeting
-          fetch(url)
+          // See if we can fetch this
+          fetch(url.split('#')[0])
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.querySelector('main.content');
+            const note = htmlDoc.getElementById(id);
             if (note !== null) {
-              // This should only happen for chapter cross references
-              // (since there is no id in the URL)
-              // remove the first header
-              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-                note.children[0].remove();
-              }
-              const html = processXRef(null, note);
+              const html = processXRef(id, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1299,161 +1754,185 @@ Grupo Aeroportuario del Pacífico. (2026c). <em>Resultados consolidados del cuar
             instance.show();
           });
         }
-      }, function(instance) {
-      });
-    }
-        let selectedAnnoteEl;
-        const selectorForAnnotation = ( cell, annotation) => {
-          let cellAttr = 'data-code-cell="' + cell + '"';
-          let lineAttr = 'data-code-annotation="' +  annotation + '"';
-          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-          return selector;
-        }
-        const selectCodeLines = (annoteEl) => {
-          const doc = window.document;
-          const targetCell = annoteEl.getAttribute("data-target-cell");
-          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-          const lineIds = lines.map((line) => {
-            return targetCell + "-" + line;
-          })
-          let top = null;
-          let height = null;
-          let parent = null;
-          if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
-            }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
-            }
-            selectedAnnoteEl = annoteEl;
-          }
-        };
-        const unselectCodeLines = () => {
-          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-          elementsIds.forEach((elId) => {
-            const div = window.document.getElementById(elId);
-            if (div) {
-              div.remove();
-            }
-          });
-          selectedAnnoteEl = undefined;
-        };
-          // Handle positioning of the toggle
-      window.addEventListener(
-        "resize",
-        throttle(() => {
-          elRect = undefined;
-          if (selectedAnnoteEl) {
-            selectCodeLines(selectedAnnoteEl);
-          }
-        }, 10)
-      );
-      function throttle(fn, ms) {
-      let throttle = false;
-      let timer;
-        return (...args) => {
-          if(!throttle) { // first call gets through
-              fn.apply(this, args);
-              throttle = true;
-          } else { // all the others get throttled
-              if(timer) clearTimeout(timer); // cancel #2
-              timer = setTimeout(() => {
-                fn.apply(this, args);
-                timer = throttle = false;
-              }, ms);
-          }
-        };
-      }
-        // Attach click handler to the DT
-        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-        for (const annoteDlNode of annoteDls) {
-          annoteDlNode.addEventListener('click', (event) => {
-            const clickedEl = event.target;
-            if (clickedEl !== selectedAnnoteEl) {
-              unselectCodeLines();
-              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-              if (activeEl) {
-                activeEl.classList.remove('code-annotation-active');
-              }
-              selectCodeLines(clickedEl);
-              clickedEl.classList.add('code-annotation-active');
-            } else {
-              // Unselect the line
-              unselectCodeLines();
-              clickedEl.classList.remove('code-annotation-active');
-            }
-          });
-        }
-    const findCites = (el) => {
-      const parentEl = el.parentElement;
-      if (parentEl) {
-        const cites = parentEl.dataset.cites;
-        if (cites) {
-          return {
-            el,
-            cites: cites.split(' ')
-          };
-        } else {
-          return findCites(el.parentElement)
-        }
       } else {
-        return undefined;
-      }
-    };
-    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-    for (var i=0; i<bibliorefs.length; i++) {
-      const ref = bibliorefs[i];
-      const citeInfo = findCites(ref);
-      if (citeInfo) {
-        tippyHover(citeInfo.el, function() {
-          var popup = window.document.createElement('div');
-          citeInfo.cites.forEach(function(cite) {
-            var citeDiv = window.document.createElement('div');
-            citeDiv.classList.add('hanging-indent');
-            citeDiv.classList.add('csl-entry');
-            var biblioDiv = window.document.getElementById('ref-' + cite);
-            if (biblioDiv) {
-              citeDiv.innerHTML = biblioDiv.innerHTML;
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
             }
-            popup.appendChild(citeDiv);
-          });
-          return popup.innerHTML;
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
         });
       }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
     }
-  });
-  </script>
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">

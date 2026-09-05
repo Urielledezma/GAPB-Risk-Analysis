@@ -38,6 +38,42 @@ fundamentals$debt_to_equity <- fundamentals$total_debt_mxn_m / fundamentals$tota
 fundamentals$debt_to_ebitda <- fundamentals$total_debt_mxn_m / fundamentals$ebitda_mxn_m
 fundamentals$net_debt_to_ebitda <- fundamentals$net_debt_mxn_m / fundamentals$ebitda_mxn_m
 
+# Renglones que el dataset no captura y que se transcriben de la Forma 20-F
+# 2025: el estado de flujos de efectivo (R6.htm) y el desglose de ingreso, costo
+# y resultado financiero (R3.htm), ambos del filing 0001193125-26-161714. Se
+# transcriben porque no se recalculan: son cifras auditadas leidas del estado.
+fundamentals$finance_cost_mxn_m <- c(3439.276, 4104.423, 4458.335)
+fundamentals$finance_income_mxn_m <- c(1402.964, 1289.271, 1025.319)
+fundamentals$interest_coverage <-
+  fundamentals$ebitda_mxn_m / fundamentals$finance_cost_mxn_m
+
+fundamentals$revenue_aero_mxn_m <- c(19267.395, 19110.067, 22821.817)
+fundamentals$revenue_non_aero_mxn_m <- c(6165.429, 7671.766, 9704.090)
+fundamentals$revenue_construction_mxn_m <- c(7791.320, 6832.541, 8882.633)
+fundamentals$concession_tax_mxn_m <- c(2532.896, 2666.751, 3817.751)
+fundamentals$non_aero_share <-
+  fundamentals$revenue_non_aero_mxn_m / fundamentals$revenue_operating_mxn_m
+
+# Estado de flujos de efectivo. Los intereses pagados incluyen los capitalizados,
+# y las distribuciones suman el dividendo o reduccion de capital al accionista
+# controlador mas el dividendo al interes no controlador, porque ambos salen de
+# la misma caja.
+fundamentals$operating_cash_flow_mxn_m <- c(13934.854, 16674.340, 18249.740)
+fundamentals$capex_mxn_m <- c(10444.346, 7844.983, 12396.949)
+fundamentals$interest_paid_mxn_m <- c(4004.535, 4216.658, 4987.450)
+fundamentals$distributions_mxn_m <- c(7634.231, 7143.142, 9068.423)
+fundamentals$capex_coverage <-
+  fundamentals$operating_cash_flow_mxn_m / fundamentals$capex_mxn_m
+fundamentals$funding_gap_mxn_m <-
+  fundamentals$operating_cash_flow_mxn_m - fundamentals$capex_mxn_m -
+  fundamentals$interest_paid_mxn_m - fundamentals$distributions_mxn_m
+
+# Distribuciones atribuibles al accionista controlador, para la razon de
+# distribucion. Excluyen el dividendo pagado al interes no controlador.
+fundamentals$distributed_controlling_mxn_m <- c(7498.318, 7003.146, 8508.872)
+fundamentals$payout <- fundamentals$distributed_controlling_mxn_m /
+  fundamentals$net_income_controlling_mxn_m
+
 # Year slices, taken only once every derived column exists, so a single-year
 # reference carries the ratios as well as the raw statement lines.
 latest <- fundamentals[fundamentals$year == max(fundamentals$year), ]
@@ -78,7 +114,7 @@ cv_recent <- cv(recent$diluted_eps)
 <div><dt>Fuente de datos</dt><dd>Reportes de GAP ante la SEC: Forma 20-F 2025 y 28 comunicados trimestrales</dd></div>
 <div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>
 <div><dt>Moneda</dt><dd>MXN millones; EPS en MXN por acción serie B</dd></div>
-<div><dt>Periodo cubierto</dt><dd>Estados 2023–2025; EPS 1T19–4T25</dd></div>
+<div><dt>Periodo cubierto</dt><dd>Estados 2023–2025; EPS 1T19–4T25; tráfico 2024–2025</dd></div>
 </dl>
 
 ## Introducción
@@ -90,7 +126,10 @@ consolidados de 2023 a 2025, indicadores de rentabilidad y apalancamiento,
 utilidad trimestral por acción y política de distribuciones. La lectura
 conjunta muestra una concesionaria con alta generación operativa y crecimiento,
 aunque expuesta a regulación tarifaria, tráfico aéreo, deuda y grandes
-compromisos de inversión.
+compromisos de inversión. El análisis se contrasta además con ASUR y OMA, las dos
+concesionarias comparables del mercado mexicano, para separar lo que corresponde
+al sector de lo que corresponde a las decisiones financieras de este emisor en
+particular.
 
 ::: {.callout-note title="Criterio de fuentes"}
 ITESO confirmó que la licencia institucional de FactSet no incluye acceso por
@@ -104,6 +143,14 @@ GAP presentó ante la SEC entre 2019 y 2026. El manifiesto `config/filings.yml`
 registra qué documento sustenta cada periodo y
 `analysis/06_ingest_gap_filings.R` reconstruye ambos conjuntos de datos; el
 informe nunca consulta una API durante el renderizado.
+
+Tres bloques de cifras quedan fuera de ese pipeline y se transcriben directamente
+del documento que las publica, por lo que llevan su fuente señalada en el propio
+chunk: el estado de flujos de efectivo y el desglose de ingreso, costo y
+resultado financiero, tomados de los estados financieros en XBRL de la misma
+Forma 20-F; el tráfico por aeropuerto, tomado del comunicado de diciembre de 2025
+[@gaptraffic2025dec]; y las cifras de ASUR y OMA, tomadas de sus respectivas
+Formas 20-F de 2025 [@asur20f2025; @oma20f2025]. Ninguna de ellas se recalcula.
 :::
 
 ## Descripción general del activo y del negocio
@@ -118,6 +165,83 @@ de 2006 en la Bolsa Mexicana de Valores mediante GAPB y en Nueva York mediante
 el ADS PAC, incorporó Montego Bay en 2015 mediante la compra de la sociedad
 controladora de MBJ Airports y tomó el control de Kingston en octubre de 2019
 [@gap20f2025; @gapcbx2026].
+
+El origen conviene precisarlo porque fija la escala del sector. El proceso de
+1998 no privatizó la totalidad de la red estatal: de los aeropuertos que
+administraba Aeropuertos y Servicios Auxiliares, **treinta y cinco** se
+repartieron en cuatro grupos —GAP con doce, OMA con trece, ASUR con nueve y el
+Aeropuerto Internacional de la Ciudad de México aparte— [@gapquienes2025]. Los
+derechos de la concesión mexicana entraron en vigor el 1 de noviembre de 1998
+por un plazo de cincuenta años [@gapconcesion1998], de donde procede el
+vencimiento de 2048. El domicilio social de la sociedad está en Guadalajara,
+Jalisco [@gap20f2025].
+
+La red no es homogénea, y su composición es la primera fuente de riesgo del
+activo. La @tbl-airports desagrega el tráfico terminal de 2025 por aeropuerto.
+
+```{r tbl-airports}
+#| echo: false
+#| tbl-cap: "Red de aeropuertos: pasajeros terminales en miles y vencimiento de la concesión."
+airports <- data.frame(
+  Aeropuerto = c("Guadalajara", "Tijuana", "Los Cabos", "Puerto Vallarta",
+                 "Montego Bay", "Guanajuato (Bajío)", "Hermosillo", "Kingston",
+                 "Morelia", "La Paz", "Mexicali", "Aguascalientes",
+                 "Los Mochis", "Manzanillo"),
+  Plaza = c("Jalisco", "Baja California", "Baja California Sur", "Jalisco",
+            "Jamaica", "Guanajuato", "Sonora", "Jamaica", "Michoacán",
+            "Baja California Sur", "Baja California", "Aguascalientes",
+            "Sinaloa", "Colima"),
+  pax_2025 = c(18696.6, 12650.0, 7529.9, 6947.7, 4469.1, 3301.5, 2203.1,
+               1841.2, 1508.1, 1337.6, 1272.1, 984.1, 713.6, 231.2),
+  pax_2024 = c(17848.7, 12545.8, 7488.1, 6803.5, 5057.1, 3169.0, 2156.7,
+               1777.2, 1304.6, 1206.0, 1034.1, 961.8, 585.2, 218.4),
+  Vencimiento = c(rep("2048", 4), "mar-2034", rep("2048", 2), "oct-2044",
+                  rep("2048", 6)),
+  stringsAsFactors = FALSE
+)
+airports$share <- airports$pax_2025 / sum(airports$pax_2025)
+airports$var <- growth(airports$pax_2025, airports$pax_2024)
+
+airports_table <- data.frame(
+  Aeropuerto = airports$Aeropuerto,
+  Plaza = airports$Plaza,
+  `Pax 2025` = round(airports$pax_2025, 1),
+  `Pax 2024` = round(airports$pax_2024, 1),
+  `Var. anual` = paste0(round(airports$var, 1), "%"),
+  `% de la red` = fmt_pct(airports$share, 1),
+  Vencimiento = airports$Vencimiento,
+  check.names = FALSE
+)
+report_table(airports_table, digits = 1)
+```
+
+Tres lecturas se desprenden de la @tbl-airports. La primera es la concentración:
+los cinco aeropuertos mayores —Guadalajara, Tijuana, Los Cabos, Puerto Vallarta y
+Montego Bay— reúnen
+`r fmt_pct(sum(sort(airports$share, decreasing = TRUE)[1:5]), 1)` del tráfico, y
+sólo Guadalajara y Tijuana explican
+`r fmt_pct(sum(sort(airports$share, decreasing = TRUE)[1:2]), 1)`. Cuando el
+propio emisor advierte que su negocio depende en alto grado de cinco aeropuertos
+[@gap20f2025], la tabla pone la cifra a esa advertencia: no es una figura
+retórica del apartado de riesgos sino la estructura real del activo.
+
+La segunda es que el crecimiento de 2025 no fue homogéneo. Los aeropuertos de
+ciudad media avanzaron a doble dígito —Mexicali
+`r round(airports$var[airports$Aeropuerto == "Mexicali"], 1)`%, Los Mochis
+`r round(airports$var[airports$Aeropuerto == "Los Mochis"], 1)`%, Morelia
+`r round(airports$var[airports$Aeropuerto == "Morelia"], 1)`%— mientras los
+grandes crecieron poco y Montego Bay retrocedió
+`r drop_pct(airports$pax_2025[airports$Aeropuerto == "Montego Bay"], airports$pax_2024[airports$Aeropuerto == "Montego Bay"])`%.
+Como el avance se concentró donde el tráfico es pequeño y la caída ocurrió en el
+quinto activo de la red, el resultado agregado fue de apenas
+`r round(growth(sum(airports$pax_2025), sum(airports$pax_2024)), 1)`%: el volumen
+no fue el motor del año, lo que confirma que el crecimiento del ingreso provino
+del precio.
+
+La tercera es el horizonte. Doce concesiones vencen simultáneamente en 2048 y las
+dos jamaiquinas antes; Montego Bay, que aporta
+`r fmt_pct(airports$share[airports$Aeropuerto == "Montego Bay"], 1)` del tráfico,
+tiene el vencimiento más próximo de toda la red.
 
 La @tbl-asset-metadata sintetiza la identificación bursátil utilizada en el
 análisis.
@@ -135,10 +259,14 @@ plazo remanente de sus títulos de concesión, ya que al vencimiento los activos
 revierten al Estado. Las doce concesiones mexicanas vencen en 2048 y admiten
 prórroga por hasta cincuenta años adicionales, sujeta a la aceptación de las
 modificaciones que imponga la autoridad; la concesión de Montego Bay vence en
-2033 sin opción de prórroga pactada y la de Kingston en 2044 [@gap20f2025]. Esa
-asimetría importa: la vida remanente mexicana es de más de dos décadas, mientras
-que el activo jamaiquino de mayor tamaño tiene un horizonte considerablemente
-más corto.
+marzo de 2034 —un año más que el plazo original de treinta, tras la enmienda de
+julio de 2024— y la de Kingston en octubre de 2044 [@gap20f2025; @gapjamaica2024].
+Esa misma enmienda redujo la cuota de concesión de Kingston de 62.01% a 53.22% de
+los ingresos brutos, con efecto retroactivo a septiembre de 2023: casi nueve
+puntos porcentuales de margen sobre el activo jamaiquino menor. La asimetría de
+plazos importa: la vida remanente mexicana supera las dos décadas, mientras que
+el activo jamaiquino de mayor tamaño tiene un horizonte considerablemente más
+corto.
 
 El ingreso económico se divide en servicios aeronáuticos —tarifas a pasajeros,
 aerolíneas y operadores, sujetas a una tarifa máxima regulada— y no aeronáuticos
@@ -166,13 +294,67 @@ entre terminales cercanas sino entre destinos: el propio 20-F identifica como
 competidores de Puerto Vallarta, Los Cabos, La Paz, Manzanillo y Montego Bay a
 otros destinos vacacionales —Acapulco, Cancún, Hawái, Puerto Rico, Florida, Cuba
 y República Dominicana— y no a un aeropuerto rival [@gap20f2025]. En el mercado
-bursátil mexicano los comparables son ASUR y OMA, que operan bajo el mismo
-régimen concesionario y de tarifa máxima.
+bursátil mexicano los comparables son ASUR y OMA, surgidos del mismo proceso de
+1998 y sujetos al mismo régimen de tarifa máxima. La @tbl-peers los coloca lado a
+lado sobre el ejercicio 2025, con el ingreso depurado de IFRIC 12 en las tres
+emisoras para que los márgenes sean comparables.
+
+```{r tbl-peers}
+#| echo: false
+#| tbl-cap: "GAP frente a sus comparables bursátiles, ejercicio 2025. El ingreso operativo excluye la construcción de IFRIC 12 en las tres emisoras."
+peers <- data.frame(
+  Concepto = c("Pasajeros (millones)", "Aeropuertos",
+               "Ingreso operativo (MXN m)", "EBITDA (MXN m)", "Margen EBITDA",
+               "Utilidad neta (MXN m)", "Deuda financiera (MXN m)",
+               "Deuda neta / EBITDA", "Deuda / capital",
+               "ROE de la controladora"),
+  GAP = c("63.7", "14", fmt_mxn(latest$revenue_operating_mxn_m, 1),
+          fmt_mxn(latest$ebitda_mxn_m, 1),
+          fmt_pct(latest$ebitda_margin_ex_ifric, 1),
+          fmt_mxn(latest$net_income_mxn_m, 1),
+          fmt_mxn(latest$total_debt_mxn_m, 1),
+          paste0(round(latest$net_debt_to_ebitda, 2), "x"),
+          paste0(round(latest$debt_to_equity, 2), "x"),
+          fmt_pct(roe_controlling, 1)),
+  ASUR = c("71.6", "16", "29,887.1", "20,256.3", "67.8%", "10,924.7",
+           "27,486.6", "0.81x", "0.59x", "26.5%"),
+  OMA = c("28.8", "13", "13,651.0", "10,166.9", "74.5%", "5,365.3",
+          "13,428.4", "1.03x", "1.18x", "47.4%"),
+  check.names = FALSE
+)
+report_table(peers)
+```
+
+La @tbl-peers precisa qué significa "comparable". En generación operativa las
+tres emisoras juegan en la misma liga —márgenes EBITDA entre 65% y 75%, propios
+de un activo concesionado— y GAP queda en el extremo bajo de ese rango pese a ser
+la segunda por tráfico. Donde la separación es nítida es en el balance: con
+`r round(latest$debt_to_equity, 2)` veces de deuda sobre capital y
+`r round(latest$net_debt_to_ebitda, 2)` veces EBITDA de deuda neta, GAP está
+sensiblemente más apalancada que ASUR, que opera casi sin deuda neta, y que OMA
+[@asur20f2025; @oma20f2025]. El contraste con ASUR es el más informativo porque
+su escala es parecida: atiende más pasajeros que GAP con un ingreso operativo
+menor, y aun así financia su expansión sin recurrir al pasivo en la misma
+proporción. La diferencia no está, por tanto, en el negocio ni en el régimen
+regulatorio, que son los mismos, sino en la decisión de estructura financiera: el
+apalancamiento de GAP es una elección de la administración, no una condición del
+sector. Ese es el rasgo que la etapa cuantitativa debería encontrar traducido en
+una volatilidad mayor que la de sus pares.
+
+Conviene una advertencia de comparabilidad. Las tres emisoras construyen su razón
+de apalancamiento con criterios distintos: OMA incluye los pasivos por
+arrendamiento de la NIIF 16 en su deuda neta y ASUR no, pese a mantener MXN
+8,115.1 millones de ellos por la operación de San Juan; homogeneizando el
+criterio, ASUR pasaría de 0.81 a aproximadamente 1.21 veces. Las cifras del
+cuadro se presentan como cada emisora las reporta, y la comparación de fondo
+—GAP claramente más apalancada que ambas— se sostiene con cualquiera de los dos
+criterios. El conteo de pasajeros de ASUR tampoco es homogéneo: excluye tránsito
+en México y Colombia pero lo incluye en Puerto Rico [@asur20f2025].
 
 Dos dependencias estructurales conviene fijar desde ahora. La primera es
 regulatoria: la tarifa máxima aplicable a los servicios aeronáuticos se fija por
-quinquenio, y las tarifas del periodo 2025–2029 entraron en vigor en marzo de
-2025; además, cada concesionaria mexicana paga al Estado un derecho equivalente
+quinquenio, y las tarifas del periodo 2025–2029 se aplican desde el 1 de enero de
+2025 [@gappmd2024]; además, cada concesionaria mexicana paga al Estado un derecho equivalente
 al 9.0% de sus ingresos brutos [@gap20f2025; @gap4q2025]. La segunda es
 accionaria: Aeropuertos Mexicanos del Pacífico mantenía las acciones serie BB,
 equivalentes al 15% del capital, con derecho a designar directivos y a vetar
@@ -222,6 +404,46 @@ report_table(
   digits = 1
 )
 ```
+
+La @tbl-revenue-mix descompone ese ingreso operativo en sus dos fuentes.
+
+```{r tbl-revenue-mix}
+#| echo: false
+#| tbl-cap: "Composición del ingreso, millones de pesos corrientes."
+revenue_mix <- data.frame(
+  Año = fundamentals$year,
+  `Aeronáutico` = fundamentals$revenue_aero_mxn_m,
+  `No aeronáutico` = fundamentals$revenue_non_aero_mxn_m,
+  `Construcción IFRIC 12` = fundamentals$revenue_construction_mxn_m,
+  `No aeronáutico / operativo` = fmt_pct(fundamentals$non_aero_share, 1),
+  `Derecho de concesión` = fundamentals$concession_tax_mxn_m,
+  check.names = FALSE
+)
+report_table(revenue_mix, digits = 1)
+```
+
+La @tbl-revenue-mix contiene el hallazgo más favorable del periodo, y matiza el
+riesgo regulatorio que se describe más adelante. El ingreso no aeronáutico creció
+`r round(growth(latest$revenue_non_aero_mxn_m, first_year$revenue_non_aero_mxn_m), 1)`%
+entre 2023 y 2025 frente a
+`r round(growth(latest$revenue_aero_mxn_m, first_year$revenue_aero_mxn_m), 1)`%
+del aeronáutico, con lo que su peso en el ingreso operativo pasó de
+`r fmt_pct(first_year$non_aero_share, 1)` a `r fmt_pct(latest$non_aero_share, 1)`.
+La mezcla se está desplazando hacia el componente **no sujeto a tarifa máxima**,
+donde GAP fija precios con libertad. Es una diversificación real frente a la
+revisión quinquenal, aunque acotada: el ingreso comercial también depende del
+pasajero que cruza la terminal, de modo que reduce la exposición a la tarifa pero
+no la exposición al tráfico.
+
+La última columna registra un movimiento en sentido contrario. El derecho de
+concesión, fijado en 9.0% de los ingresos brutos, creció
+`r round(growth(latest$concession_tax_mxn_m, first_year$concession_tax_mxn_m), 1)`%
+en dos años, muy por encima del
+`r round(growth(latest$revenue_operating_mxn_m, first_year$revenue_operating_mxn_m), 1)`%
+del ingreso operativo. La diferencia se explica porque la base gravable son los
+ingresos brutos, que incluyen la construcción de IFRIC 12, y ese renglón saltó en
+2025. Es un costo regulatorio que crece con una base que no representa venta
+económica, y contribuye a la compresión de márgenes que se documenta enseguida.
 
 El ingreso operativo aumentó de `r fmt_mxn(first_year$revenue_operating_mxn_m, 1)`
 millones en 2023 a `r fmt_mxn(latest$revenue_operating_mxn_m, 1)` millones en
@@ -392,13 +614,66 @@ redujo el riesgo de refinanciamiento inmediato a cambio de fijar por más tiempo
 un costo financiero que en 2025 ascendió a MXN 4,458.3 millones.
 
 La pregunta de fondo —con qué se financia el crecimiento— tiene respuesta
-documental. La inversión en activos concesionados totalizó MXN 10,042.5 millones
-en 2023, MXN 7,393.2 en 2024 y MXN 11,012.0 en 2025, y **sólo 26.2%, 28.9% y
-29.9% de ese CAPEX se financió con flujo de operación**; el resto provino de
-emisiones de certificados bursátiles de largo plazo y préstamos bancarios
-[@gap20f2025]. La expansión de GAP se está financiando con deuda, no con
-generación interna ni con capital nuevo, y ese hecho explica simultáneamente el
-alza del pasivo, la compresión del margen neto y el descenso del efectivo.
+documental, y conviene formularla con cuidado porque la respuesta intuitiva es
+incorrecta. La @tbl-cashflow reconstruye el origen y la aplicación del efectivo.
+
+```{r tbl-cashflow}
+#| echo: false
+#| tbl-cap: "Origen y aplicación del flujo de efectivo, millones de pesos."
+cashflow <- data.frame(
+  Concepto = c("Flujo neto de operación", "Inversión en activos y equipo",
+               "Intereses pagados", "Dividendos y reducción de capital",
+               "Faltante cubierto con deuda"),
+  `2023` = c(fundamentals$operating_cash_flow_mxn_m[1],
+             -fundamentals$capex_mxn_m[1], -fundamentals$interest_paid_mxn_m[1],
+             -fundamentals$distributions_mxn_m[1],
+             fundamentals$funding_gap_mxn_m[1]),
+  `2024` = c(fundamentals$operating_cash_flow_mxn_m[2],
+             -fundamentals$capex_mxn_m[2], -fundamentals$interest_paid_mxn_m[2],
+             -fundamentals$distributions_mxn_m[2],
+             fundamentals$funding_gap_mxn_m[2]),
+  `2025` = c(fundamentals$operating_cash_flow_mxn_m[3],
+             -fundamentals$capex_mxn_m[3], -fundamentals$interest_paid_mxn_m[3],
+             -fundamentals$distributions_mxn_m[3],
+             fundamentals$funding_gap_mxn_m[3]),
+  check.names = FALSE
+)
+report_table(cashflow, digits = 1)
+```
+
+El flujo de operación **cubre el CAPEX con holgura en los tres ejercicios**:
+`r fmt_pct(fundamentals$capex_coverage[1], 1)` en 2023,
+`r fmt_pct(fundamentals$capex_coverage[2], 1)` en 2024 y
+`r fmt_pct(fundamentals$capex_coverage[3], 1)` en 2025 [@gap20f2025]. La inversión,
+por tanto, no es lo que obliga a endeudarse, y sería un error leer el alza del
+pasivo como síntoma de una operación incapaz de autofinanciarse.
+
+Lo que abre el faltante es lo que viene después del CAPEX. Los intereses de la
+deuda ya contratada consumieron
+`r fmt_mxn(latest$interest_paid_mxn_m, 1)` millones en 2025 —GAP los clasifica en
+actividades de financiamiento, no de operación, por lo que no están descontados
+del primer renglón— y las distribuciones a los accionistas absorbieron
+`r fmt_mxn(latest$distributions_mxn_m, 1)` millones más. Sumadas ambas partidas a
+la inversión, el requerimiento supera al flujo generado y la diferencia,
+`r fmt_mxn(abs(latest$funding_gap_mxn_m), 1)` millones en 2025, se cubre con
+emisiones de certificados bursátiles y préstamos bancarios.
+
+La distinción no es de matiz. Un negocio que no puede financiar su inversión con
+su operación tiene un problema de rentabilidad; GAP no lo tiene. Lo que tiene es
+una política de distribución que reparte prácticamente toda la utilidad mientras
+el programa de inversión sigue corriendo, y esa decisión —no la debilidad del
+flujo— explica simultáneamente el alza del pasivo, el descenso del efectivo y un
+capital contable que apenas crece pese a utilidades sostenidas. Es también, por
+eso mismo, una palanca reversible: el consejo puede moderar la distribución sin
+incumplir obligación alguna ni renunciar a un peso de inversión comprometida. Que
+el apalancamiento de GAP sea reversible por decisión propia importa para el
+perfil de riesgo tanto como su nivel.
+
+El ejercicio 2024 confirma la mecánica al mostrar el caso menos tenso. El CAPEX
+cayó a `r fmt_mxn(previous$capex_mxn_m, 1)` millones, el flujo de operación
+creció, y el faltante se redujo a menos de un tercio del de los otros dos años.
+No fue una mejora operativa sino una pausa de inversión, y el efectivo aumentó en
+consecuencia.
 
 Para el accionista, el apalancamiento actúa como amplificador en ambos sentidos.
 Con una deuda de `r round(latest$debt_to_equity, 2)` veces el capital, una
@@ -446,30 +721,35 @@ as_times <- function(x) ifelse(is.na(x), "—", paste0(round(x, 2), "x"))
 
 ratios <- data.frame(
   Indicador = c("ROE", "ROA", "Deuda / capital", "Deuda / EBITDA",
-                "Deuda neta / EBITDA", "Margen EBITDA"),
+                "Deuda neta / EBITDA", "Margen EBITDA",
+                "Cobertura de intereses"),
   Fórmula = c(
     "Utilidad neta de la controladora / capital contable de la controladora promedio",
     "Utilidad neta consolidada / activos totales promedio",
     "Deuda financiera total / capital contable total",
     "Deuda financiera total / EBITDA",
     "(Deuda financiera total − efectivo) / EBITDA",
-    "EBITDA / ingreso operativo sin IFRIC 12"
+    "EBITDA / ingreso operativo sin IFRIC 12",
+    "EBITDA / gasto financiero del ejercicio"
   ),
   `2023` = c(as_pct(roe_series[1]), as_pct(roa_series[1]),
              as_times(fundamentals$debt_to_equity[1]),
              as_times(fundamentals$debt_to_ebitda[1]),
              as_times(fundamentals$net_debt_to_ebitda[1]),
-             as_pct(fundamentals$ebitda_margin_ex_ifric[1])),
+             as_pct(fundamentals$ebitda_margin_ex_ifric[1]),
+             as_times(fundamentals$interest_coverage[1])),
   `2024` = c(as_pct(roe_series[2]), as_pct(roa_series[2]),
              as_times(fundamentals$debt_to_equity[2]),
              as_times(fundamentals$debt_to_ebitda[2]),
              as_times(fundamentals$net_debt_to_ebitda[2]),
-             as_pct(fundamentals$ebitda_margin_ex_ifric[2])),
+             as_pct(fundamentals$ebitda_margin_ex_ifric[2]),
+             as_times(fundamentals$interest_coverage[2])),
   `2025` = c(as_pct(roe_series[3]), as_pct(roa_series[3]),
              as_times(fundamentals$debt_to_equity[3]),
              as_times(fundamentals$debt_to_ebitda[3]),
              as_times(fundamentals$net_debt_to_ebitda[3]),
-             as_pct(fundamentals$ebitda_margin_ex_ifric[3])),
+             as_pct(fundamentals$ebitda_margin_ex_ifric[3]),
+             as_times(fundamentals$interest_coverage[3])),
   check.names = FALSE
 )
 report_table(ratios)
@@ -536,6 +816,22 @@ margen sin que nada económico hubiera cambiado. Sobre esa base el margen es
 sería `r fmt_pct(latest$ebitda_mxn_m / latest$revenue_reported_mxn_m, 1)`, y la
 brecha entre ambas cifras es exactamente el artefacto contable que la definición
 evita.
+
+**Cobertura de intereses.** Mide cuántas veces la generación operativa del
+ejercicio alcanza para pagar el costo financiero del mismo periodo. Es el
+complemento necesario de deuda a EBITDA: aquella razón dice cuánta deuda hay
+respecto del flujo, ésta dice si el flujo alcanza para sostenerla mientras tanto.
+El EBITDA cubre `r round(latest$interest_coverage, 2)` veces el gasto financiero
+de 2025, frente a `r round(first_year$interest_coverage, 2)` veces en 2023, con
+un mínimo de `r round(previous$interest_coverage, 2)` veces en 2024. El nivel es
+holgado y no sugiere tensión de servicio en el escenario base, pero la
+trayectoria desciende y su causa está identificada: el gasto financiero creció
+`r round(growth(latest$finance_cost_mxn_m, first_year$finance_cost_mxn_m), 1)`%
+en dos años, más rápido que el EBITDA,
+`r round(growth(latest$ebitda_mxn_m, first_year$ebitda_mxn_m), 1)`%. Es además el
+indicador que primero se deterioraría ante un choque de tráfico, porque el
+numerador es la variable cíclica mientras el denominador está contractualmente
+fijado.
 
 La lectura conjunta no es "bajo riesgo". GAP puede servir su deuda en el
 escenario base y su rentabilidad sobre capital es elevada, pero ambas cosas
@@ -841,14 +1137,61 @@ programa de inversión creciente.
 
 La interacción con el resto de la estructura financiera es directa y ya quedó
 cuantificada. GAP distribuyó MXN 8,508.9 millones en 2025 mientras invertía MXN
-11,012.0 millones en CAPEX y financiaba con flujo operativo menos de un tercio de
-esa inversión. En otras palabras, la política de distribución compite con el
-programa de inversión por el mismo flujo, y el diferencial se cubre con deuda.
+`r fmt_mxn(latest$capex_mxn_m, 1)` millones en CAPEX y pagaba
+`r fmt_mxn(latest$interest_paid_mxn_m, 1)` millones de intereses, contra un flujo
+de operación de `r fmt_mxn(latest$operating_cash_flow_mxn_m, 1)` millones. En
+otras palabras, la política de distribución compite con el programa de inversión
+por el mismo flujo, y el diferencial se cubre con deuda.
 Eso es coherente con el descenso del efectivo, con el alza de la deuda neta y con
 un capital contable que apenas crece pese a utilidades sostenidas. La flexibilidad
 de la política protege la inversión y el servicio de deuda —el consejo puede
 reducir la distribución sin incumplir nada—, pero vuelve el retorno total del
 accionista sensible a decisiones corporativas y al ciclo de CAPEX.
+
+La @tbl-payout mide la distribución contra la utilidad que efectivamente
+pertenece al accionista de GAPB.
+
+```{r tbl-payout}
+#| echo: false
+#| tbl-cap: "Distribuciones contra la utilidad del accionista controlador."
+payout_table <- data.frame(
+  Año = fundamentals$year,
+  `Distribuido` = fundamentals$distributed_controlling_mxn_m,
+  `Utilidad de la controladora` = fundamentals$net_income_controlling_mxn_m,
+  `Razón de distribución` = fmt_pct(fundamentals$payout, 1),
+  check.names = FALSE
+)
+report_table(payout_table, digits = 1)
+```
+
+La razón sube de `r fmt_pct(first_year$payout, 1)` en 2023 a
+`r fmt_pct(latest$payout, 1)` en 2025: GAP entrega prácticamente toda la utilidad
+del dueño. Leído junto con la @tbl-cashflow, el cuadro cierra el argumento de la
+sección anterior. Repartir cerca del total de la utilidad mientras el programa de
+inversión sigue corriendo obliga a que el balance absorba la diferencia, y es la
+razón de que el capital contable apenas crezca pese a resultados sostenidos.
+
+A la distribución se añade un segundo canal de retorno que el análisis no ha
+nombrado todavía. En la misma asamblea en que aprueba el dividendo, GAP autoriza
+un fondo de recompra de acciones —MXN 2,500 millones en la asamblea del 22 de
+abril de 2026, monto que sustituye la parte no ejercida del autorizado el año
+previo [@gapagm2026]—. Es una autorización que se renueva cada ejercicio, no un
+programa permanente, y es el mecanismo que produjo la reducción de
+`r fmt_pct(buyback_pct, 1)` en el número de acciones que documenta la sección
+anterior. Para el análisis de riesgo importa porque es la parte discrecional del
+retorno: a diferencia del dividendo aprobado en asamblea, la recompra puede
+suspenderse sin decisión societaria adicional, y es lo primero que cede si el
+flujo se estrecha.
+
+El ejercicio siguiente al analizado confirma la trayectoria. La asamblea del 22
+de abril de 2026 aprobó un dividendo de MXN 20.80 por acción [@gapagm2026], un
+incremento de `r round(100 * 20.80 / 16.84 - 100, 1)`% frente al de 2025. La
+prensa financiera estimó ese dividendo en un rendimiento aproximado de 5% sobre
+el precio de la acción al momento del anuncio [@axis2026]; conviene tomar esa
+cifra como referencia de mercado y no como dato del emisor, porque GAP no publica
+rendimiento alguno en sus comunicados y el resultado depende por completo de la
+fecha de precio que se elija. La etapa siguiente, que trabajará sobre la serie de
+precios, permitirá calcularlo con una fecha de corte declarada.
 
 Sobre *splits*, la evidencia documental es negativa y explícita: la Forma 20-F de
 2025 no registra ninguna división ni consolidación de acciones, y la revisión de
@@ -902,6 +1245,18 @@ GAP documenta además que las principales aerolíneas domésticas se han negado 
 el pasado a pagar ciertos incrementos tarifarios y podrían volver a hacerlo, y
 que recaudan por cuenta de GAP las tarifas de pasajeros, función que podrían
 dejar de prestar [@gap20f2025].
+
+**Disponibilidad de flota.** El ejercicio 2024 documenta este riesgo sin
+necesidad de escenario hipotético. Las inspecciones preventivas de los motores
+Pratt & Whitney de la familia A320neo y A321neo inmovilizaron parte de las flotas
+de Volaris y VivaAerobus, con lo que la oferta de asientos se contrajo sin que la
+demanda ni la tarifa hubieran cambiado. El tráfico total de GAP cayó 2.1% ese año
+y el segmento doméstico mexicano —donde operan esas dos aerolíneas— retrocedió
+5.3%, mientras el internacional avanzó 2.3% [@gaptraffic2024dec; @gap4q2024]. Es
+la ilustración más limpia de por qué el riesgo de aerolíneas no se agota en la
+solvencia del cliente: una decisión técnica de un fabricante de motores, sobre la
+que ni GAP ni sus aerolíneas tienen control, se transmitió al tráfico de la
+concesionaria en cuestión de trimestres.
 
 **Clima y desastres naturales.** El caso de 4T25 es el ejemplo documentado: el
 huracán Melissa forzó la suspensión de operaciones en Montego Bay entre el 26 de
@@ -995,13 +1350,16 @@ decisiones de negocio [@gap20f2025]. Un deterioro del EBITDA que acerque las
 razones de cobertura a sus límites restringiría inversión y distribuciones antes
 de que exista cualquier problema de solvencia.
 
-**Liquidez frente a un CAPEX intensivo.** Con menos de un tercio del CAPEX
-financiado por flujo de operación y un efectivo que cedió
-`r fmt_mxn(previous$cash_mxn_m - latest$cash_mxn_m, 1)` millones durante 2025
-hasta `r fmt_mxn(latest$cash_mxn_m, 1)` millones, GAP depende del acceso continuo
-al mercado de deuda mexicano [@gap20f2025]. Un cierre temporal de ese mercado
-obligaría a elegir entre recortar inversión comprometida o suspender la
-distribución.
+**Liquidez frente a un CAPEX intensivo.** Aunque el flujo de operación cubre la
+inversión, no alcanza a cubrirla junto con los intereses y las distribuciones: el
+faltante fue de `r fmt_mxn(abs(latest$funding_gap_mxn_m), 1)` millones en 2025 y
+el efectivo cedió
+`r fmt_mxn(previous$cash_mxn_m - latest$cash_mxn_m, 1)` millones ese año hasta
+`r fmt_mxn(latest$cash_mxn_m, 1)` millones. Mientras esa combinación se mantenga,
+GAP depende del acceso continuo al mercado de deuda mexicano [@gap20f2025]. Un
+cierre temporal de ese mercado obligaría a elegir entre recortar inversión
+comprometida y suspender la distribución, y la segunda es la variable que la
+administración puede mover sin incumplir nada.
 
 **Dilución.** La emisión de 89,740,731 acciones por la fusión con CBX reduce en
 15.1% la participación del accionista previo [@gapcbx2026]. El efecto sobre el
@@ -1030,7 +1388,7 @@ negocio. El mismo régimen prevé sanciones si se excede la tarifa máxima al ci
 de un año.
 
 **Vida y reversión de la concesión.** Las concesiones mexicanas vencen en 2048 y
-las jamaiquinas en 2033 y 2044; al vencimiento los activos revierten al Estado.
+las jamaiquinas en 2034 y 2044; al vencimiento los activos revierten al Estado.
 El valor del emisor es, en rigor, el valor presente de un flujo con horizonte
 finito, y cualquier cambio en la expectativa de prórroga —que no está garantizada
 y queda sujeta a las modificaciones que imponga la autoridad— reprecia el activo.
@@ -1039,8 +1397,10 @@ readquirir las concesiones [@gap20f2025].
 
 **Programas Maestros de Desarrollo.** La inversión comprometida por quinquenio es
 obligatoria y se negocia con la autoridad [@gap20f2025]. Una exigencia mayor a
-la prevista eleva el CAPEX sin elevar necesariamente el ingreso permitido, y
-dado que menos de un tercio del CAPEX se autofinancia, se traduce en más deuda.
+la prevista eleva el CAPEX sin elevar necesariamente el ingreso permitido. Como
+el flujo de operación ya se reparte entre inversión, intereses y distribuciones
+sin alcanzar para las tres, cualquier exigencia adicional de inversión se traduce
+en más deuda o en una distribución menor.
 
 **Accionista estratégico y gobierno corporativo.** El tenedor de las acciones
 serie BB, equivalentes al 15% del capital, designa directivos y veta decisiones
@@ -1073,8 +1433,10 @@ eliminar el factor común. La rentabilidad lo confirma: un ROA de
 La expansión, en cambio, está financiada. El ingreso operativo creció
 `r round(growth(latest$revenue_operating_mxn_m, first_year$revenue_operating_mxn_m), 1)`%
 en dos años y el EBITDA alcanzó `r fmt_mxn(latest$ebitda_mxn_m, 1)` millones,
-pero la inversión que lo hizo posible se cubrió en menos de un tercio con flujo
-de operación; el resto vino de deuda. De ahí que el pasivo financiero creciera
+y el flujo de operación cubrió la inversión con holgura en los tres ejercicios.
+Lo que el flujo no alcanzó a cubrir fue la inversión *más* los intereses *más*
+las distribuciones, y ese faltante —`r fmt_mxn(abs(latest$funding_gap_mxn_m), 1)`
+millones sólo en 2025— se financió con deuda. De ahí que el pasivo financiero creciera
 `r round(growth(latest$total_debt_mxn_m, first_year$total_debt_mxn_m), 1)`% frente
 a `r round(growth(latest$total_equity_mxn_m, first_year$total_equity_mxn_m), 1)`%
 del capital, que la razón deuda a capital pasara de
