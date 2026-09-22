@@ -13,6 +13,7 @@ website:
   title: "Análisis de Riesgo · GAPB"
   description: "Análisis de riesgo de mercado de Grupo Aeroportuario del Pacífico (BMV: GAPB)"
   repo-url: https://github.com/Urielledezma/GAPB-Risk-Analysis
+  repo-subdir: reports
   repo-actions: [source]
   page-navigation: true
   navbar:

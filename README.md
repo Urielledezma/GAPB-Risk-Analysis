@@ -19,8 +19,9 @@ event attribution, return distribution and geometric Brownian motion, conditiona
 variance models, and portfolio VaR / Expected Shortfall. Each stage renders as a page
 of the research site; together they form the basis of a research article.
 
-The analytics are deliberately kept out of the reports and live in `R/` as a small
-library driven by `config/`. Point `config/assets.yml` at a different universe and the
+Reusable analytics live in `R/` as a small library driven by `config/`; stage 02
+also shows introductory return and drawdown calculations directly in its report.
+Point `config/assets.yml` at a different universe and the
 same pipeline runs unchanged — the repository is intended to be reused.
 
 **Reports:** <https://urielledezma.github.io/GAPB-Risk-Analysis/>
@@ -278,12 +279,36 @@ synced folder.
 
 - [x] Repository scaffold, analytics library and report skeletons
 - [x] Stage 01 — issuer profile and risk taxonomy
-- [ ] Stage 02 — price path, drawdowns and event attribution
+- [x] Stage 02 — price path, drawdowns and documented event interpretation
 - [ ] Stage 03 — return distribution and GBM projection
 - [ ] Stage 04 — conditional variance models and out-of-sample evaluation
 - [ ] Stage 05 — portfolio VaR, Expected Shortfall and optimisation
 - [ ] Research article
 - [ ] Render-in-CI once the dependency lockfile is stable
+
+Stage 02 uses the public price snapshot through **2026-06-30**, with
+**July 2025–June 2026** as its recent twelve-month window. The IPO took place on
+2006-02-24; the available daily snapshot starts on 2006-02-27, one session later.
+Calendar-year returns are compared with real Mexican GDP growth for 2007–2025.
+Dates and exploratory event windows live in `config/price_history.yml`; this
+descriptive report does not change the model-estimation cutoff in `params.yml`.
+It uses base-R calculations and plots, reads saved data without network calls,
+and distinguishes documented facts from proposed explanations of price moves.
+
+Render the standalone Canvas deliverable with
+`quarto render reports/02-price-history-events.qmd --profile submission`;
+the resulting HTML is written to `outputs/submission/`.
+
+Build qualification for this delivery: on the local Windows installation, R 4.5.1
+crashes at shutdown after loading `rlang` (Quarto reports status -1073741819).
+All 221 unit assertions completed successfully, but the R process did not exit
+successfully; the ordinary end-to-end render therefore remains unverified on that
+installation. The delivered artifacts were produced by executing the original
+QMDs with knitr, checking completion and independent numerical assertions, then
+rendering the saved Markdown with Quarto and the existing styles and bibliography.
+The resulting HTML, cross-references and local resource links were inspected.
+Use the standard command above on a working R installation; the system R and
+package libraries were not modified for this delivery.
 
 ---
 

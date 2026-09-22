@@ -1,0 +1,14 @@
+# Stage 02 is descriptive; the model-estimation cutoff in params.yml is unchanged.
+cutoff: "2026-06-30"
+ipo_date: "2006-02-24"
+recent_start: "2025-07-01"
+recent_baseline: "2025-06-30"
+historical:
+  label: ["Crisis financiera", "Influenza A/H1N1", "Choque de COVID-19", "Recuperación del tráfico", "Cambio regulatorio"]
+  start: ["2007-10-18", "2009-04-24", "2020-02-19", "2020-03-23", "2023-10-04"]
+  end: ["2008-10-27", "2009-04-27", "2020-03-23", "2021-12-31", "2023-10-05"]
+recent:
+  label: ["Huracán Melissa", "Resultados del 1T26", "Integración de CBX"]
+  event: ["2025-10-26", "2026-04-20", "2026-05-07"]
+  start: ["2025-10-24", "2026-04-20", "2026-05-06"]
+  end: ["2025-11-03", "2026-04-21", "2026-05-08"]

@@ -1,6 +1,6 @@
-﻿---
+---
 title: "Precio, caídas y eventos"
-subtitle: "Trayectoria histórica, drawdowns y su atribución a hechos del entorno"
+subtitle: "Proyecto Final · Parte 2 | GAPB, febrero de 2006–junio de 2026"
 author:
   - "Santiago Álvarez Tostado Estrada"
   - "Francisco Uriel Ledezma Chávez"
@@ -13,167 +13,314 @@ date-format: "D [de] MMMM [de] YYYY"
 ```{r setup}
 #| include: false
 source("_setup.R")
+history_config <- load_config("price_history")
+cutoff <- as.Date(history_config$cutoff)
 ```
 
 <dl class="report-meta" aria-label="Ficha técnica del reporte">
-<div><dt>Fuente de datos</dt><dd>Yahoo Finance / BMV y Banco Mundial</dd></div>
-<div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>
-<div><dt>Moneda</dt><dd>MXN por acción; rendimientos adimensionales</dd></div>
-<div><dt>Periodo cubierto</dt><dd>27 de febrero de 2006–26 de agosto de 2026</dd></div>
+<div><dt>Activo y mercado</dt><dd>Grupo Aeroportuario del Pacífico · GAPB en la BMV</dd></div>
+<div><dt>Corte del análisis</dt><dd>30 de junio de 2026</dd></div>
+<div><dt>Último año</dt><dd>Julio de 2025–junio de 2026</dd></div>
+<div><dt>Fuentes</dt><dd>Yahoo Finance, Banco Mundial y documentos primarios</dd></div>
 </dl>
-
-```{r data}
-#| include: false
-prices <- read_dataset("prices_daily")
-returns <- read_dataset("returns_daily")
-gdp <- read_processed("gdp_mx")
-
-subject_prices <- prices[prices$ticker == subject(), ]
-subject_returns <- returns[returns$ticker == subject(), ]
-```
 
 ## Introducción
 
-::: {.callout-important title="Pendiente de redacción"}
-Qué se examina en esta etapa y por qué: el precio responde a información nueva
-que los inversionistas no controlan ni anticipan, y esa exposición es una parte
-fundamental del riesgo financiero.
-:::
+El precio de una acción concentra expectativas sobre ingresos, costos y riesgos que todavía no se materializan, por lo que una empresa puede conservar sus instalaciones y sus concesiones mientras su valor de mercado cambia de manera considerable. En Grupo Aeroportuario del Pacífico, esta relación resulta especialmente visible, ya que el tráfico de pasajeros depende de la actividad económica y del turismo, mientras que las tarifas, las restricciones a la movilidad y las decisiones corporativas modifican los flujos que esperan recibir los accionistas.
 
-## Exploración de la serie histórica
+El propósito de esta segunda parte es estudiar cómo se ha comportado GAPB desde sus primeras observaciones bursátiles hasta el primer semestre de 2026, identificar cinco episodios relevantes y contrastarlos con hechos documentados, además de medir la pérdida acumulada más profunda y comparar los rendimientos anuales con el crecimiento de México. Finalmente, se examina julio de 2025–junio de 2026 para reconocer situaciones en las que una noticia operativa y la respuesta del precio pueden tener distinta magnitud, o incluso distinto signo.
 
-La @fig-price presenta la trayectoria ajustada del activo y la @fig-returns
-muestra los rendimientos diarios que sostienen el análisis de riesgo.
+La interpretación es descriptiva: una coincidencia temporal, acompañada de un mecanismo financiero razonable, permite proponer una explicación, aunque no demuestra cuánto del movimiento fue causado exclusivamente por ese evento. Esta distinción evita presentar el conocimiento posterior como si hubiera sido una predicción disponible para el inversionista.
+
+## Datos y criterios de cálculo
+
+### Cobertura y fuentes
+
+GAP realizó su oferta pública el **24 de febrero de 2006**, mientras que la base disponible comienza el **27 de febrero de 2006**, es decir, en la siguiente sesión bursátil, por lo que no contamos con el cierre del día de colocación y no lo sustituimos por un precio estimado [@gap20f2009]. La serie corresponde a la acción mexicana en pesos, no al ADS negociado en Nueva York.
+
+Los precios se leen de la copia pública guardada en el repositorio, obtenida de Yahoo Finance y registrada el 27 de agosto de 2026, pero se filtran al corte de esta entrega antes de calcular cualquier resultado. Por ello, se trata de una reconstrucción histórica con la versión disponible de los datos, incluidos sus ajustes retrospectivos, y no de una base congelada tal como se conocía en junio. El reporte no descarga información durante su ejecución [@yahoogapbhistory].
+
+```{r data}
+prices <- read_processed("prices_daily")
+gdp <- read_processed("gdp_mx")
+prices <- prices[prices$ticker == subject() & prices$date <= cutoff, ]
+prices <- prices[order(prices$date), ]
+
+stopifnot(nrow(prices) > 1, !anyDuplicated(prices$date),
+          all(is.finite(prices$adjusted)), all(prices$adjusted > 0),
+          max(prices$date) == cutoff)
+
+prices$log_return <- c(NA, diff(log(prices$adjusted)))
+```
+
+### Precio, rendimiento y pérdida acumulada
+
+El cierre sin ajustar indica la cotización de mercado de cada fecha, mientras que el cierre ajustado incorpora los ajustes del proveedor por distribuciones y desdoblamientos, de modo que sus cocientes sirven como aproximación al desempeño de una inversión con distribuciones reinvertidas. No se interpreta el nivel ajustado como el efectivo que se habría pagado por una acción en esa fecha, ni se descuentan impuestos, comisiones o inflación.
+
+Para describir los cambios diarios utilizamos rendimientos logarítmicos, y para expresar la ganancia o pérdida de un periodo empleamos rendimientos simples acumulados:
+
+$$
+r_t=\ln\left(\frac{P_t^{aj}}{P_{t-1}^{aj}}\right),
+\qquad R_{a,b}=\frac{P_b^{aj}}{P_a^{aj}}-1
+=\exp\left(\sum_{t=a+1}^{b}r_t\right)-1.
+$$
+
+Ambas medidas parten de la misma serie, aunque sus porcentajes no son intercambiables en movimientos grandes. En todas las ventanas, la fecha inicial representa el cierre de referencia y la final representa el cierre de salida; los cuadros muestran rendimientos simples, mientras que la gráfica diaria utiliza logarítmicos.
+
+## Trayectoria histórica
+
+La @fig-price permite observar la cotización sin ajustar, con una expansión importante en el largo plazo y retrocesos que interrumpen esa trayectoria. Por su parte, la @fig-returns muestra que la variación diaria no tiene una intensidad constante: existen tramos relativamente tranquilos y concentraciones de movimientos extremos, principalmente alrededor de las crisis y de cambios regulatorios.
 
 ```{r}
 #| label: fig-price
-#| fig-cap: "Precio ajustado de GAPB desde su listado en la BMV."
-ggplot(subject_prices, aes(date, adjusted)) +
-  geom_line(colour = RISK_PALETTE[1], linewidth = 0.5) +
-  scale_y_continuous(labels = label_dollar(prefix = "$")) +
-  labs(
-    x = NULL, y = "Precio ajustado (MXN)",
-    caption = "Fuente: Yahoo Finance / BMV. Serie ajustada por dividendos y splits."
-  )
+#| fig-cap: "Cierre de GAPB sin ajustar, en pesos por acción. Fuente: copia local de Yahoo Finance."
+#| fig-alt: "Serie del cierre de GAPB entre febrero de 2006 y junio de 2026, con retrocesos visibles en 2008, 2020 y 2023."
+par(mar = c(4, 4.5, 1, 1))
+plot(prices$date, prices$close, type = "l", col = "#174A6E",
+     xlab = "Año", ylab = "Cierre sin ajustar (MXN)", lwd = 1)
+grid(col = "#E5E7EB")
 ```
 
 ```{r}
 #| label: fig-returns
-#| fig-cap: "Rendimientos logarítmicos diarios."
-ggplot(subject_returns, aes(date, log_return)) +
-  geom_line(colour = RISK_PALETTE[1], linewidth = 0.25) +
-  scale_y_continuous(labels = label_percent(accuracy = 1)) +
-  labs(x = NULL, y = "Rendimiento logarítmico diario")
+#| fig-cap: "Rendimientos logarítmicos diarios calculados con el cierre ajustado, en porcentaje."
+#| fig-alt: "Rendimientos diarios alrededor de cero, con caídas particularmente grandes en 2008, marzo de 2020 y octubre de 2023."
+par(mar = c(4, 4.5, 1, 1))
+plot(prices$date, 100 * prices$log_return, type = "l", col = "#174A6E",
+     xlab = "Año", ylab = "Rendimiento logarítmico diario (%)", lwd = 0.6)
+abline(h = 0, col = "#808080", lty = 2)
 ```
 
-### Máximo *drawdown*
+La muestra contiene **`r nrow(prices)` precios y `r sum(!is.na(prices$log_return))` rendimientos diarios**. La trayectoria ascendente del precio no elimina el riesgo, porque un inversionista que necesita retirar recursos durante una caída enfrenta una pérdida distinta de la que sugiere comparar únicamente el primer y el último cierre, además de que los dividendos hacen necesario distinguir entre cotización y desempeño ajustado.
 
-El *drawdown* mide la caída proporcional desde el máximo acumulado hasta la
-fecha:
+### Máximo drawdown
 
-La @tbl-drawdown resume el episodio extremo y la @fig-drawdown muestra su
-evolución respecto del máximo acumulado.
+El *drawdown* mide cuánto se encuentra una inversión por debajo del máximo alcanzado hasta esa fecha, de acuerdo con $DD_t=P_t^{aj}/\max_{s\leq t}P_s^{aj}-1$. El máximo drawdown es el valor más negativo de esa serie, por lo que reúne profundidad y orden temporal de las pérdidas, sin depender de que los rendimientos sigan una distribución normal.
 
-$$
-DD_t = \frac{S_t}{\max_{s \le t} S_s} - 1
-$$
-
-```{r}
-#| label: tbl-drawdown
-drawdown <- max_drawdown(subject_prices$adjusted, subject_prices$date)
-report_table(drawdown, caption = "Máximo drawdown del periodo completo.")
+```{r drawdown}
+prices$drawdown <- prices$adjusted / cummax(prices$adjusted) - 1
+trough <- which.min(prices$drawdown)
+peak <- which.max(prices$adjusted[1:trough])
+recovery <- which(seq_len(nrow(prices)) > trough &
+                  prices$adjusted >= prices$adjusted[peak])[1]
+mdd <- prices$drawdown[trough]
 ```
 
 ```{r}
 #| label: fig-drawdown
-#| fig-cap: "Drawdown respecto del máximo acumulado."
-subject_prices$drawdown <- drawdown_series(subject_prices$adjusted)
-ggplot(subject_prices, aes(date, drawdown)) +
-  geom_area(fill = RISK_PALETTE[1], alpha = 0.25) +
-  geom_line(colour = RISK_PALETTE[1], linewidth = 0.4) +
-  scale_y_continuous(labels = label_percent(accuracy = 1)) +
-  labs(x = NULL, y = "Drawdown")
+#| fig-cap: "Drawdown del cierre ajustado, con el mínimo histórico señalado."
+#| fig-alt: "Pérdida respecto del máximo previo; el mínimo es cercano a menos 65 por ciento en octubre de 2008."
+par(mar = c(4, 4.5, 1, 1))
+plot(prices$date, 100 * prices$drawdown, type = "l", col = "#A64236",
+     xlab = "Año", ylab = "Drawdown (%)", ylim = c(-70, 0))
+abline(h = 0, col = "#808080", lty = 2)
+points(prices$date[trough], 100 * mdd, pch = 19, col = "#174A6E")
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-Descripción del comportamiento general e identificación de **al menos cinco
-periodos** con movimientos pronunciados, justificados con criterio financiero y
-no sólo visual.
-:::
+```{r}
+#| label: tbl-drawdown
+#| tbl-cap: "Profundidad y fechas del máximo drawdown sobre la serie ajustada."
+dd_table <- data.frame(
+  Indicador = c("Pérdida máxima", "Máximo previo", "Mínimo posterior",
+                "Primera recuperación", "Días naturales del máximo a la recuperación"),
+  Resultado = c(sprintf("%.2f%%", 100 * mdd),
+                as.character(prices$date[peak]), as.character(prices$date[trough]),
+                as.character(prices$date[recovery]),
+                as.character(as.integer(prices$date[recovery] - prices$date[peak])))
+)
+report_table(dd_table)
+```
 
-## Eventos y explicación de los movimientos
+La pérdida máxima fue de **`r sprintf("%.2f", -100 * mdd)`%**, desde el 18 de octubre de 2007 hasta el 27 de octubre de 2008, y el nivel ajustado del máximo previo se recuperó hasta el 27 de febrero de 2012. Una inversión equivalente a 100 pesos en el máximo habría descendido a aproximadamente **`r sprintf("%.2f", 100 * (1 + mdd))` pesos**, por lo que recuperar el nivel inicial requería posteriormente una subida de **`r sprintf("%.2f", 100 * (1 / (1 + mdd) - 1))`%**, no solamente un aumento igual al porcentaje perdido.
 
-::: {.callout-important title="Pendiente de redacción"}
-Para cada periodo identificado: qué ocurrió en el entorno financiero,
-macroeconómico, político o en la propia empresa, y por qué ese hecho es
-relevante para el precio de este activo en particular.
+La caída de 2020 fue muy intensa, aunque no fue la más profunda de toda la muestra, lo cual muestra por qué conviene calcular este indicador sobre la historia completa y no elegir el episodio más reciente o más recordado. La recuperación señalada corresponde al precio ajustado, sin considerar pérdida de poder adquisitivo ni costo de oportunidad.
 
-El énfasis está en mostrar que el precio responde a choques e información nueva,
-no en narrar la noticia.
-:::
+## Cinco episodios relevantes y sus posibles causas
 
-## Relación con el ciclo económico
+Seleccionamos dos crisis amplias, un choque sanitario localizado, una recuperación prolongada y una modificación regulatoria, con el fin de observar mecanismos distintos de riesgo. Las ventanas son exploratorias y se eligieron después de observar la historia: algunas abarcan meses y otras una sesión, por lo que sus rendimientos no constituyen una clasificación comparable de intensidad diaria ni una estrategia que pudiera haberse ejecutado con conocimiento anticipado.
 
-La @fig-gdp compara ambas series y la @tbl-gdp conserva los valores anuales
-utilizados en la lectura del ciclo.
+```{r event-windows}
+events <- data.frame(
+  Episodio = unlist(history_config$historical$label),
+  Inicio = as.Date(unlist(history_config$historical$start)),
+  Fin = as.Date(unlist(history_config$historical$end))
+)
+events$return_pct <- NA_real_
+events$observations <- NA_integer_
+for (i in seq_len(nrow(events))) {
+  a <- match(events$Inicio[i], prices$date)
+  b <- match(events$Fin[i], prices$date)
+  stopifnot(!is.na(a), !is.na(b), b > a)
+  events$return_pct[i] <- 100 * (prices$adjusted[b] / prices$adjusted[a] - 1)
+  events$observations[i] <- b - a
+}
+```
+
+```{r}
+#| label: tbl-events
+#| tbl-cap: "Ventanas históricas: cierre inicial de referencia, cierre final y rendimiento simple ajustado."
+event_table <- events
+names(event_table)[4:5] <- c("Rendimiento (%)", "Intervalos")
+report_table(event_table, digits = 2)
+```
+
+El número de intervalos corresponde a pares consecutivos de registros dentro de cada ventana. Se conserva el calendario del proveedor, que incluye algunas fechas con volumen cero y cierre repetido, por lo que este conteo describe las observaciones disponibles y no implica una validación del calendario bursátil.
+
+### Crisis financiera de 2007–2008: demanda y prima de riesgo
+
+Entre el máximo de octubre de 2007 y el mínimo de octubre de 2008, GAPB acumuló la pérdida de **`r sprintf("%.2f", events$return_pct[1])`%** de la @tbl-events. La crisis hipotecaria y bancaria internacional se intensificó durante 2008, con problemas de liquidez y financiamiento que la Reserva Federal documentó en su informe anual, particularmente después de la quiebra de Lehman Brothers en septiembre [@fedannual2008].
+
+Para GAP, el mecanismo propuesto opera por dos vías: menores expectativas de actividad y turismo reducen los flujos esperados, mientras que una mayor aversión al riesgo eleva el rendimiento exigido para mantener acciones. Como corroboración operativa posterior, la emisora reportó una caída de 5.6% en pasajeros durante 2008 [@gap20f2009]. Esta combinación es coherente con la pérdida observada, aunque no permite asignar toda la caída a una noticia concreta, pues la ventana comienza antes del momento más agudo de la crisis.
+
+### Influenza A/H1N1 en 2009: sensibilidad al turismo
+
+Del cierre del 24 al del 27 de abril de 2009, el rendimiento ajustado fue de **`r sprintf("%.2f", events$return_pct[2])`%**. GAP documentó la emergencia sanitaria declarada el 25 de abril, las restricciones y las advertencias internacionales contra viajes no esenciales, además de una disminución interanual de 33.3% en pasajeros nacionales y 43.7% en internacionales durante mayo [@gap20f2009].
+
+La explicación financiera es que un aeropuerto puede perder ingresos por pasajeros y actividad comercial aun cuando conserva la capacidad instalada, mientras que buena parte de sus costos debe seguir cubriéndose. El dato de mayo confirma posteriormente el deterioro operativo, pero no era información conocida el 27 de abril, por lo que se utiliza para respaldar el mecanismo y no como la noticia que habría provocado esa sesión. Asimismo, la crisis económica seguía presente, de modo que separar ambos efectos requeriría un análisis adicional.
+
+### COVID-19 en 2020: interrupción de la movilidad
+
+Entre el 19 de febrero y el 23 de marzo de 2020, GAPB perdió **`r sprintf("%.2f", -events$return_pct[3])`%** sobre la serie ajustada. Dentro de esa ventana, el 11 de marzo la OMS caracterizó el brote de COVID-19 como pandemia, en un entorno de creciente incertidumbre sobre la duración de las interrupciones sanitarias y de movilidad [@whotimeline2020].
+
+El 4 de abril, GAP informó que el tráfico de marzo había disminuido 30.2% frente al mismo mes de 2019 [@gaptraffic2020mar]. Ese comunicado es evidencia posterior del daño operativo, mientras que la caída de febrero y marzo es consistente con una revisión anticipada de ingresos, liquidez y capacidad para sostener inversiones durante una interrupción prolongada. El riesgo no consistía únicamente en recibir menos pasajeros un mes, sino en desconocer cuánto tiempo duraría la restricción y qué tan rápida sería la recuperación.
+
+### Recuperación de 2020–2021: revisión de expectativas
+
+Desde el mínimo seleccionado del 23 de marzo de 2020 hasta el cierre de 2021, el rendimiento fue de **`r sprintf("%.2f", events$return_pct[4])`%**. La interpretación propuesta es que la progresiva normalización de los viajes permitió revisar al alza los flujos esperados, después de que el precio había incorporado un escenario especialmente adverso.
+
+Dentro del propio periodo, el comunicado del 6 de diciembre de 2021 informó que el tráfico total de noviembre ya superaba en 0.1% al de noviembre de 2019 [@gaptraffic2021nov]. Esta información era compatible con mejores expectativas sobre los flujos, aunque no permite atribuir a ese anuncio toda la recuperación acumulada.
+
+El comunicado publicado el 4 de enero de 2022 señaló que, en diciembre de 2021, los pasajeros de los doce aeropuertos mexicanos superaron en 4.1% a los de diciembre de 2019, mientras que el conjunto de catorce aeropuertos todavía se encontraba 0.2% por debajo [@gaptraffic2021dec]. Esta evidencia respalda retrospectivamente la recuperación, pero no implica que todos los destinos se normalizaran al mismo ritmo ni que ese comunicado explicara precios anteriores a su publicación. Además, medir desde el mínimo amplifica el rendimiento acumulado y supone una selección retrospectiva que no debe confundirse con una oportunidad identificable de antemano.
+
+### Cambio regulatorio de octubre de 2023: incertidumbre sobre las tarifas
+
+El 4 de octubre de 2023, después del cierre, GAP anunció que la AFAC había notificado una modificación unilateral de las bases de regulación tarifaria, y del cierre de ese día al del 5 de octubre la acción cayó **`r sprintf("%.2f", -events$return_pct[5])`%** [@gaptariff2023initial]. A diferencia de una disminución gradual en pasajeros, la noticia afectaba las condiciones bajo las cuales se generarían ingresos futuros y la percepción de estabilidad de las concesiones.
+
+El mecanismo plausible combina una revisión de márgenes esperados con una mayor prima por incertidumbre regulatoria, por lo que el precio puede reaccionar antes de que se observe un cambio en los estados financieros. El 19 de octubre, la empresa informó que las tarifas máximas vigentes para 2020–2024 permanecerían y que las modificaciones tarifarias derivadas de las nuevas reglas aplicarían desde 2025, tras la revisión ordinaria [@gaptariff2023update]. La proximidad entre el anuncio inicial y la caída ofrece una asociación temporal más clara que una ventana de varios meses, aunque sin un referente de mercado no podemos estimar un rendimiento anormal ni aislar un efecto causal.
+
+## Rendimiento anual y crecimiento económico de México
+
+El crecimiento del PIB real del Banco Mundial mide el cambio anual de la producción a precios constantes, mientras que el rendimiento de GAPB resume una variación nominal en el valor de una inversión; ambos se expresan en porcentaje, pero no miden lo mismo [@worldbankgdpmethod]. Para hacer comparable el calendario se utilizan **2007–2025**, los diecinueve años completos con cierre del año previo y dato de PIB, excluyendo 2006 por iniciar después de enero y 2026 por estar incompleto al corte.
+
+```{r annual-comparison}
+prices$year <- as.integer(format(prices$date, "%Y"))
+year_end <- prices[!duplicated(prices$year, fromLast = TRUE),
+                   c("year", "date", "adjusted")]
+year_end$asset_return <- c(NA, 100 * (year_end$adjusted[-1] /
+                             head(year_end$adjusted, -1) - 1))
+annual <- merge(year_end[, c("year", "asset_return")],
+                gdp[, c("year", "gdp_growth")], by = "year")
+annual <- annual[annual$year > min(prices$year) &
+                   annual$year < as.integer(format(cutoff, "%Y")), ]
+rownames(annual) <- NULL
+annual_correlation <- cor(annual$asset_return, annual$gdp_growth)
+```
 
 ```{r}
 #| label: fig-gdp
-#| fig-cap: "Rendimiento anual del activo frente al crecimiento anual del PIB real de México."
-annual <- do.call(rbind, lapply(
-  split(subject_returns, format(subject_returns$date, "%Y")),
-  function(one) {
-    data.frame(
-      year = as.integer(format(one$date[1], "%Y")),
-      asset_return = 100 * (exp(sum(one$log_return)) - 1),
-      stringsAsFactors = FALSE
-    )
-  }
-))
-combined <- merge(annual, gdp[, c("year", "gdp_growth")], by = "year")
-
-long <- rbind(
-  data.frame(year = combined$year, serie = "GAPB", valor = combined$asset_return),
-  data.frame(year = combined$year, serie = "PIB real", valor = combined$gdp_growth)
-)
-
-ggplot(long, aes(year, valor, fill = serie)) +
-  geom_col(position = position_dodge(width = 0.75), width = 0.7) +
-  geom_hline(yintercept = 0, colour = RISK_INK$baseline, linewidth = 0.3) +
-  scale_fill_manual(values = unname(RISK_PALETTE[1:2])) +
-  labs(
-    x = NULL, y = "Variación anual (%)",
-    caption = "Fuentes: Yahoo Finance / BMV y Banco Mundial."
-  )
+#| fig-cap: "Rendimiento nominal ajustado de GAPB y crecimiento real del PIB mexicano, por año completo. Una sola escala porcentual."
+#| fig-alt: "Comparación anual de 2007 a 2025: los rendimientos de GAPB fluctúan más que el PIB y sus signos divergen en varios años."
+par(mar = c(4, 4.5, 2, 1))
+plot(annual$year, annual$asset_return, type = "o", pch = 16,
+     col = "#174A6E", xlab = "Año", ylab = "Variación anual (%)",
+     ylim = range(annual$asset_return, annual$gdp_growth))
+lines(annual$year, annual$gdp_growth, type = "o", pch = 17,
+      col = "#A64236", lty = 2)
+abline(h = 0, col = "#808080", lty = 3)
+legend("topright", c("GAPB: rendimiento ajustado", "México: PIB real"),
+       col = c("#174A6E", "#A64236"), lty = c(1, 2), pch = c(16, 17),
+       bty = "n", cex = 0.85)
 ```
 
 ```{r}
 #| label: tbl-gdp
-report_table(
-  combined,
-  caption = "Rendimiento anual del activo y crecimiento del PIB real.",
-  digits = 2
-)
+#| tbl-cap: "Datos de la comparación anual, expresados en porcentaje. Fuentes: Yahoo Finance y Banco Mundial, copias locales."
+report_table(annual, digits = 2)
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-¿El activo se mueve con el ciclo económico, lo amplifica o se desacopla? ¿Qué
-explica las coincidencias y las diferencias?
-:::
+La correlación contemporánea de Pearson es **`r sprintf("%.3f", annual_correlation)`**, por lo que en esta muestra la asociación lineal entre ambas variaciones anuales es débil, sin que ello implique independencia económica. La @tbl-gdp muestra que en 2009 el PIB cayó 6.30% y la acción ganó 38.85%, mientras que en 2021 ambos indicadores avanzaron; asimismo, en 2025 el PIB creció apenas 0.56% y GAPB registró un rendimiento ajustado de 33.53%.
 
-## Periodo reciente
+Una explicación razonable de estas diferencias es que el PIB describe la producción realizada durante el año, mientras que el mercado incorpora expectativas sobre años posteriores, además de que GAP atiende demanda internacional y enfrenta decisiones regulatorias y corporativas propias. Por ello, el rendimiento positivo de 2009 puede ser compatible con expectativas de recuperación en un año todavía recesivo, aunque la comparación por sí sola no demuestra que esa anticipación haya sido su causa.
 
-::: {.callout-important title="Pendiente de redacción"}
-Eventos del último año —tasas de interés, entorno internacional, cambios
-regulatorios, resultados trimestrales— y cómo se reflejan, o no, en el precio y
-en los rendimientos.
-:::
+También importa la agregación: en 2020 la pérdida anual fue de 1.65%, cifra que oculta la caída de más de 50% de la ventana de crisis y el rebote posterior. El balance de diciembre puede parecer moderado aun cuando el riesgo experimentado durante el año fue elevado, de modo que evaluar el activo únicamente con datos anuales omitiría una parte sustancial de su exposición.
+
+## Último año: julio de 2025–junio de 2026
+
+Para medir los doce meses completos se utiliza el cierre del 30 de junio de 2025 como base, incorporando así el movimiento de la primera sesión de julio. Dentro de este intervalo se seleccionan tres hechos anteriores al corte: el huracán Melissa, los resultados del primer trimestre de 2026 y la integración de CBX.
+
+```{r recent-data}
+recent <- prices[prices$date >= as.Date(history_config$recent_baseline), ]
+recent$index <- 100 * recent$adjusted / recent$adjusted[1]
+recent_return <- tail(recent$index, 1) - 100
+recent_events <- data.frame(
+  Evento = unlist(history_config$recent$label),
+  Fecha = as.Date(unlist(history_config$recent$event)),
+  Inicio = as.Date(unlist(history_config$recent$start)),
+  Fin = as.Date(unlist(history_config$recent$end))
+)
+recent_events$return_pct <- NA_real_
+for (i in seq_len(nrow(recent_events))) {
+  a <- match(recent_events$Inicio[i], prices$date)
+  b <- match(recent_events$Fin[i], prices$date)
+  stopifnot(!is.na(a), !is.na(b), b > a)
+  recent_events$return_pct[i] <- 100 * (prices$adjusted[b] / prices$adjusted[a] - 1)
+}
+cbx_day <- match(recent_events$Fecha[3], prices$date)
+cbx_first_return <- 100 * (prices$adjusted[cbx_day] / prices$adjusted[cbx_day - 1] - 1)
+```
+
+```{r}
+#| label: fig-recent
+#| fig-cap: "Desempeño ajustado del último año, base 100 al 30 de junio de 2025. Las líneas numeradas corresponden al orden de eventos del cuadro siguiente."
+#| fig-alt: "Índice de la inversión ajustada entre junio de 2025 y junio de 2026, con tres fechas de eventos señaladas y cierre próximo a 105."
+par(mar = c(4, 4.5, 2, 1))
+plot(recent$date, recent$index, type = "l", col = "#174A6E",
+     xlab = "Fecha", ylab = "Índice ajustado (base 100)", lwd = 1.2)
+abline(h = 100, col = "#808080", lty = 2)
+abline(v = as.numeric(recent_events$Fecha), col = "#A64236", lty = 3)
+text(recent_events$Fecha, rep(max(recent$index), nrow(recent_events)),
+     labels = seq_len(nrow(recent_events)), pos = 3, cex = 0.85, xpd = TRUE)
+```
+
+```{r}
+#| label: tbl-recent
+#| tbl-cap: "Eventos recientes y rendimiento simple ajustado entre los cierres indicados. Fecha: inicio operativo del choque o publicación del anuncio."
+recent_table <- recent_events
+names(recent_table)[5] <- "Rendimiento (%)"
+report_table(recent_table, digits = 2)
+```
+
+El rendimiento de todo el intervalo fue de **`r sprintf("%.2f", recent_return)`%**, aunque la @fig-recent muestra que ese resultado no se obtuvo mediante una trayectoria estable. Las ventanas de la @tbl-recent incluyen cierres previos y posteriores a los hechos, sin suponer que los movimientos intermedios respondieran a una sola causa.
+
+### Huracán Melissa: afectación operativa y respuesta limitada
+
+Los resultados del cuarto trimestre de 2025 documentan que Montego Bay suspendió operaciones el 26 de octubre y las reanudó el 1 de noviembre, mientras que Kingston cerró preventivamente el 25 de octubre y retomó operaciones el 29 [@gap4q2025]. El mecanismo esperado es negativo por la interrupción de pasajeros y por el daño a la infraestructura turística que sostiene la demanda, incluso después de reabrir los aeropuertos.
+
+Entre los cierres del 24 de octubre y del 3 de noviembre, GAPB registró **`r sprintf("%.2f", recent_events$return_pct[1])`%**, una caída relativamente moderada frente a los episodios históricos seleccionados. Esto no demuestra ausencia de daño: el mercado valora el conjunto del grupo, puede anticipar parte del riesgo meteorológico y puede ajustar sus expectativas en fechas posteriores, por lo que una ventana corta no equivale al costo económico total del huracán. El reporte trimestral se utiliza como confirmación posterior de las fechas operativas, no como un anuncio publicado en octubre.
+
+### Resultados del primer trimestre de 2026: noticias de distinto signo
+
+El 20 de abril de 2026, a las 19:56 horas del este de Estados Unidos, GAP publicó sus resultados después del cierre bursátil. El tráfico total había disminuido 5.5% frente al primer trimestre de 2025, aunque el EBITDA aumentó 6.4%, combinación que evidencia que pasajeros y resultados financieros no necesariamente se mueven en la misma proporción [@gap1q2026].
+
+Por el horario del anuncio, comparamos el cierre del 20 con el del 21 de abril, obteniendo **`r sprintf("%.2f", recent_events$return_pct[2])`%**. El movimiento positivo es compatible con que los inversionistas hayan valorado favorablemente la resistencia de los resultados, aun con menor tráfico; sin embargo, al no contar con un consenso previo de expectativas ni con un ajuste por el mercado, no podemos afirmar que hubo una sorpresa positiva cuantificada ni atribuir toda la subida al comunicado.
+
+### Integración de CBX: crecimiento con efectos sobre cada acción
+
+El 7 de mayo de 2026, GAP anunció la conclusión de la combinación de negocios de CBX y de los servicios de asistencia técnica, junto con la adquisición del 25% restante de CBX y la emisión neta de 89,740,731 acciones [@gapcbx2026]. El mecanismo potencialmente favorable es una mayor integración de operaciones y flujos, aunque el accionista también debe considerar el financiamiento y el aumento del número de títulos entre los que se distribuyen los beneficios.
+
+El comunicado se publicó el 7 de mayo a las 07:59 horas del este de Estados Unidos, antes de la apertura bursátil [@gapcbx2026release]. Del cierre del 6 al del 7 de mayo, la acción subió **`r sprintf("%.2f", cbx_first_return)`%**, mientras que el balance del 6 al 8 de mayo fue de **`r sprintf("%.2f", recent_events$return_pct[3])`%**, por lo que la reacción inicial positiva se revirtió en la siguiente sesión. Ninguno de estos movimientos puede atribuirse exclusivamente al anuncio, ya que pueden coexistir expectativas previas y otras noticias; el ejemplo muestra que tanto el horizonte elegido como los efectos por acción importan al interpretar una expansión empresarial.
 
 ## Conclusión
 
-::: {.callout-important title="Pendiente de redacción"}
-Síntesis razonada, no resumen: qué enseña este ejercicio sobre el riesgo, la
-incertidumbre y el papel de la información nueva en la formación de precios.
+La historia de GAPB muestra que el riesgo de mercado surge de la interacción entre el negocio y la revisión de expectativas, ya que las crisis sanitarias pueden afectar directamente la demanda, una crisis financiera puede deteriorar al mismo tiempo los flujos esperados y las condiciones de financiamiento, y un cambio regulatorio puede alterar la valoración aun antes de modificar los ingresos reportados. Por ello, contar con infraestructura esencial y una trayectoria de crecimiento no garantiza estabilidad en el valor de la inversión.
+
+La magnitud del drawdown y el tiempo necesario para recuperar el máximo previo hacen que el horizonte del inversionista sea parte del problema: dos personas que mantienen el mismo activo pueden enfrentar consecuencias diferentes si una tiene liquidez para esperar y la otra debe vender durante el deterioro. Asimismo, una recuperación posterior no elimina la pérdida transitoria ni permite asegurar que el siguiente choque tendrá una duración semejante, mientras que la débil relación contemporánea con el PIB advierte que una sola variable macroeconómica resulta insuficiente para representar todas las fuentes de incertidumbre.
+
+El análisis reciente refuerza esta interpretación, pues una afectación operativa coincidió con una caída moderada en la ventana elegida, unos resultados con menor tráfico coexistieron con una subida y el anuncio de una integración corporativa coincidió con un avance inicial que se revirtió en la siguiente sesión. Para evaluar el riesgo de GAPB conviene, por tanto, complementar las medidas históricas con escenarios sobre movilidad, regulación y liquidez, manteniendo clara la diferencia entre explicar un episodio una vez ocurrido y tener capacidad para anticiparlo. La evidencia permite reconocer vulnerabilidades y formular preguntas mejor sustentadas, pero no convierte la historia observada en una garantía sobre el comportamiento futuro.
+
+## Referencias {.unnumbered}
+
+::: {#refs}
 :::
 
-## Referencias
+[Repositorio del proyecto en GitHub](https://github.com/Urielledezma/GAPB-Risk-Analysis), enlace para los comentarios de la entrega en Canvas.

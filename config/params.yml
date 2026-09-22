@@ -19,9 +19,9 @@ sample:
 # --- Conventions -------------------------------------------------------------
 conventions:
   trading_days_per_year: 252
-  # Continuously compounded. The alternative, simple returns, is not used
-  # anywhere in this project -- log returns are additive across time, which the
-  # horizon scaling in stages 03 and 05 relies on.
+  # Daily model inputs use continuously compounded returns. Stage 02 converts
+  # them to compounded simple returns for event windows and calendar years;
+  # its descriptive cutoff is configured separately in price_history.yml.
   return_type: log
   price_field: adjusted
 
