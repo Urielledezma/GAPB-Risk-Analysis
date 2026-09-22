@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -13,15 +13,21 @@
 
 <title>El activo y su negocio – Análisis de Riesgo · GAPB</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for citations */
@@ -54,15 +60,16 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-8b03d5e0b9f575736ff961f99966e527.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bb6b7ff44b12c6be5ebe32cd498144c2.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8c63c3e55c9d928fa9b9e192c27b7bb7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dd9eeb3a66d606a42fa7fa148d450bc2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -77,7 +84,7 @@ div.csl-indent {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "Sin resultados",
+    "search-no-results-text": "No se han encontrado resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
@@ -95,7 +102,7 @@ div.csl-indent {
 
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -113,36 +120,36 @@ div.csl-indent {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="./index.html">
 <span class="menu-text">Inicio</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link active" href="./01-asset-profile.html" aria-current="page"> 
+    <a class="nav-link active" href="./01-asset-profile.html" aria-current="page">
 <span class="menu-text">01 · Activo</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./02-price-history-events.html"> 
+    <a class="nav-link" href="./02-price-history-events.html">
 <span class="menu-text">02 · Precio y eventos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./03-returns-volatility-gbm.html"> 
+    <a class="nav-link" href="./03-returns-volatility-gbm.html">
 <span class="menu-text">03 · Rendimientos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./04-variance-models.html"> 
+    <a class="nav-link" href="./04-variance-models.html">
 <span class="menu-text">04 · Volatilidad</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./05-value-at-risk.html"> 
+    <a class="nav-link" href="./05-value-at-risk.html">
 <span class="menu-text">05 · VaR</span></a>
-  </li>  
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/Urielledezma/GAPB-Risk-Analysis"> <i class="bi bi-github" role="img" aria-label="Repositorio en GitHub">
-</i> 
+</i>
 <span class="menu-text"></span></a>
-  </li>  
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -157,7 +164,7 @@ div.csl-indent {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">En esta página</h2>
-   
+
   <ul>
   <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
   <li><a href="#descripción-general-del-activo-y-del-negocio" id="toc-descripción-general-del-activo-y-del-negocio" class="nav-link" data-scroll-target="#descripción-general-del-activo-y-del-negocio"><span class="header-section-number">2</span> Descripción general del activo y del negocio</a></li>
@@ -184,7 +191,7 @@ div.csl-indent {
   <li><a href="#conclusión" id="toc-conclusión" class="nav-link" data-scroll-target="#conclusión"><span class="header-section-number">8</span> Conclusión</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">9</span> Referencias</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/01-asset-profile.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/01-asset-profile.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -208,17 +215,17 @@ div.csl-indent {
              <p>Juan Pablo Morán Errejón </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">5 de septiembre de 2026</p>
+      <p class="date">21 de septiembre de 2026</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 
 </header>
@@ -267,7 +274,7 @@ Estados 2023–2025; EPS 1T19–4T25; tráfico 2024–2025
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Criterio de fuentes
+<span class="screen-reader-only">Nota</span>Criterio de fuentes
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -281,15 +288,14 @@ Criterio de fuentes
 <p>GAP administra infraestructura aeroportuaria bajo concesión y su negocio consiste en cobrar por el uso de un espacio que no puede replicarse ni trasladarse. Opera doce aeropuertos en el occidente y noroeste de México —entre ellos Guadalajara, Tijuana, Puerto Vallarta, Los Cabos, La Paz y Manzanillo— y los aeropuertos de Montego Bay y Kingston en Jamaica. La sociedad surgió del proceso de privatización aeroportuaria de 1998, cotiza desde febrero de 2006 en la Bolsa Mexicana de Valores mediante GAPB y en Nueva York mediante el ADS PAC, incorporó Montego Bay en 2015 mediante la compra de la sociedad controladora de MBJ Airports y tomó el control de Kingston en octubre de 2019 <span class="citation" data-cites="gap20f2025 gapcbx2026">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>, <a href="#ref-gapcbx2026" role="doc-biblioref">2026a</a>)</span>.</p>
 <p>El origen conviene precisarlo porque fija la escala del sector. El proceso de 1998 no privatizó la totalidad de la red estatal: de los aeropuertos que administraba Aeropuertos y Servicios Auxiliares, <strong>treinta y cinco</strong> se repartieron en cuatro grupos —GAP con doce, OMA con trece, ASUR con nueve y el Aeropuerto Internacional de la Ciudad de México aparte— <span class="citation" data-cites="gapquienes2025">(<a href="#ref-gapquienes2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2025b</a>)</span>. Los derechos de la concesión mexicana entraron en vigor el 1 de noviembre de 1998 por un plazo de cincuenta años <span class="citation" data-cites="gapconcesion1998">(<a href="#ref-gapconcesion1998" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2006</a>)</span>, de donde procede el vencimiento de 2048. El domicilio social de la sociedad está en Guadalajara, Jalisco <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
 <p>La red no es homogénea, y su composición es la primera fuente de riesgo del activo. La <a href="#tbl-airports" class="quarto-xref">Tabla&nbsp;1</a> desagrega el tráfico terminal de 2025 por aeropuerto.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-airports" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-airports" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-airports-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;1: Red de aeropuertos: pasajeros terminales en miles y vencimiento de la concesión.
 </figcaption>
 <div aria-describedby="tbl-airports-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 21%">
@@ -440,7 +446,6 @@ Tabla&nbsp;1: Red de aeropuertos: pasajeros terminales en miles y vencimiento de
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -448,15 +453,14 @@ Tabla&nbsp;1: Red de aeropuertos: pasajeros terminales en miles y vencimiento de
 <p>La segunda es que el crecimiento de 2025 no fue homogéneo. Los aeropuertos de ciudad media avanzaron a doble dígito —Mexicali 23%, Los Mochis 21.9%, Morelia 15.6%— mientras los grandes crecieron poco y Montego Bay retrocedió 11.6%. Como el avance se concentró donde el tráfico es pequeño y la caída ocurrió en el quinto activo de la red, el resultado agregado fue de apenas 2.5%: el volumen no fue el motor del año, lo que confirma que el crecimiento del ingreso provino del precio.</p>
 <p>La tercera es el horizonte. Doce concesiones vencen simultáneamente en 2048 y las dos jamaiquinas antes; Montego Bay, que aporta 7.0% del tráfico, tiene el vencimiento más próximo de toda la red.</p>
 <p>La <a href="#tbl-asset-metadata" class="quarto-xref">Tabla&nbsp;2</a> sintetiza la identificación bursátil utilizada en el análisis.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-asset-metadata" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-asset-metadata" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-asset-metadata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;2: Identificación bursátil del emisor analizado.
 </figcaption>
 <div aria-describedby="tbl-asset-metadata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 6%">
 <col style="width: 38%">
@@ -487,7 +491,6 @@ Tabla&nbsp;2: Identificación bursátil del emisor analizado.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -495,15 +498,14 @@ Tabla&nbsp;2: Identificación bursátil del emisor analizado.
 <p>El ingreso económico se divide en servicios aeronáuticos —tarifas a pasajeros, aerolíneas y operadores, sujetas a una tarifa máxima regulada— y no aeronáuticos —arrendamientos, alimentos y bebidas, estacionamientos, salas VIP, tiendas, publicidad, hotelería y carga, que no están sujetos a esa tarifa—. En 2025 la mezcla, excluyendo la contabilidad de construcción de IFRIC 12, fue de 70% aeronáutica y 30% no aeronáutica. Esa diversificación reduce la dependencia de una sola tarifa pero no la del flujo de pasajeros, porque el ingreso comercial también se origina en quien cruza la terminal. Los catorce aeropuertos atendieron 63.7 millones de pasajeros en 2025, 2.5% más que en 2024, y el ingreso aeronáutico y no aeronáutico por pasajero subió 18.5%, hasta MXN 510.7; el avance del ingreso, por tanto, provino más del precio que del volumen <span class="citation" data-cites="gap4q2025">(<a href="#ref-gap4q2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026c</a>)</span>.</p>
 <p>La escala del negocio se mide mejor por su balance que por su plantilla: GAP cerró 2025 con $88,140 millones de activos y aproximadamente 3,506 colaboradores, de los cuales 3,341 corresponden a los aeropuertos mexicanos y 165 a Montego Bay <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La intensidad de capital, y no la intensidad de trabajo, es la característica económica dominante.</p>
 <p>La posición competitiva proviene de la exclusividad geográfica. Cada aeropuerto es monopolio local en su plaza, de modo que la competencia relevante no ocurre entre terminales cercanas sino entre destinos: el propio 20-F identifica como competidores de Puerto Vallarta, Los Cabos, La Paz, Manzanillo y Montego Bay a otros destinos vacacionales —Acapulco, Cancún, Hawái, Puerto Rico, Florida, Cuba y República Dominicana— y no a un aeropuerto rival <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. En el mercado bursátil mexicano los comparables son ASUR y OMA, surgidos del mismo proceso de 1998 y sujetos al mismo régimen de tarifa máxima. La <a href="#tbl-peers" class="quarto-xref">Tabla&nbsp;3</a> los coloca lado a lado sobre el ejercicio 2025, con el ingreso depurado de IFRIC 12 en las tres emisoras para que los márgenes sean comparables.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-peers" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-peers" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-peers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;3: GAP frente a sus comparables bursátiles, ejercicio 2025. El ingreso operativo excluye la construcción de IFRIC 12 en las tres emisoras.
 </figcaption>
 <div aria-describedby="tbl-peers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Concepto</th>
@@ -576,7 +578,6 @@ Tabla&nbsp;3: GAP frente a sus comparables bursátiles, ejercicio 2025. El ingre
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -589,15 +590,14 @@ Tabla&nbsp;3: GAP frente a sus comparables bursátiles, ejercicio 2025. El ingre
 <h2 data-number="3" class="anchored" data-anchor-id="análisis-de-estados-financieros"><span class="header-section-number">3</span> Análisis de estados financieros</h2>
 <p>IFRIC 12 obliga a reconocer como ingreso la construcción y mejora de activos concesionados junto con un costo equivalente. Como ese renglón infla ingreso y costo sin representar venta recurrente ni margen económico, se presentan dos bases: ingreso reportado y <strong>ingreso operativo</strong>, definido como la suma de servicios aeronáuticos y no aeronáuticos <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>.</p>
 <p>La <a href="#tbl-financials" class="quarto-xref">Tabla&nbsp;4</a> presenta ambas bases y evita interpretar el ingreso de construcción como una venta recurrente.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-financials" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-financials" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-financials-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;4: Resultados consolidados, millones de pesos corrientes.
 </figcaption>
 <div aria-describedby="tbl-financials-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 4%">
 <col style="width: 17%">
@@ -649,20 +649,18 @@ Tabla&nbsp;4: Resultados consolidados, millones de pesos corrientes.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
 <p>La <a href="#tbl-revenue-mix" class="quarto-xref">Tabla&nbsp;5</a> descompone ese ingreso operativo en sus dos fuentes.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-revenue-mix" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-revenue-mix" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-revenue-mix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;5: Composición del ingreso, millones de pesos corrientes.
 </figcaption>
 <div aria-describedby="tbl-revenue-mix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 4%">
 <col style="width: 11%">
@@ -709,7 +707,6 @@ Tabla&nbsp;5: Composición del ingreso, millones de pesos corrientes.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -726,12 +723,11 @@ Tabla&nbsp;5: Composición del ingreso, millones de pesos corrientes.
 <p><strong>Margen operativo.</strong> Utilidad de operación entre ingreso operativo. Se reporta también sobre ingreso reportado para dejar visible cuánto distorsiona IFRIC 12.</p>
 <p><strong>Margen neto.</strong> Utilidad neta consolidada entre ingreso operativo.</p>
 </div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div id="fig-margins" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div class="cell">
+<div id="fig-margins" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Márgenes consolidados bajo base reportada y base operativa sin IFRIC 12.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-margins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="01-asset-profile_files/figure-html/fig-margins-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
+<img src="01-asset-profile_files/figure-html/fig-margins-1.png" class="img-fluid figure-img" alt="Márgenes consolidados bajo base reportada y base operativa sin IFRIC 12.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-margins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;1: Márgenes consolidados bajo base reportada y base operativa sin IFRIC 12.
@@ -739,16 +735,14 @@ Figura&nbsp;1: Márgenes consolidados bajo base reportada y base operativa sin I
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div id="tbl-margins" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-margins" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-margins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;6: Márgenes comparables por ejercicio.
 </figcaption>
 <div aria-describedby="tbl-margins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 5%">
 <col style="width: 14%">
@@ -795,7 +789,6 @@ Tabla&nbsp;6: Márgenes comparables por ejercicio.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -804,15 +797,14 @@ Tabla&nbsp;6: Márgenes comparables por ejercicio.
 <section id="endeudamiento-y-estructura-de-capital" class="level3">
 <h3 class="anchored" data-anchor-id="endeudamiento-y-estructura-de-capital">Endeudamiento y estructura de capital</h3>
 <p>La deuda financiera se define como la suma de los préstamos bancarios y certificados bursátiles de corto plazo, los préstamos bancarios de largo plazo y los certificados bursátiles de largo plazo. Excluye pasivos por arrendamiento —MXN 95.9 millones en 2025, inmateriales—, cuentas por pagar, depósitos en garantía y pasivos por impuestos diferidos, que no son financiamiento oneroso. La <a href="#tbl-leverage" class="quarto-xref">Tabla&nbsp;7</a> compara los tres ejercicios.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-leverage" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-leverage" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-leverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;7: Estructura de capital y apalancamiento, millones de pesos.
 </figcaption>
 <div aria-describedby="tbl-leverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 4%">
 <col style="width: 8%">
@@ -874,22 +866,20 @@ Tabla&nbsp;7: Estructura de capital y apalancamiento, millones de pesos.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
 <p>Entre 2023 y 2025 la deuda financiera creció 30.6% mientras el capital contable lo hizo 18.6%, de modo que la estructura sí cambió: la razón deuda a capital pasó de 1.94 a 2.13 veces. La deuda neta avanzó todavía más rápido, 39.4%, porque el efectivo terminó el bienio prácticamente donde lo empezó —$10,055.2 millones en 2023 frente a $10,453.2 en 2025— después de haber acumulado $13,466.0 millones al cierre de 2024 y de ceder $3,012.8 millones durante 2025 con el pago del dividendo. La caja, en otras palabras, no financió la expansión: la absorbió la distribución. Medida contra la generación operativa, en cambio, la carga se movió poco: la deuda neta equivale a 1.99 veces EBITDA frente a 1.73 veces en 2023, porque el EBITDA creció casi al ritmo del pasivo.</p>
 <p>El movimiento más informativo ocurre dentro de la deuda y no en su total. En 2024 el vencimiento circulante llegó a $13,982.9 millones, y en 2025 descendió a $9,024.8 mientras los certificados bursátiles de largo plazo subieron de MXN 29,903.7 a MXN 39,026.1 millones <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Lo que ocurrió, por tanto, no fue desapalancamiento sino refinanciamiento: GAP sustituyó vencimientos próximos por deuda bursátil larga, alargó el perfil y redujo el riesgo de refinanciamiento inmediato a cambio de fijar por más tiempo un costo financiero que en 2025 ascendió a MXN 4,458.3 millones.</p>
 <p>La pregunta de fondo —con qué se financia el crecimiento— tiene respuesta documental, y conviene formularla con cuidado porque la respuesta intuitiva es incorrecta. La <a href="#tbl-cashflow" class="quarto-xref">Tabla&nbsp;8</a> reconstruye el origen y la aplicación del efectivo.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-cashflow" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-cashflow" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cashflow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;8: Origen y aplicación del flujo de efectivo, millones de pesos.
 </figcaption>
 <div aria-describedby="tbl-cashflow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Concepto</th>
@@ -932,7 +922,6 @@ Tabla&nbsp;8: Origen y aplicación del flujo de efectivo, millones de pesos.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -946,15 +935,14 @@ Tabla&nbsp;8: Origen y aplicación del flujo de efectivo, millones de pesos.
 <section id="indicadores-financieros-clave" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="indicadores-financieros-clave"><span class="header-section-number">4</span> Indicadores financieros clave</h2>
 <p>La <a href="#tbl-ratios" class="quarto-xref">Tabla&nbsp;9</a> presenta los indicadores exigidos con su fórmula y su valor para los tres ejercicios, de modo que el nivel más reciente pueda leerse contra su propia tendencia y no de manera aislada.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-ratios" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-ratios" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ratios-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;9: Indicadores financieros clave, fórmula y valor por ejercicio.
 </figcaption>
 <div aria-describedby="tbl-ratios-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 19%">
 <col style="width: 66%">
@@ -1024,7 +1012,6 @@ Tabla&nbsp;9: Indicadores financieros clave, fórmula y valor por ejercicio.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -1051,12 +1038,11 @@ Tabla&nbsp;9: Indicadores financieros clave, fórmula y valor por ejercicio.
 <p><strong>Unidad.</strong> Pesos por acción serie B. No se mezcla con precio ni se convierte a dólares dentro de la serie principal.</p>
 </div>
 <p>La <a href="#fig-eps" class="quarto-xref">Figura&nbsp;2</a> permite observar la ruptura y la recuperación, mientras que la <a href="#tbl-eps" class="quarto-xref">Tabla&nbsp;10</a> conserva el detalle trimestral.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div id="fig-eps" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div class="cell">
+<div id="fig-eps" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Utilidad trimestral por acción serie B (proxy calculado); pesos por acción.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-eps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="01-asset-profile_files/figure-html/fig-eps-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
+<img src="01-asset-profile_files/figure-html/fig-eps-1.png" class="img-fluid figure-img" alt="Utilidad trimestral por acción serie B (proxy calculado); pesos por acción.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-eps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;2: Utilidad trimestral por acción serie B (proxy calculado); pesos por acción.
@@ -1064,16 +1050,14 @@ Figura&nbsp;2: Utilidad trimestral por acción serie B (proxy calculado); pesos 
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div id="tbl-eps" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-eps" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-eps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;10: EPS trimestral (proxy calculado), pesos por acción serie B.
 </figcaption>
 <div aria-describedby="tbl-eps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">Año</th>
@@ -1136,22 +1120,20 @@ Tabla&nbsp;10: EPS trimestral (proxy calculado), pesos por acción serie B.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
 <section id="reconciliación-entre-gapb-el-ads-pac-y-las-dos-monedas" class="level3">
 <h3 class="anchored" data-anchor-id="reconciliación-entre-gapb-el-ads-pac-y-las-dos-monedas">Reconciliación entre GAPB, el ADS PAC y las dos monedas</h3>
 <p>Cada ADS de PAC representa diez acciones serie B, relación fija desde el listado de 2006 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La conversión encadena dos pasos que conviene no confundir: primero la relación de instrumentos, que es un factor constante de diez, y después la conversión de moneda, que es variable. Para el cuarto trimestre de 2025, el EPS calculado de 3.5453 pesos por acción equivale a 35.453 pesos por ADS y, al tipo de cambio de cierre de MXN 18.0057 por dólar que GAP declara en ese comunicado, a 1.969 dólares por ADS. La <a href="#tbl-eps-ads" class="quarto-xref">Tabla&nbsp;11</a> muestra la cadena completa para 2025.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-eps-ads" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-eps-ads" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-eps-ads-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;11: Reconciliación MXN por acción a USD por ADS, 2025.
 </figcaption>
 <div aria-describedby="tbl-eps-ads-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 7%">
 <col style="width: 20%">
@@ -1206,7 +1188,6 @@ Tabla&nbsp;11: Reconciliación MXN por acción a USD por ADS, 2025.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -1221,15 +1202,14 @@ Tabla&nbsp;11: Reconciliación MXN por acción a USD por ADS, 2025.
 <section id="control-anual-contra-el-eps-auditado" class="level3">
 <h3 class="anchored" data-anchor-id="control-anual-contra-el-eps-auditado">Control anual contra el EPS auditado</h3>
 <p>La <a href="#tbl-eps-control" class="quarto-xref">Tabla&nbsp;12</a> confronta la serie trimestral con la única utilidad por acción que GAP publica bajo la NIC 33: la del estado de resultados anual auditado, disponible para 2023, 2024 y 2025 <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. Es la prueba que decide si el proxy trimestral sirve, y cuánto se desvía del nivel correcto.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-eps-control" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-eps-control" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-eps-control-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;12: Control anual: EPS auditado bajo NIC 33 contra la suma de los cuatro trimestres calculados.
 </figcaption>
 <div aria-describedby="tbl-eps-control-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 5%">
 <col style="width: 26%">
@@ -1271,7 +1251,6 @@ Tabla&nbsp;12: Control anual: EPS auditado bajo NIC 33 contra la suma de los cua
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -1291,15 +1270,14 @@ Tabla&nbsp;12: Control anual: EPS auditado bajo NIC 33 contra la suma de los cua
 <h2 data-number="6" class="anchored" data-anchor-id="dividendos-y-splits"><span class="header-section-number">6</span> Dividendos y <em>splits</em></h2>
 <p>GAP sí distribuye efectivo, y lo hace bajo una política formal de dos componentes: un monto fijo, originalmente de MXN 450 millones en 2005 y creciente cada año, más el excedente de efectivo y equivalentes sobre un saldo mínimo de caja que el consejo determina como necesario para cubrir gastos e inversiones mínimas del ejercicio <span class="citation" data-cites="gap20f2025">(<a href="#ref-gap20f2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. La frecuencia no es trimestral ni automática: la asamblea aprueba un monto anual y el pago se hace en una o más exhibiciones, con lo que el calendario depende de una decisión corporativa y de la liquidez disponible.</p>
 <p>La <a href="#tbl-distributions" class="quarto-xref">Tabla&nbsp;13</a> resume las distribuciones de los tres ejercicios analizados.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-distributions" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-distributions" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;13: Distribuciones a los accionistas, millones de pesos.
 </figcaption>
 <div aria-describedby="tbl-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 4%">
 <col style="width: 20%">
@@ -1341,7 +1319,6 @@ Tabla&nbsp;13: Distribuciones a los accionistas, millones de pesos.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -1349,15 +1326,14 @@ Tabla&nbsp;13: Distribuciones a los accionistas, millones de pesos.
 <p>El segundo es la <strong>cadencia</strong>. El dividendo de 2023, de MXN 14.84 por acción aprobado el 13 de abril, se pagó en cuatro exhibiciones trimestrales de MXN 3.71 repartidas de mayo a diciembre; la reducción de capital de 2024 y el dividendo de 2025 se liquidaron en dos exhibiciones cada uno <span class="citation" data-cites="gap20f2025 gapdividend2025">(<a href="#ref-gapdividend2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2025a</a>, <a href="#ref-gap20f2025" role="doc-biblioref">2026b</a>)</span>. El emisor concentró el desembolso en menos fechas y en la primera mitad del año, lo que es consistente con un ejercicio en el que la caja debía sostener además un programa de inversión creciente.</p>
 <p>La interacción con el resto de la estructura financiera es directa y ya quedó cuantificada. GAP distribuyó MXN 8,508.9 millones en 2025 mientras invertía MXN $12,396.9 millones en CAPEX y pagaba $4,987.4 millones de intereses, contra un flujo de operación de $18,249.7 millones. En otras palabras, la política de distribución compite con el programa de inversión por el mismo flujo, y el diferencial se cubre con deuda. Eso es coherente con el descenso del efectivo, con el alza de la deuda neta y con un capital contable que apenas crece pese a utilidades sostenidas. La flexibilidad de la política protege la inversión y el servicio de deuda —el consejo puede reducir la distribución sin incumplir nada—, pero vuelve el retorno total del accionista sensible a decisiones corporativas y al ciclo de CAPEX.</p>
 <p>La <a href="#tbl-payout" class="quarto-xref">Tabla&nbsp;14</a> mide la distribución contra la utilidad que efectivamente pertenece al accionista de GAPB.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-payout" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-payout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-payout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;14: Distribuciones contra la utilidad del accionista controlador.
 </figcaption>
 <div aria-describedby="tbl-payout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">Año</th>
@@ -1387,7 +1363,6 @@ Tabla&nbsp;14: Distribuciones contra la utilidad del accionista controlador.
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </figure>
 </div>
@@ -1512,436 +1487,419 @@ Grupo Aeroportuario del Sureste. (2026). <em>Forma 20-F, ejercicio 2025</em>. Pr
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copiado");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copiado");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();
       }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-          // target, if specified
-          link.setAttribute("target", "_blank");
-          if (link.getAttribute("rel") === null) {
-            link.setAttribute("rel", "noopener");
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
         }
       }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config);
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
         }
-        return container.innerHTML
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined;
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              }
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Licencia MIT · el contenido de terceros conserva los términos de su proveedor.</p>
-</div>   
+</div>
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/01-asset-profile.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/01-asset-profile.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Fuentes de mercado: Yahoo Finance / BMV · Macro: Banco Mundial</p>
 </div>

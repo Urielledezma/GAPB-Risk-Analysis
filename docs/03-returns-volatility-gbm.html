@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,20 +11,23 @@
 <meta name="author" content="Jorge Isaac López Ávila">
 <meta name="author" content="Juan Pablo Morán Errejón">
 
-<title>returns-volatility-gbm – Análisis de Riesgo · GAPB</title>
+<title>Rendimientos, volatilidad y movimiento browniano geométrico – Análisis de Riesgo · GAPB</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -78,10 +81,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-1e796f7a7bf16e5eb5298f63857716ad.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bb6b7ff44b12c6be5ebe32cd498144c2.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-56c9fb2a36a481e37cf6329f2f24e7ca.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dd9eeb3a66d606a42fa7fa148d450bc2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -112,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style>html{ scroll-behavior: smooth; }</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -161,36 +164,36 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="./index.html">
 <span class="menu-text">Inicio</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./01-asset-profile.html"> 
+    <a class="nav-link" href="./01-asset-profile.html">
 <span class="menu-text">01 · Activo</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./02-price-history-events.html"> 
+    <a class="nav-link" href="./02-price-history-events.html">
 <span class="menu-text">02 · Precio y eventos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link active" href="./03-returns-volatility-gbm.html" aria-current="page"> 
+    <a class="nav-link active" href="./03-returns-volatility-gbm.html" aria-current="page">
 <span class="menu-text">03 · Rendimientos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./04-variance-models.html"> 
+    <a class="nav-link" href="./04-variance-models.html">
 <span class="menu-text">04 · Volatilidad</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./05-value-at-risk.html"> 
+    <a class="nav-link" href="./05-value-at-risk.html">
 <span class="menu-text">05 · VaR</span></a>
-  </li>  
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/Urielledezma/GAPB-Risk-Analysis"> <i class="bi bi-github" role="img" aria-label="Repositorio en GitHub">
-</i> 
+</i>
 <span class="menu-text"></span></a>
-  </li>  
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -205,7 +208,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">En esta página</h2>
-   
+
   <ul>
   <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
   <li><a href="#metodología" id="toc-metodología" class="nav-link" data-scroll-target="#metodología"><span class="header-section-number">2</span> Metodología</a></li>
@@ -225,7 +228,7 @@ window.Quarto = {
   <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones"><span class="header-section-number">8</span> Conclusiones</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">9</span> Referencias</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/03-returns-volatility-gbm.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/03-returns-volatility-gbm.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -249,17 +252,17 @@ window.Quarto = {
              <p>Juan Pablo Morán Errejón </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2 de septiembre de 2026</p>
+      <p class="date">21 de septiembre de 2026</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 
 </header>
@@ -333,22 +336,23 @@ r_t = \ln\!\left(\frac{S_t}{S_{t-1}}\right)
 <p>La <a href="#tbl-moments" class="quarto-xref">Tabla&nbsp;1</a> resume la muestra completa y la <a href="#tbl-moments-annual" class="quarto-xref">Tabla&nbsp;2</a> permite comparar los cambios entre años.</p>
 <section id="periodo-completo-de-estimación" class="level3">
 <h3 class="anchored" data-anchor-id="periodo-completo-de-estimación">Periodo completo de estimación</h3>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return_moments</span>(sample_returns<span class="sc">$</span>log_return),</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Momentos de la muestra de estimación (2021-2025)."</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-moments" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-moments" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-moments-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;1: Momentos de la muestra de estimación (2021-2025).
 </figcaption>
 <div aria-describedby="tbl-moments-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 16%">
 <col style="width: 15%">
@@ -376,29 +380,29 @@ Tabla&nbsp;1: Momentos de la muestra de estimación (2021-2025).
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
 </section>
 <section id="estimación-año-por-año" class="level3">
 <h3 class="anchored" data-anchor-id="estimación-año-por-año">Estimación año por año</h3>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return_moments_by_year</span>(sample_returns),</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Media y volatilidad, diarias y anualizadas, por año."</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-moments-annual" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-moments-annual" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-moments-annual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;2: Media y volatilidad, diarias y anualizadas, por año.
 </figcaption>
 <div aria-describedby="tbl-moments-annual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 5%">
 <col style="width: 15%">
@@ -461,7 +465,6 @@ Tabla&nbsp;2: Media y volatilidad, diarias y anualizadas, por año.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -489,24 +492,25 @@ Tabla&nbsp;2: Media y volatilidad, diarias y anualizadas, por año.
 <p><span class="math display">\[
 JB = \frac{n}{6}\left(S^2 + \frac{(K-3)^2}{4}\right) \;\sim\; \chi^2_{2}
 \]</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>jb <span class="ot">&lt;-</span> <span class="fu">jarque_bera_table</span>(<span class="fu">list</span>(</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>jb <span class="ot">&lt;-</span> <span class="fu">jarque_bera_table</span>(<span class="fu">list</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Rendimientos"</span> <span class="ot">=</span> sample_returns<span class="sc">$</span>log_return,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Precio"</span> <span class="ot">=</span> sample_prices<span class="sc">$</span>adjusted,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Logaritmo del precio"</span> <span class="ot">=</span> <span class="fu">log</span>(sample_prices<span class="sc">$</span>adjusted)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>))</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(jb, <span class="at">caption =</span> <span class="st">"Prueba de Jarque-Bera sobre las tres series."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-jb" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-jb" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-jb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;3: Prueba de Jarque-Bera sobre las tres series.
 </figcaption>
 <div aria-describedby="tbl-jb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 18%">
 <col style="width: 12%">
@@ -563,14 +567,15 @@ Tabla&nbsp;3: Prueba de Jarque-Bera sobre las tres series.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(sample_returns<span class="sc">$</span>log_return)</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(sample_returns<span class="sc">$</span>log_return)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sd</span>(sample_returns<span class="sc">$</span>log_return)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sample_returns, <span class="fu">aes</span>(log_return)) <span class="sc">+</span></span>
@@ -584,17 +589,15 @@ Tabla&nbsp;3: Prueba de Jarque-Bera sobre las tres series.
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Barra: distribución empírica. Línea: normal con la media y la desviación de la muestra."</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output-display">
-<div id="fig-distribution" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-distribution" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Distribución empírica de los rendimientos diarios frente a la normal ajustada.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="03-returns-volatility-gbm_files/figure-html/fig-distribution-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
+<img src="03-returns-volatility-gbm_files/figure-html/fig-distribution-1.png" class="img-fluid figure-img" alt="Distribución empírica de los rendimientos diarios frente a la normal ajustada.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;1: Distribución empírica de los rendimientos diarios frente a la normal ajustada.
 </figcaption>
 </figure>
-</div>
 </div>
 </div>
 </section>
@@ -604,22 +607,23 @@ Figura&nbsp;1: Distribución empírica de los rendimientos diarios frente a la n
 t = \frac{\bar{r}}{s/\sqrt{n}} \;\sim\; t_{\,n-1}
 \]</span></p>
 <p>La <a href="#tbl-ttest" class="quarto-xref">Tabla&nbsp;4</a> reporta la estimación y la decisión estadística correspondiente.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean_zero_test</span>(sample_returns<span class="sc">$</span>log_return),</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Prueba t de media diaria igual a cero."</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-ttest" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-ttest" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ttest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;4: Prueba t de media diaria igual a cero.
 </figcaption>
 <div aria-describedby="tbl-ttest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 11%">
 <col style="width: 5%">
@@ -659,7 +663,6 @@ Tabla&nbsp;4: Prueba t de media diaria igual a cero.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -690,10 +693,12 @@ S_t = S_0 \exp\!\left[\left(\mu - \tfrac{\sigma^2}{2}\right)t + \sigma W_t\right
 \]</span></p>
 <p>de modo que <span class="math inline">\(\ln S_t\)</span> es normal y <span class="math inline">\(S_t\)</span> es lognormal. El intervalo de confianza se construye sobre los cuantiles de la lognormal, no como una banda simétrica alrededor de la media: el precio no puede ser negativo y su distribución es asimétrica a la derecha.</p>
 <p>La <a href="#tbl-gbm-daily" class="quarto-xref">Tabla&nbsp;5</a> presenta las proyecciones construidas con parámetros diarios.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>gbm <span class="ot">&lt;-</span> <span class="fu">gbm_params</span>(sample_returns<span class="sc">$</span>log_return)</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>gbm <span class="ot">&lt;-</span> <span class="fu">gbm_params</span>(sample_returns<span class="sc">$</span>log_return)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>s0 <span class="ot">&lt;-</span> sample_prices<span class="sc">$</span>adjusted[<span class="fu">which.max</span>(sample_prices<span class="sc">$</span>date)]</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
@@ -701,14 +706,13 @@ S_t = S_0 \exp\!\left[\left(\mu - \tfrac{\sigma^2}{2}\right)t + \sigma W_t\right
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Proyección con parámetros diarios. Horizonte en días hábiles."</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-gbm-daily" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-gbm-daily" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-gbm-daily-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;5: Proyección con parámetros diarios. Horizonte en días hábiles.
 </figcaption>
 <div aria-describedby="tbl-gbm-daily-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 6%">
 <col style="width: 14%">
@@ -765,7 +769,6 @@ Tabla&nbsp;5: Proyección con parámetros diarios. Horizonte en días hábiles.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -773,24 +776,25 @@ Tabla&nbsp;5: Proyección con parámetros diarios. Horizonte en días hábiles.
 <section id="modelo-con-parámetros-anuales" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="modelo-con-parámetros-anuales"><span class="header-section-number">6</span> Modelo con parámetros anuales</h2>
 <p>La <a href="#tbl-gbm-annual" class="quarto-xref">Tabla&nbsp;6</a> expresa la misma proyección en horizontes anuales.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>horizons_years <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>gbm<span class="sc">$</span>horizons_months <span class="sc">/</span> <span class="dv">12</span></span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>horizons_years <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>gbm<span class="sc">$</span>horizons_months <span class="sc">/</span> <span class="dv">12</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gbm_projection</span>(s0, gbm<span class="sc">$</span>nu_annual, gbm<span class="sc">$</span>sigma_annual, horizons_years),</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Proyección con parámetros anualizados. Horizonte en años."</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-gbm-annual" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-gbm-annual" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-gbm-annual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
 </figcaption>
 <div aria-describedby="tbl-gbm-annual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 6%">
 <col style="width: 14%">
@@ -856,7 +860,6 @@ Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </figure>
 </div>
@@ -925,7 +928,7 @@ Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
+        if (clz.startsWith('code-annotation-')) {
           return true;
         }
       }
@@ -945,11 +948,11 @@ Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copiado");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();    
+        tooltip.show();
       }
       setTimeout(function() {
         if (tooltip) {
@@ -1031,7 +1034,7 @@ Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config); 
+      window.tippy(el, config);
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -1106,7 +1109,7 @@ Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined; 
+        let hash = undefined;
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -1134,7 +1137,7 @@ Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              } 
+              }
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -1158,7 +1161,7 @@ Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -1198,7 +1201,7 @@ Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
+              // cook up a div (if necessary) and position it
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -1324,10 +1327,10 @@ Tabla&nbsp;6: Proyección con parámetros anualizados. Horizonte en años.
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Licencia MIT · el contenido de terceros conserva los términos de su proveedor.</p>
-</div>   
+</div>
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/03-returns-volatility-gbm.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/03-returns-volatility-gbm.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Fuentes de mercado: Yahoo Finance / BMV · Macro: Banco Mundial</p>
 </div>

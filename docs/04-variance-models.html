@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,20 +11,23 @@
 <meta name="author" content="Jorge Isaac López Ávila">
 <meta name="author" content="Juan Pablo Morán Errejón">
 
-<title>variance-models – Análisis de Riesgo · GAPB</title>
+<title>Modelos de varianza – Análisis de Riesgo · GAPB</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -78,10 +81,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-1e796f7a7bf16e5eb5298f63857716ad.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bb6b7ff44b12c6be5ebe32cd498144c2.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-56c9fb2a36a481e37cf6329f2f24e7ca.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dd9eeb3a66d606a42fa7fa148d450bc2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -112,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style>html{ scroll-behavior: smooth; }</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -161,36 +164,36 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="./index.html">
 <span class="menu-text">Inicio</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./01-asset-profile.html"> 
+    <a class="nav-link" href="./01-asset-profile.html">
 <span class="menu-text">01 · Activo</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./02-price-history-events.html"> 
+    <a class="nav-link" href="./02-price-history-events.html">
 <span class="menu-text">02 · Precio y eventos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./03-returns-volatility-gbm.html"> 
+    <a class="nav-link" href="./03-returns-volatility-gbm.html">
 <span class="menu-text">03 · Rendimientos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link active" href="./04-variance-models.html" aria-current="page"> 
+    <a class="nav-link active" href="./04-variance-models.html" aria-current="page">
 <span class="menu-text">04 · Volatilidad</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./05-value-at-risk.html"> 
+    <a class="nav-link" href="./05-value-at-risk.html">
 <span class="menu-text">05 · VaR</span></a>
-  </li>  
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/Urielledezma/GAPB-Risk-Analysis"> <i class="bi bi-github" role="img" aria-label="Repositorio en GitHub">
-</i> 
+</i>
 <span class="menu-text"></span></a>
-  </li>  
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -205,7 +208,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">En esta página</h2>
-   
+
   <ul>
   <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
   <li><a href="#metodología" id="toc-metodología" class="nav-link" data-scroll-target="#metodología"><span class="header-section-number">2</span> Metodología</a></li>
@@ -217,7 +220,7 @@ window.Quarto = {
   <li><a href="#conclusión" id="toc-conclusión" class="nav-link" data-scroll-target="#conclusión"><span class="header-section-number">8</span> Conclusión</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">9</span> Referencias</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/04-variance-models.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/04-variance-models.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -241,17 +244,17 @@ window.Quarto = {
              <p>Juan Pablo Morán Errejón </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2 de septiembre de 2026</p>
+      <p class="date">21 de septiembre de 2026</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 
 </header>
@@ -325,10 +328,12 @@ Periodo cubierto
 <section id="promedios-móviles" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="promedios-móviles"><span class="header-section-number">3</span> Promedios móviles</h2>
 <p>La <a href="#fig-ma" class="quarto-xref">Figura&nbsp;1</a> compara la respuesta de las distintas ventanas móviles.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ma <span class="ot">&lt;-</span> <span class="fu">ma_volatility_grid</span>(estimation<span class="sc">$</span>log_return)</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ma <span class="ot">&lt;-</span> <span class="fu">ma_volatility_grid</span>(estimation<span class="sc">$</span>log_return)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>ma_long <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">colnames</span>(ma), <span class="cf">function</span>(column) {</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> estimation<span class="sc">$</span>date,</span>
@@ -344,17 +349,15 @@ Periodo cubierto
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(<span class="at">accuracy =</span> <span class="fl">0.1</span>)) <span class="sc">+</span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Volatilidad diaria estimada"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output-display">
-<div id="fig-ma" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ma" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Volatilidad estimada con distintas ventanas móviles.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="04-variance-models_files/figure-html/fig-ma-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
+<img src="04-variance-models_files/figure-html/fig-ma-1.png" class="img-fluid figure-img" alt="Volatilidad estimada con distintas ventanas móviles.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;1: Volatilidad estimada con distintas ventanas móviles.
 </figcaption>
 </figure>
-</div>
 </div>
 </div>
 <div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
@@ -374,10 +377,12 @@ Figura&nbsp;1: Volatilidad estimada con distintas ventanas móviles.
 <section id="ewma" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="ewma"><span class="header-section-number">4</span> EWMA</h2>
 <p>La <a href="#fig-ewma" class="quarto-xref">Figura&nbsp;2</a> muestra la trayectoria estimada con el factor de RiskMetrics.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lambda_rm <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>variance<span class="sc">$</span>ewma<span class="sc">$</span>lambda_riskmetrics</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lambda_rm <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>variance<span class="sc">$</span>ewma<span class="sc">$</span>lambda_riskmetrics</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>estimation<span class="sc">$</span>ewma <span class="ot">&lt;-</span> <span class="fu">ewma_volatility</span>(estimation<span class="sc">$</span>log_return, <span class="at">lambda =</span> lambda_rm)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(estimation[<span class="fu">is.finite</span>(estimation<span class="sc">$</span>ewma), ], <span class="fu">aes</span>(date, ewma)) <span class="sc">+</span></span>
@@ -385,11 +390,10 @@ Figura&nbsp;1: Volatilidad estimada con distintas ventanas móviles.
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(<span class="at">accuracy =</span> <span class="fl">0.1</span>)) <span class="sc">+</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Volatilidad diaria estimada"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output-display">
-<div id="fig-ewma" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ewma" class="quarto-float quarto-figure quarto-figure-center anchored" alt="EWMA con el factor de decaimiento de RiskMetrics.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ewma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="04-variance-models_files/figure-html/fig-ewma-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
+<img src="04-variance-models_files/figure-html/fig-ewma-1.png" class="img-fluid figure-img" alt="EWMA con el factor de decaimiento de RiskMetrics.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ewma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;2: EWMA con el factor de decaimiento de RiskMetrics.
@@ -397,15 +401,16 @@ Figura&nbsp;2: EWMA con el factor de decaimiento de RiskMetrics.
 </figure>
 </div>
 </div>
-</div>
 </section>
 <section id="ewma-calibrado-con-los-datos" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="ewma-calibrado-con-los-datos"><span class="header-section-number">5</span> EWMA calibrado con los datos</h2>
 <p>La <a href="#tbl-ewma-fit" class="quarto-xref">Tabla&nbsp;1</a> compara los parámetros seleccionados por cada criterio.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fit_rmse <span class="ot">&lt;-</span> <span class="fu">ewma_fit_lambda</span>(estimation<span class="sc">$</span>log_return, <span class="at">loss =</span> <span class="st">"rmse"</span>)</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fit_rmse <span class="ot">&lt;-</span> <span class="fu">ewma_fit_lambda</span>(estimation<span class="sc">$</span>log_return, <span class="at">loss =</span> <span class="st">"rmse"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fit_ll <span class="ot">&lt;-</span> <span class="fu">ewma_fit_lambda</span>(estimation<span class="sc">$</span>log_return, <span class="at">loss =</span> <span class="st">"loglik"</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
@@ -417,14 +422,13 @@ Figura&nbsp;2: EWMA con el factor de decaimiento de RiskMetrics.
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Factor de decaimiento seleccionado bajo cada criterio."</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-ewma-fit" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-ewma-fit" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ewma-fit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;1: Factor de decaimiento seleccionado bajo cada criterio.
 </figcaption>
 <div aria-describedby="tbl-ewma-fit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Criterio</th>
@@ -446,7 +450,6 @@ Tabla&nbsp;1: Factor de decaimiento seleccionado bajo cada criterio.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -466,19 +469,14 @@ Tabla&nbsp;1: Factor de decaimiento seleccionado bajo cada criterio.
 </section>
 <section id="arch-garch" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="arch-garch"><span class="header-section-number">6</span> ARCH / GARCH</h2>
-<div id="tbl-garch" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-garch-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;2
-</figcaption>
-<div aria-describedby="tbl-garch-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>garch <span class="ot">&lt;-</span> <span class="fu">fit_garch</span>(estimation<span class="sc">$</span>log_return)</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>garch <span class="ot">&lt;-</span> <span class="fu">fit_garch</span>(estimation<span class="sc">$</span>log_return)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(garch<span class="sc">$</span>selection, <span class="at">caption =</span> <span class="st">"Tabla de selección de órdenes."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-</div>
-</figure>
 </div>
 <div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
 <div class="callout-header d-flex align-content-center">
@@ -497,15 +495,12 @@ Tabla&nbsp;2
 </section>
 <section id="evaluación-fuera-de-muestra" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="evaluación-fuera-de-muestra"><span class="header-section-number">7</span> Evaluación fuera de muestra</h2>
-<div id="tbl-scores" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-scores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3
-</figcaption>
-<div aria-describedby="tbl-scores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>realised <span class="ot">&lt;-</span> <span class="fu">realised_volatility</span>(evaluation<span class="sc">$</span>log_return)</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>realised <span class="ot">&lt;-</span> <span class="fu">realised_volatility</span>(evaluation<span class="sc">$</span>log_return)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">score_volatility</span>(ma_oos, realised, <span class="st">"MA(m*)"</span>),</span>
@@ -515,8 +510,6 @@ Tabla&nbsp;3
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(scores, <span class="at">caption =</span> <span class="st">"Desempeño fuera de muestra, 2026."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-</div>
-</figure>
 </div>
 <div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
 <div class="callout-header d-flex align-content-center">
@@ -572,7 +565,7 @@ Tabla&nbsp;3
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
+        if (clz.startsWith('code-annotation-')) {
           return true;
         }
       }
@@ -592,11 +585,11 @@ Tabla&nbsp;3
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copiado");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();    
+        tooltip.show();
       }
       setTimeout(function() {
         if (tooltip) {
@@ -678,7 +671,7 @@ Tabla&nbsp;3
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config); 
+      window.tippy(el, config);
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -753,7 +746,7 @@ Tabla&nbsp;3
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined; 
+        let hash = undefined;
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -781,7 +774,7 @@ Tabla&nbsp;3
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              } 
+              }
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -805,7 +798,7 @@ Tabla&nbsp;3
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -845,7 +838,7 @@ Tabla&nbsp;3
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
+              // cook up a div (if necessary) and position it
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -971,10 +964,10 @@ Tabla&nbsp;3
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Licencia MIT · el contenido de terceros conserva los términos de su proveedor.</p>
-</div>   
+</div>
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/04-variance-models.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/04-variance-models.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Fuentes de mercado: Yahoo Finance / BMV · Macro: Banco Mundial</p>
 </div>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,20 +11,23 @@
 <meta name="author" content="Jorge Isaac López Ávila">
 <meta name="author" content="Juan Pablo Morán Errejón">
 
-<title>value-at-risk – Análisis de Riesgo · GAPB</title>
+<title>Valor en Riesgo y Expected Shortfall – Análisis de Riesgo · GAPB</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -78,10 +81,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-1e796f7a7bf16e5eb5298f63857716ad.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bb6b7ff44b12c6be5ebe32cd498144c2.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-56c9fb2a36a481e37cf6329f2f24e7ca.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dd9eeb3a66d606a42fa7fa148d450bc2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -112,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style>html{ scroll-behavior: smooth; }</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -161,36 +164,36 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="./index.html">
 <span class="menu-text">Inicio</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./01-asset-profile.html"> 
+    <a class="nav-link" href="./01-asset-profile.html">
 <span class="menu-text">01 · Activo</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./02-price-history-events.html"> 
+    <a class="nav-link" href="./02-price-history-events.html">
 <span class="menu-text">02 · Precio y eventos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./03-returns-volatility-gbm.html"> 
+    <a class="nav-link" href="./03-returns-volatility-gbm.html">
 <span class="menu-text">03 · Rendimientos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./04-variance-models.html"> 
+    <a class="nav-link" href="./04-variance-models.html">
 <span class="menu-text">04 · Volatilidad</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link active" href="./05-value-at-risk.html" aria-current="page"> 
+    <a class="nav-link active" href="./05-value-at-risk.html" aria-current="page">
 <span class="menu-text">05 · VaR</span></a>
-  </li>  
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/Urielledezma/GAPB-Risk-Analysis"> <i class="bi bi-github" role="img" aria-label="Repositorio en GitHub">
-</i> 
+</i>
 <span class="menu-text"></span></a>
-  </li>  
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -205,7 +208,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">En esta página</h2>
-   
+
   <ul>
   <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
   <li><a href="#construcción-de-la-cartera" id="toc-construcción-de-la-cartera" class="nav-link" data-scroll-target="#construcción-de-la-cartera"><span class="header-section-number">2</span> Construcción de la cartera</a></li>
@@ -218,7 +221,7 @@ window.Quarto = {
   <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones"><span class="header-section-number">9</span> Conclusiones</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">10</span> Referencias</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/05-value-at-risk.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/05-value-at-risk.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -242,17 +245,17 @@ window.Quarto = {
              <p>Juan Pablo Morán Errejón </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2 de septiembre de 2026</p>
+      <p class="date">21 de septiembre de 2026</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 
 </header>
@@ -312,22 +315,23 @@ Periodo cubierto
 <h2 data-number="2" class="anchored" data-anchor-id="construcción-de-la-cartera"><span class="header-section-number">2</span> Construcción de la cartera</h2>
 <p>La cartera invierte $100,000 en cada una de las seis emisoras. Son pesos iguales en <strong>monto</strong>, no en número de acciones: las seis cotizan a niveles de precio muy distintos y una cartera de cien acciones de cada una sería una apuesta concentrada en la más cara.</p>
 <p>La <a href="#tbl-portfolio" class="quarto-xref">Tabla&nbsp;1</a> presenta la composición monetaria inicial.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  portfolio<span class="sc">$</span>holdings,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="fu">paste0</span>(<span class="st">"Composición inicial al "</span>, portfolio<span class="sc">$</span>as_of, <span class="st">"."</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-portfolio" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-portfolio" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-portfolio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;1: Composición inicial al 2026-08-25.
 </figcaption>
 <div aria-describedby="tbl-portfolio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
@@ -390,7 +394,6 @@ Tabla&nbsp;1: Composición inicial al 2026-08-25.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -400,10 +403,12 @@ Tabla&nbsp;1: Composición inicial al 2026-08-25.
 <h2 data-number="3" class="anchored" data-anchor-id="var-no-paramétrico-simulación-histórica"><span class="header-section-number">3</span> VaR no paramétrico: simulación histórica</h2>
 <p>El cuantil se lee directamente de la distribución empírica, sin suponer ninguna forma funcional, de modo que las colas pesadas y la asimetría se arrastran tal como la muestra las exhibe.</p>
 <p>La <a href="#tbl-var-hist" class="quarto-xref">Tabla&nbsp;2</a> cuantifica los escenarios y la <a href="#fig-var" class="quarto-xref">Figura&nbsp;1</a> sitúa visualmente los umbrales sobre la distribución de pérdidas y ganancias.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">confidence =</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>confidence,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizon =</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>horizons_days</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -412,14 +417,13 @@ Tabla&nbsp;1: Composición inicial al 2026-08-25.
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>}))</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(hist_var, <span class="at">caption =</span> <span class="st">"VaR por simulación histórica."</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-var-hist" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-var-hist" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;2: VaR por simulación histórica.
 </figcaption>
 <div aria-describedby="tbl-var-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 13%">
@@ -538,14 +542,15 @@ Tabla&nbsp;2: VaR por simulación histórica.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pnl <span class="ot">&lt;-</span> portfolio<span class="sc">$</span>value <span class="sc">*</span> (<span class="fu">exp</span>(portfolio_r) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pnl <span class="ot">&lt;-</span> portfolio<span class="sc">$</span>value <span class="sc">*</span> (<span class="fu">exp</span>(portfolio_r) <span class="sc">-</span> <span class="dv">1</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>cuts <span class="ot">&lt;-</span> <span class="fu">vapply</span>(<span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>confidence, <span class="cf">function</span>(c) {</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span><span class="fu">var_historical</span>(portfolio_r, c, <span class="dv">1</span>, portfolio<span class="sc">$</span>value)<span class="sc">$</span>var_currency</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>}, <span class="fu">numeric</span>(<span class="dv">1</span>))</span>
@@ -568,17 +573,15 @@ Tabla&nbsp;2: VaR por simulación histórica.
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Líneas verticales: VaR a un día por nivel de confianza."</span></span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output-display">
-<div id="fig-var" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-var" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Distribución de pérdidas y ganancias diarias de la cartera, con el VaR a un día.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="05-value-at-risk_files/figure-html/fig-var-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
+<img src="05-value-at-risk_files/figure-html/fig-var-1.png" class="img-fluid figure-img" alt="Distribución de pérdidas y ganancias diarias de la cartera, con el VaR a un día.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;1: Distribución de pérdidas y ganancias diarias de la cartera, con el VaR a un día.
 </figcaption>
 </figure>
-</div>
 </div>
 </div>
 </section>
@@ -592,10 +595,12 @@ Figura&nbsp;1: Distribución de pérdidas y ganancias diarias de la cartera, con
 \]</span></p>
 <p>El escalamiento por <span class="math inline">\(\sqrt{h}\)</span> supone independencia serial: la varianza crece linealmente en el tiempo y la desviación estándar con su raíz.</p>
 <p>La <a href="#tbl-var-param" class="quarto-xref">Tabla&nbsp;3</a> resume el VaR paramétrico y la <a href="#tbl-cov" class="quarto-xref">Tabla&nbsp;4</a> documenta la estructura de correlaciones utilizada.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>covariance <span class="ot">&lt;-</span> <span class="fu">covariance_matrix</span>(matrix_returns)</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>covariance <span class="ot">&lt;-</span> <span class="fu">covariance_matrix</span>(matrix_returns)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sigma_p <span class="ot">&lt;-</span> <span class="fu">portfolio_sigma</span>(portfolio<span class="sc">$</span>weights, covariance)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>param_var <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(grid)), <span class="cf">function</span>(i) {</span>
@@ -603,14 +608,13 @@ Figura&nbsp;1: Distribución de pérdidas y ganancias diarias de la cartera, con
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}))</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(param_var, <span class="at">caption =</span> <span class="st">"VaR paramétrico (varianza-covarianza)."</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-var-param" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-var-param" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var-param-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;3: VaR paramétrico (varianza-covarianza).
 </figcaption>
 <div aria-describedby="tbl-var-param-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 16%">
 <col style="width: 14%">
@@ -729,26 +733,26 @@ Tabla&nbsp;3: VaR paramétrico (varianza-covarianza).
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(<span class="fu">round</span>(stats<span class="sc">::</span><span class="fu">cov2cor</span>(covariance), <span class="dv">3</span>)),</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Matriz de correlaciones de los últimos seis meses."</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-cov" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-cov" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;4: Matriz de correlaciones de los últimos seis meses.
 </figcaption>
 <div aria-describedby="tbl-cov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 16%">
 <col style="width: 12%">
@@ -827,7 +831,6 @@ Tabla&nbsp;4: Matriz de correlaciones de los últimos seis meses.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -840,10 +843,12 @@ Tabla&nbsp;4: Matriz de correlaciones de los últimos seis meses.
 LR = -2\ln\frac{(1-p)^{\,n-x}\,p^{\,x}}{(1-\hat\pi)^{\,n-x}\,\hat\pi^{\,x}} \;\sim\; \chi^2_{1}
 \]</span></p>
 <p>La <a href="#tbl-backtest" class="quarto-xref">Tabla&nbsp;5</a> contrasta las excedencias observadas y esperadas.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>confidence <span class="ot">&lt;-</span> <span class="fl">0.99</span></span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>confidence <span class="ot">&lt;-</span> <span class="fl">0.99</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>rolling_hist <span class="ot">&lt;-</span> <span class="fu">rolling_var</span>(portfolio_r, confidence, <span class="at">method =</span> <span class="st">"historical"</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>rolling_param <span class="ot">&lt;-</span> <span class="fu">rolling_var</span>(portfolio_r, confidence, <span class="at">method =</span> <span class="st">"parametric"</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -853,14 +858,13 @@ LR = -2\ln\frac{(1-p)^{\,n-x}\,p^{\,x}}{(1-\hat\pi)^{\,n-x}\,\hat\pi^{\,x}} \;\s
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(backtest, <span class="at">caption =</span> <span class="st">"Backtesting del VaR a un día al 99%."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-backtest" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-backtest" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-backtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;5: Backtesting del VaR a un día al 99%.
 </figcaption>
 <div aria-describedby="tbl-backtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 8%">
 <col style="width: 7%">
@@ -911,7 +915,6 @@ Tabla&nbsp;5: Backtesting del VaR a un día al 99%.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
@@ -931,15 +934,12 @@ Tabla&nbsp;5: Backtesting del VaR a un día al 99%.
 </section>
 <section id="optimización-de-la-cartera" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="optimización-de-la-cartera"><span class="header-section-number">6</span> Optimización de la cartera</h2>
-<div id="tbl-optimisation" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-optimisation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;6
-</figcaption>
-<div aria-describedby="tbl-optimisation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>optimal <span class="ot">&lt;-</span> <span class="fu">optimise_min_var</span>(matrix_returns)</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>optimal <span class="ot">&lt;-</span> <span class="fu">optimise_min_var</span>(matrix_returns)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>comparison <span class="ot">&lt;-</span> <span class="fu">compare_allocations</span>(</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  matrix_returns,</span>
@@ -951,8 +951,6 @@ Tabla&nbsp;6
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(comparison, <span class="at">caption =</span> <span class="st">"Cartera equiponderada frente a la de VaR mínimo."</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-</div>
-</figure>
 </div>
 <div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
 <div class="callout-header d-flex align-content-center">
@@ -970,11 +968,13 @@ Tabla&nbsp;6
 </section>
 <section id="var-individual-y-expected-shortfall" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="var-individual-y-expected-shortfall"><span class="header-section-number">7</span> VaR individual y <em>Expected Shortfall</em></h2>
-<p>La <a href="#tbl-individual" class="quarto-xref">Tabla&nbsp;7</a> presenta ambas medidas para la posición individual.</p>
-<div class="cell" data-layout-align="center">
+<p>La <a href="#tbl-individual" class="quarto-xref">Tabla&nbsp;6</a> presenta ambas medidas para la posición individual.</p>
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>position <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>position_mxn</span>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>position <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>position_mxn</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>subject_returns <span class="ot">&lt;-</span> returns[returns<span class="sc">$</span>ticker <span class="sc">==</span> <span class="fu">subject</span>(), <span class="st">"log_return"</span>]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>individual <span class="ot">&lt;-</span> <span class="fu">var_monte_carlo</span>(</span>
@@ -989,14 +989,13 @@ Tabla&nbsp;6
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">2</span></span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-individual" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-individual" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-individual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en GAPB.MX.
+Tabla&nbsp;6: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en GAPB.MX.
 </figcaption>
 <div aria-describedby="tbl-individual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 19%">
 <col style="width: 7%">
@@ -1038,7 +1037,6 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </figure>
 </div>
@@ -1105,7 +1103,7 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
+        if (clz.startsWith('code-annotation-')) {
           return true;
         }
       }
@@ -1125,11 +1123,11 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copiado");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();    
+        tooltip.show();
       }
       setTimeout(function() {
         if (tooltip) {
@@ -1211,7 +1209,7 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config); 
+      window.tippy(el, config);
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -1286,7 +1284,7 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined; 
+        let hash = undefined;
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -1314,7 +1312,7 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              } 
+              }
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -1338,7 +1336,7 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -1378,7 +1376,7 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
+              // cook up a div (if necessary) and position it
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -1504,10 +1502,10 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Licencia MIT · el contenido de terceros conserva los términos de su proveedor.</p>
-</div>   
+</div>
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/05-value-at-risk.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/05-value-at-risk.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Fuentes de mercado: Yahoo Finance / BMV · Macro: Banco Mundial</p>
 </div>

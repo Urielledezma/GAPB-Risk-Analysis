@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,20 +11,23 @@
 <meta name="author" content="Jorge Isaac López Ávila">
 <meta name="author" content="Juan Pablo Morán Errejón">
 
-<title>Análisis de Riesgo · GAPB</title>
+<title>Análisis de riesgo de mercado – Análisis de Riesgo · GAPB</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 </style>
@@ -43,10 +46,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-1e796f7a7bf16e5eb5298f63857716ad.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bb6b7ff44b12c6be5ebe32cd498144c2.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-56c9fb2a36a481e37cf6329f2f24e7ca.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dd9eeb3a66d606a42fa7fa148d450bc2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -97,36 +100,36 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link active" href="./index.html" aria-current="page">
 <span class="menu-text">Inicio</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./01-asset-profile.html"> 
+    <a class="nav-link" href="./01-asset-profile.html">
 <span class="menu-text">01 · Activo</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./02-price-history-events.html"> 
+    <a class="nav-link" href="./02-price-history-events.html">
 <span class="menu-text">02 · Precio y eventos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./03-returns-volatility-gbm.html"> 
+    <a class="nav-link" href="./03-returns-volatility-gbm.html">
 <span class="menu-text">03 · Rendimientos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./04-variance-models.html"> 
+    <a class="nav-link" href="./04-variance-models.html">
 <span class="menu-text">04 · Volatilidad</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./05-value-at-risk.html"> 
+    <a class="nav-link" href="./05-value-at-risk.html">
 <span class="menu-text">05 · VaR</span></a>
-  </li>  
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/Urielledezma/GAPB-Risk-Analysis"> <i class="bi bi-github" role="img" aria-label="Repositorio en GitHub">
-</i> 
+</i>
 <span class="menu-text"></span></a>
-  </li>  
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -141,15 +144,15 @@ ul.task-list li input[type="checkbox"] {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">En esta página</h2>
-   
+
   <ul>
-  <li><a href="#estructura-del-análisis" id="toc-estructura-del-análisis" class="nav-link active" data-scroll-target="#estructura-del-análisis"><span class="header-section-number">1</span> Estructura del análisis</a></li>
-  <li><a href="#universo-analizado" id="toc-universo-analizado" class="nav-link" data-scroll-target="#universo-analizado"><span class="header-section-number">2</span> Universo analizado</a></li>
-  <li><a href="#cobertura-de-datos" id="toc-cobertura-de-datos" class="nav-link" data-scroll-target="#cobertura-de-datos"><span class="header-section-number">3</span> Cobertura de datos</a></li>
-  <li><a href="#procedencia-de-los-datos" id="toc-procedencia-de-los-datos" class="nav-link" data-scroll-target="#procedencia-de-los-datos"><span class="header-section-number">4</span> Procedencia de los datos</a></li>
-  <li><a href="#nota-metodológica" id="toc-nota-metodológica" class="nav-link" data-scroll-target="#nota-metodológica"><span class="header-section-number">5</span> Nota metodológica</a></li>
+  <li><a href="#estructura-del-análisis" id="toc-estructura-del-análisis" class="nav-link active" data-scroll-target="#estructura-del-análisis">Estructura del análisis</a></li>
+  <li><a href="#universo-analizado" id="toc-universo-analizado" class="nav-link" data-scroll-target="#universo-analizado">Universo analizado</a></li>
+  <li><a href="#cobertura-de-datos" id="toc-cobertura-de-datos" class="nav-link" data-scroll-target="#cobertura-de-datos">Cobertura de datos</a></li>
+  <li><a href="#procedencia-de-los-datos" id="toc-procedencia-de-los-datos" class="nav-link" data-scroll-target="#procedencia-de-los-datos">Procedencia de los datos</a></li>
+  <li><a href="#nota-metodológica" id="toc-nota-metodológica" class="nav-link" data-scroll-target="#nota-metodológica">Nota metodológica</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/index.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -173,17 +176,17 @@ ul.task-list li input[type="checkbox"] {
              <p>Juan Pablo Morán Errejón </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">3 de septiembre de 2026</p>
+      <p class="date">21 de septiembre de 2026</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 
 </header>
@@ -224,8 +227,8 @@ GAPB: 27 de febrero de 2006–26 de agosto de 2026
 </div>
 </dl>
 <p>Este sitio reúne el análisis de riesgo de mercado de <strong>Grupo Aeroportuario del Pacífico</strong> y de una cartera de seis emisoras de la Bolsa Mexicana de Valores. El trabajo avanza en cinco etapas, de los fundamentos del emisor a un modelo de Valor en Riesgo sometido a <em>backtesting</em>.</p>
-<section id="estructura-del-análisis" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="estructura-del-análisis"><span class="header-section-number">1</span> Estructura del análisis</h2>
+<section id="estructura-del-análisis" class="level2">
+<h2 class="anchored" data-anchor-id="estructura-del-análisis">Estructura del análisis</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -257,18 +260,17 @@ GAPB: 27 de febrero de 2006–26 de agosto de 2026
 </tbody>
 </table>
 </section>
-<section id="universo-analizado" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="universo-analizado"><span class="header-section-number">2</span> Universo analizado</h2>
+<section id="universo-analizado" class="level2">
+<h2 class="anchored" data-anchor-id="universo-analizado">Universo analizado</h2>
 <p>La <a href="#tbl-universe" class="quarto-xref">Tabla&nbsp;1</a> identifica las seis emisoras que integran la cartera de la etapa 05.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-universe" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-universe" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-universe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;1: Emisoras que integran la cartera analizada en la etapa 05.
 </figcaption>
 <div aria-describedby="tbl-universe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 9%">
 <col style="width: 41%">
@@ -323,23 +325,21 @@ Tabla&nbsp;1: Emisoras que integran la cartera analizada en la etapa 05.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
 </section>
-<section id="cobertura-de-datos" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="cobertura-de-datos"><span class="header-section-number">3</span> Cobertura de datos</h2>
+<section id="cobertura-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="cobertura-de-datos">Cobertura de datos</h2>
 <p>La <a href="#tbl-coverage" class="quarto-xref">Tabla&nbsp;2</a> resume el periodo y las observaciones disponibles por emisora.</p>
-<div class="cell" data-layout-align="center">
-<div id="tbl-coverage" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div class="cell">
+<div id="tbl-coverage" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;2: Historia de cotización disponible por emisora.
 </figcaption>
 <div aria-describedby="tbl-coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Ticker</th>
@@ -388,22 +388,20 @@ Tabla&nbsp;2: Historia de cotización disponible por emisora.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
 </section>
-<section id="procedencia-de-los-datos" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="procedencia-de-los-datos"><span class="header-section-number">4</span> Procedencia de los datos</h2>
-<div class="cell" data-layout-align="center">
-<div id="tbl-provenance" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<section id="procedencia-de-los-datos" class="level2">
+<h2 class="anchored" data-anchor-id="procedencia-de-los-datos">Procedencia de los datos</h2>
+<div class="cell">
+<div id="tbl-provenance" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-provenance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
 </figcaption>
 <div aria-describedby="tbl-provenance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Ticker</th>
@@ -459,15 +457,14 @@ Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
 <p>La licencia institucional de FactSet no incluye acceso por API. Por ello, los precios usan la ruta pública Yahoo Finance / BMV y los fundamentales usan reportes GAP/SEC, salvo que exista una exportación manual de FactSet validada en <code>data/private/</code>. La <a href="#tbl-provenance" class="quarto-xref">Tabla&nbsp;3</a> refleja la fuente efectiva de este render.</p>
 </section>
-<section id="nota-metodológica" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="nota-metodológica"><span class="header-section-number">5</span> Nota metodológica</h2>
-<p>Todo el análisis trabaja con rendimientos logarítmicos, aditivos en el tiempo, lo que hace exacto —y no aproximado— el escalamiento por horizonte de las etapas 03 y 05. Los parámetros de cada modelo se estiman con información disponible hasta el <strong>31 de diciembre de 2025</strong>; 2026 se reserva como periodo de evaluación fuera de muestra.</p>
+<section id="nota-metodológica" class="level2">
+<h2 class="anchored" data-anchor-id="nota-metodológica">Nota metodológica</h2>
+<p>Los modelos trabajan con rendimientos logarítmicos, aditivos en el tiempo, aunque el escalamiento de volatilidad y riesgo por horizonte requiere los supuestos propios de cada modelo. Sus parámetros se estiman con información hasta el <strong>31 de diciembre de 2025</strong>; 2026 se reserva como periodo de evaluación fuera de muestra. La etapa 02 es descriptiva y tiene un corte distinto, el <strong>30 de junio de 2026</strong>, con julio de 2025–junio de 2026 como último año y rendimientos simples acumulados para comparar ventanas y años completos.</p>
 <p>Ningún reporte consulta una API durante el render: los scripts de <code>analysis/</code> descargan y escriben, y los reportes únicamente leen. Esa separación es lo que permite que cada cifra sea reproducible a partir de un conjunto de datos fijo en lugar de depender de lo que un proveedor esté sirviendo el día de la reconstrucción.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
@@ -501,7 +498,7 @@ Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
+        if (clz.startsWith('code-annotation-')) {
           return true;
         }
       }
@@ -521,11 +518,11 @@ Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copiado");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();    
+        tooltip.show();
       }
       setTimeout(function() {
         if (tooltip) {
@@ -607,7 +604,7 @@ Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config); 
+      window.tippy(el, config);
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -682,7 +679,7 @@ Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined; 
+        let hash = undefined;
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -710,7 +707,7 @@ Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              } 
+              }
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -734,7 +731,7 @@ Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -774,7 +771,7 @@ Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
+              // cook up a div (if necessary) and position it
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -900,10 +897,10 @@ Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Licencia MIT · el contenido de terceros conserva los términos de su proveedor.</p>
-</div>   
+</div>
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/index.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Fuentes de mercado: Yahoo Finance / BMV · Macro: Banco Mundial</p>
 </div>

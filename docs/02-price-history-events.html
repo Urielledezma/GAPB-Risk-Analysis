@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,20 +11,23 @@
 <meta name="author" content="Jorge Isaac López Ávila">
 <meta name="author" content="Juan Pablo Morán Errejón">
 
-<title>price-history-events – Análisis de Riesgo · GAPB</title>
+<title>Precio, caídas y eventos – Análisis de Riesgo · GAPB</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -62,7 +65,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -78,10 +101,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-1e796f7a7bf16e5eb5298f63857716ad.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bb6b7ff44b12c6be5ebe32cd498144c2.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-56c9fb2a36a481e37cf6329f2f24e7ca.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dd9eeb3a66d606a42fa7fa148d450bc2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -112,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style>html{ scroll-behavior: smooth; }</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -161,36 +184,36 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="./index.html">
 <span class="menu-text">Inicio</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./01-asset-profile.html"> 
+    <a class="nav-link" href="./01-asset-profile.html">
 <span class="menu-text">01 · Activo</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link active" href="./02-price-history-events.html" aria-current="page"> 
+    <a class="nav-link active" href="./02-price-history-events.html" aria-current="page">
 <span class="menu-text">02 · Precio y eventos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./03-returns-volatility-gbm.html"> 
+    <a class="nav-link" href="./03-returns-volatility-gbm.html">
 <span class="menu-text">03 · Rendimientos</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./04-variance-models.html"> 
+    <a class="nav-link" href="./04-variance-models.html">
 <span class="menu-text">04 · Volatilidad</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./05-value-at-risk.html"> 
+    <a class="nav-link" href="./05-value-at-risk.html">
 <span class="menu-text">05 · VaR</span></a>
-  </li>  
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/Urielledezma/GAPB-Risk-Analysis"> <i class="bi bi-github" role="img" aria-label="Repositorio en GitHub">
-</i> 
+</i>
 <span class="menu-text"></span></a>
-  </li>  
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -205,20 +228,37 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">En esta página</h2>
-   
+
   <ul>
   <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
-  <li><a href="#exploración-de-la-serie-histórica" id="toc-exploración-de-la-serie-histórica" class="nav-link" data-scroll-target="#exploración-de-la-serie-histórica"><span class="header-section-number">2</span> Exploración de la serie histórica</a>
+  <li><a href="#datos-y-criterios-de-cálculo" id="toc-datos-y-criterios-de-cálculo" class="nav-link" data-scroll-target="#datos-y-criterios-de-cálculo"><span class="header-section-number">2</span> Datos y criterios de cálculo</a>
   <ul class="collapse">
-  <li><a href="#máximo-drawdown" id="toc-máximo-drawdown" class="nav-link" data-scroll-target="#máximo-drawdown">Máximo <em>drawdown</em></a></li>
+  <li><a href="#cobertura-y-fuentes" id="toc-cobertura-y-fuentes" class="nav-link" data-scroll-target="#cobertura-y-fuentes">Cobertura y fuentes</a></li>
+  <li><a href="#precio-rendimiento-y-pérdida-acumulada" id="toc-precio-rendimiento-y-pérdida-acumulada" class="nav-link" data-scroll-target="#precio-rendimiento-y-pérdida-acumulada">Precio, rendimiento y pérdida acumulada</a></li>
   </ul></li>
-  <li><a href="#eventos-y-explicación-de-los-movimientos" id="toc-eventos-y-explicación-de-los-movimientos" class="nav-link" data-scroll-target="#eventos-y-explicación-de-los-movimientos"><span class="header-section-number">3</span> Eventos y explicación de los movimientos</a></li>
-  <li><a href="#relación-con-el-ciclo-económico" id="toc-relación-con-el-ciclo-económico" class="nav-link" data-scroll-target="#relación-con-el-ciclo-económico"><span class="header-section-number">4</span> Relación con el ciclo económico</a></li>
-  <li><a href="#periodo-reciente" id="toc-periodo-reciente" class="nav-link" data-scroll-target="#periodo-reciente"><span class="header-section-number">5</span> Periodo reciente</a></li>
-  <li><a href="#conclusión" id="toc-conclusión" class="nav-link" data-scroll-target="#conclusión"><span class="header-section-number">6</span> Conclusión</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">7</span> Referencias</a></li>
+  <li><a href="#trayectoria-histórica" id="toc-trayectoria-histórica" class="nav-link" data-scroll-target="#trayectoria-histórica"><span class="header-section-number">3</span> Trayectoria histórica</a>
+  <ul class="collapse">
+  <li><a href="#máximo-drawdown" id="toc-máximo-drawdown" class="nav-link" data-scroll-target="#máximo-drawdown">Máximo drawdown</a></li>
+  </ul></li>
+  <li><a href="#cinco-episodios-relevantes-y-sus-posibles-causas" id="toc-cinco-episodios-relevantes-y-sus-posibles-causas" class="nav-link" data-scroll-target="#cinco-episodios-relevantes-y-sus-posibles-causas"><span class="header-section-number">4</span> Cinco episodios relevantes y sus posibles causas</a>
+  <ul class="collapse">
+  <li><a href="#crisis-financiera-de-20072008-demanda-y-prima-de-riesgo" id="toc-crisis-financiera-de-20072008-demanda-y-prima-de-riesgo" class="nav-link" data-scroll-target="#crisis-financiera-de-20072008-demanda-y-prima-de-riesgo">Crisis financiera de 2007–2008: demanda y prima de riesgo</a></li>
+  <li><a href="#influenza-ah1n1-en-2009-sensibilidad-al-turismo" id="toc-influenza-ah1n1-en-2009-sensibilidad-al-turismo" class="nav-link" data-scroll-target="#influenza-ah1n1-en-2009-sensibilidad-al-turismo">Influenza A/H1N1 en 2009: sensibilidad al turismo</a></li>
+  <li><a href="#covid-19-en-2020-interrupción-de-la-movilidad" id="toc-covid-19-en-2020-interrupción-de-la-movilidad" class="nav-link" data-scroll-target="#covid-19-en-2020-interrupción-de-la-movilidad">COVID-19 en 2020: interrupción de la movilidad</a></li>
+  <li><a href="#recuperación-de-20202021-revisión-de-expectativas" id="toc-recuperación-de-20202021-revisión-de-expectativas" class="nav-link" data-scroll-target="#recuperación-de-20202021-revisión-de-expectativas">Recuperación de 2020–2021: revisión de expectativas</a></li>
+  <li><a href="#cambio-regulatorio-de-octubre-de-2023-incertidumbre-sobre-las-tarifas" id="toc-cambio-regulatorio-de-octubre-de-2023-incertidumbre-sobre-las-tarifas" class="nav-link" data-scroll-target="#cambio-regulatorio-de-octubre-de-2023-incertidumbre-sobre-las-tarifas">Cambio regulatorio de octubre de 2023: incertidumbre sobre las tarifas</a></li>
+  </ul></li>
+  <li><a href="#rendimiento-anual-y-crecimiento-económico-de-méxico" id="toc-rendimiento-anual-y-crecimiento-económico-de-méxico" class="nav-link" data-scroll-target="#rendimiento-anual-y-crecimiento-económico-de-méxico"><span class="header-section-number">5</span> Rendimiento anual y crecimiento económico de México</a></li>
+  <li><a href="#último-año-julio-de-2025junio-de-2026" id="toc-último-año-julio-de-2025junio-de-2026" class="nav-link" data-scroll-target="#último-año-julio-de-2025junio-de-2026"><span class="header-section-number">6</span> Último año: julio de 2025–junio de 2026</a>
+  <ul class="collapse">
+  <li><a href="#huracán-melissa-afectación-operativa-y-respuesta-limitada" id="toc-huracán-melissa-afectación-operativa-y-respuesta-limitada" class="nav-link" data-scroll-target="#huracán-melissa-afectación-operativa-y-respuesta-limitada">Huracán Melissa: afectación operativa y respuesta limitada</a></li>
+  <li><a href="#resultados-del-primer-trimestre-de-2026-noticias-de-distinto-signo" id="toc-resultados-del-primer-trimestre-de-2026-noticias-de-distinto-signo" class="nav-link" data-scroll-target="#resultados-del-primer-trimestre-de-2026-noticias-de-distinto-signo">Resultados del primer trimestre de 2026: noticias de distinto signo</a></li>
+  <li><a href="#integración-de-cbx-crecimiento-con-efectos-sobre-cada-acción" id="toc-integración-de-cbx-crecimiento-con-efectos-sobre-cada-acción" class="nav-link" data-scroll-target="#integración-de-cbx-crecimiento-con-efectos-sobre-cada-acción">Integración de CBX: crecimiento con efectos sobre cada acción</a></li>
+  </ul></li>
+  <li><a href="#conclusión" id="toc-conclusión" class="nav-link" data-scroll-target="#conclusión"><span class="header-section-number">7</span> Conclusión</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/02-price-history-events.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/02-price-history-events.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -226,7 +266,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Precio, caídas y eventos</h1>
-<p class="subtitle lead">Trayectoria histórica, drawdowns y su atribución a hechos del entorno</p>
+<p class="subtitle lead">Proyecto Final · Parte 2 | GAPB, febrero de 2006–junio de 2026</p>
 </div>
 
 
@@ -242,17 +282,17 @@ window.Quarto = {
              <p>Juan Pablo Morán Errejón </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2 de septiembre de 2026</p>
+      <p class="date">22 de septiembre de 2026</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 
 </header>
@@ -261,267 +301,410 @@ window.Quarto = {
 <dl class="report-meta" aria-label="Ficha técnica del reporte">
 <div>
 <dt>
-Fuente de datos
+Activo y mercado
 </dt>
 <dd>
-Yahoo Finance / BMV y Banco Mundial
+Grupo Aeroportuario del Pacífico · GAPB en la BMV
 </dd>
 </div>
 <div>
 <dt>
-Corte financiero
+Corte del análisis
 </dt>
 <dd>
-31 de diciembre de 2025
+30 de junio de 2026
 </dd>
 </div>
 <div>
 <dt>
-Moneda
+Último año
 </dt>
 <dd>
-MXN por acción; rendimientos adimensionales
+Julio de 2025–junio de 2026
 </dd>
 </div>
 <div>
 <dt>
-Periodo cubierto
+Fuentes
 </dt>
 <dd>
-27 de febrero de 2006–26 de agosto de 2026
+Yahoo Finance, Banco Mundial y documentos primarios
 </dd>
 </div>
 </dl>
 <section id="introducción" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">1</span> Introducción</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Qué se examina en esta etapa y por qué: el precio responde a información nueva que los inversionistas no controlan ni anticipan, y esa exposición es una parte fundamental del riesgo financiero.</p>
-</div>
+<p>El precio de una acción concentra expectativas sobre ingresos, costos y riesgos que todavía no se materializan, por lo que una empresa puede conservar sus instalaciones y sus concesiones mientras su valor de mercado cambia de manera considerable. En Grupo Aeroportuario del Pacífico, esta relación resulta especialmente visible, ya que el tráfico de pasajeros depende de la actividad económica y del turismo, mientras que las tarifas, las restricciones a la movilidad y las decisiones corporativas modifican los flujos que esperan recibir los accionistas.</p>
+<p>El propósito de esta segunda parte es estudiar cómo se ha comportado GAPB desde sus primeras observaciones bursátiles hasta el primer semestre de 2026, identificar cinco episodios relevantes y contrastarlos con hechos documentados, además de medir la pérdida acumulada más profunda y comparar los rendimientos anuales con el crecimiento de México. Finalmente, se examina julio de 2025–junio de 2026 para reconocer situaciones en las que una noticia operativa y la respuesta del precio pueden tener distinta magnitud, o incluso distinto signo.</p>
+<p>La interpretación es descriptiva: una coincidencia temporal, acompañada de un mecanismo financiero razonable, permite proponer una explicación, aunque no demuestra cuánto del movimiento fue causado exclusivamente por ese evento. Esta distinción evita presentar el conocimiento posterior como si hubiera sido una predicción disponible para el inversionista.</p>
+</section>
+<section id="datos-y-criterios-de-cálculo" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="datos-y-criterios-de-cálculo"><span class="header-section-number">2</span> Datos y criterios de cálculo</h2>
+<section id="cobertura-y-fuentes" class="level3">
+<h3 class="anchored" data-anchor-id="cobertura-y-fuentes">Cobertura y fuentes</h3>
+<p>GAP realizó su oferta pública el <strong>24 de febrero de 2006</strong>, mientras que la base disponible comienza el <strong>27 de febrero de 2006</strong>, es decir, en la siguiente sesión bursátil, por lo que no contamos con el cierre del día de colocación y no lo sustituimos por un precio estimado <span class="citation" data-cites="gap20f2009">(<a href="#ref-gap20f2009" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2010</a>)</span>. La serie corresponde a la acción mexicana en pesos, no al ADS negociado en Nueva York.</p>
+<p>Los precios se leen de la copia pública guardada en el repositorio, obtenida de Yahoo Finance y registrada el 27 de agosto de 2026, pero se filtran al corte de esta entrega antes de calcular cualquier resultado. Por ello, se trata de una reconstrucción histórica con la versión disponible de los datos, incluidos sus ajustes retrospectivos, y no de una base congelada tal como se conocía en junio. El reporte no descarga información durante su ejecución <span class="citation" data-cites="yahoogapbhistory">(<a href="#ref-yahoogapbhistory" role="doc-biblioref">Yahoo Finance, 2026</a>)</span>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>prices <span class="ot">&lt;-</span> <span class="fu">read_processed</span>(<span class="st">"prices_daily"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gdp <span class="ot">&lt;-</span> <span class="fu">read_processed</span>(<span class="st">"gdp_mx"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>prices <span class="ot">&lt;-</span> prices[prices<span class="sc">$</span>ticker <span class="sc">==</span> <span class="fu">subject</span>() <span class="sc">&amp;</span> prices<span class="sc">$</span>date <span class="sc">&lt;=</span> cutoff, ]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>prices <span class="ot">&lt;-</span> prices[<span class="fu">order</span>(prices<span class="sc">$</span>date), ]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(prices) <span class="sc">&gt;</span> <span class="dv">1</span>, <span class="sc">!</span><span class="fu">anyDuplicated</span>(prices<span class="sc">$</span>date),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>          <span class="fu">all</span>(<span class="fu">is.finite</span>(prices<span class="sc">$</span>adjusted)), <span class="fu">all</span>(prices<span class="sc">$</span>adjusted <span class="sc">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>          <span class="fu">max</span>(prices<span class="sc">$</span>date) <span class="sc">==</span> cutoff)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>prices<span class="sc">$</span>log_return <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">diff</span>(<span class="fu">log</span>(prices<span class="sc">$</span>adjusted)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 </section>
-<section id="exploración-de-la-serie-histórica" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="exploración-de-la-serie-histórica"><span class="header-section-number">2</span> Exploración de la serie histórica</h2>
-<p>La <a href="#fig-price" class="quarto-xref">Figura&nbsp;1</a> presenta la trayectoria ajustada del activo y la <a href="#fig-returns" class="quarto-xref">Figura&nbsp;2</a> muestra los rendimientos diarios que sostienen el análisis de riesgo.</p>
-<div class="cell" data-layout-align="center">
+<section id="precio-rendimiento-y-pérdida-acumulada" class="level3">
+<h3 class="anchored" data-anchor-id="precio-rendimiento-y-pérdida-acumulada">Precio, rendimiento y pérdida acumulada</h3>
+<p>El cierre sin ajustar indica la cotización de mercado de cada fecha, mientras que el cierre ajustado incorpora los ajustes del proveedor por distribuciones y desdoblamientos, de modo que sus cocientes sirven como aproximación al desempeño de una inversión con distribuciones reinvertidas. No se interpreta el nivel ajustado como el efectivo que se habría pagado por una acción en esa fecha, ni se descuentan impuestos, comisiones o inflación.</p>
+<p>Para describir los cambios diarios utilizamos rendimientos logarítmicos, y para expresar la ganancia o pérdida de un periodo empleamos rendimientos simples acumulados:</p>
+<p><span class="math display">\[
+r_t=\ln\left(\frac{P_t^{aj}}{P_{t-1}^{aj}}\right),
+\qquad R_{a,b}=\frac{P_b^{aj}}{P_a^{aj}}-1
+=\exp\left(\sum_{t=a+1}^{b}r_t\right)-1.
+\]</span></p>
+<p>Ambas medidas parten de la misma serie, aunque sus porcentajes no son intercambiables en movimientos grandes. En todas las ventanas, la fecha inicial representa el cierre de referencia y la final representa el cierre de salida; los cuadros muestran rendimientos simples, mientras que la gráfica diaria utiliza logarítmicos.</p>
+</section>
+</section>
+<section id="trayectoria-histórica" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="trayectoria-histórica"><span class="header-section-number">3</span> Trayectoria histórica</h2>
+<p>La <a href="#fig-price" class="quarto-xref">Figura&nbsp;1</a> permite observar la cotización sin ajustar, con una expansión importante en el largo plazo y retrocesos que interrumpen esa trayectoria. Por su parte, la <a href="#fig-returns" class="quarto-xref">Figura&nbsp;2</a> muestra que la variación diaria no tiene una intensidad constante: existen tramos relativamente tranquilos y concentraciones de movimientos extremos, principalmente alrededor de las crisis y de cambios regulatorios.</p>
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(subject_prices, <span class="fu">aes</span>(date, adjusted)) <span class="sc">+</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> RISK_PALETTE[<span class="dv">1</span>], <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_dollar</span>(<span class="at">prefix =</span> <span class="st">"$"</span>)) <span class="sc">+</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Precio ajustado (MXN)"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuente: Yahoo Finance / BMV. Serie ajustada por dividendos y splits."</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="fl">4.5</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(prices<span class="sc">$</span>date, prices<span class="sc">$</span>close, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"#174A6E"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Año"</span>, <span class="at">ylab =</span> <span class="st">"Cierre sin ajustar (MXN)"</span>, <span class="at">lwd =</span> <span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">"#E5E7EB"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output-display">
-<div id="fig-price" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-price" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Serie del cierre de GAPB entre febrero de 2006 y junio de 2026, con retrocesos visibles en 2008, 2020 y 2023.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-price-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-price-history-events_files/figure-html/fig-price-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
+<img src="02-price-history-events_files/figure-html/fig-price-1.png" class="img-fluid figure-img" alt="Serie del cierre de GAPB entre febrero de 2006 y junio de 2026, con retrocesos visibles en 2008, 2020 y 2023.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-price-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;1: Precio ajustado de GAPB desde su listado en la BMV.
+Figura&nbsp;1: Cierre de GAPB sin ajustar, en pesos por acción. Fuente: copia local de Yahoo Finance.
 </figcaption>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(subject_returns, <span class="fu">aes</span>(date, log_return)) <span class="sc">+</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> RISK_PALETTE[<span class="dv">1</span>], <span class="at">linewidth =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(<span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Rendimiento logarítmico diario"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="fl">4.5</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(prices<span class="sc">$</span>date, <span class="dv">100</span> <span class="sc">*</span> prices<span class="sc">$</span>log_return, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"#174A6E"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Año"</span>, <span class="at">ylab =</span> <span class="st">"Rendimiento logarítmico diario (%)"</span>, <span class="at">lwd =</span> <span class="fl">0.6</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"#808080"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output-display">
-<div id="fig-returns" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-returns" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Rendimientos diarios alrededor de cero, con caídas particularmente grandes en 2008, marzo de 2020 y octubre de 2023.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-returns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-price-history-events_files/figure-html/fig-returns-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
+<img src="02-price-history-events_files/figure-html/fig-returns-1.png" class="img-fluid figure-img" alt="Rendimientos diarios alrededor de cero, con caídas particularmente grandes en 2008, marzo de 2020 y octubre de 2023.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-returns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2: Rendimientos logarítmicos diarios.
+Figura&nbsp;2: Rendimientos logarítmicos diarios calculados con el cierre ajustado, en porcentaje.
 </figcaption>
 </figure>
 </div>
 </div>
-</div>
+<p>La muestra contiene <strong>5115 precios y 5114 rendimientos diarios</strong>. La trayectoria ascendente del precio no elimina el riesgo, porque un inversionista que necesita retirar recursos durante una caída enfrenta una pérdida distinta de la que sugiere comparar únicamente el primer y el último cierre, además de que los dividendos hacen necesario distinguir entre cotización y desempeño ajustado.</p>
 <section id="máximo-drawdown" class="level3">
-<h3 class="anchored" data-anchor-id="máximo-drawdown">Máximo <em>drawdown</em></h3>
-<p>El <em>drawdown</em> mide la caída proporcional desde el máximo acumulado hasta la fecha:</p>
-<p>La <a href="#tbl-drawdown" class="quarto-xref">Tabla&nbsp;1</a> resume el episodio extremo y la <a href="#fig-drawdown" class="quarto-xref">Figura&nbsp;3</a> muestra su evolución respecto del máximo acumulado.</p>
-<p><span class="math display">\[
-DD_t = \frac{S_t}{\max_{s \le t} S_s} - 1
-\]</span></p>
-<div class="cell" data-layout-align="center">
+<h3 class="anchored" data-anchor-id="máximo-drawdown">Máximo drawdown</h3>
+<p>El <em>drawdown</em> mide cuánto se encuentra una inversión por debajo del máximo alcanzado hasta esa fecha, de acuerdo con <span class="math inline">\(DD_t=P_t^{aj}/\max_{s\leq t}P_s^{aj}-1\)</span>. El máximo drawdown es el valor más negativo de esa serie, por lo que reúne profundidad y orden temporal de las pérdidas, sin depender de que los rendimientos sigan una distribución normal.</p>
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>drawdown <span class="ot">&lt;-</span> <span class="fu">max_drawdown</span>(subject_prices<span class="sc">$</span>adjusted, subject_prices<span class="sc">$</span>date)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(drawdown, <span class="at">caption =</span> <span class="st">"Máximo drawdown del periodo completo."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>prices<span class="sc">$</span>drawdown <span class="ot">&lt;-</span> prices<span class="sc">$</span>adjusted <span class="sc">/</span> <span class="fu">cummax</span>(prices<span class="sc">$</span>adjusted) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>trough <span class="ot">&lt;-</span> <span class="fu">which.min</span>(prices<span class="sc">$</span>drawdown)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>peak <span class="ot">&lt;-</span> <span class="fu">which.max</span>(prices<span class="sc">$</span>adjusted[<span class="dv">1</span><span class="sc">:</span>trough])</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>recovery <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(prices)) <span class="sc">&gt;</span> trough <span class="sc">&amp;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                  prices<span class="sc">$</span>adjusted <span class="sc">&gt;=</span> prices<span class="sc">$</span>adjusted[peak])[<span class="dv">1</span>]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>mdd <span class="ot">&lt;-</span> prices<span class="sc">$</span>drawdown[trough]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-drawdown" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="fl">4.5</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(prices<span class="sc">$</span>date, <span class="dv">100</span> <span class="sc">*</span> prices<span class="sc">$</span>drawdown, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"#A64236"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Año"</span>, <span class="at">ylab =</span> <span class="st">"Drawdown (%)"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">70</span>, <span class="dv">0</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"#808080"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(prices<span class="sc">$</span>date[trough], <span class="dv">100</span> <span class="sc">*</span> mdd, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"#174A6E"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="fig-drawdown" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Pérdida respecto del máximo previo; el mínimo es cercano a menos 65 por ciento en octubre de 2008.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-drawdown-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-price-history-events_files/figure-html/fig-drawdown-1.png" class="img-fluid figure-img" alt="Pérdida respecto del máximo previo; el mínimo es cercano a menos 65 por ciento en octubre de 2008.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-drawdown-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3: Drawdown del cierre ajustado, con el mínimo histórico señalado.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dd_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Indicador =</span> <span class="fu">c</span>(<span class="st">"Pérdida máxima"</span>, <span class="st">"Máximo previo"</span>, <span class="st">"Mínimo posterior"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Primera recuperación"</span>, <span class="st">"Días naturales del máximo a la recuperación"</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Resultado =</span> <span class="fu">c</span>(<span class="fu">sprintf</span>(<span class="st">"%.2f%%"</span>, <span class="dv">100</span> <span class="sc">*</span> mdd),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">as.character</span>(prices<span class="sc">$</span>date[peak]), <span class="fu">as.character</span>(prices<span class="sc">$</span>date[trough]),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                <span class="fu">as.character</span>(prices<span class="sc">$</span>date[recovery]),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                <span class="fu">as.character</span>(<span class="fu">as.integer</span>(prices<span class="sc">$</span>date[recovery] <span class="sc">-</span> prices<span class="sc">$</span>date[peak])))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(dd_table)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-drawdown" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-drawdown-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;1: Máximo drawdown del periodo completo.
+Tabla&nbsp;1: Profundidad y fechas del máximo drawdown sobre la serie ajustada.
 </figcaption>
 <div aria-describedby="tbl-drawdown-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 22%">
-<col style="width: 23%">
-<col style="width: 23%">
-<col style="width: 30%">
-</colgroup>
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: right;">Drawdown máximo</th>
-<th style="text-align: left;">Fecha del máximo</th>
-<th style="text-align: left;">Fecha del mínimo</th>
-<th style="text-align: left;">Fecha de recuperación</th>
+<th style="text-align: left;">Indicador</th>
+<th style="text-align: left;">Resultado</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">-0.6458</td>
+<td style="text-align: left;">Pérdida máxima</td>
+<td style="text-align: left;">-64.58%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Máximo previo</td>
 <td style="text-align: left;">2007-10-18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mínimo posterior</td>
 <td style="text-align: left;">2008-10-27</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Primera recuperación</td>
 <td style="text-align: left;">2012-02-27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Días naturales del máximo a la recuperación</td>
+<td style="text-align: left;">1593</td>
 </tr>
 </tbody>
 </table>
 </div>
-</div>
 </figure>
 </div>
 </div>
-<div class="cell" data-layout-align="center">
+<p>La pérdida máxima fue de <strong>64.58%</strong>, desde el 18 de octubre de 2007 hasta el 27 de octubre de 2008, y el nivel ajustado del máximo previo se recuperó hasta el 27 de febrero de 2012. Una inversión equivalente a 100 pesos en el máximo habría descendido a aproximadamente <strong>35.42 pesos</strong>, por lo que recuperar el nivel inicial requería posteriormente una subida de <strong>182.33%</strong>, no solamente un aumento igual al porcentaje perdido.</p>
+<p>La caída de 2020 fue muy intensa, aunque no fue la más profunda de toda la muestra, lo cual muestra por qué conviene calcular este indicador sobre la historia completa y no elegir el episodio más reciente o más recordado. La recuperación señalada corresponde al precio ajustado, sin considerar pérdida de poder adquisitivo ni costo de oportunidad.</p>
+</section>
+</section>
+<section id="cinco-episodios-relevantes-y-sus-posibles-causas" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="cinco-episodios-relevantes-y-sus-posibles-causas"><span class="header-section-number">4</span> Cinco episodios relevantes y sus posibles causas</h2>
+<p>Seleccionamos dos crisis amplias, un choque sanitario localizado, una recuperación prolongada y una modificación regulatoria, con el fin de observar mecanismos distintos de riesgo. Las ventanas son exploratorias y se eligieron después de observar la historia: algunas abarcan meses y otras una sesión, por lo que sus rendimientos no constituyen una clasificación comparable de intensidad diaria ni una estrategia que pudiera haberse ejecutado con conocimiento anticipado.</p>
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>subject_prices<span class="sc">$</span>drawdown <span class="ot">&lt;-</span> <span class="fu">drawdown_series</span>(subject_prices<span class="sc">$</span>adjusted)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(subject_prices, <span class="fu">aes</span>(date, drawdown)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="at">fill =</span> RISK_PALETTE[<span class="dv">1</span>], <span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> RISK_PALETTE[<span class="dv">1</span>], <span class="at">linewidth =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(<span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Drawdown"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>events <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Episodio =</span> <span class="fu">unlist</span>(history_config<span class="sc">$</span>historical<span class="sc">$</span>label),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Inicio =</span> <span class="fu">as.Date</span>(<span class="fu">unlist</span>(history_config<span class="sc">$</span>historical<span class="sc">$</span>start)),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Fin =</span> <span class="fu">as.Date</span>(<span class="fu">unlist</span>(history_config<span class="sc">$</span>historical<span class="sc">$</span>end))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>events<span class="sc">$</span>return_pct <span class="ot">&lt;-</span> <span class="cn">NA_real_</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>events<span class="sc">$</span>observations <span class="ot">&lt;-</span> <span class="cn">NA_integer_</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(events))) {</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span> <span class="fu">match</span>(events<span class="sc">$</span>Inicio[i], prices<span class="sc">$</span>date)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span> <span class="fu">match</span>(events<span class="sc">$</span>Fin[i], prices<span class="sc">$</span>date)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="sc">!</span><span class="fu">is.na</span>(a), <span class="sc">!</span><span class="fu">is.na</span>(b), b <span class="sc">&gt;</span> a)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  events<span class="sc">$</span>return_pct[i] <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> (prices<span class="sc">$</span>adjusted[b] <span class="sc">/</span> prices<span class="sc">$</span>adjusted[a] <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  events<span class="sc">$</span>observations[i] <span class="ot">&lt;-</span> b <span class="sc">-</span> a</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output-display">
-<div id="fig-drawdown" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-drawdown-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-price-history-events_files/figure-html/fig-drawdown-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-drawdown-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3: Drawdown respecto del máximo acumulado.
+<div class="cell">
+<details class="code-fold">
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>event_table <span class="ot">&lt;-</span> events</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(event_table)[<span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Rendimiento (%)"</span>, <span class="st">"Intervalos"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(event_table, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-events" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;2: Ventanas históricas: cierre inicial de referencia, cierre final y rendimiento simple ajustado.
 </figcaption>
+<div aria-describedby="tbl-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 21%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Episodio</th>
+<th style="text-align: left;">Inicio</th>
+<th style="text-align: left;">Fin</th>
+<th style="text-align: right;">Rendimiento (%)</th>
+<th style="text-align: right;">Intervalos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Crisis financiera</td>
+<td style="text-align: left;">2007-10-18</td>
+<td style="text-align: left;">2008-10-27</td>
+<td style="text-align: right;">-64.58</td>
+<td style="text-align: right;">258</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Influenza A/H1N1</td>
+<td style="text-align: left;">2009-04-24</td>
+<td style="text-align: left;">2009-04-27</td>
+<td style="text-align: right;">-13.92</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Choque de COVID-19</td>
+<td style="text-align: left;">2020-02-19</td>
+<td style="text-align: left;">2020-03-23</td>
+<td style="text-align: right;">-54.31</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Recuperación del tráfico</td>
+<td style="text-align: left;">2020-03-23</td>
+<td style="text-align: left;">2021-12-31</td>
+<td style="text-align: right;">166.40</td>
+<td style="text-align: right;">449</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cambio regulatorio</td>
+<td style="text-align: left;">2023-10-04</td>
+<td style="text-align: left;">2023-10-05</td>
+<td style="text-align: right;">-22.45</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
 </figure>
 </div>
 </div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Descripción del comportamiento general e identificación de <strong>al menos cinco periodos</strong> con movimientos pronunciados, justificados con criterio financiero y no sólo visual.</p>
-</div>
-</div>
+<p>El número de intervalos corresponde a pares consecutivos de registros dentro de cada ventana. Se conserva el calendario del proveedor, que incluye algunas fechas con volumen cero y cierre repetido, por lo que este conteo describe las observaciones disponibles y no implica una validación del calendario bursátil.</p>
+<section id="crisis-financiera-de-20072008-demanda-y-prima-de-riesgo" class="level3">
+<h3 class="anchored" data-anchor-id="crisis-financiera-de-20072008-demanda-y-prima-de-riesgo">Crisis financiera de 2007–2008: demanda y prima de riesgo</h3>
+<p>Entre el máximo de octubre de 2007 y el mínimo de octubre de 2008, GAPB acumuló la pérdida de <strong>-64.58%</strong> de la <a href="#tbl-events" class="quarto-xref">Tabla&nbsp;2</a>. La crisis hipotecaria y bancaria internacional se intensificó durante 2008, con problemas de liquidez y financiamiento que la Reserva Federal documentó en su informe anual, particularmente después de la quiebra de Lehman Brothers en septiembre <span class="citation" data-cites="fedannual2008">(<a href="#ref-fedannual2008" role="doc-biblioref">Board of Governors of the Federal Reserve System, 2009</a>)</span>.</p>
+<p>Para GAP, el mecanismo propuesto opera por dos vías: menores expectativas de actividad y turismo reducen los flujos esperados, mientras que una mayor aversión al riesgo eleva el rendimiento exigido para mantener acciones. Como corroboración operativa posterior, la emisora reportó una caída de 5.6% en pasajeros durante 2008 <span class="citation" data-cites="gap20f2009">(<a href="#ref-gap20f2009" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2010</a>)</span>. Esta combinación es coherente con la pérdida observada, aunque no permite asignar toda la caída a una noticia concreta, pues la ventana comienza antes del momento más agudo de la crisis.</p>
+</section>
+<section id="influenza-ah1n1-en-2009-sensibilidad-al-turismo" class="level3">
+<h3 class="anchored" data-anchor-id="influenza-ah1n1-en-2009-sensibilidad-al-turismo">Influenza A/H1N1 en 2009: sensibilidad al turismo</h3>
+<p>Del cierre del 24 al del 27 de abril de 2009, el rendimiento ajustado fue de <strong>-13.92%</strong>. GAP documentó la emergencia sanitaria declarada el 25 de abril, las restricciones y las advertencias internacionales contra viajes no esenciales, además de una disminución interanual de 33.3% en pasajeros nacionales y 43.7% en internacionales durante mayo <span class="citation" data-cites="gap20f2009">(<a href="#ref-gap20f2009" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2010</a>)</span>.</p>
+<p>La explicación financiera es que un aeropuerto puede perder ingresos por pasajeros y actividad comercial aun cuando conserva la capacidad instalada, mientras que buena parte de sus costos debe seguir cubriéndose. El dato de mayo confirma posteriormente el deterioro operativo, pero no era información conocida el 27 de abril, por lo que se utiliza para respaldar el mecanismo y no como la noticia que habría provocado esa sesión. Asimismo, la crisis económica seguía presente, de modo que separar ambos efectos requeriría un análisis adicional.</p>
+</section>
+<section id="covid-19-en-2020-interrupción-de-la-movilidad" class="level3">
+<h3 class="anchored" data-anchor-id="covid-19-en-2020-interrupción-de-la-movilidad">COVID-19 en 2020: interrupción de la movilidad</h3>
+<p>Entre el 19 de febrero y el 23 de marzo de 2020, GAPB perdió <strong>54.31%</strong> sobre la serie ajustada. Dentro de esa ventana, el 11 de marzo la OMS caracterizó el brote de COVID-19 como pandemia, en un entorno de creciente incertidumbre sobre la duración de las interrupciones sanitarias y de movilidad <span class="citation" data-cites="whotimeline2020">(<a href="#ref-whotimeline2020" role="doc-biblioref">World Health Organization, 2020</a>)</span>.</p>
+<p>El 4 de abril, GAP informó que el tráfico de marzo había disminuido 30.2% frente al mismo mes de 2019 <span class="citation" data-cites="gaptraffic2020mar">(<a href="#ref-gaptraffic2020mar" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2020</a>)</span>. Ese comunicado es evidencia posterior del daño operativo, mientras que la caída de febrero y marzo es consistente con una revisión anticipada de ingresos, liquidez y capacidad para sostener inversiones durante una interrupción prolongada. El riesgo no consistía únicamente en recibir menos pasajeros un mes, sino en desconocer cuánto tiempo duraría la restricción y qué tan rápida sería la recuperación.</p>
+</section>
+<section id="recuperación-de-20202021-revisión-de-expectativas" class="level3">
+<h3 class="anchored" data-anchor-id="recuperación-de-20202021-revisión-de-expectativas">Recuperación de 2020–2021: revisión de expectativas</h3>
+<p>Desde el mínimo seleccionado del 23 de marzo de 2020 hasta el cierre de 2021, el rendimiento fue de <strong>166.40%</strong>. La interpretación propuesta es que la progresiva normalización de los viajes permitió revisar al alza los flujos esperados, después de que el precio había incorporado un escenario especialmente adverso.</p>
+<p>Dentro del propio periodo, el comunicado del 6 de diciembre de 2021 informó que el tráfico total de noviembre ya superaba en 0.1% al de noviembre de 2019 <span class="citation" data-cites="gaptraffic2021nov">(<a href="#ref-gaptraffic2021nov" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2021</a>)</span>. Esta información era compatible con mejores expectativas sobre los flujos, aunque no permite atribuir a ese anuncio toda la recuperación acumulada.</p>
+<p>El comunicado publicado el 4 de enero de 2022 señaló que, en diciembre de 2021, los pasajeros de los doce aeropuertos mexicanos superaron en 4.1% a los de diciembre de 2019, mientras que el conjunto de catorce aeropuertos todavía se encontraba 0.2% por debajo <span class="citation" data-cites="gaptraffic2021dec">(<a href="#ref-gaptraffic2021dec" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2022</a>)</span>. Esta evidencia respalda retrospectivamente la recuperación, pero no implica que todos los destinos se normalizaran al mismo ritmo ni que ese comunicado explicara precios anteriores a su publicación. Además, medir desde el mínimo amplifica el rendimiento acumulado y supone una selección retrospectiva que no debe confundirse con una oportunidad identificable de antemano.</p>
+</section>
+<section id="cambio-regulatorio-de-octubre-de-2023-incertidumbre-sobre-las-tarifas" class="level3">
+<h3 class="anchored" data-anchor-id="cambio-regulatorio-de-octubre-de-2023-incertidumbre-sobre-las-tarifas">Cambio regulatorio de octubre de 2023: incertidumbre sobre las tarifas</h3>
+<p>El 4 de octubre de 2023, después del cierre, GAP anunció que la AFAC había notificado una modificación unilateral de las bases de regulación tarifaria, y del cierre de ese día al del 5 de octubre la acción cayó <strong>22.45%</strong> <span class="citation" data-cites="gaptariff2023initial">(<a href="#ref-gaptariff2023initial" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2023a</a>)</span>. A diferencia de una disminución gradual en pasajeros, la noticia afectaba las condiciones bajo las cuales se generarían ingresos futuros y la percepción de estabilidad de las concesiones.</p>
+<p>El mecanismo plausible combina una revisión de márgenes esperados con una mayor prima por incertidumbre regulatoria, por lo que el precio puede reaccionar antes de que se observe un cambio en los estados financieros. El 19 de octubre, la empresa informó que las tarifas máximas vigentes para 2020–2024 permanecerían y que las modificaciones tarifarias derivadas de las nuevas reglas aplicarían desde 2025, tras la revisión ordinaria <span class="citation" data-cites="gaptariff2023update">(<a href="#ref-gaptariff2023update" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2023b</a>)</span>. La proximidad entre el anuncio inicial y la caída ofrece una asociación temporal más clara que una ventana de varios meses, aunque sin un referente de mercado no podemos estimar un rendimiento anormal ni aislar un efecto causal.</p>
 </section>
 </section>
-<section id="eventos-y-explicación-de-los-movimientos" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="eventos-y-explicación-de-los-movimientos"><span class="header-section-number">3</span> Eventos y explicación de los movimientos</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Para cada periodo identificado: qué ocurrió en el entorno financiero, macroeconómico, político o en la propia empresa, y por qué ese hecho es relevante para el precio de este activo en particular.</p>
-<p>El énfasis está en mostrar que el precio responde a choques e información nueva, no en narrar la noticia.</p>
-</div>
-</div>
-</section>
-<section id="relación-con-el-ciclo-económico" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="relación-con-el-ciclo-económico"><span class="header-section-number">4</span> Relación con el ciclo económico</h2>
-<p>La <a href="#fig-gdp" class="quarto-xref">Figura&nbsp;4</a> compara ambas series y la <a href="#tbl-gdp" class="quarto-xref">Tabla&nbsp;2</a> conserva los valores anuales utilizados en la lectura del ciclo.</p>
-<div class="cell" data-layout-align="center">
+<section id="rendimiento-anual-y-crecimiento-económico-de-méxico" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="rendimiento-anual-y-crecimiento-económico-de-méxico"><span class="header-section-number">5</span> Rendimiento anual y crecimiento económico de México</h2>
+<p>El crecimiento del PIB real del Banco Mundial mide el cambio anual de la producción a precios constantes, mientras que el rendimiento de GAPB resume una variación nominal en el valor de una inversión; ambos se expresan en porcentaje, pero no miden lo mismo <span class="citation" data-cites="worldbankgdpmethod">(<a href="#ref-worldbankgdpmethod" role="doc-biblioref">World Bank, 2026</a>)</span>. Para hacer comparable el calendario se utilizan <strong>2007–2025</strong>, los diecinueve años completos con cierre del año previo y dato de PIB, excluyendo 2006 por iniciar después de enero y 2026 por estar incompleto al corte.</p>
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>annual <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(subject_returns, <span class="fu">format</span>(subject_returns<span class="sc">$</span>date, <span class="st">"%Y"</span>)),</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(one) {</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">year =</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(one<span class="sc">$</span>date[<span class="dv">1</span>], <span class="st">"%Y"</span>)),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">asset_return =</span> <span class="dv">100</span> <span class="sc">*</span> (<span class="fu">exp</span>(<span class="fu">sum</span>(one<span class="sc">$</span>log_return)) <span class="sc">-</span> <span class="dv">1</span>),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>combined <span class="ot">&lt;-</span> <span class="fu">merge</span>(annual, gdp[, <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"gdp_growth"</span>)], <span class="at">by =</span> <span class="st">"year"</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>long <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">year =</span> combined<span class="sc">$</span>year, <span class="at">serie =</span> <span class="st">"GAPB"</span>, <span class="at">valor =</span> combined<span class="sc">$</span>asset_return),</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">year =</span> combined<span class="sc">$</span>year, <span class="at">serie =</span> <span class="st">"PIB real"</span>, <span class="at">valor =</span> combined<span class="sc">$</span>gdp_growth)</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(long, <span class="fu">aes</span>(year, valor, <span class="at">fill =</span> serie)) <span class="sc">+</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.75</span>), <span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">colour =</span> RISK_INK<span class="sc">$</span>baseline, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">unname</span>(RISK_PALETTE[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])) <span class="sc">+</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Variación anual (%)"</span>,</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: Yahoo Finance / BMV y Banco Mundial."</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>prices<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(prices<span class="sc">$</span>date, <span class="st">"%Y"</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>year_end <span class="ot">&lt;-</span> prices[<span class="sc">!</span><span class="fu">duplicated</span>(prices<span class="sc">$</span>year, <span class="at">fromLast =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"date"</span>, <span class="st">"adjusted"</span>)]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>year_end<span class="sc">$</span>asset_return <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">100</span> <span class="sc">*</span> (year_end<span class="sc">$</span>adjusted[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">/</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">head</span>(year_end<span class="sc">$</span>adjusted, <span class="sc">-</span><span class="dv">1</span>) <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>annual <span class="ot">&lt;-</span> <span class="fu">merge</span>(year_end[, <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"asset_return"</span>)],</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                gdp[, <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"gdp_growth"</span>)], <span class="at">by =</span> <span class="st">"year"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>annual <span class="ot">&lt;-</span> annual[annual<span class="sc">$</span>year <span class="sc">&gt;</span> <span class="fu">min</span>(prices<span class="sc">$</span>year) <span class="sc">&amp;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                   annual<span class="sc">$</span>year <span class="sc">&lt;</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(cutoff, <span class="st">"%Y"</span>)), ]</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(annual) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>annual_correlation <span class="ot">&lt;-</span> <span class="fu">cor</span>(annual<span class="sc">$</span>asset_return, annual<span class="sc">$</span>gdp_growth)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output-display">
-<div id="fig-gdp" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="fl">4.5</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(annual<span class="sc">$</span>year, annual<span class="sc">$</span>asset_return, <span class="at">type =</span> <span class="st">"o"</span>, <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"#174A6E"</span>, <span class="at">xlab =</span> <span class="st">"Año"</span>, <span class="at">ylab =</span> <span class="st">"Variación anual (%)"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">range</span>(annual<span class="sc">$</span>asset_return, annual<span class="sc">$</span>gdp_growth))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(annual<span class="sc">$</span>year, annual<span class="sc">$</span>gdp_growth, <span class="at">type =</span> <span class="st">"o"</span>, <span class="at">pch =</span> <span class="dv">17</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">"#A64236"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"#808080"</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"GAPB: rendimiento ajustado"</span>, <span class="st">"México: PIB real"</span>),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#174A6E"</span>, <span class="st">"#A64236"</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">16</span>, <span class="dv">17</span>),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">cex =</span> <span class="fl">0.85</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="fig-gdp" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Comparación anual de 2007 a 2025: los rendimientos de GAPB fluctúan más que el PIB y sus signos divergen en varios años.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-gdp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-price-history-events_files/figure-html/fig-gdp-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
+<img src="02-price-history-events_files/figure-html/fig-gdp-1.png" class="img-fluid figure-img" alt="Comparación anual de 2007 a 2025: los rendimientos de GAPB fluctúan más que el PIB y sus signos divergen en varios años.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gdp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4: Rendimiento anual del activo frente al crecimiento anual del PIB real de México.
+Figura&nbsp;4: Rendimiento nominal ajustado de GAPB y crecimiento real del PIB mexicano, por año completo. Una sola escala porcentual.
 </figcaption>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  combined,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Rendimiento anual del activo y crecimiento del PIB real."</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">2</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(annual, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-gdp" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-gdp" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-gdp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
+Tabla&nbsp;3: Datos de la comparación anual, expresados en porcentaje. Fuentes: Yahoo Finance y Banco Mundial, copias locales.
 </figcaption>
 <div aria-describedby="tbl-gdp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">Año</th>
@@ -531,101 +714,96 @@ Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">2006</td>
-<td style="text-align: right;">45.02</td>
-<td style="text-align: right;">4.81</td>
-</tr>
-<tr class="even">
 <td style="text-align: right;">2007</td>
 <td style="text-align: right;">19.51</td>
 <td style="text-align: right;">2.08</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: right;">2008</td>
 <td style="text-align: right;">-31.80</td>
 <td style="text-align: right;">0.94</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: right;">2009</td>
 <td style="text-align: right;">38.85</td>
 <td style="text-align: right;">-6.30</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: right;">2010</td>
 <td style="text-align: right;">29.87</td>
 <td style="text-align: right;">4.97</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: right;">2011</td>
 <td style="text-align: right;">-1.77</td>
 <td style="text-align: right;">3.44</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: right;">2012</td>
 <td style="text-align: right;">62.32</td>
 <td style="text-align: right;">3.55</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: right;">2013</td>
 <td style="text-align: right;">-2.92</td>
 <td style="text-align: right;">0.85</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: right;">2014</td>
 <td style="text-align: right;">44.63</td>
 <td style="text-align: right;">2.50</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: right;">2015</td>
 <td style="text-align: right;">72.09</td>
 <td style="text-align: right;">2.70</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: right;">2016</td>
 <td style="text-align: right;">16.90</td>
 <td style="text-align: right;">1.77</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: right;">2017</td>
 <td style="text-align: right;">26.03</td>
 <td style="text-align: right;">1.87</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: right;">2018</td>
 <td style="text-align: right;">-17.04</td>
 <td style="text-align: right;">1.97</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: right;">2019</td>
 <td style="text-align: right;">47.69</td>
 <td style="text-align: right;">-0.39</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: right;">2020</td>
 <td style="text-align: right;">-1.65</td>
 <td style="text-align: right;">-8.35</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: right;">2021</td>
 <td style="text-align: right;">33.73</td>
 <td style="text-align: right;">6.05</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: right;">2022</td>
 <td style="text-align: right;">3.96</td>
 <td style="text-align: right;">3.71</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: right;">2023</td>
 <td style="text-align: right;">14.11</td>
 <td style="text-align: right;">3.11</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: right;">2024</td>
 <td style="text-align: right;">28.14</td>
 <td style="text-align: right;">1.35</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: right;">2025</td>
 <td style="text-align: right;">33.53</td>
 <td style="text-align: right;">0.56</td>
@@ -633,58 +811,195 @@ Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
 </tbody>
 </table>
 </div>
+</figure>
+</div>
+</div>
+<p>La correlación contemporánea de Pearson es <strong>0.131</strong>, por lo que en esta muestra la asociación lineal entre ambas variaciones anuales es débil, sin que ello implique independencia económica. La <a href="#tbl-gdp" class="quarto-xref">Tabla&nbsp;3</a> muestra que en 2009 el PIB cayó 6.30% y la acción ganó 38.85%, mientras que en 2021 ambos indicadores avanzaron; asimismo, en 2025 el PIB creció apenas 0.56% y GAPB registró un rendimiento ajustado de 33.53%.</p>
+<p>Una explicación razonable de estas diferencias es que el PIB describe la producción realizada durante el año, mientras que el mercado incorpora expectativas sobre años posteriores, además de que GAP atiende demanda internacional y enfrenta decisiones regulatorias y corporativas propias. Por ello, el rendimiento positivo de 2009 puede ser compatible con expectativas de recuperación en un año todavía recesivo, aunque la comparación por sí sola no demuestra que esa anticipación haya sido su causa.</p>
+<p>También importa la agregación: en 2020 la pérdida anual fue de 1.65%, cifra que oculta la caída de más de 50% de la ventana de crisis y el rebote posterior. El balance de diciembre puede parecer moderado aun cuando el riesgo experimentado durante el año fue elevado, de modo que evaluar el activo únicamente con datos anuales omitiría una parte sustancial de su exposición.</p>
+</section>
+<section id="último-año-julio-de-2025junio-de-2026" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="último-año-julio-de-2025junio-de-2026"><span class="header-section-number">6</span> Último año: julio de 2025–junio de 2026</h2>
+<p>Para medir los doce meses completos se utiliza el cierre del 30 de junio de 2025 como base, incorporando así el movimiento de la primera sesión de julio. Dentro de este intervalo se seleccionan tres hechos anteriores al corte: el huracán Melissa, los resultados del primer trimestre de 2026 y la integración de CBX.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>recent <span class="ot">&lt;-</span> prices[prices<span class="sc">$</span>date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(history_config<span class="sc">$</span>recent_baseline), ]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>recent<span class="sc">$</span>index <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> recent<span class="sc">$</span>adjusted <span class="sc">/</span> recent<span class="sc">$</span>adjusted[<span class="dv">1</span>]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>recent_return <span class="ot">&lt;-</span> <span class="fu">tail</span>(recent<span class="sc">$</span>index, <span class="dv">1</span>) <span class="sc">-</span> <span class="dv">100</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>recent_events <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Evento =</span> <span class="fu">unlist</span>(history_config<span class="sc">$</span>recent<span class="sc">$</span>label),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Fecha =</span> <span class="fu">as.Date</span>(<span class="fu">unlist</span>(history_config<span class="sc">$</span>recent<span class="sc">$</span>event)),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Inicio =</span> <span class="fu">as.Date</span>(<span class="fu">unlist</span>(history_config<span class="sc">$</span>recent<span class="sc">$</span>start)),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Fin =</span> <span class="fu">as.Date</span>(<span class="fu">unlist</span>(history_config<span class="sc">$</span>recent<span class="sc">$</span>end))</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>recent_events<span class="sc">$</span>return_pct <span class="ot">&lt;-</span> <span class="cn">NA_real_</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(recent_events))) {</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span> <span class="fu">match</span>(recent_events<span class="sc">$</span>Inicio[i], prices<span class="sc">$</span>date)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span> <span class="fu">match</span>(recent_events<span class="sc">$</span>Fin[i], prices<span class="sc">$</span>date)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="sc">!</span><span class="fu">is.na</span>(a), <span class="sc">!</span><span class="fu">is.na</span>(b), b <span class="sc">&gt;</span> a)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  recent_events<span class="sc">$</span>return_pct[i] <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> (prices<span class="sc">$</span>adjusted[b] <span class="sc">/</span> prices<span class="sc">$</span>adjusted[a] <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>cbx_day <span class="ot">&lt;-</span> <span class="fu">match</span>(recent_events<span class="sc">$</span>Fecha[<span class="dv">3</span>], prices<span class="sc">$</span>date)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>cbx_first_return <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> (prices<span class="sc">$</span>adjusted[cbx_day] <span class="sc">/</span> prices<span class="sc">$</span>adjusted[cbx_day <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">-</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="fl">4.5</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(recent<span class="sc">$</span>date, recent<span class="sc">$</span>index, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"#174A6E"</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Fecha"</span>, <span class="at">ylab =</span> <span class="st">"Índice ajustado (base 100)"</span>, <span class="at">lwd =</span> <span class="fl">1.2</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">100</span>, <span class="at">col =</span> <span class="st">"#808080"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">as.numeric</span>(recent_events<span class="sc">$</span>Fecha), <span class="at">col =</span> <span class="st">"#A64236"</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(recent_events<span class="sc">$</span>Fecha, <span class="fu">rep</span>(<span class="fu">max</span>(recent<span class="sc">$</span>index), <span class="fu">nrow</span>(recent_events)),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">labels =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(recent_events)), <span class="at">pos =</span> <span class="dv">3</span>, <span class="at">cex =</span> <span class="fl">0.85</span>, <span class="at">xpd =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="fig-recent" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Índice de la inversión ajustada entre junio de 2025 y junio de 2026, con tres fechas de eventos señaladas y cierre próximo a 105.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-recent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-price-history-events_files/figure-html/fig-recent-1.png" class="img-fluid figure-img" alt="Índice de la inversión ajustada entre junio de 2025 y junio de 2026, con tres fechas de eventos señaladas y cierre próximo a 105.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-recent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5: Desempeño ajustado del último año, base 100 al 30 de junio de 2025. Las líneas numeradas corresponden al orden de eventos del cuadro siguiente.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>
+Ver código
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>recent_table <span class="ot">&lt;-</span> recent_events</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(recent_table)[<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="st">"Rendimiento (%)"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(recent_table, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-recent" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-recent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;4: Eventos recientes y rendimiento simple ajustado entre los cierres indicados. Fecha: inicio operativo del choque o publicación del anuncio.
+</figcaption>
+<div aria-describedby="tbl-recent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Evento</th>
+<th style="text-align: left;">Fecha</th>
+<th style="text-align: left;">Inicio</th>
+<th style="text-align: left;">Fin</th>
+<th style="text-align: right;">Rendimiento (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Huracán Melissa</td>
+<td style="text-align: left;">2025-10-26</td>
+<td style="text-align: left;">2025-10-24</td>
+<td style="text-align: left;">2025-11-03</td>
+<td style="text-align: right;">-1.23</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resultados del 1T26</td>
+<td style="text-align: left;">2026-04-20</td>
+<td style="text-align: left;">2026-04-20</td>
+<td style="text-align: left;">2026-04-21</td>
+<td style="text-align: right;">3.63</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Integración de CBX</td>
+<td style="text-align: left;">2026-05-07</td>
+<td style="text-align: left;">2026-05-06</td>
+<td style="text-align: left;">2026-05-08</td>
+<td style="text-align: right;">-0.96</td>
+</tr>
+</tbody>
+</table>
 </div>
 </figure>
 </div>
 </div>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>¿El activo se mueve con el ciclo económico, lo amplifica o se desacopla? ¿Qué explica las coincidencias y las diferencias?</p>
-</div>
-</div>
+<p>El rendimiento de todo el intervalo fue de <strong>4.77%</strong>, aunque la <a href="#fig-recent" class="quarto-xref">Figura&nbsp;5</a> muestra que ese resultado no se obtuvo mediante una trayectoria estable. Las ventanas de la <a href="#tbl-recent" class="quarto-xref">Tabla&nbsp;4</a> incluyen cierres previos y posteriores a los hechos, sin suponer que los movimientos intermedios respondieran a una sola causa.</p>
+<section id="huracán-melissa-afectación-operativa-y-respuesta-limitada" class="level3">
+<h3 class="anchored" data-anchor-id="huracán-melissa-afectación-operativa-y-respuesta-limitada">Huracán Melissa: afectación operativa y respuesta limitada</h3>
+<p>Los resultados del cuarto trimestre de 2025 documentan que Montego Bay suspendió operaciones el 26 de octubre y las reanudó el 1 de noviembre, mientras que Kingston cerró preventivamente el 25 de octubre y retomó operaciones el 29 <span class="citation" data-cites="gap4q2025">(<a href="#ref-gap4q2025" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026b</a>)</span>. El mecanismo esperado es negativo por la interrupción de pasajeros y por el daño a la infraestructura turística que sostiene la demanda, incluso después de reabrir los aeropuertos.</p>
+<p>Entre los cierres del 24 de octubre y del 3 de noviembre, GAPB registró <strong>-1.23%</strong>, una caída relativamente moderada frente a los episodios históricos seleccionados. Esto no demuestra ausencia de daño: el mercado valora el conjunto del grupo, puede anticipar parte del riesgo meteorológico y puede ajustar sus expectativas en fechas posteriores, por lo que una ventana corta no equivale al costo económico total del huracán. El reporte trimestral se utiliza como confirmación posterior de las fechas operativas, no como un anuncio publicado en octubre.</p>
 </section>
-<section id="periodo-reciente" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="periodo-reciente"><span class="header-section-number">5</span> Periodo reciente</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Eventos del último año —tasas de interés, entorno internacional, cambios regulatorios, resultados trimestrales— y cómo se reflejan, o no, en el precio y en los rendimientos.</p>
-</div>
-</div>
+<section id="resultados-del-primer-trimestre-de-2026-noticias-de-distinto-signo" class="level3">
+<h3 class="anchored" data-anchor-id="resultados-del-primer-trimestre-de-2026-noticias-de-distinto-signo">Resultados del primer trimestre de 2026: noticias de distinto signo</h3>
+<p>El 20 de abril de 2026, a las 19:56 horas del este de Estados Unidos, GAP publicó sus resultados después del cierre bursátil. El tráfico total había disminuido 5.5% frente al primer trimestre de 2025, aunque el EBITDA aumentó 6.4%, combinación que evidencia que pasajeros y resultados financieros no necesariamente se mueven en la misma proporción <span class="citation" data-cites="gap1q2026">(<a href="#ref-gap1q2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026c</a>)</span>.</p>
+<p>Por el horario del anuncio, comparamos el cierre del 20 con el del 21 de abril, obteniendo <strong>3.63%</strong>. El movimiento positivo es compatible con que los inversionistas hayan valorado favorablemente la resistencia de los resultados, aun con menor tráfico; sin embargo, al no contar con un consenso previo de expectativas ni con un ajuste por el mercado, no podemos afirmar que hubo una sorpresa positiva cuantificada ni atribuir toda la subida al comunicado.</p>
 </section>
-<section id="conclusión" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="conclusión"><span class="header-section-number">6</span> Conclusión</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Síntesis razonada, no resumen: qué enseña este ejercicio sobre el riesgo, la incertidumbre y el papel de la información nueva en la formación de precios.</p>
-</div>
-</div>
+<section id="integración-de-cbx-crecimiento-con-efectos-sobre-cada-acción" class="level3">
+<h3 class="anchored" data-anchor-id="integración-de-cbx-crecimiento-con-efectos-sobre-cada-acción">Integración de CBX: crecimiento con efectos sobre cada acción</h3>
+<p>El 7 de mayo de 2026, GAP anunció la conclusión de la combinación de negocios de CBX y de los servicios de asistencia técnica, junto con la adquisición del 25% restante de CBX y la emisión neta de 89,740,731 acciones <span class="citation" data-cites="gapcbx2026">(<a href="#ref-gapcbx2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026a</a>)</span>. El mecanismo potencialmente favorable es una mayor integración de operaciones y flujos, aunque el accionista también debe considerar el financiamiento y el aumento del número de títulos entre los que se distribuyen los beneficios.</p>
+<p>El comunicado se publicó el 7 de mayo a las 07:59 horas del este de Estados Unidos, antes de la apertura bursátil <span class="citation" data-cites="gapcbx2026release">(<a href="#ref-gapcbx2026release" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026d</a>)</span>. Del cierre del 6 al del 7 de mayo, la acción subió <strong>1.02%</strong>, mientras que el balance del 6 al 8 de mayo fue de <strong>-0.96%</strong>, por lo que la reacción inicial positiva se revirtió en la siguiente sesión. Ninguno de estos movimientos puede atribuirse exclusivamente al anuncio, ya que pueden coexistir expectativas previas y otras noticias; el ejemplo muestra que tanto el horizonte elegido como los efectos por acción importan al interpretar una expansión empresarial.</p>
 </section>
-<section id="referencias" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="referencias"><span class="header-section-number">7</span> Referencias</h2>
+</section>
+<section id="conclusión" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="conclusión"><span class="header-section-number">7</span> Conclusión</h2>
+<p>La historia de GAPB muestra que el riesgo de mercado surge de la interacción entre el negocio y la revisión de expectativas, ya que las crisis sanitarias pueden afectar directamente la demanda, una crisis financiera puede deteriorar al mismo tiempo los flujos esperados y las condiciones de financiamiento, y un cambio regulatorio puede alterar la valoración aun antes de modificar los ingresos reportados. Por ello, contar con infraestructura esencial y una trayectoria de crecimiento no garantiza estabilidad en el valor de la inversión.</p>
+<p>La magnitud del drawdown y el tiempo necesario para recuperar el máximo previo hacen que el horizonte del inversionista sea parte del problema: dos personas que mantienen el mismo activo pueden enfrentar consecuencias diferentes si una tiene liquidez para esperar y la otra debe vender durante el deterioro. Asimismo, una recuperación posterior no elimina la pérdida transitoria ni permite asegurar que el siguiente choque tendrá una duración semejante, mientras que la débil relación contemporánea con el PIB advierte que una sola variable macroeconómica resulta insuficiente para representar todas las fuentes de incertidumbre.</p>
+<p>El análisis reciente refuerza esta interpretación, pues una afectación operativa coincidió con una caída moderada en la ventana elegida, unos resultados con menor tráfico coexistieron con una subida y el anuncio de una integración corporativa coincidió con un avance inicial que se revirtió en la siguiente sesión. Para evaluar el riesgo de GAPB conviene, por tanto, complementar las medidas históricas con escenarios sobre movilidad, regulación y liquidez, manteniendo clara la diferencia entre explicar un episodio una vez ocurrido y tener capacidad para anticiparlo. La evidencia permite reconocer vulnerabilidades y formular preguntas mejor sustentadas, pero no convierte la historia observada en una garantía sobre el comportamiento futuro.</p>
+</section>
+<section id="referencias" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="referencias">Referencias</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-fedannual2008" class="csl-entry" role="listitem">
+Board of Governors of the Federal Reserve System. (2009). <em>Annual Report 2008: Monetary Policy and the Economic Outlook</em>. Federal Reserve. <a href="https://www.federalreserve.gov/boarddocs/rptcongress/annual08/sec1/c1.htm">https://www.federalreserve.gov/boarddocs/rptcongress/annual08/sec1/c1.htm</a>
+</div>
+<div id="ref-gap20f2009" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2010). <em>Annual Report 2009, Form 20-F</em>. U.S. Securities; Exchange Commission. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000119312510150057/d20f.htm">https://www.sec.gov/Archives/edgar/data/1347557/000119312510150057/d20f.htm</a>
+</div>
+<div id="ref-gaptraffic2020mar" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2020, abril 4). <em>Reports Passenger Traffic Decrease of 30.2 Percent for the Month of March</em>. <a href="https://www.globenewswire.com/news-release/2020/04/05/2011806/0/en/GRUPO-AEROPORTUARIO-DEL-PACIFICO-REPORTS-PASSENGER-TRAFFIC-DECREASE-OF-30-2-FOR-THE-MONTH-OF-MARCH.html">https://www.globenewswire.com/news-release/2020/04/05/2011806/0/en/GRUPO-AEROPORTUARIO-DEL-PACIFICO-REPORTS-PASSENGER-TRAFFIC-DECREASE-OF-30-2-FOR-THE-MONTH-OF-MARCH.html</a>
+</div>
+<div id="ref-gaptraffic2021nov" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2021, diciembre 6). <em>Reports in November 2021 a Passenger Traffic Increase of 0.1 Percent Compared to 2019</em>. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000117184321008327/f6k_120621.htm">https://www.sec.gov/Archives/edgar/data/1347557/000117184321008327/f6k_120621.htm</a>
+</div>
+<div id="ref-gaptraffic2021dec" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2022, enero 4). <em>Reports in December 2021 a Passenger Traffic Decrease of 0.2 Percent Compared to 2019, Increase of 58.8 Percent Compared to 2020</em>. <a href="https://www.globenewswire.com/news-release/2022/01/05/2361264/0/en/Grupo-Aeroportuario-del-Pacifico-Reports-in-December-2021-a-Passenger-Traffic-Decrease-of-0-2-Compared-to-2019-Increase-of-58-8-Compared-to-2020.html">https://www.globenewswire.com/news-release/2022/01/05/2361264/0/en/Grupo-Aeroportuario-del-Pacifico-Reports-in-December-2021-a-Passenger-Traffic-Decrease-of-0-2-Compared-to-2019-Increase-of-58-8-Compared-to-2020.html</a>
+</div>
+<div id="ref-gaptariff2023initial" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2023a, octubre 4). <em>Announces Government Action to Change Tariff Base Regulation</em>. <a href="https://www.globenewswire.com/news-release/2023/10/05/2755031/0/en/Grupo-Aeroportuario-del-Pacifico-Announces-Government-Action-to-Change-Tariff-Base-Regulation.html">https://www.globenewswire.com/news-release/2023/10/05/2755031/0/en/Grupo-Aeroportuario-del-Pacifico-Announces-Government-Action-to-Change-Tariff-Base-Regulation.html</a>
+</div>
+<div id="ref-gaptariff2023update" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2023b, octubre 19). <em>Announces Government Action to Amend the Rules for Tariff Regulation</em>. <a href="https://www.globenewswire.com/ip/news-release/2023/10/20/2763783/0/en/Grupo-Aeroportuario-del-Pacifico-Announces-Government-Action-to-Amend-the-Rules-for-Tariff-Regulation.html">https://www.globenewswire.com/ip/news-release/2023/10/20/2763783/0/en/Grupo-Aeroportuario-del-Pacifico-Announces-Government-Action-to-Amend-the-Rules-for-Tariff-Regulation.html</a>
+</div>
+<div id="ref-gapcbx2026" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2026a). <em>Announces Completion of Business Combination Process of <span>CBX</span> and the Provision of Technical Assistance Services</em> [Form 6-K]. U.S. Securities; Exchange Commission. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000117184326003120/f6k_050726.htm">https://www.sec.gov/Archives/edgar/data/1347557/000117184326003120/f6k_050726.htm</a>
+</div>
+<div id="ref-gap4q2025" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2026b). <em>Resultados consolidados del cuarto trimestre de 2025</em>. Grupo Aeroportuario del Pacífico. <a href="https://www.sec.gov/Archives/edgar/data/1347557/000117184326001035/f6k_022426.htm">https://www.sec.gov/Archives/edgar/data/1347557/000117184326001035/f6k_022426.htm</a>
+</div>
+<div id="ref-gap1q2026" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2026c, abril 20). <em>Announces Results for the First Quarter of 2026</em>. <a href="https://www.globenewswire.com/news-release/2026/04/20/3277544/0/en/grupo-aeroportuario-del-pacifico-announces-results-for-the-first-quarter-of-2026.html">https://www.globenewswire.com/news-release/2026/04/20/3277544/0/en/grupo-aeroportuario-del-pacifico-announces-results-for-the-first-quarter-of-2026.html</a>
+</div>
+<div id="ref-gapcbx2026release" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2026d, mayo 7). <em>Announces Completion of Business Combination Process of CBX and the Provision of Technical Assistance Services</em>. <a href="https://www.globenewswire.com/news-release/2026/05/07/3289938/0/en/grupo-aeroportuario-del-pacifico-announces-completion-of-business-combination-process-of-cbx-and-the-provision-of-technical-assistance-services.html">https://www.globenewswire.com/news-release/2026/05/07/3289938/0/en/grupo-aeroportuario-del-pacifico-announces-completion-of-business-combination-process-of-cbx-and-the-provision-of-technical-assistance-services.html</a>
+</div>
+<div id="ref-worldbankgdpmethod" class="csl-entry" role="listitem">
+World Bank. (2026). <em>GDP Growth (Annual Percent): Indicator NY.GDP.MKTP.KD.ZG</em>. <a href="https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.KD.ZG">https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.KD.ZG</a>
+</div>
+<div id="ref-whotimeline2020" class="csl-entry" role="listitem">
+World Health Organization. (2020, abril 27). <em>Archived: WHO Timeline – COVID-19</em>. <a href="https://www.who.int/news/item/27-04-2020-who-timeline---covid-19">https://www.who.int/news/item/27-04-2020-who-timeline---covid-19</a>
+</div>
+<div id="ref-yahoogapbhistory" class="csl-entry" role="listitem">
+Yahoo Finance. (2026). <em><span>GAPB.MX</span>: Historical Data</em>. <a href="https://finance.yahoo.com/quote/GAPB.MX/history/">https://finance.yahoo.com/quote/GAPB.MX/history/</a>
+</div>
+</div>
+<p><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis">Repositorio del proyecto en GitHub</a>, enlace para los comentarios de la entrega en Canvas.</p>
 
 
 </section>
@@ -701,7 +1016,7 @@ Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
+        if (clz.startsWith('code-annotation-')) {
           return true;
         }
       }
@@ -721,11 +1036,11 @@ Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copiado");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();    
+        tooltip.show();
       }
       setTimeout(function() {
         if (tooltip) {
@@ -807,7 +1122,7 @@ Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config); 
+      window.tippy(el, config);
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -882,7 +1197,7 @@ Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined; 
+        let hash = undefined;
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -910,7 +1225,7 @@ Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              } 
+              }
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -934,7 +1249,7 @@ Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -974,7 +1289,7 @@ Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
+              // cook up a div (if necessary) and position it
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -1100,10 +1415,10 @@ Tabla&nbsp;2: Rendimiento anual del activo y crecimiento del PIB real.
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Licencia MIT · el contenido de terceros conserva los términos de su proveedor.</p>
-</div>   
+</div>
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/02-price-history-events.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/02-price-history-events.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Fuentes de mercado: Yahoo Finance / BMV · Macro: Banco Mundial</p>
 </div>
