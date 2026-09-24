@@ -8,6 +8,20 @@ author:
   - "Juan Pablo Morán Errejón"
 date: last-modified
 date-format: "D [de] MMMM [de] YYYY"
+format:
+  html:
+    theme:
+      - cosmo
+      - _theme.scss
+    toc: true
+    toc-depth: 3
+    toc-title: "Contenido"
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-summary: "Ver código R"
+    embed-resources: true
+    smooth-scroll: true
 ---
 
 ```{r setup}
@@ -17,12 +31,14 @@ history_config <- load_config("price_history")
 cutoff <- as.Date(history_config$cutoff)
 ```
 
-<dl class="report-meta" aria-label="Ficha técnica del reporte">
-<div><dt>Activo y mercado</dt><dd>Grupo Aeroportuario del Pacífico · GAPB en la BMV</dd></div>
-<div><dt>Corte del análisis</dt><dd>30 de junio de 2026</dd></div>
-<div><dt>Último año</dt><dd>Julio de 2025–junio de 2026</dd></div>
-<div><dt>Fuentes</dt><dd>Yahoo Finance, Banco Mundial y documentos primarios</dd></div>
-</dl>
+:::{.callout-note appearance="simple" icon=false}
+## 📋 Ficha Técnica del Reporte
+
+* **Activo y mercado:** Grupo Aeroportuario del Pacífico · `GAPB` en la Bolsa Mexicana de Valores (BMV)
+* **Corte del análisis:** 30 de junio de 2026
+* **Último año evaluado:** Julio de 2025 – junio de 2026
+* **Fuentes de datos:** Yahoo Finance, Banco Mundial y documentos primarios corporativos
+:::
 
 ## Introducción
 
@@ -135,6 +151,11 @@ La pérdida máxima fue de **`r sprintf("%.2f", -100 * mdd)`%**, desde el 18 de 
 
 La caída de 2020 fue muy intensa, aunque no fue la más profunda de toda la muestra, lo cual muestra por qué conviene calcular este indicador sobre la historia completa y no elegir el episodio más reciente o más recordado. La recuperación señalada corresponde al precio ajustado, sin considerar pérdida de poder adquisitivo ni costo de oportunidad.
 
+:::{.callout-important icon=true}
+## Pérdida Histórica Extrema
+La caída máxima registrada para GAPB ocurrió entre octubre de 2007 y octubre de 2008, alcanzando un **drawdown de -64.71%**. El activo requirió **1,593 días (más de 4 años)** únicamente para recuperar su nivel nominal previo.
+:::
+
 ## Cinco episodios relevantes y sus posibles causas
 
 Seleccionamos dos crisis amplias, un choque sanitario localizado, una recuperación prolongada y una modificación regulatoria, con el fin de observar mecanismos distintos de riesgo. Las ventanas son exploratorias y se eligieron después de observar la historia: algunas abarcan meses y otras una sesión, por lo que sus rendimientos no constituyen una clasificación comparable de intensidad diaria ni una estrategia que pudiera haberse ejecutado con conocimiento anticipado.
@@ -197,6 +218,11 @@ El comunicado publicado el 4 de enero de 2022 señaló que, en diciembre de 2021
 El 4 de octubre de 2023, después del cierre, GAP anunció que la AFAC había notificado una modificación unilateral de las bases de regulación tarifaria, y del cierre de ese día al del 5 de octubre la acción cayó **`r sprintf("%.2f", -events$return_pct[5])`%** [@gaptariff2023initial]. A diferencia de una disminución gradual en pasajeros, la noticia afectaba las condiciones bajo las cuales se generarían ingresos futuros y la percepción de estabilidad de las concesiones.
 
 El mecanismo plausible combina una revisión de márgenes esperados con una mayor prima por incertidumbre regulatoria, por lo que el precio puede reaccionar antes de que se observe un cambio en los estados financieros. El 19 de octubre, la empresa informó que las tarifas máximas vigentes para 2020–2024 permanecerían y que las modificaciones tarifarias derivadas de las nuevas reglas aplicarían desde 2025, tras la revisión ordinaria [@gaptariff2023update]. La proximidad entre el anuncio inicial y la caída ofrece una asociación temporal más clara que una ventana de varios meses, aunque sin un referente de mercado no podemos estimar un rendimiento anormal ni aislar un efecto causal.
+
+:::{.callout-warning icon=true}
+## Lección sobre Riesgo Regulatorio
+El choque de octubre de 2023 demuestra cómo el valor de mercado de una concesión puede reajustarse de forma inmediata ante incertidumbre en las reglas tarifarias, incluso antes de que el impacto se refleje en los estados financieros reportados.
+:::
 
 ## Rendimiento anual y crecimiento económico de México
 
