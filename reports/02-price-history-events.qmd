@@ -109,6 +109,8 @@ abline(h = 0, col = "#808080", lty = 2)
 
 La muestra contiene **`r nrow(prices)` precios y `r sum(!is.na(prices$log_return))` rendimientos diarios**. La trayectoria ascendente del precio no elimina el riesgo, porque un inversionista que necesita retirar recursos durante una caída enfrenta una pérdida distinta de la que sugiere comparar únicamente el primer y el último cierre, además de que los dividendos hacen necesario distinguir entre cotización y desempeño ajustado.
 
+Entre los movimientos diarios más extremos también aparecen choques de origen político nacional. El 3 de junio de 2024, primera sesión después de la elección presidencial, cuyos resultados apuntaban a una mayoría calificada del partido gobernante en el Congreso, el peso y la bolsa registraron fuertes caídas [@expansion2024elecciones], y GAPB perdió **`r sprintf("%.2f", -100 * (prices$adjusted[prices$date == as.Date("2024-06-03")] / prices$adjusted[prices$date == as.Date("2024-05-31")] - 1))`%** respecto al cierre del 31 de mayo. La preocupación por posibles reformas constitucionales y por la estabilidad de las reglas es particularmente relevante para una empresa que opera bajo concesiones federales, lo cual conecta este episodio con el riesgo regulatorio analizado más adelante.
+
 ### Máximo drawdown
 
 El *drawdown* mide cuánto se encuentra una inversión por debajo del máximo alcanzado hasta esa fecha, de acuerdo con $DD_t=P_t^{aj}/\max_{s\leq t}P_s^{aj}-1$. El máximo drawdown es el valor más negativo de esa serie, por lo que reúne profundidad y orden temporal de las pérdidas, sin depender de que los rendimientos sigan una distribución normal.
@@ -153,7 +155,7 @@ La caída de 2020 fue muy intensa, aunque no fue la más profunda de toda la mue
 
 :::{.callout-important icon=true}
 ## Pérdida Histórica Extrema
-La caída máxima registrada para GAPB ocurrió entre octubre de 2007 y octubre de 2008, alcanzando un **drawdown de -64.71%**. El activo requirió **1,593 días (más de 4 años)** únicamente para recuperar su nivel nominal previo.
+La caída máxima registrada para GAPB ocurrió entre octubre de 2007 y octubre de 2008, alcanzando un **drawdown de `r sprintf("%.2f", 100 * mdd)`%**. El activo requirió **`r format(as.integer(prices$date[recovery] - prices$date[peak]), big.mark = ",")` días (más de 4 años)** únicamente para recuperar su nivel ajustado previo.
 :::
 
 ## Cinco episodios relevantes y sus posibles causas
@@ -219,6 +221,8 @@ El 4 de octubre de 2023, después del cierre, GAP anunció que la AFAC había no
 
 El mecanismo plausible combina una revisión de márgenes esperados con una mayor prima por incertidumbre regulatoria, por lo que el precio puede reaccionar antes de que se observe un cambio en los estados financieros. El 19 de octubre, la empresa informó que las tarifas máximas vigentes para 2020–2024 permanecerían y que las modificaciones tarifarias derivadas de las nuevas reglas aplicarían desde 2025, tras la revisión ordinaria [@gaptariff2023update]. La proximidad entre el anuncio inicial y la caída ofrece una asociación temporal más clara que una ventana de varios meses, aunque sin un referente de mercado no podemos estimar un rendimiento anormal ni aislar un efecto causal.
 
+La incertidumbre regulatoria también se redujo mediante nueva información. El 14 de diciembre de 2023, después de que la SICT autorizara el programa maestro de desarrollo y las tarifas de ASUR, las tres aeroportuarias registraron un alza histórica en la BMV [@elceo2023rally]; del cierre del 13 al del 14 de diciembre, GAPB subió **`r sprintf("%.2f", 100 * (prices$adjusted[prices$date == as.Date("2023-12-14")] / prices$adjusted[prices$date == as.Date("2023-12-13")] - 1))`%**. Una interpretación razonable es que la aprobación indicó que las nuevas reglas permitirían al sector mantener rentabilidades aceptables, por lo que el precio se movió en ambas direcciones: castigó la incertidumbre cuando apareció y la revirtió parcialmente cuando esta disminuyó.
+
 :::{.callout-warning icon=true}
 ## Lección sobre Riesgo Regulatorio
 El choque de octubre de 2023 demuestra cómo el valor de mercado de una concesión puede reajustarse de forma inmediata ante incertidumbre en las reglas tarifarias, incluso antes de que el impacto se refleje en los estados financieros reportados.
@@ -272,7 +276,7 @@ También importa la agregación: en 2020 la pérdida anual fue de 1.65%, cifra q
 
 ## Último año: julio de 2025–junio de 2026
 
-Para medir los doce meses completos se utiliza el cierre del 30 de junio de 2025 como base, incorporando así el movimiento de la primera sesión de julio. Dentro de este intervalo se seleccionan tres hechos anteriores al corte: el huracán Melissa, los resultados del primer trimestre de 2026 y la integración de CBX.
+Para medir los doce meses completos se utiliza el cierre del 30 de junio de 2025 como base, incorporando así el movimiento de la primera sesión de julio. Dentro de este intervalo se seleccionan cuatro hechos anteriores al corte: el huracán Melissa, la violencia en Jalisco de febrero de 2026, los resultados del primer trimestre de 2026 y la integración de CBX.
 
 ```{r recent-data}
 recent <- prices[prices$date >= as.Date(history_config$recent_baseline), ]
@@ -291,14 +295,14 @@ for (i in seq_len(nrow(recent_events))) {
   stopifnot(!is.na(a), !is.na(b), b > a)
   recent_events$return_pct[i] <- 100 * (prices$adjusted[b] / prices$adjusted[a] - 1)
 }
-cbx_day <- match(recent_events$Fecha[3], prices$date)
+cbx_day <- match(recent_events$Fecha[4], prices$date)
 cbx_first_return <- 100 * (prices$adjusted[cbx_day] / prices$adjusted[cbx_day - 1] - 1)
 ```
 
 ```{r}
 #| label: fig-recent
 #| fig-cap: "Desempeño ajustado del último año, base 100 al 30 de junio de 2025. Las líneas numeradas corresponden al orden de eventos del cuadro siguiente."
-#| fig-alt: "Índice de la inversión ajustada entre junio de 2025 y junio de 2026, con tres fechas de eventos señaladas y cierre próximo a 105."
+#| fig-alt: "Índice de la inversión ajustada entre junio de 2025 y junio de 2026, con cuatro fechas de eventos señaladas y cierre próximo a 105."
 par(mar = c(4, 4.5, 2, 1))
 plot(recent$date, recent$index, type = "l", col = "#174A6E",
      xlab = "Fecha", ylab = "Índice ajustado (base 100)", lwd = 1.2)
@@ -324,17 +328,23 @@ Los resultados del cuarto trimestre de 2025 documentan que Montego Bay suspendi�
 
 Entre los cierres del 24 de octubre y del 3 de noviembre, GAPB registró **`r sprintf("%.2f", recent_events$return_pct[1])`%**, una caída relativamente moderada frente a los episodios históricos seleccionados. Esto no demuestra ausencia de daño: el mercado valora el conjunto del grupo, puede anticipar parte del riesgo meteorológico y puede ajustar sus expectativas en fechas posteriores, por lo que una ventana corta no equivale al costo económico total del huracán. El reporte trimestral se utiliza como confirmación posterior de las fechas operativas, no como un anuncio publicado en octubre.
 
+### Violencia en Jalisco: un choque de seguridad sobre los principales aeropuertos
+
+El 22 de febrero de 2026, un operativo militar en Jalisco en el que murió Nemesio Oseguera Cervantes, líder del Cártel Jalisco Nueva Generación, fue seguido por bloqueos y hechos violentos en la región. Entre el 22 y el 23 de febrero se cancelaron 329 vuelos en Guadalajara, Puerto Vallarta y Manzanillo, aeropuertos operados por GAP, aunque la empresa informó que no hubo incidentes dentro de sus instalaciones [@silarota2026jalisco].
+
+Del cierre del viernes 20 al del martes 24 de febrero, GAPB registró **`r sprintf("%.2f", recent_events$return_pct[2])`%**, el movimiento más pronunciado del último año, que además interrumpió la trayectoria que había llevado al índice a su máximo del periodo. A diferencia del huracán, el choque recayó sobre Guadalajara, el aeropuerto de mayor tráfico del grupo, y sobre un destino turístico como Puerto Vallarta, por lo que el mercado no solo pudo descontar las cancelaciones de dos días, sino también una mayor prima por riesgo de seguridad sobre la demanda turística futura. Es un evento que ningún inversionista podía anticipar ni controlar; sin embargo, al no contar con un referente de mercado, no podemos separar la parte específica de GAP de la reacción general de la bolsa en esas sesiones.
+
 ### Resultados del primer trimestre de 2026: noticias de distinto signo
 
 El 20 de abril de 2026, a las 19:56 horas del este de Estados Unidos, GAP publicó sus resultados después del cierre bursátil. El tráfico total había disminuido 5.5% frente al primer trimestre de 2025, aunque el EBITDA aumentó 6.4%, combinación que evidencia que pasajeros y resultados financieros no necesariamente se mueven en la misma proporción [@gap1q2026].
 
-Por el horario del anuncio, comparamos el cierre del 20 con el del 21 de abril, obteniendo **`r sprintf("%.2f", recent_events$return_pct[2])`%**. El movimiento positivo es compatible con que los inversionistas hayan valorado favorablemente la resistencia de los resultados, aun con menor tráfico; sin embargo, al no contar con un consenso previo de expectativas ni con un ajuste por el mercado, no podemos afirmar que hubo una sorpresa positiva cuantificada ni atribuir toda la subida al comunicado.
+Por el horario del anuncio, comparamos el cierre del 20 con el del 21 de abril, obteniendo **`r sprintf("%.2f", recent_events$return_pct[3])`%**. El movimiento positivo es compatible con que los inversionistas hayan valorado favorablemente la resistencia de los resultados, aun con menor tráfico; sin embargo, al no contar con un consenso previo de expectativas ni con un ajuste por el mercado, no podemos afirmar que hubo una sorpresa positiva cuantificada ni atribuir toda la subida al comunicado.
 
 ### Integración de CBX: crecimiento con efectos sobre cada acción
 
 El 7 de mayo de 2026, GAP anunció la conclusión de la combinación de negocios de CBX y de los servicios de asistencia técnica, junto con la adquisición del 25% restante de CBX y la emisión neta de 89,740,731 acciones [@gapcbx2026]. El mecanismo potencialmente favorable es una mayor integración de operaciones y flujos, aunque el accionista también debe considerar el financiamiento y el aumento del número de títulos entre los que se distribuyen los beneficios.
 
-El comunicado se publicó el 7 de mayo a las 07:59 horas del este de Estados Unidos, antes de la apertura bursátil [@gapcbx2026release]. Del cierre del 6 al del 7 de mayo, la acción subió **`r sprintf("%.2f", cbx_first_return)`%**, mientras que el balance del 6 al 8 de mayo fue de **`r sprintf("%.2f", recent_events$return_pct[3])`%**, por lo que la reacción inicial positiva se revirtió en la siguiente sesión. Ninguno de estos movimientos puede atribuirse exclusivamente al anuncio, ya que pueden coexistir expectativas previas y otras noticias; el ejemplo muestra que tanto el horizonte elegido como los efectos por acción importan al interpretar una expansión empresarial.
+El comunicado se publicó el 7 de mayo a las 07:59 horas del este de Estados Unidos, antes de la apertura bursátil [@gapcbx2026release]. Del cierre del 6 al del 7 de mayo, la acción subió **`r sprintf("%.2f", cbx_first_return)`%**, mientras que el balance del 6 al 8 de mayo fue de **`r sprintf("%.2f", recent_events$return_pct[4])`%**, por lo que la reacción inicial positiva se revirtió en la siguiente sesión. Ninguno de estos movimientos puede atribuirse exclusivamente al anuncio, ya que pueden coexistir expectativas previas y otras noticias; el ejemplo muestra que tanto el horizonte elegido como los efectos por acción importan al interpretar una expansión empresarial.
 
 ## Conclusión
 
@@ -342,7 +352,7 @@ La historia de GAPB muestra que el riesgo de mercado surge de la interacción en
 
 La magnitud del drawdown y el tiempo necesario para recuperar el máximo previo hacen que el horizonte del inversionista sea parte del problema: dos personas que mantienen el mismo activo pueden enfrentar consecuencias diferentes si una tiene liquidez para esperar y la otra debe vender durante el deterioro. Asimismo, una recuperación posterior no elimina la pérdida transitoria ni permite asegurar que el siguiente choque tendrá una duración semejante, mientras que la débil relación contemporánea con el PIB advierte que una sola variable macroeconómica resulta insuficiente para representar todas las fuentes de incertidumbre.
 
-El análisis reciente refuerza esta interpretación, pues una afectación operativa coincidió con una caída moderada en la ventana elegida, unos resultados con menor tráfico coexistieron con una subida y el anuncio de una integración corporativa coincidió con un avance inicial que se revirtió en la siguiente sesión. Para evaluar el riesgo de GAPB conviene, por tanto, complementar las medidas históricas con escenarios sobre movilidad, regulación y liquidez, manteniendo clara la diferencia entre explicar un episodio una vez ocurrido y tener capacidad para anticiparlo. La evidencia permite reconocer vulnerabilidades y formular preguntas mejor sustentadas, pero no convierte la historia observada en una garantía sobre el comportamiento futuro.
+El análisis reciente refuerza esta interpretación, pues una afectación operativa coincidió con una caída moderada en la ventana elegida, un choque de seguridad en Jalisco provocó la mayor caída del año, unos resultados con menor tráfico coexistieron con una subida y el anuncio de una integración corporativa coincidió con un avance inicial que se revirtió en la siguiente sesión. Para evaluar el riesgo de GAPB conviene, por tanto, complementar las medidas históricas con escenarios sobre movilidad, regulación y liquidez, manteniendo clara la diferencia entre explicar un episodio una vez ocurrido y tener capacidad para anticiparlo. La evidencia permite reconocer vulnerabilidades y formular preguntas mejor sustentadas, pero no convierte la historia observada en una garantía sobre el comportamiento futuro.
 
 ## Referencias {.unnumbered}
 
