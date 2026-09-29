@@ -8,20 +8,6 @@ author:
   - "Juan Pablo Morán Errejón"
 date: last-modified
 date-format: "D [de] MMMM [de] YYYY"
-format:
-  html:
-    theme:
-      - cosmo
-      - _theme.scss
-    toc: true
-    toc-depth: 3
-    toc-title: "Contenido"
-    toc-location: left
-    number-sections: true
-    code-fold: true
-    code-summary: "Ver código R"
-    embed-resources: true
-    smooth-scroll: true
 ---
 
 ```{r setup}
@@ -31,14 +17,12 @@ history_config <- load_config("price_history")
 cutoff <- as.Date(history_config$cutoff)
 ```
 
-:::{.callout-note appearance="simple" icon=false}
-## 📋 Ficha Técnica del Reporte
-
-* **Activo y mercado:** Grupo Aeroportuario del Pacífico · `GAPB` en la Bolsa Mexicana de Valores (BMV)
-* **Corte del análisis:** 30 de junio de 2026
-* **Último año evaluado:** Julio de 2025 – junio de 2026
-* **Fuentes de datos:** Yahoo Finance, Banco Mundial y documentos primarios corporativos
-:::
+<dl class="report-meta" aria-label="Ficha técnica del reporte">
+<div><dt>Activo y mercado</dt><dd>Grupo Aeroportuario del Pacífico · GAPB en la BMV</dd></div>
+<div><dt>Corte del análisis</dt><dd>30 de junio de 2026</dd></div>
+<div><dt>Último año</dt><dd>Julio de 2025–junio de 2026</dd></div>
+<div><dt>Fuentes</dt><dd>Yahoo Finance, Banco Mundial, documentos primarios y prensa</dd></div>
+</dl>
 
 ## Introducción
 
@@ -153,9 +137,10 @@ La pérdida máxima fue de **`r sprintf("%.2f", -100 * mdd)`%**, desde el 18 de 
 
 La caída de 2020 fue muy intensa, aunque no fue la más profunda de toda la muestra, lo cual muestra por qué conviene calcular este indicador sobre la historia completa y no elegir el episodio más reciente o más recordado. La recuperación señalada corresponde al precio ajustado, sin considerar pérdida de poder adquisitivo ni costo de oportunidad.
 
-:::{.callout-important icon=true}
-## Pérdida Histórica Extrema
-La caída máxima registrada para GAPB ocurrió entre octubre de 2007 y octubre de 2008, alcanzando un **drawdown de `r sprintf("%.2f", 100 * mdd)`%**. El activo requirió **`r format(as.integer(prices$date[recovery] - prices$date[peak]), big.mark = ",")` días (más de 4 años)** únicamente para recuperar su nivel ajustado previo.
+::: {.semantic-block .semantic-risk}
+<span class="semantic-label">Pérdida histórica extrema</span>
+
+La caída máxima registrada para GAPB ocurrió entre octubre de 2007 y octubre de 2008 y alcanzó un **drawdown de `r sprintf("%.2f", 100 * mdd)`%**. El precio ajustado permaneció **`r format(as.integer(prices$date[recovery] - prices$date[peak]), big.mark = ",")` días naturales** por debajo de su máximo previo, alrededor de `r sprintf("%.1f", as.numeric(prices$date[recovery] - prices$date[peak]) / 365.25)` años, y de ellos **`r format(as.integer(prices$date[recovery] - prices$date[trough]), big.mark = ",")`** transcurrieron entre el mínimo y la recuperación.
 :::
 
 ## Cinco episodios relevantes y sus posibles causas
@@ -223,9 +208,10 @@ El mecanismo plausible combina una revisión de márgenes esperados con una mayo
 
 La incertidumbre regulatoria también se redujo mediante nueva información. El 14 de diciembre de 2023, después de que la SICT autorizara el programa maestro de desarrollo y las tarifas de ASUR, las tres aeroportuarias registraron un alza histórica en la BMV [@elceo2023rally]; del cierre del 13 al del 14 de diciembre, GAPB subió **`r sprintf("%.2f", 100 * (prices$adjusted[prices$date == as.Date("2023-12-14")] / prices$adjusted[prices$date == as.Date("2023-12-13")] - 1))`%**. Una interpretación razonable es que la aprobación indicó que las nuevas reglas permitirían al sector mantener rentabilidades aceptables, por lo que el precio se movió en ambas direcciones: castigó la incertidumbre cuando apareció y la revirtió parcialmente cuando esta disminuyó.
 
-:::{.callout-warning icon=true}
-## Lección sobre Riesgo Regulatorio
-El choque de octubre de 2023 demuestra cómo el valor de mercado de una concesión puede reajustarse de forma inmediata ante incertidumbre en las reglas tarifarias, incluso antes de que el impacto se refleje en los estados financieros reportados.
+::: {.semantic-block .semantic-risk}
+<span class="semantic-label">Lección sobre riesgo regulatorio</span>
+
+El choque de octubre de 2023 ilustra cómo el valor de mercado de una concesión puede reajustarse de forma inmediata ante incertidumbre en las reglas tarifarias, incluso antes de que el impacto se refleje en los estados financieros reportados.
 :::
 
 ## Rendimiento anual y crecimiento económico de México
