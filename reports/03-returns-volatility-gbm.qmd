@@ -1,6 +1,6 @@
-﻿---
-title: "Rendimientos, volatilidad y movimiento browniano geométrico"
-subtitle: "Distribución empírica, pruebas de normalidad y proyección del precio"
+---
+title: "Rendimientos, volatilidad y simulación del precio"
+subtitle: "Proyecto Final · Parte 3 | GAPB, febrero de 2006–diciembre de 2025"
 author:
   - "Santiago Álvarez Tostado Estrada"
   - "Francisco Uriel Ledezma Chávez"
@@ -13,208 +13,802 @@ date-format: "D [de] MMMM [de] YYYY"
 ```{r setup}
 #| include: false
 source("_setup.R")
-```
 
-<dl class="report-meta" aria-label="Ficha técnica del reporte">
-<div><dt>Fuente de datos</dt><dd>Yahoo Finance / BMV</dd></div>
-<div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>
-<div><dt>Moneda</dt><dd>MXN por acción; rendimientos adimensionales</dd></div>
-<div><dt>Periodo cubierto</dt><dd>27 de febrero de 2006–26 de agosto de 2026</dd></div>
-</dl>
+config <- params()
+trading_days <- config$conventions$trading_days_per_year
+confidence <- config$gbm$confidence
+z_crit <- qnorm(1 - (1 - confidence) / 2)
+
+# Presentation helpers only; every calculation lives in R/.
+num <- function(x, digits = 2) formatC(x, format = "f", digits = digits, big.mark = ",")
+pct <- function(x, digits = 2) fmt_pct(x, digits)
+months_es <- c("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+               "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+fecha <- function(d) {
+  d <- as.Date(d)
+  paste(as.integer(format(d, "%d")), "de", months_es[as.integer(format(d, "%m"))],
+        "de", format(d, "%Y"))
+}
+```
 
 ```{r data}
 #| include: false
-prices <- read_dataset("prices_daily")
-returns <- read_dataset("returns_daily")
+prices <- read_dataset("prices_daily", quiet = TRUE)
+returns <- read_dataset("returns_daily", quiet = TRUE)
+prices <- prices[prices$ticker == subject(), ]
+returns <- returns[returns$ticker == subject(), ]
+prices <- prices[order(prices$date), ]
+returns <- returns[order(returns$date), ]
 
-subject_prices <- prices[prices$ticker == subject(), ]
-subject_returns <- returns[returns$ticker == subject(), ]
+# Three windows, each fixed in config/params.yml.
+#   estimation: the whole history up to the 2025 cut-off (sections 2a, 3, 4, 5)
+#   recent:     2021 to the cut-off, reported beside it as a comparison
+#   descriptive: 2021 to the last session of the snapshot (sections 2b, 2c)
+est_returns <- in_sample(returns, config$gbm$estimation_start, config$sample$end)
+est_prices <- in_sample(prices, config$gbm$estimation_start, config$sample$end)
+recent_returns <- in_sample(returns, config$sample$start, config$sample$end)
+recent_prices <- in_sample(prices, config$sample$start, config$sample$end)
+desc_returns <- in_sample(returns, config$sample$start, max(returns$date))
 
-sample_returns <- in_sample(subject_returns)
-sample_prices <- in_sample(subject_prices)
+r_est <- est_returns$log_return
+s0_row <- est_prices[nrow(est_prices), ]
+s0 <- s0_row$adjusted
+snapshot_end <- max(prices$date)
 ```
+
+<dl class="report-meta" aria-label="Ficha técnica del reporte">
+<div><dt>Activo y mercado</dt><dd>Grupo Aeroportuario del Pacífico · GAPB en la BMV</dd></div>
+<div><dt>Estimación</dt><dd>27 de febrero de 2006–31 de diciembre de 2025</dd></div>
+<div><dt>Descripción reciente</dt><dd>Enero de 2021–26 de agosto de 2026</dd></div>
+<div><dt>Fuentes</dt><dd>Yahoo Finance, material de clase, documentos primarios y prensa</dd></div>
+</dl>
 
 ## Introducción
 
-::: {.callout-important title="Pendiente de redacción"}
-Propósito del análisis y estructura del documento.
-:::
+El movimiento browniano geométrico (GBM) es el modelo con el que la teoría financiera describe el precio de una acción como un proceso que crece a una tasa promedio y recibe, cada instante, un choque aleatorio proporcional a su nivel. Su atractivo es que convierte dos números, una deriva y una volatilidad, en una distribución completa del precio futuro, aunque esa conveniencia descansa en supuestos concretos: rendimientos logarítmicos independientes, normales y con parámetros constantes. En esta tercera entrega contrastamos esos supuestos con la historia de GAPB y después utilizamos los parámetros estimados para proyectar su precio, de modo que el modelo se evalúa antes de emplearse y no solo se aplica.
 
-## Metodología
+El documento sigue el orden del análisis. La sección 2 calcula los rendimientos logarítmicos, su media y su volatilidad para el periodo reciente y año por año, con el fin de identificar cambios de comportamiento y episodios de mayor riesgo. La sección 3 aplica la prueba de Jarque-Bera a los rendimientos, al precio y a su logaritmo, y una prueba *t* sobre la media diaria. Las secciones 4 y 5 construyen la proyección del precio con parámetros diarios, mediante la ecuación $dS$, y con parámetros anuales, mediante la ecuación de $\ln S_t$, cada una con su intervalo del 95% y su verificación por simulación. La sección 6 discute qué tan lejos están los datos del modelo y qué riesgos introduce suponer normalidad, y la sección 7 reúne las conclusiones.
 
-El rendimiento logarítmico diario se define como
+Trabajamos con dos ventanas que responden a preguntas distintas. Las pruebas y los parámetros del modelo usan toda la historia de cotización disponible hasta el 31 de diciembre de 2025, es decir, `r num(length(r_est), 0)` rendimientos diarios calculados a partir del primer cierre disponible, del `r fecha(min(est_prices$date))`, mientras que la descripción reciente abarca de enero de 2021 al `r fecha(snapshot_end)`, último cierre de la copia de datos. Ninguna observación posterior a 2025 interviene en un parámetro, por lo que los precios de 2026 sirven después como evidencia fuera de muestra para evaluar las proyecciones, que parten del cierre ajustado del `r fecha(s0_row$date)`, de **`r num(s0)` pesos**.
 
-$$
-r_t = \ln\!\left(\frac{S_t}{S_{t-1}}\right)
-$$
+## Cálculo de rendimientos y volatilidad
 
-Los rendimientos logarítmicos son aditivos en el tiempo, propiedad que hace
-exacto el escalamiento por horizonte. Bajo el supuesto de independencia serial,
-la media y la volatilidad se anualizan como
+### a) Rendimiento logarítmico
+
+Los precios provienen de la copia pública de Yahoo Finance guardada en el repositorio, registrada el 27 de agosto de 2026 [@yahoogapbhistory]. Utilizamos el cierre ajustado, que incorpora dividendos y ajustes de capital, porque un rendimiento debe medir el cambio en el valor de la inversión y no solo en la cotización. Para cada sesión calculamos el rendimiento simple y el logarítmico,
 
 $$
-\mu_{\text{anual}} = 252\,\mu_{\text{diario}}
+R_t=\frac{S_t-S_{t-1}}{S_{t-1}},
 \qquad
-\sigma_{\text{anual}} = \sqrt{252}\,\sigma_{\text{diario}}
+r_t=\ln\!\left(\frac{S_t}{S_{t-1}}\right)=\ln S_t-\ln S_{t-1}=\ln(1+R_t),
 $$
 
-## Rendimientos y volatilidad
+y trabajamos con $r_t$ porque es aditivo en el tiempo: el rendimiento entre dos fechas es la suma de los rendimientos diarios intermedios, $r_{0,T}=\sum_{t=1}^{T}r_t=\ln(S_T/S_0)$, propiedad que vuelve exactos el escalamiento por horizonte y la anualización [@ruiz2026gbm]. La media y la volatilidad diarias se estiman con
 
-La @tbl-moments resume la muestra completa y la @tbl-moments-annual permite
-comparar los cambios entre años.
+$$
+\bar r=\frac{1}{n}\sum_{t=1}^{n}r_t,
+\qquad
+s=\sqrt{\frac{1}{n-1}\sum_{t=1}^{n}\left(r_t-\bar r\right)^2}.
+$$
 
-### Periodo completo de estimación
+```{r moments-estimation}
+est_moments <- return_moments(r_est)
+worst <- est_returns[order(est_returns$log_return), ][1:3, ]
+best <- est_returns[order(-est_returns$log_return), ][1:3, ]
+```
 
 ```{r}
-#| label: tbl-moments
-report_table(
-  return_moments(sample_returns$log_return),
-  caption = "Momentos de la muestra de estimación (2021-2025)."
+#| label: fig-returns-history
+#| fig-cap: "Rendimiento logarítmico diario de GAPB, febrero de 2006–diciembre de 2025."
+#| fig-alt: "Serie de rendimientos diarios alrededor de cero, con movimientos extremos concentrados en 2008, marzo de 2020 y octubre a diciembre de 2023."
+ggplot(est_returns, aes(date, log_return)) +
+  geom_hline(yintercept = 0, colour = RISK_INK$baseline, linewidth = 0.3) +
+  geom_line(colour = RISK_PALETTE[1], linewidth = 0.25) +
+  scale_y_continuous(labels = label_percent(accuracy = 1)) +
+  labs(x = NULL, y = "Rendimiento logarítmico diario")
+```
+
+Entre el `r fecha(min(est_returns$date))` y el `r fecha(max(est_returns$date))` la muestra contiene `r num(est_moments$n, 0)` rendimientos, con una media diaria de **`r pct(est_moments$mean_daily, 4)`** y una volatilidad diaria de **`r pct(est_moments$vol_daily, 2)`**, de modo que la dispersión de un día cualquiera es unas `r round(est_moments$vol_daily / est_moments$mean_daily)` veces la tendencia que se acumula en ese mismo día. La @fig-returns-history muestra que esa dispersión no se reparte de manera uniforme: los movimientos grandes aparecen agrupados en la crisis de 2008, en marzo de 2020 y en el último trimestre de 2023, mientras que entre esos episodios la serie permanece en una banda estrecha.
+
+Las tres caídas más profundas ocurrieron el `r fecha(worst$date[1])`, el `r fecha(worst$date[2])` y el `r fecha(worst$date[3])`, de `r pct(worst$log_return[1])`, `r pct(worst$log_return[2])` y `r pct(worst$log_return[3])`, y las tres alzas más intensas el `r fecha(best$date[1])`, el `r fecha(best$date[2])` y el `r fecha(best$date[3])`. La primera corresponde al anuncio de que la autoridad aeronáutica modificaba las bases de la regulación tarifaria [@gaptariff2023initial], y la mayor alza, dos meses después, a la autorización de las tarifas del sector que redujo esa incertidumbre [@elceo2023rally], de manera que los dos extremos de la muestra completa provienen del mismo frente regulatorio.
+
+### b) Estimaciones de 2021 a lo que va de 2026
+
+Bajo el supuesto de rendimientos independientes e idénticamente distribuidos, la media de 252 rendimientos diarios es 252 veces la media diaria y su varianza 252 veces la varianza diaria, por lo que
+
+$$
+\bar r_{\text{anual}}=252\,\bar r,
+\qquad
+\sigma_{\text{anual}}=\sqrt{252}\;s.
+$$
+
+La deriva del precio en el GBM no es $252\,\bar r$, porque la media del logaritmo crece más despacio que la media del precio. Como $E[r_{\Delta t}]=\left(\mu-\tfrac12\sigma^2\right)\Delta t$, despejar la deriva da $\widehat\mu=252\,\bar r+\tfrac12\sigma_{\text{anual}}^2$, y por ello reportamos ambas cifras por separado [@ruiz2026gbm].
+
+```{r moments-recent}
+desc_moments <- return_moments(desc_returns$log_return)
+desc_gbm <- gbm_params(desc_returns$log_return)
+
+recent_table <- data.frame(
+  Ventana = paste0(fecha(min(desc_returns$date)), "–", fecha(max(desc_returns$date))),
+  Observaciones = num(desc_moments$n, 0),
+  "Media diaria" = pct(desc_moments$mean_daily, 4),
+  "Volatilidad diaria" = pct(desc_moments$vol_daily, 3),
+  "Media anualizada" = pct(desc_moments$mean_annual),
+  "Volatilidad anualizada" = pct(desc_moments$vol_annual),
+  "Deriva del precio (μ)" = pct(desc_gbm$mu_annual),
+  check.names = FALSE
 )
 ```
 
-### Estimación año por año
+```{r}
+#| label: tbl-moments-recent
+#| tbl-cap: "Media y volatilidad del rendimiento logarítmico, de 2021 al último cierre disponible de 2026."
+report_table(recent_table)
+```
+
+La @tbl-moments-recent resume las `r num(desc_moments$n, 0)` sesiones desde enero de 2021: una media anualizada de **`r pct(desc_moments$mean_annual)`** con una volatilidad anual de **`r pct(desc_moments$vol_annual)`**, por lo que la incertidumbre de un año típico supera a su rendimiento esperado en un factor de `r num(desc_moments$vol_annual / desc_moments$mean_annual, 1)`. La deriva del precio, de `r pct(desc_gbm$mu_annual)`, excede a la media anualizada exactamente en la corrección $\tfrac12\sigma^2_{\text{anual}}$, de `r pct(0.5 * desc_moments$vol_annual^2)`, que no es un rendimiento adicional sino la diferencia entre la tasa a la que crece el precio esperado y la tasa a la que crece el precio típico.
+
+### c) Estimaciones año por año
+
+Para cada año calculamos las mismas cuatro cifras sobre sus propias sesiones y añadimos el rendimiento que efectivamente produjo, que por la aditividad es la suma de sus rendimientos diarios,
+
+$$
+r_{\text{año}}=\sum_{t\in\text{año}}r_t=\ln\!\left(\frac{S_{\text{último cierre del año}}}{S_{\text{último cierre del año previo}}}\right).
+$$
+
+Ambas medidas coinciden en un año completo de 252 sesiones, pero se separan en uno incompleto, ya que la media anualizada supone que el ritmo observado se mantiene durante todo el año.
+
+```{r moments-annual}
+by_year <- return_moments_by_year(returns)
+annual_table <- data.frame(
+  Año = ifelse(by_year$year == as.integer(format(snapshot_end, "%Y")),
+               paste0(by_year$year, " (hasta ", format(snapshot_end, "%d/%m"), ")"),
+               as.character(by_year$year)),
+  Sesiones = by_year$n,
+  "Media diaria" = pct(by_year$mean_daily, 4),
+  "Volatilidad diaria" = pct(by_year$vol_daily, 3),
+  "Rendimiento anualizado (252·r̄)" = pct(by_year$mean_annual),
+  "Rendimiento del año" = pct(by_year$realised_annual),
+  "Volatilidad anualizada" = pct(by_year$vol_annual),
+  check.names = FALSE
+)
+
+peak_year <- by_year[which.max(by_year$vol_annual), ]
+calm_year <- by_year[which.min(by_year$vol_annual), ]
+ytd <- by_year[by_year$year == as.integer(format(snapshot_end, "%Y")), ]
+# Standard error of an annualised mean: 252 * s / sqrt(n).
+se_annual_mean <- trading_days * by_year$vol_daily / sqrt(by_year$n)
+```
 
 ```{r}
 #| label: tbl-moments-annual
-report_table(
-  return_moments_by_year(sample_returns),
-  caption = "Media y volatilidad, diarias y anualizadas, por año."
-)
+#| tbl-cap: "Media y volatilidad del rendimiento logarítmico por año. El último año está incompleto."
+report_table(annual_table)
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-¿Hay cambios estructurales? ¿Años con volatilidad particularmente elevada?
-¿Periodos de mayor riesgo, y a qué corresponden?
-:::
+### d) Interpretación
+
+La pregunta por un cambio estructural tiene respuestas distintas para la media y para la volatilidad. El rendimiento anualizado va de `r pct(min(by_year$mean_annual))` a `r pct(max(by_year$mean_annual))` entre años, una variación que parece enorme, pero el error estándar de una media anualizada con un solo año de datos, $252\,s/\sqrt{n}$, ronda `r pct(min(se_annual_mean), 0)` a `r pct(max(se_annual_mean), 0)`, de manera que casi ninguna de esas diferencias se distingue del ruido y no permiten afirmar que la deriva haya cambiado. La volatilidad, en cambio, se estima con mucha más precisión y sí muestra niveles distintos: `r peak_year$year` registró la más alta, de **`r pct(peak_year$vol_annual)`**, y `r calm_year$year` la más baja, de `r pct(calm_year$vol_annual)`, de modo que el riesgo de un año llegó a ser `r num(peak_year$vol_annual / calm_year$vol_annual, 1)` veces el de otro.
+
+```{r rolling-volatility}
+window_m <- config$gbm$rolling_window
+desc_returns$rolling_vol <- sqrt(trading_days) * ma_volatility(desc_returns$log_return, window_m)
+rolling <- desc_returns[!is.na(desc_returns$rolling_vol), ]
+rolling_peak <- rolling[which.max(rolling$rolling_vol), ]
+rolling_calm <- rolling[which.min(rolling$rolling_vol), ]
+```
+
+Para ubicar los episodios dentro de cada año utilizamos la volatilidad móvil de `r window_m` sesiones vista en clase,
+
+$$
+\widehat\sigma_t=\sqrt{252\cdot\frac{1}{m}\sum_{i=1}^{m}r_{t-i}^2},\qquad m=`r window_m`,
+$$
+
+que promedia los rendimientos al cuadrado de las `r window_m` sesiones previas y prescinde de la media porque, a frecuencia diaria, es pequeña frente a la dispersión.
+
+```{r}
+#| label: fig-rolling-volatility
+#| fig-cap: "Volatilidad anualizada con promedio móvil de 20 sesiones, enero de 2021–agosto de 2026."
+#| fig-alt: "Volatilidad móvil entre 15 y 40 por ciento la mayor parte del tiempo, con un pico cercano a 105 por ciento a finales de octubre de 2023 y repuntes en 2022, 2024 y marzo de 2026."
+ggplot(rolling, aes(date, rolling_vol)) +
+  geom_hline(yintercept = desc_moments$vol_annual, colour = RISK_INK$muted,
+             linetype = "dashed", linewidth = 0.4) +
+  geom_line(colour = RISK_PALETTE[1], linewidth = 0.4) +
+  annotate("text", x = max(rolling$date), y = 0.98,
+           label = paste0("Línea punteada: volatilidad de toda la ventana, ", pct(desc_moments$vol_annual, 1)),
+           hjust = 1, vjust = 1,
+           size = 3, colour = RISK_INK$muted) +
+  scale_y_continuous(labels = label_percent(accuracy = 1)) +
+  labs(x = NULL, y = "Volatilidad anualizada")
+```
+
+La @fig-rolling-volatility muestra que el riesgo se concentra en episodios. El máximo, de **`r pct(rolling_peak$rolling_vol, 1)`** el `r fecha(rolling_peak$date)`, llega tres semanas después de la caída de octubre de 2023 y triplica la volatilidad promedio de la ventana, mientras que el mínimo, de `r pct(rolling_calm$rolling_vol, 1)` el `r fecha(rolling_calm$date)`, queda en menos de la mitad de ese promedio. Los periodos de mayor riesgo son, por tanto, el último trimestre de 2023, con el choque regulatorio y su reversión parcial en diciembre, varios tramos de 2022 y de 2024, y el arranque de 2026, cuando la violencia en Jalisco afectó a los aeropuertos de Guadalajara y Puerto Vallarta [@silarota2026jalisco].
+
+El año en curso merece una lectura aparte. Con `r ytd$n` sesiones, su rendimiento acumulado es de **`r pct(ytd$realised_annual)`**, mientras que la media anualizada, de `r pct(ytd$mean_annual)`, extrapola ese ritmo a un año completo y por ello exagera la pérdida. El contraste con 2025, cuando la acción subió `r pct(by_year$realised_annual[by_year$year == 2025])`, ilustra que un solo año puede cambiar de signo frente al anterior sin que eso pruebe un cambio en la deriva, aunque sí obliga a reconocer que la volatilidad de una ventana larga promedia regímenes de calma y de tensión, y que ninguno de ellos es el promedio.
 
 ## Pruebas estadísticas
 
-### Normalidad
+### a) Pruebas de normalidad (Jarque-Bera)
 
-El estadístico de Jarque-Bera contrasta conjuntamente el tercer y cuarto momento
-contra los de una normal:
-
-La @tbl-jb formaliza el contraste y la @fig-distribution permite comparar la
-densidad empírica con la normal ajustada.
+Bajo el GBM, el rendimiento logarítmico de un intervalo $\Delta t$ es normal,
 
 $$
-JB = \frac{n}{6}\left(S^2 + \frac{(K-3)^2}{4}\right) \;\sim\; \chi^2_{2}
+r_t=\ln S_t-\ln S_{t-\Delta t}=\left(\mu-\tfrac12\sigma^2\right)\Delta t+\sigma\left(W_t-W_{t-\Delta t}\right)
+\;\sim\;\mathcal N\!\left(\left(\mu-\tfrac12\sigma^2\right)\Delta t,\ \sigma^2\Delta t\right),
 $$
+
+de manera que la normalidad de $r_t$ es la implicación del modelo que se puede contrastar con datos. Para cada serie planteamos $H_0$: la variable sigue una distribución normal, frente a $H_a$: no la sigue, con el estadístico de Jarque-Bera [@jarque1987],
+
+$$
+JB=\frac{n}{6}\left[\widehat S^{\,2}+\frac{\left(\widehat K-3\right)^2}{4}\right]\ \sim\ \chi^2_2\ \text{bajo }H_0,
+$$
+
+donde la asimetría y la curtosis muestrales son
+
+$$
+\widehat S=\frac{\frac1n\sum_{t=1}^{n}\left(x_t-\bar x\right)^3}{\widehat\sigma^{\,3}},
+\qquad
+\widehat K=\frac{\frac1n\sum_{t=1}^{n}\left(x_t-\bar x\right)^4}{\widehat\sigma^{\,4}},
+\qquad
+\widehat\sigma^{\,2}=\frac1n\sum_{t=1}^{n}\left(x_t-\bar x\right)^2.
+$$
+
+Una normal tiene $S=0$ y $K=3$, de modo que el estadístico crece cuando la muestra es asimétrica, cuando tiene colas más pesadas, o ambas cosas, y al 5% se rechaza la normalidad si $JB>\chi^2_{2;\,0.95}=`r num(qchisq(0.95, 2))`$.
+
+```{r jarque-bera}
+jb_est <- jarque_bera_table(list(
+  "Rendimiento logarítmico" = r_est,
+  "Rendimiento simple" = exp(r_est) - 1,
+  "Precio" = est_prices$adjusted,
+  "Logaritmo del precio" = log(est_prices$adjusted)
+))
+jb_recent <- jarque_bera_table(list(
+  "Rendimiento logarítmico" = recent_returns$log_return,
+  "Precio" = recent_prices$adjusted,
+  "Logaritmo del precio" = log(recent_prices$adjusted)
+))
+jb_est$window <- "2006–2025"
+jb_recent$window <- "2021–2025"
+jb_all <- rbind(jb_est, jb_recent)
+
+jb_table <- data.frame(
+  Serie = jb_all$series,
+  Ventana = jb_all$window,
+  n = num(jb_all$n, 0),
+  Asimetría = num(jb_all$skewness, 3),
+  Curtosis = num(jb_all$kurtosis, 2),
+  "Estadístico JB" = num(jb_all$statistic, 2),
+  "Valor p" = ifelse(jb_all$p_value < 1e-4, "< 0.0001", num(jb_all$p_value, 4)),
+  Decisión = ifelse(jb_all$reject_normality, "Se rechaza H0", "No se rechaza H0"),
+  check.names = FALSE
+)
+jb_r <- jb_est[jb_est$series == "Rendimiento logarítmico", ]
+jb_s <- jb_est[jb_est$series == "Precio", ]
+jb_ls <- jb_est[jb_est$series == "Logaritmo del precio", ]
+jb_r_recent <- jb_recent[jb_recent$series == "Rendimiento logarítmico", ]
+```
 
 ```{r}
 #| label: tbl-jb
-jb <- jarque_bera_table(list(
-  "Rendimientos" = sample_returns$log_return,
-  "Precio" = sample_prices$adjusted,
-  "Logaritmo del precio" = log(sample_prices$adjusted)
-))
-report_table(jb, caption = "Prueba de Jarque-Bera sobre las tres series.")
+#| tbl-cap: "Prueba de Jarque-Bera sobre los rendimientos, el precio y su logaritmo."
+report_table(jb_table)
+```
+
+La @tbl-jb muestra que se rechaza la normalidad en todas las series, aunque por razones distintas. En el rendimiento logarítmico el estadístico alcanza **`r num(jb_r$statistic, 0)`**, unas `r num(jb_r$statistic / qchisq(0.95, 2), 0)` veces el valor crítico, y lo explica sobre todo la curtosis de **`r num(jb_r$kurtosis, 2)`**, casi cinco veces la de una normal, con una asimetría de `r num(jb_r$skewness, 2)` que indica una cola izquierda más pesada. En la ventana 2021–2025 la curtosis sube a `r num(jb_r_recent$kurtosis, 2)`, porque la caída de octubre de 2023 pesa más en una muestra más corta, lo que confirma que estos momentos dependen de unas cuantas observaciones extremas.
+
+```{r tails}
+z_scores <- (r_est - mean(r_est)) / sd(r_est)
+tail_table <- data.frame(k = c(3, 4, 5))
+tail_table$observed <- sapply(tail_table$k, function(k) mean(abs(z_scores) > k))
+tail_table$normal <- 2 * pnorm(-tail_table$k)
+tail_table$days <- sapply(tail_table$k, function(k) sum(abs(z_scores) > k))
+tail_display <- data.frame(
+  Umbral = paste0("|r − r̄| > ", tail_table$k, "s"),
+  "Sesiones observadas" = tail_table$days,
+  "Frecuencia observada" = pct(tail_table$observed, 3),
+  "Probabilidad normal" = pct(tail_table$normal, 5),
+  "Veces la normal" = num(tail_table$observed / tail_table$normal, 1),
+  check.names = FALSE
+)
+```
+
+La curtosis tiene una traducción directa en frecuencias. Si los rendimientos fueran normales, un movimiento de más de $k$ desviaciones estándar ocurriría con probabilidad $P(|Z|>k)=2\,\Phi(-k)$, y la @tbl-tails compara esa probabilidad con lo observado en las `r num(length(r_est), 0)` sesiones.
+
+```{r}
+#| label: tbl-tails
+#| tbl-cap: "Frecuencia de movimientos extremos frente a la que implica una normal con la misma media y desviación."
+report_table(tail_display)
+```
+
+Los movimientos de más de cuatro desviaciones estándar ocurrieron `r num(tail_table$observed[2] / tail_table$normal[2], 0)` veces más de lo que permite la normal, y los de más de cinco, `r num(tail_table$observed[3] / tail_table$normal[3], 0)` veces más. Ese es el significado financiero de la curtosis: no describe un detalle de forma, sino que mide cuánto subestima un modelo normal la probabilidad de las pérdidas que más importan [@mandelbrot1963; @cont2001].
+
+```{r}
+#| label: fig-return-histogram
+#| fig-cap: "Histograma del rendimiento logarítmico diario, 2006–2025, frente a la normal con la misma media y desviación estándar."
+#| fig-alt: "Histograma con un pico central más alto y estrecho que la curva normal y observaciones aisladas lejos del centro, sobre todo en la cola izquierda."
+ggplot(est_returns, aes(log_return)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 120,
+                 fill = RISK_PALETTE[1], alpha = 0.75) +
+  stat_function(fun = dnorm, args = list(mean = mean(r_est), sd = sd(r_est)),
+                colour = RISK_PALETTE[2], linewidth = 0.7) +
+  scale_x_continuous(labels = label_percent(accuracy = 1)) +
+  labs(x = "Rendimiento logarítmico diario", y = "Densidad",
+       caption = "Barras: distribución observada. Línea: normal con la media y la desviación de la muestra.")
+```
+
+La @fig-return-histogram muestra las dos caras de la curtosis a la vez, ya que el centro es más alto y estrecho que la normal, porque abundan los días tranquilos, y las colas se extienden mucho más allá de lo que la curva admite, porque los días de crisis son más extremos. Una normal ajustada con la misma desviación promedia ambos regímenes y por ello se equivoca en los dos: sobrestima la variabilidad de un día ordinario y subestima la de un día de estrés.
+
+```{r level-histograms}
+levels_long <- rbind(
+  data.frame(serie = "Precio (pesos)", valor = est_prices$adjusted),
+  data.frame(serie = "Logaritmo del precio", valor = log(est_prices$adjusted))
+)
+levels_long$serie <- factor(levels_long$serie, levels = c("Precio (pesos)", "Logaritmo del precio"))
 ```
 
 ```{r}
-#| label: fig-distribution
-#| fig-cap: "Distribución empírica de los rendimientos diarios frente a la normal ajustada."
-mu <- mean(sample_returns$log_return)
-sigma <- sd(sample_returns$log_return)
-
-ggplot(sample_returns, aes(log_return)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 80,
-                 fill = RISK_PALETTE[1], alpha = 0.7) +
-  stat_function(fun = dnorm, args = list(mean = mu, sd = sigma),
-                colour = RISK_PALETTE[2], linewidth = 0.7) +
-  scale_x_continuous(labels = label_percent(accuracy = 1)) +
-  labs(
-    x = "Rendimiento logarítmico diario", y = "Densidad",
-    caption = "Barra: distribución empírica. Línea: normal con la media y la desviación de la muestra."
-  )
+#| label: fig-level-histograms
+#| fig-cap: "Histogramas del precio ajustado y de su logaritmo, 2006–2025."
+#| fig-alt: "Dos histogramas con varias modas, que corresponden a los niveles en los que el precio permaneció durante distintos periodos, y no a una sola campana."
+ggplot(levels_long, aes(valor)) +
+  geom_histogram(bins = 80, fill = RISK_PALETTE[1], alpha = 0.75) +
+  facet_wrap(~serie, scales = "free") +
+  labs(x = NULL, y = "Sesiones")
 ```
 
-### Media igual a cero
+En el precio y en su logaritmo la prueba también rechaza, con estadísticos de `r num(jb_s$statistic, 0)` y `r num(jb_ls$statistic, 0)`, pero ese resultado no debe leerse como evidencia contra el GBM. La @fig-level-histograms muestra varias modas, que corresponden a los niveles en los que la acción permaneció durante años, y una curtosis del logaritmo de apenas `r num(jb_ls$kurtosis, 2)`, por debajo de 3, que refleja esa distribución aplanada del tiempo entre niveles. El modelo no afirma que los precios históricos formen una muestra de una sola normal: afirma que, para una fecha fija, $\ln S_t\mid S_0\sim\mathcal N\!\left(\ln S_0+\left(\mu-\tfrac12\sigma^2\right)t,\ \sigma^2 t\right)$, de modo que cada fecha tiene su propia media y una varianza que crece con $t$, y que dos fechas consecutivas están casi perfectamente correlacionadas. La serie histórica es, por tanto, una sola trayectoria de un proceso no estacionario y no $n$ observaciones independientes de una misma distribución, por lo que la referencia $\chi^2_2$ de la prueba deja de ser válida y el rechazo no informa sobre la lognormalidad que el modelo sí postula [@ruiz2026gbm].
+
+### b) Prueba de media igual a cero
+
+Para saber si la deriva diaria es distinguible de cero planteamos $H_0:E[r_t]=0$ frente a $H_a:E[r_t]\neq0$, con el estadístico
 
 $$
-t = \frac{\bar{r}}{s/\sqrt{n}} \;\sim\; t_{\,n-1}
+t=\frac{\bar r-0}{s/\sqrt n}\ \sim\ t_{\,n-1}\ \text{bajo }H_0,
+\qquad
+p=2\,P\!\left(T_{n-1}>|t|\right),
+\qquad
+\bar r\pm t_{0.975,\,n-1}\,\frac{s}{\sqrt n},
 $$
 
-La @tbl-ttest reporta la estimación y la decisión estadística correspondiente.
+donde el último término es el intervalo de confianza del 95% para la media diaria.
+
+```{r t-test}
+t_est <- mean_zero_test(r_est)
+t_recent <- mean_zero_test(recent_returns$log_return)
+t_both <- rbind(t_est, t_recent)
+t_table <- data.frame(
+  Ventana = c("2006–2025", "2021–2025"),
+  n = num(t_both$n, 0),
+  "Media diaria" = pct(t_both$mean, 4),
+  "Error estándar" = pct(t_both$std_error, 4),
+  "Estadístico t" = num(t_both$statistic, 3),
+  "Valor p" = num(t_both$p_value, 4),
+  "IC 95% de la media" = paste0("[", pct(t_both$conf_low, 4), ", ", pct(t_both$conf_high, 4), "]"),
+  Decisión = ifelse(t_both$reject_zero_mean, "Se rechaza H0", "No se rechaza H0"),
+  check.names = FALSE
+)
+```
 
 ```{r}
 #| label: tbl-ttest
-report_table(
-  mean_zero_test(sample_returns$log_return),
-  caption = "Prueba t de media diaria igual a cero."
-)
+#| tbl-cap: "Prueba t de media diaria igual a cero."
+report_table(t_table)
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-Interpretación en términos de eficiencia de mercado. No rechazar la hipótesis de
-media cero es el resultado interesante, no el decepcionante.
-:::
+Con toda la historia, el estadístico de **`r num(t_est$statistic, 2)`** y su valor $p$ de `r num(t_est$p_value, 4)` `r if (t_est$reject_zero_mean) "rechazan" else "no rechazan"` la hipótesis de media cero al 5%, mientras que en la ventana 2021–2025 el estadístico de `r num(t_recent$statistic, 2)`, con valor $p$ de `r num(t_recent$p_value, 3)`, `r if (t_recent$reject_zero_mean) "también la rechaza" else "no la rechaza"`. La diferencia no proviene de la media, que es casi la misma en ambas ventanas, de `r pct(t_est$mean, 4)` y `r pct(t_recent$mean, 4)` diarios, sino del error estándar, que se reduce con $\sqrt n$ y pasa de `r pct(t_recent$std_error, 4)` a `r pct(t_est$std_error, 4)` al multiplicar casi por cuatro el número de observaciones.
 
-## Modelo con parámetros diarios
+### c) Interpretación: eficiencia de mercado y consistencia con la teoría
 
-El movimiento browniano geométrico postula
+El resultado es el que la teoría anticipa para una acción en un mercado razonablemente eficiente. La hipótesis de eficiencia no exige que el rendimiento promedio sea cero, sino que los precios incorporen la información disponible de modo que los movimientos futuros no puedan anticiparse con la historia de precios [@fama1970], y una deriva positiva es compatible con ello porque remunera el riesgo que asume el inversionista. Lo que sí implica la eficiencia es que esa deriva sea pequeña frente al ruido, y eso es exactamente lo que observamos: la media diaria equivale a `r num(100 * t_est$mean / sd(r_est), 1)` % de la desviación estándar, por lo que en un horizonte de un día la dirección del precio es casi impredecible y solo con casi veinte años de datos la tendencia se vuelve estadísticamente visible.
 
-$$
-dS_t = \mu S_t\,dt + \sigma S_t\,dW_t
-$$
+Esa misma debilidad de la señal tiene una consecuencia para el modelo. Anualizada, la incertidumbre de la media es $\sqrt{252}\,s/\sqrt{n/252}$, cerca de `r pct(sqrt(trading_days) * sd(r_est) / sqrt(length(r_est) / trading_days), 1)` con `r num(length(r_est) / trading_days, 1)` años de datos, de modo que la deriva del GBM se conoce con un margen amplio aun cuando su signo sea positivo con buena confianza. Además, la prueba contrasta un valor constante de la media y no evalúa si la deriva cambió entre periodos ni si los rendimientos están correlacionados, por lo que no rechazar en 2021–2025 y rechazar en toda la historia son dos lecturas consistentes de una misma media medida con distinta precisión, no evidencia de un cambio estructural.
 
-cuya solución, por el lema de Itô, es
+## Estimación del modelo con parámetros diarios
+
+El movimiento browniano geométrico describe el cambio del precio en un intervalo infinitesimal como
 
 $$
-S_t = S_0 \exp\!\left[\left(\mu - \tfrac{\sigma^2}{2}\right)t + \sigma W_t\right]
+dS_t=\mu\,S_t\,dt+\sigma\,S_t\,dW_t,
 $$
 
-de modo que $\ln S_t$ es normal y $S_t$ es lognormal. El intervalo de confianza
-se construye sobre los cuantiles de la lognormal, no como una banda simétrica
-alrededor de la media: el precio no puede ser negativo y su distribución es
-asimétrica a la derecha.
+donde $\mu$ es la deriva, $\sigma$ la volatilidad y $dW_t$ el incremento de un movimiento browniano, normal con media cero y varianza $dt$ [@black1973]. Con parámetros diarios el tiempo se mide en sesiones bursátiles, por lo que $\Delta t=1$ equivale a un día, y los parámetros se estiman con la media y la desviación del rendimiento logarítmico de toda la historia: $\widehat\sigma_d=s$ y, como $E[r_t]=\mu_d-\tfrac12\sigma_d^2$, $\widehat\mu_d=\bar r+\tfrac12\widehat\sigma_d^{\,2}$.
 
-La @tbl-gbm-daily presenta las proyecciones construidas con parámetros diarios.
+```{r gbm-daily-parameters}
+gbm_est <- gbm_params(r_est)
+mu_d <- gbm_est$mu_daily
+sigma_d <- gbm_est$sigma_daily
+nu_d <- gbm_est$nu_daily
+horizons_d <- config$gbm$horizons_days
+```
+
+Con los `r num(gbm_est$n, 0)` rendimientos de 2006 a 2025, $\bar r=$ `r pct(nu_d, 4)`, $\widehat\sigma_d=$ `r pct(sigma_d, 4)` y $\widehat\mu_d=$ `r pct(mu_d, 4)` por sesión, de modo que la ecuación estimada del modelo es
+
+$$
+dS_t=`r num(mu_d, 6)`\;S_t\,dt+`r num(sigma_d, 5)`\;S_t\,dW_t,
+\qquad S_0=`r num(s0)`,
+$$
+
+con $S_0$ igual al cierre ajustado del `r fecha(s0_row$date)`, última sesión de 2025.
+
+### Ecuación de la proyección e intervalo de confianza
+
+Para un horizonte de $h$ sesiones, la ecuación $dS$ se aplica manteniendo el precio en su valor inicial durante todo el horizonte, lo que da la aproximación local del cambio
+
+$$
+\Delta S\approx\mu_d\,S_0\,h+\sigma_d\,S_0\sqrt h\,Z,
+\qquad Z\sim\mathcal N(0,1),
+$$
+
+de modo que el precio proyectado es normal, $S_h\sim\mathcal N\!\left(S_0(1+\mu_d h),\ \sigma_d^2S_0^2h\right)$, su valor esperado es $E[S_h]\approx S_0\left(1+\mu_d h\right)$ y el intervalo del 95% es
+
+$$
+S_0\left(1+\mu_d h\right)\pm z_{0.975}\,\sigma_d\,S_0\sqrt h,
+\qquad z_{0.975}=`r num(z_crit, 3)`.
+$$
+
+En sentido estricto se trata de un intervalo de predicción, porque acota un precio futuro y no un parámetro, aunque conservamos el nombre de intervalo de confianza que utiliza el enunciado.
+
+### Procedimiento de simulación
+
+La simulación reproduce la misma ecuación con escenarios aleatorios, y su función es verificar que las fórmulas están bien aplicadas y mostrar la distribución que describen. El procedimiento es el siguiente:
+
+1. Fijamos la semilla del proyecto, `r config$seed`, para que cualquier lector obtenga los mismos números.
+2. Generamos un solo vector de `r num(config$gbm$n_paths, 0)` normales estándar, $z_1,\dots,z_N$, que comparten todos los horizontes, de modo que la diferencia entre horizontes no se deba a sorteos distintos.
+3. Para cada horizonte calculamos el precio de cada escenario, $S_h^{(i)}=S_0+\mu_d S_0 h+\sigma_d S_0\sqrt h\,z_i$.
+4. Estimamos el precio esperado con el promedio de los escenarios, $\bar S_h=\frac1N\sum_i S_h^{(i)}$, y lo comparamos con la fórmula, junto con la varianza simulada.
+5. Contamos la proporción de escenarios que caen dentro del intervalo teórico, que debe acercarse a 95% con un error de Monte Carlo de $\sqrt{0.95\cdot0.05/N}$.
+
+```{r gbm-daily-simulation}
+local_d <- gbm_local_projection(s0, mu_d, sigma_d, horizons_d)
+
+use_seed()
+z <- rnorm(config$gbm$n_paths)
+
+checks_d <- do.call(rbind, lapply(seq_along(horizons_d), function(k) {
+  gbm_mc_check(gbm_local_draws(s0, mu_d, sigma_d, horizons_d[k], z), local_d[k, ])
+}))
+stopifnot(
+  all(abs(checks_d$mean_gap) < 0.005),
+  all(abs(checks_d$coverage - confidence) < 5 * checks_d$coverage_mc_error)
+)
+
+session_dates <- price_after_sessions(prices, s0_row$date, horizons_d)$date
+daily_table <- data.frame(
+  "Horizonte (sesiones)" = horizons_d,
+  "Fecha de la sesión" = format(session_dates, "%d/%m/%Y"),
+  "Precio esperado, fórmula" = num(local_d$expected),
+  "Precio esperado, simulación" = num(checks_d$mean_sim),
+  "Desviación estándar" = num(local_d$sd),
+  "Límite inferior 95%" = num(local_d$lower),
+  "Límite superior 95%" = num(local_d$upper),
+  "Amplitud (MXN)" = num(local_d$interval_width),
+  "Amplitud / S0" = pct(local_d$relative_width, 1),
+  check.names = FALSE
+)
+mc_daily_table <- data.frame(
+  "Horizonte (sesiones)" = horizons_d,
+  "Diferencia de la media" = pct(checks_d$mean_gap, 3),
+  "Diferencia de la varianza" = pct(checks_d$var_gap, 2),
+  "Cobertura simulada" = pct(checks_d$coverage, 2),
+  "Error de Monte Carlo" = pct(checks_d$coverage_mc_error, 2),
+  check.names = FALSE
+)
+```
 
 ```{r}
 #| label: tbl-gbm-daily
-gbm <- gbm_params(sample_returns$log_return)
-s0 <- sample_prices$adjusted[which.max(sample_prices$date)]
-
-report_table(
-  gbm_projection(s0, gbm$nu_daily, gbm$sigma_daily, params()$gbm$horizons_days),
-  caption = "Proyección con parámetros diarios. Horizonte en días hábiles."
-)
+#| tbl-cap: "Proyección con parámetros diarios y la ecuación dS, desde el cierre del 31 de diciembre de 2025. Precios en pesos."
+report_table(daily_table)
 ```
 
-## Modelo con parámetros anuales
+```{r}
+#| label: tbl-gbm-daily-mc
+#| tbl-cap: "Verificación por simulación de la proyección diaria: diferencia relativa entre lo simulado y la fórmula, y proporción de escenarios dentro del intervalo."
+report_table(mc_daily_table)
+```
 
-La @tbl-gbm-annual expresa la misma proyección en horizontes anuales.
+La @tbl-gbm-daily-mc confirma que la simulación reproduce las fórmulas. El promedio de los escenarios difiere del valor esperado teórico en menos de `r pct(max(abs(checks_d$mean_gap)), 2)` y la cobertura es de `r pct(checks_d$coverage[1])`, a `r num(abs(checks_d$coverage[1] - confidence) / checks_d$coverage_mc_error[1], 1)` errores de Monte Carlo del 95% nominal. La cobertura es idéntica en los tres horizontes, y no por casualidad: un escenario cae dentro del intervalo si y solo si $|z_i|\le`r num(z_crit, 2)`$, sin importar $h$, de modo que la cobertura solo depende del vector de normales. Por la misma razón la diferencia en la varianza, de `r pct(checks_d$var_gap[1])`, es la misma en todos los horizontes y refleja que la varianza muestral de $z$ es `r num(var(z), 4)` y no exactamente uno.
+
+```{r gbm-daily-figure-data}
+band_d <- gbm_local_projection(s0, mu_d, sigma_d, 0:max(horizons_d))
+z_paths <- matrix(rnorm(max(horizons_d) * 25), nrow = max(horizons_d))
+euler_d <- gbm_euler_paths(s0, mu_d, sigma_d, z_paths)
+euler_long <- data.frame(
+  h = rep(0:max(horizons_d), ncol(euler_d)),
+  price = as.vector(euler_d),
+  path = rep(seq_len(ncol(euler_d)), each = nrow(euler_d))
+)
+observed_d <- price_after_sessions(prices, s0_row$date, 0:max(horizons_d))
+observed_d$h <- observed_d$sessions
+```
+
+Las trayectorias de la figura siguiente se construyen paso a paso con la discretización de Euler-Maruyama, $S_{t+1}=S_t+\mu_d S_t+\sigma_d S_t z_t$, que aplica la misma ecuación sesión por sesión a partir del precio alcanzado y no del inicial.
+
+```{r}
+#| label: fig-gbm-daily
+#| fig-cap: "Proyección a 40 sesiones con la ecuación dS: banda del 95%, precio esperado, 25 trayectorias simuladas y precio observado en 2026."
+#| fig-alt: "Banda del 95 por ciento que se abre con la raíz del horizonte alrededor de un precio esperado casi plano; las trayectorias simuladas se dispersan dentro de ella y el precio observado de enero y febrero de 2026 permanece dentro de la banda."
+ggplot() +
+  geom_ribbon(data = band_d, aes(horizon, ymin = lower, ymax = upper),
+              fill = RISK_PALETTE[1], alpha = 0.12) +
+  geom_line(data = euler_long, aes(h, price, group = path),
+            colour = RISK_INK$muted, alpha = 0.35, linewidth = 0.3) +
+  geom_line(data = band_d, aes(horizon, expected), colour = RISK_PALETTE[1], linewidth = 0.8) +
+  geom_line(data = observed_d, aes(h, price), colour = RISK_PALETTE[2], linewidth = 0.9) +
+  annotate("text", x = max(horizons_d), y = band_d$upper[nrow(band_d)], label = "Límite del 95%",
+           hjust = 1, vjust = -0.5, size = 3, colour = RISK_PALETTE[1]) +
+  annotate("text", x = max(horizons_d), y = band_d$expected[nrow(band_d)], label = "Esperado",
+           hjust = -0.1, size = 3, colour = RISK_PALETTE[1]) +
+  annotate("text", x = max(horizons_d), y = observed_d$price[nrow(observed_d)],
+           label = "Observado", hjust = -0.1, size = 3, colour = RISK_PALETTE[2]) +
+  scale_x_continuous(breaks = c(0, horizons_d), expand = expansion(mult = c(0.01, 0.22))) +
+  labs(x = "Sesiones desde el 31 de diciembre de 2025", y = "Precio (MXN)",
+       caption = "Gris: trayectorias de Euler-Maruyama. Azul: precio esperado y banda del 95%. Naranja: precio observado.")
+```
+
+### Interpretación
+
+La @tbl-gbm-daily muestra que la incertidumbre domina a la tendencia desde el primer horizonte. A 10 sesiones el precio esperado apenas sube `r num(local_d$expected[1] - s0)` pesos respecto de $S_0$, mientras que el intervalo del 95% abarca `r num(local_d$interval_width[1])` pesos, `r pct(local_d$relative_width[1], 1)` del precio inicial, de manera que en dos semanas la dirección del precio es prácticamente indeterminada. Al pasar a 40 sesiones el valor esperado crece en proporción al horizonte, hasta `r num(local_d$expected[3])` pesos, y la amplitud del intervalo en proporción a su raíz, hasta `r num(local_d$interval_width[3])` pesos, `r pct(local_d$relative_width[3], 1)` de $S_0$: cuadruplicar el horizonte multiplica la amplitud por `r num(local_d$interval_width[3] / local_d$interval_width[1], 2)`, es decir, por $\sqrt4=2$.
+
+Esa diferencia de ritmos, lineal para la deriva y de raíz cuadrada para la dispersión, explica por qué a horizontes cortos la deriva es irrelevante para el riesgo: con $\mu_d h$ frente a $\sigma_d\sqrt h$, la razón entre ambas a 40 sesiones es apenas `r num(mu_d * 40 / (sigma_d * sqrt(40)), 3)`. El intervalo es simétrico porque la ecuación $dS$ suma al precio un cambio normal, lo que a estos horizontes es una aproximación aceptable, aunque ya muestra su límite: a 40 sesiones el modelo asigna la misma probabilidad a quedar `r num(local_d$expected[3] - local_d$lower[3])` pesos por debajo del valor esperado que a quedar esa misma distancia por encima, mientras que un precio que se multiplica por factores aleatorios tiene una cola derecha más larga que la izquierda, la asimetría que incorpora la ecuación de la sección siguiente.
+
+## Estimación del modelo con parámetros anuales
+
+Con parámetros anuales el tiempo se mide en años y los estimadores son
+
+$$
+\widehat\sigma=\sqrt{252}\,s,
+\qquad
+\widehat\mu=252\,\bar r+\tfrac12\widehat\sigma^{\,2}.
+$$
+
+```{r gbm-annual-parameters}
+mu_a <- gbm_est$mu_annual
+sigma_a <- gbm_est$sigma_annual
+nu_a <- gbm_est$nu_annual
+horizons_years <- config$gbm$horizons_months / 12
+```
+
+Con toda la historia, $\widehat\sigma=$ `r pct(sigma_a)` y $\widehat\mu=$ `r pct(mu_a)`, de los cuales `r pct(nu_a)` corresponden a la deriva del logaritmo, $\widehat\mu-\tfrac12\widehat\sigma^2$. Al aplicar el lema de Itô a $\ln S_t$, la ecuación del modelo se vuelve lineal en el logaritmo del precio y se resuelve de forma exacta:
+
+$$
+\ln S_T=\ln S_0+\left(\mu-\tfrac12\sigma^2\right)T+\sigma\sqrt T\,Z,
+\qquad Z\sim\mathcal N(0,1),
+$$
+
+que con los parámetros estimados es
+
+$$
+\ln S_T=\ln\left(`r num(s0)`\right)+`r num(nu_a, 4)`\,T+`r num(sigma_a, 4)`\sqrt T\,Z .
+$$
+
+Así, $\ln S_T\sim\mathcal N\!\left(\ln S_0+\left(\mu-\tfrac12\sigma^2\right)T,\ \sigma^2T\right)$ y el precio es lognormal, con
+
+$$
+E[S_T]=S_0e^{\mu T},
+\qquad
+\operatorname{Var}(S_T)=S_0^2e^{2\mu T}\left(e^{\sigma^2T}-1\right),
+$$
+
+$$
+\operatorname{Mediana}(S_T)=S_0e^{\left(\mu-\frac12\sigma^2\right)T},
+\qquad
+\operatorname{Moda}(S_T)=S_0e^{\left(\mu-\frac32\sigma^2\right)T}.
+$$
+
+Como la exponencial es creciente, los cuantiles de $\ln S_T$ se transforman en cuantiles del precio, y el intervalo del 95% es
+
+$$
+\left[\,S_0e^{\left(\mu-\frac12\sigma^2\right)T-z_{0.975}\sigma\sqrt T},\;
+S_0e^{\left(\mu-\frac12\sigma^2\right)T+z_{0.975}\sigma\sqrt T}\,\right],
+$$
+
+con $T=3/12,\ 6/12,\ 9/12$ y $1$. Además calculamos la probabilidad de terminar por debajo del precio inicial,
+
+$$
+P(S_T<S_0)=\Phi\!\left(-\frac{\left(\mu-\tfrac12\sigma^2\right)\sqrt T}{\sigma}\right).
+$$
+
+La simulación sigue los mismos pasos de la sección anterior con la solución exacta, $S_T^{(i)}=S_0\exp\!\left[\left(\mu-\tfrac12\sigma^2\right)T+\sigma\sqrt T\,z_i\right]$, y con el mismo vector de normales.
+
+```{r gbm-annual}
+exact_a <- gbm_projection(s0, nu_a, sigma_a, horizons_years)
+loss_a <- gbm_loss_probability(nu_a, sigma_a, horizons_years)
+
+checks_a <- do.call(rbind, lapply(seq_along(horizons_years), function(k) {
+  gbm_mc_check(gbm_exact_draws(s0, nu_a, sigma_a, horizons_years[k], z), exact_a[k, ])
+}))
+stopifnot(
+  all(abs(checks_a$mean_gap) < 0.005),
+  all(abs(checks_a$coverage - confidence) < 5 * checks_a$coverage_mc_error)
+)
+
+# Daily and annual parameters are one model in two units: 63 sessions are a quarter.
+same_model <- all.equal(
+  gbm_projection(s0, nu_d, sigma_d, 63)[, c("expected", "lower", "upper")],
+  gbm_projection(s0, nu_a, sigma_a, 63 / trading_days)[, c("expected", "lower", "upper")],
+  check.attributes = FALSE
+)
+stopifnot(isTRUE(same_model))
+local_a <- gbm_local_projection(s0, mu_a, sigma_a, horizons_years)
+
+annual_table <- data.frame(
+  "Horizonte" = paste(config$gbm$horizons_months, "meses"),
+  "T (años)" = num(horizons_years, 2),
+  "Precio esperado" = num(exact_a$expected),
+  "Mediana" = num(exact_a$median),
+  "Moda" = num(exact_a$mode),
+  "Desviación estándar" = num(exact_a$sd),
+  "Límite inferior 95%" = num(exact_a$lower),
+  "Límite superior 95%" = num(exact_a$upper),
+  "Amplitud / S0" = pct(exact_a$relative_width, 1),
+  "P(S_T < S0)" = pct(loss_a, 1),
+  check.names = FALSE
+)
+mc_annual_table <- data.frame(
+  "Horizonte" = paste(config$gbm$horizons_months, "meses"),
+  "Media simulada" = num(checks_a$mean_sim),
+  "Diferencia de la media" = pct(checks_a$mean_gap, 3),
+  "Diferencia de la varianza" = pct(checks_a$var_gap, 2),
+  "Cobertura simulada" = pct(checks_a$coverage, 2),
+  check.names = FALSE
+)
+```
 
 ```{r}
 #| label: tbl-gbm-annual
-horizons_years <- params()$gbm$horizons_months / 12
+#| tbl-cap: "Proyección con parámetros anuales y la solución exacta de ln S_t, desde el cierre del 31 de diciembre de 2025. Precios en pesos."
+report_table(annual_table)
+```
 
-report_table(
-  gbm_projection(s0, gbm$nu_annual, gbm$sigma_annual, horizons_years),
-  caption = "Proyección con parámetros anualizados. Horizonte en años."
+```{r}
+#| label: tbl-gbm-annual-mc
+#| tbl-cap: "Verificación por simulación de la proyección anual con el mismo vector de normales."
+report_table(mc_annual_table)
+```
+
+```{r gbm-annual-figure-data}
+grid_years <- (0:trading_days) / trading_days
+band_a <- gbm_projection(s0, nu_a, sigma_a, grid_years)
+band_a$date <- s0_row$date + round(band_a$horizon * 365.25)
+observed_a <- prices[prices$date >= s0_row$date, c("date", "adjusted")]
+```
+
+```{r}
+#| label: fig-gbm-annual
+#| fig-cap: "Proyección a doce meses con la solución exacta: banda del 95%, precio esperado, mediana y precio observado hasta el 26 de agosto de 2026."
+#| fig-alt: "Banda del 95 por ciento asimétrica que se abre más hacia arriba que hacia abajo; el precio esperado queda por encima de la mediana y el precio observado de 2026 desciende hacia la parte baja de la banda sin salir de ella."
+ggplot() +
+  geom_ribbon(data = band_a, aes(date, ymin = lower, ymax = upper),
+              fill = RISK_PALETTE[1], alpha = 0.12) +
+  geom_line(data = band_a, aes(date, expected), colour = RISK_PALETTE[1], linewidth = 0.8) +
+  geom_line(data = band_a, aes(date, median), colour = RISK_PALETTE[1], linewidth = 0.5,
+            linetype = "dashed") +
+  geom_line(data = observed_a, aes(date, adjusted), colour = RISK_PALETTE[2], linewidth = 0.8) +
+  annotate("text", x = max(band_a$date), y = band_a$expected[nrow(band_a)], label = "Esperado",
+           hjust = -0.1, size = 3, colour = RISK_PALETTE[1]) +
+  annotate("text", x = max(band_a$date), y = band_a$median[nrow(band_a)], label = "Mediana",
+           hjust = -0.1, vjust = 1.2, size = 3, colour = RISK_PALETTE[1]) +
+  annotate("text", x = max(observed_a$date), y = observed_a$adjusted[nrow(observed_a)],
+           label = "Observado", hjust = -0.1, size = 3, colour = RISK_PALETTE[2]) +
+  scale_x_date(date_labels = "%m/%Y", expand = expansion(mult = c(0.01, 0.12))) +
+  labs(x = NULL, y = "Precio (MXN)",
+       caption = "Azul: precio esperado (continuo), mediana (punteado) y banda del 95%. Naranja: precio observado.")
+```
+
+### Interpretación
+
+La @tbl-gbm-annual muestra cómo se amplifica la incertidumbre con el horizonte. La amplitud del intervalo pasa de `r pct(exact_a$relative_width[1], 0)` del precio inicial a tres meses a `r pct(exact_a$relative_width[4], 0)` a un año, y la desviación estándar del precio de `r num(exact_a$sd[1])` a `r num(exact_a$sd[4])` pesos, mientras que el precio esperado sube de `r num(exact_a$expected[1])` a `r num(exact_a$expected[4])` pesos. En el logaritmo la amplitud crece exactamente con $\sqrt T$, pero en pesos crece más rápido que esa raíz, porque la dispersión escala con el nivel esperado $S_0e^{\mu T}$ y con $\sqrt{e^{\sigma^2T}-1}$, y ambos aumentan con el horizonte: entre tres meses y un año la desviación estándar se multiplica por `r num(exact_a$sd[4] / exact_a$sd[1], 2)`, frente al factor de 2 que daría la regla de la raíz del tiempo.
+
+La incertidumbre también cambia de forma. A un año el límite superior queda `r num(exact_a$upper[4] - exact_a$median[4])` pesos por encima de la mediana y el inferior solo `r num(exact_a$median[4] - exact_a$lower[4])` por debajo, y la media supera a la mediana y esta a la moda, una separación que crece con $T$ y que es la firma de la cola derecha de la lognormal: el valor esperado lo eleva una minoría de escenarios muy favorables, mientras que el escenario típico, la mediana, crece a la tasa $\mu-\tfrac12\sigma^2$, de `r pct(nu_a)` anual. Por eso la probabilidad de terminar por debajo de $S_0$ baja con lentitud, de `r pct(loss_a[1], 1)` a tres meses a `r pct(loss_a[4], 1)` a un año: aun con una deriva estimada positiva, casi tres de cada diez escenarios a un año terminan en pérdida.
+
+Dos comparaciones aclaran qué cambia entre esta sección y la anterior. Los parámetros diarios y anuales describen el mismo modelo en distintas unidades, y comprobamos que 63 sesiones con parámetros diarios producen exactamente el mismo intervalo que $T=0.25$ con parámetros anuales, por lo que la diferencia entre secciones está en la ecuación y no en los parámetros. Si a tres meses aplicáramos la ecuación $dS$, el intervalo sería $[`r num(local_a$lower[1])`,\ `r num(local_a$upper[1])`]$ frente a $[`r num(exact_a$lower[1])`,\ `r num(exact_a$upper[1])`]$ de la solución exacta, y a un año el límite inferior de la aproximación caería a `r num(local_a$lower[4])` pesos frente a `r num(exact_a$lower[4])`, ya que la aproximación simétrica traslada al lado de las pérdidas una dispersión que la lognormal concentra en las ganancias. Esa distorsión crece con el horizonte, por lo que la ecuación de $\ln S_t$ es la adecuada para proyecciones de meses [@ruiz2026gbm].
+
+## Discusión teórica
+
+### Evidencia fuera de muestra
+
+Como ningún precio de 2026 intervino en los parámetros, los cierres observados este año permiten evaluar las proyecciones con información que el modelo no conoció. Para cada fecha comparamos el precio observado con el intervalo de la sección correspondiente y calculamos su posición en la distribución del modelo,
+
+$$
+z_{\text{obs}}=\frac{\ln\!\left(S_{\text{obs}}/S_0\right)-\left(\mu-\tfrac12\sigma^2\right)T}{\sigma\sqrt T},
+$$
+
+que bajo el GBM es una normal estándar, de modo que $|z_{\text{obs}}|>`r num(z_crit, 2)`$ equivale a salir del intervalo del 95%.
+
+```{r out-of-sample}
+month_end <- function(d, m) {
+  first <- as.Date(format(d, "%Y-%m-01"))
+  seq(first, by = paste(m + 1, "months"), length.out = 2)[2] - 1
+}
+targets_a <- do.call(c, lapply(config$gbm$horizons_months, function(m) month_end(s0_row$date, m)))
+observed_sessions <- price_after_sessions(prices, s0_row$date, horizons_d)
+observed_months <- price_on_or_before(prices, targets_a)
+
+after_s0 <- prices[prices$date > s0_row$date, ]
+last_obs <- after_s0[nrow(after_s0), ]
+low_obs <- after_s0[which.min(after_s0$adjusted), ]
+sessions_to <- function(d) sum(after_s0$date <= d)
+extra_T <- c(sessions_to(last_obs$date), sessions_to(low_obs$date)) / trading_days
+extra_proj <- gbm_projection(s0, nu_a, sigma_a, extra_T)
+
+oos <- data.frame(
+  horizon = c(paste(horizons_d, "sesiones (ecuación dS)"),
+              paste(config$gbm$horizons_months, "meses (ecuación de ln S)"),
+              "Último cierre de la copia", "Mínimo de 2026"),
+  date = c(observed_sessions$date, observed_months$date, last_obs$date, low_obs$date),
+  observed = c(observed_sessions$price, observed_months$price, last_obs$adjusted, low_obs$adjusted),
+  lower = c(local_d$lower, exact_a$lower, extra_proj$lower),
+  upper = c(local_d$upper, exact_a$upper, extra_proj$upper),
+  z = c(
+    gbm_standardised_outcome(s0, observed_sessions$price, nu_d, sigma_d, horizons_d),
+    gbm_standardised_outcome(s0, observed_months$price, nu_a, sigma_a, horizons_years),
+    gbm_standardised_outcome(s0, c(last_obs$adjusted, low_obs$adjusted), nu_a, sigma_a, extra_T)
+  )
+)
+oos$inside <- oos$observed >= oos$lower & oos$observed <= oos$upper
+observable <- !is.na(oos$observed)
+z_low <- oos$z[nrow(oos)]
+
+oos_table <- data.frame(
+  Horizonte = oos$horizon,
+  Fecha = ifelse(observable, format(oos$date, "%d/%m/%Y"), "Posterior a la copia"),
+  "Precio observado" = ifelse(observable, num(oos$observed), "—"),
+  "Intervalo del 95%" = paste0("[", num(oos$lower), ", ", num(oos$upper), "]"),
+  "¿Dentro del intervalo?" = ifelse(observable, ifelse(oos$inside, "Sí", "No"), "No observable"),
+  "z observado" = ifelse(observable, num(oos$z, 2), "—"),
+  check.names = FALSE
 )
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-Cómo se amplifica la incertidumbre al ampliar el horizonte: el ancho del
-intervalo crece con $\sqrt{t}$ mientras el valor esperado crece con $t$.
-:::
+```{r}
+#| label: tbl-out-of-sample
+#| tbl-cap: "Precios observados en 2026 frente a los intervalos proyectados desde el 31 de diciembre de 2025."
+report_table(oos_table)
+```
 
-## Discusión
+La @tbl-out-of-sample muestra que los `r sum(observable)` precios observables cayeron dentro de su intervalo, con valores de $z$ entre `r num(min(oos$z[observable]), 2)` y `r num(max(oos$z[observable]), 2)`, mientras que los horizontes de nueve y doce meses todavía no pueden evaluarse con la copia de datos. Ese resultado debe leerse con dos cautelas. La primera es que intervalos tan amplios son difíciles de violar: a seis meses el del 95% abarca `r pct(exact_a$relative_width[2], 0)` del precio inicial, de manera que acertar dice poco sobre la precisión del modelo. La segunda es que el precio se movió de forma persistente hacia la cola izquierda, ya que el `r fecha(low_obs$date)` cerró en `r num(low_obs$adjusted)` pesos, con $z=`r num(z_low, 2)`$, un nivel tan bajo o menor que solo alcanzaban `r pct(pnorm(z_low), 1)` de los escenarios del modelo para esa fecha. En otras palabras, el GBM no falló en 2026, pero la trayectoria observada recorrió la región que el modelo consideraba poco probable, y bastaría un choque como el de octubre de 2023 para salir del intervalo.
 
-::: {.callout-important title="Pendiente de redacción"}
-¿Son normales los rendimientos? ¿Es el precio normal o lognormal? ¿Qué implica
-suponer normalidad al modelar riesgo, y qué riesgos introduce ese supuesto en la
-toma de decisiones? La respuesta debe apoyarse en los estadísticos calculados
-arriba, no en la teoría general.
-:::
+```{r tail-evidence}
+k_jump <- (min(r_est) - mean(r_est)) / sd(r_est)
+p_jump <- pnorm(k_jump)
+drop10_observed <- sum(r_est < log(0.9))
+drop10_model <- length(r_est) * pnorm((log(0.9) - nu_d) / sigma_d)
+q01_model <- qnorm(0.01, mean = nu_d, sd = sigma_d)
+q01_exceed <- mean(r_est < q01_model)
+```
+
+### ¿Los rendimientos siguen una distribución normal?
+
+No. El estadístico de Jarque-Bera de `r num(jb_r$statistic, 0)` frente al valor crítico de `r num(qchisq(0.95, 2))`, la curtosis de `r num(jb_r$kurtosis, 2)` y una frecuencia de movimientos de más de cuatro desviaciones estándar `r num(tail_table$observed[2] / tail_table$normal[2], 0)` veces mayor que la normal muestran que el centro de la distribución es más estrecho y las colas mucho más pesadas que en una normal, el hecho estilizado que Mandelbrot documentó para los precios especulativos [@mandelbrot1963; @cont2001]. La caída del `r fecha(worst$date[1])` equivale a `r num(abs(k_jump), 1)` desviaciones estándar, un evento al que la normal asigna una probabilidad del orden de $10^{`r floor(log10(p_jump))`}$, es decir, imposible en cualquier horizonte humano, y aun así ocurrió.
+
+### ¿El precio es normal o lognormal?
+
+Bajo el modelo, el precio en una fecha futura es lognormal y su logaritmo es normal, y la evidencia apoya esa estructura en lo esencial: el precio no puede ser negativo, sus cambios son proporcionales a su nivel y los rendimientos se acumulan sumando logaritmos, de modo que tratar el precio como una normal, como hace la ecuación $dS$ a horizontes largos, produce intervalos simétricos que subestiman la cola de las ganancias y admiten precios negativos con suficiente horizonte. La prueba de Jarque-Bera sobre la serie histórica del precio y de su logaritmo no puede, sin embargo, confirmar ni refutar esa lognormalidad, porque contrasta una sola trayectoria no estacionaria en lugar de muchos escenarios para una misma fecha, como explicamos en la sección 3. La respuesta correcta es, por tanto, que el precio es aproximadamente lognormal como estructura, aunque su logaritmo no es exactamente normal, ya que se forma sumando rendimientos de colas pesadas.
+
+### ¿Qué implica asumir normalidad en la modelación del riesgo?
+
+Implica medir el riesgo con la desviación estándar y suponer que esta resume las pérdidas extremas, cuando en GAPB no lo hace. Con la media y la volatilidad diarias, la normal fija en `r pct(q01_model)` el umbral que solo debería superarse a la baja en 1% de las sesiones, pero en la historia se rebasó en `r pct(q01_exceed)` de ellas, una frecuencia `r num(q01_exceed / 0.01, 1)` veces la prevista. En caídas de más de 10% en un día la diferencia es todavía mayor, ya que el modelo esperaba `r format(signif(drop10_model, 2), scientific = FALSE)` sesiones así en toda la muestra y ocurrieron `r drop10_observed`. Un modelo normal es razonable para el día típico, pero precisamente falla en la región que define el riesgo de una posición.
+
+### ¿Qué diferencias hay entre los supuestos del GBM y los datos?
+
+El GBM supone parámetros constantes, choques independientes y normales, y trayectorias continuas, y los datos se apartan de los tres. La volatilidad no es constante, ya que la volatilidad móvil osciló entre `r pct(rolling_calm$rolling_vol, 1)` y `r pct(rolling_peak$rolling_vol, 1)` y la anual entre `r pct(calm_year$vol_annual, 1)` y `r pct(peak_year$vol_annual, 1)`, y esa concentración de los movimientos grandes en episodios indica además que los rendimientos al cuadrado dependen de su pasado aunque los rendimientos mismos sean casi impredecibles. Las trayectorias tampoco son continuas, porque una noticia regulatoria movió el precio `r pct(worst$log_return[1], 1)` en una sesión, un salto que el modelo solo puede representar como la suma improbable de muchos choques pequeños. Por último, la deriva se estima con un error estándar cercano a `r pct(sqrt(trading_days) * sd(r_est) / sqrt(length(r_est) / trading_days), 1)` anual, y la conclusión de la prueba *t* cambia según la ventana, de modo que la parte del modelo que más pesa en el valor esperado es también la menos confiable.
+
+### ¿Qué riesgos introduce el supuesto de normalidad en las decisiones?
+
+El primero es subestimar las pérdidas extremas, y con ellas el capital, los límites de exposición o los márgenes que se fijan a partir de un cuantil normal: el umbral del 1% se rebasó con una frecuencia `r num(q01_exceed / 0.01, 1)` veces la prevista, y las caídas de más de 10% en un día, que el modelo trataba como prácticamente imposibles, ocurrieron `r drop10_observed` veces. El segundo es usar una volatilidad promedio en un momento que no es promedio: la estimada con toda la historia, de `r pct(sigma_a, 1)`, duplicaba el riesgo de la calma de `r months_es[as.integer(format(rolling_calm$date, "%m"))]` de `r format(rolling_calm$date, "%Y")`, cuando la volatilidad móvil era de `r pct(rolling_calm$rolling_vol, 1)`, y tras octubre de 2023 lo subestimaba en un factor de `r num(rolling_peak$rolling_vol / sigma_a, 1)`, de modo que una regla basada en un solo $\sigma$ protege cuando no hace falta y falla cuando más se necesita. El tercero es la falsa precisión: un intervalo del 95% bien calculado transmite una seguridad que depende de supuestos que los datos no cumplen, y en 2026 el precio pasó de `r num(s0)` a `r num(low_obs$adjusted)` pesos dentro de un intervalo correcto en el papel, con una pérdida de `r pct(1 - low_obs$adjusted / s0, 1)` que para un inversionista apalancado o con necesidad de liquidez habría tenido consecuencias reales. Por ello, las cifras del GBM deben acompañarse de medidas que no dependan de la normalidad, como frecuencias históricas de pérdidas y modelos de volatilidad cambiante.
 
 ## Conclusiones
 
-::: {.callout-important title="Pendiente de redacción"}
-Síntesis de hallazgos y validez del modelo teórico frente a los datos.
+Los rendimientos de GAPB no son normales. Con casi veinte años de datos, la curtosis de `r num(jb_r$kurtosis, 2)` y una frecuencia de movimientos extremos decenas de veces mayor que la normal muestran colas pesadas, y la volatilidad cambia por regímenes, desde `r pct(calm_year$vol_annual, 1)` en `r calm_year$year` hasta `r pct(peak_year$vol_annual, 1)` en `r peak_year$year`, con un máximo de corto plazo de `r pct(rolling_peak$rolling_vol, 0)` tras el choque regulatorio de 2023. La media diaria es positiva y significativa en toda la historia pero no en 2021–2025, una diferencia que refleja la precisión de cada ventana y no un cambio en la deriva, y que es consistente con un mercado en el que la tendencia es pequeña frente al ruido.
+
+Con esos parámetros, el GBM proyecta desde los `r num(s0)` pesos de cierre de 2025 un precio esperado de `r num(local_d$expected[3])` pesos a 40 sesiones y de `r num(exact_a$expected[4])` a un año, con intervalos que pasan de `r pct(local_d$relative_width[1], 0)` a `r pct(exact_a$relative_width[4], 0)` del precio inicial, y la simulación reproduce esas fórmulas dentro de su error de Monte Carlo. La comparación entre ecuaciones muestra que la aproximación $dS$ basta para unas semanas, pero que a horizontes de meses solo la solución de $\ln S_t$ respeta la asimetría del precio, y los precios de 2026 cayeron dentro de sus intervalos, aunque el mínimo del año alcanzó la región que el modelo consideraba poco probable.
+
+El modelo es, por tanto, válido como descripción del centro de la distribución y de la forma en que la incertidumbre crece con el horizonte, pero no como descripción de las colas ni de la dinámica de la volatilidad, que es donde se concentra el riesgo. La lección es que la incertidumbre de un activo no es un número fijo que se escala con $\sqrt T$, sino una cantidad que cambia con el entorno y que en los días que más importan excede por mucho lo que la normal permite, de modo que cualquier medida de riesgo basada en el GBM debe leerse como un piso y no como un techo. En las siguientes entregas este diagnóstico orienta el trabajo: los modelos de varianza condicional responden a la volatilidad cambiante, y el Valor en Riesgo deberá contrastar el supuesto normal con la distribución histórica de las pérdidas.
+
+## Referencias {.unnumbered}
+
+::: {#refs}
 :::
 
-## Referencias
+[Repositorio del proyecto en GitHub](https://github.com/Urielledezma/GAPB-Risk-Analysis), enlace para los comentarios de la entrega en Canvas.
