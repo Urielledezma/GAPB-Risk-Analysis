@@ -280,7 +280,7 @@ synced folder.
 - [x] Repository scaffold, analytics library and report skeletons
 - [x] Stage 01 — issuer profile and risk taxonomy
 - [x] Stage 02 — price path, drawdowns and documented event interpretation
-- [ ] Stage 03 — return distribution and GBM projection
+- [x] Stage 03 — return distribution and GBM projection
 - [ ] Stage 04 — conditional variance models and out-of-sample evaluation
 - [ ] Stage 05 — portfolio VaR, Expected Shortfall and optimisation
 - [ ] Research article
@@ -298,6 +298,19 @@ and distinguishes documented facts from proposed explanations of price moves.
 Render the standalone Canvas deliverable with
 `quarto render reports/02-price-history-events.qmd --profile submission`;
 the resulting HTML is written to `outputs/submission/`.
+
+Stage 03 estimates on the whole trading history up to the hard cut-off,
+**2006-02-27 to 2025-12-31** (`gbm.estimation_start` and `sample.end` in
+`params.yml`), and reports 2021–2025 beside it in the normality and t tables,
+because the t-test on the mean rejects on the first window and not on the second.
+Its descriptive section runs from 2021 to the last session of the snapshot,
+2026-08-26, and the 2026 prices serve as out-of-sample evidence for the
+projections, which start from the 2025-12-31 close. Every formula follows the
+course material: the daily projection uses the local `dS` approximation and the
+annual one the exact solution of `ln S_t`, each verified by a 100,000-draw Monte
+Carlo check of mean, variance and interval coverage rather than by simulated
+percentiles. Render its Canvas deliverable with
+`quarto render reports/03-returns-volatility-gbm.qmd --profile submission`.
 
 Build qualification for this delivery: on the local Windows installation, R 4.5.1
 crashes at shutdown after loading `rlang` (Quarto reports status -1073741819).
