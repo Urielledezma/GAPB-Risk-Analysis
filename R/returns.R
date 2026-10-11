@@ -107,6 +107,12 @@ return_moments <- function(returns,
 #' single pooled volatility hides exactly the structural breaks the analysis is
 #' looking for.
 #'
+#' Two figures are easy to conflate here. mean_annual annualises the year's
+#' average day, 252 times its mean, whatever the number of sessions it actually
+#' had. realised_annual is what the year actually returned: the sum of its log
+#' returns, which telescopes to ln(P_last / P_last_of_previous_year). They agree
+#' only for a complete year of exactly 252 sessions.
+#'
 #' @param returns A data frame with date and log_return.
 #' @param years Years to report. Defaults to the configured breakdown.
 #' @return One row per year.
@@ -116,11 +122,68 @@ return_moments_by_year <- function(returns, years = params()$sample$annual_break
     if (nrow(slice) == 0) {
       return(NULL)
     }
-    cbind(year = year, return_moments(slice$log_return))
+    cbind(
+      year = year,
+      return_moments(slice$log_return),
+      realised_annual = sum(slice$log_return[is.finite(slice$log_return)])
+    )
   })
   out <- do.call(rbind, Filter(Negate(is.null), rows))
   rownames(out) <- NULL
   out
+}
+
+#' The last available price on or before each target date.
+#'
+#' Calendar horizons -- three months after a date -- often land on a weekend or a
+#' holiday. The price that a holder could actually observe is the last close on
+#' or before that date, never a later one.
+#'
+#' @param prices A data frame with date and a price column.
+#' @param dates Target dates.
+#' @param price_col Price column to read.
+#' @return One row per target: the target, the date actually used and its
+#'   price. Targets before the first observation, or after the last one, return
+#'   NA, because a price beyond the data cannot be inferred from it.
+price_on_or_before <- function(prices, dates, price_col = params()$conventions$price_field) {
+  prices <- prices[order(prices$date), ]
+  dates <- as.Date(dates)
+  index <- findInterval(as.numeric(dates), as.numeric(prices$date))
+  beyond <- dates > max(prices$date)
+  index[index == 0 | beyond] <- NA
+
+  data.frame(
+    target = dates,
+    date = prices$date[index],
+    price = prices[[price_col]][index],
+    stringsAsFactors = FALSE
+  )
+}
+
+#' The price a given number of sessions after a date.
+#'
+#' @param prices A data frame with date and a price column.
+#' @param from The starting session, which must be in the data.
+#' @param sessions Numbers of sessions ahead.
+#' @param price_col Price column to read.
+#' @return One row per offset: sessions, date and price; NA past the data.
+price_after_sessions <- function(prices, from, sessions,
+                                 price_col = params()$conventions$price_field) {
+  prices <- prices[order(prices$date), ]
+  start <- match(as.Date(from), prices$date)
+  if (is.na(start)) {
+    stop("price_after_sessions: ", format(as.Date(from)), " is not a session in the data.",
+         call. = FALSE)
+  }
+  index <- start + sessions
+  index[index > nrow(prices)] <- NA
+
+  data.frame(
+    sessions = sessions,
+    date = prices$date[index],
+    price = prices[[price_col]][index],
+    stringsAsFactors = FALSE
+  )
 }
 
 #' Cumulative wealth index from log returns.

@@ -76,3 +76,45 @@ test_that("returns_matrix keeps only dates common to every ticker", {
   expect_equal(sort(colnames(matrix_returns)), c("A", "B"))
   expect_false("2020-01-01" %in% rownames(matrix_returns))
 })
+
+test_that("the realised annual return telescopes to the log price ratio", {
+  prices <- data.frame(
+    date = as.Date(c("2020-12-30", "2020-12-31", "2021-03-01", "2021-07-01", "2021-12-31")),
+    ticker = "TEST",
+    adjusted = c(95, 100, 110, 90, 120)
+  )
+  returns <- compute_log_returns(prices)
+
+  by_year <- return_moments_by_year(returns, years = 2021)
+  expect_equal(by_year$realised_annual, log(120 / 100))
+  expect_equal(by_year$mean_annual, mean(returns$log_return[-1]) * 252)
+})
+
+test_that("price_on_or_before never reads a later price, nor past the data", {
+  prices <- data.frame(
+    date = as.Date(c("2026-01-02", "2026-01-05", "2026-01-06")),
+    adjusted = c(10, 11, 12)
+  )
+  found <- price_on_or_before(
+    prices, as.Date(c("2026-01-03", "2026-01-05", "2026-01-01", "2026-02-01"))
+  )
+
+  # A Saturday target takes Friday's close.
+  expect_equal(found$price[1], 10)
+  expect_equal(found$date[1], as.Date("2026-01-02"))
+  expect_equal(found$price[2], 11)
+  expect_true(is.na(found$price[3]))
+  expect_true(is.na(found$price[4]))
+})
+
+test_that("price_after_sessions counts sessions, not calendar days", {
+  prices <- data.frame(
+    date = as.Date(c("2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07")),
+    adjusted = c(10, 11, 12, 13)
+  )
+  ahead <- price_after_sessions(prices, "2026-01-02", c(1, 3, 4))
+
+  expect_equal(ahead$price, c(11, 13, NA))
+  expect_equal(ahead$date[1], as.Date("2026-01-05"))
+  expect_error(price_after_sessions(prices, "2026-01-03", 1), "not a session")
+})
