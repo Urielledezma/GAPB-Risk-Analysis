@@ -13,8 +13,9 @@ sample:
   end: "2025-12-31"
   # Out-of-sample evaluation period for stage 04.
   oos_start: "2026-01-01"
-  # Years reported individually in the year-by-year volatility table.
-  annual_breakdown: [2021, 2022, 2023, 2024, 2025]
+  # Years reported individually in the year-by-year volatility table. 2026 is
+  # year-to-date: stage 03's section 2 runs "hasta lo que va de 2026".
+  annual_breakdown: [2021, 2022, 2023, 2024, 2025, 2026]
 
 # --- Conventions -------------------------------------------------------------
 conventions:
@@ -31,12 +32,20 @@ tests:
 
 # --- Geometric Brownian motion (stage 03) ------------------------------------
 gbm:
+  # Start of the estimation window for the normality tests, the t-test and both
+  # GBM projections. Part 3 asks for "todo el periodo de cotización hasta
+  # diciembre 2025", so it takes the whole history up to sample.end; the loader
+  # begins at the first session that exists. Stages 04 and 05 keep sample.start.
+  estimation_start: "2006-01-01"
   # Horizons in trading days, using daily parameters.
   horizons_days: [10, 20, 40]
   # Horizons in months, using annualised parameters.
   horizons_months: [3, 6, 9, 12]
   confidence: 0.95
-  n_paths: 10000
+  # Draws per Monte Carlo check: the class convention.
+  n_paths: 100000
+  # Window of the rolling volatility, sqrt(252 * SMA(r^2, m)), as in class.
+  rolling_window: 20
 
 # --- Variance models (stage 04) ----------------------------------------------
 variance:
