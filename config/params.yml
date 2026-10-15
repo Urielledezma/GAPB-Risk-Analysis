@@ -44,13 +44,19 @@ gbm:
   confidence: 0.95
   # Draws per Monte Carlo check: the class convention.
   n_paths: 100000
-  # Window of the rolling volatility, sqrt(252 * SMA(r^2, m)), as in class.
-  rolling_window: 20
 
 # --- Variance models (stage 04) ----------------------------------------------
 variance:
   # Moving-average windows to sweep when selecting m.
   ma_windows: [5, 10, 20, 40, 60, 120, 252]
+  # The class procedure for choosing m (Modulo 3): candidate windows and the
+  # share of the sample before the 70 / 30 cut. Stage 03 re-runs it on every
+  # session from sample.oos_start on, over the history from
+  # gbm.estimation_start, and its rolling-volatility figure uses the window it
+  # chooses on the last session.
+  ma_class:
+    windows: [5, 10, 20, 40]
+    train_share: 0.70
   ewma:
     # RiskMetrics convention, used as the benchmark against which an optimised
     # lambda has to justify itself.

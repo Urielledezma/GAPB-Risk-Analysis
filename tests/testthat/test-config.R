@@ -23,7 +23,8 @@ test_that("model parameters are present and internally consistent", {
   expect_true(as.Date(p$sample$oos_start) > as.Date(p$sample$end))
   expect_true(as.Date(p$gbm$estimation_start) < as.Date(p$sample$start))
   expect_true(all(p$gbm$horizons_days > 0) && all(p$gbm$horizons_months > 0))
-  expect_true(p$gbm$rolling_window > 1)
+  expect_true(all(p$variance$ma_class$windows >= 1))
+  expect_true(p$variance$ma_class$train_share > 0 && p$variance$ma_class$train_share < 1)
   expect_equal(p$conventions$trading_days_per_year, 252)
   expect_equal(p$conventions$return_type, "log")
 
