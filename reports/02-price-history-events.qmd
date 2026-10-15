@@ -38,7 +38,7 @@ La interpretación es descriptiva: una coincidencia temporal, acompañada de un 
 
 GAP realizó su oferta pública el **24 de febrero de 2006**, mientras que la base disponible comienza el **27 de febrero de 2006**, es decir, en la siguiente sesión bursátil, por lo que no contamos con el cierre del día de colocación y no lo sustituimos por un precio estimado [@gap20f2009]. La serie corresponde a la acción mexicana en pesos, no al ADS negociado en Nueva York.
 
-Los precios se leen de la copia pública guardada en el repositorio, obtenida de Yahoo Finance y registrada el 27 de agosto de 2026, pero se filtran al corte de esta entrega antes de calcular cualquier resultado. Por ello, se trata de una reconstrucción histórica con la versión disponible de los datos, incluidos sus ajustes retrospectivos, y no de una base congelada tal como se conocía en junio. El reporte no descarga información durante su ejecución [@yahoogapbhistory].
+Los precios se leen de la copia pública guardada en el repositorio, obtenida de Yahoo Finance y registrada el `r fecha_es(substr(snapshot_manifest()$recorded_at[1], 1, 10))`, pero se filtran al corte de esta entrega antes de calcular cualquier resultado. Por ello, se trata de una reconstrucción histórica con la versión disponible de los datos, incluidos sus ajustes retrospectivos, y no de una base congelada tal como se conocía en junio. El reporte no descarga información durante su ejecución [@yahoogapbhistory].
 
 ```{r data}
 prices <- read_processed("prices_daily")

@@ -34,6 +34,29 @@ options(
   knitr.kable.NA = "—"
 )
 
+#' A date written for Spanish prose, "13 de octubre de 2026".
+#'
+#' @param d A date or a string as.Date() understands.
+#' @return A character vector.
+fecha_es <- function(d) {
+  months <- c("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+              "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+  d <- as.Date(d)
+  paste(as.integer(format(d, "%d")), "de", months[as.integer(format(d, "%m"))],
+        "de", format(d, "%Y"))
+}
+
+#' The provenance manifest of the price snapshot the site is rendered from.
+#'
+#' Pages state the dates their data cover from here rather than in literals,
+#' so a refresh of the snapshot cannot leave a page describing the old one.
+#'
+#' @return The manifest: ticker, source, rows, first and last date, and the
+#'   time the copy was recorded.
+snapshot_manifest <- function() {
+  read_dataset("prices_provenance", date_cols = c("first", "last"), quiet = TRUE)
+}
+
 #' Render a data frame as a report table.
 #'
 #' Every multi-series figure in this project is paired with its table: the chart
