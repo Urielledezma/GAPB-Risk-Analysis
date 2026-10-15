@@ -287,7 +287,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">29 de septiembre de 2026</p>
+      <p class="date">15 de octubre de 2026</p>
     </div>
   </div>
   
@@ -344,7 +344,7 @@ Yahoo Finance, Banco Mundial, documentos primarios y prensa
 <section id="cobertura-y-fuentes" class="level3">
 <h3 class="anchored" data-anchor-id="cobertura-y-fuentes">Cobertura y fuentes</h3>
 <p>GAP realizó su oferta pública el <strong>24 de febrero de 2006</strong>, mientras que la base disponible comienza el <strong>27 de febrero de 2006</strong>, es decir, en la siguiente sesión bursátil, por lo que no contamos con el cierre del día de colocación y no lo sustituimos por un precio estimado <span class="citation" data-cites="gap20f2009">(<a href="#ref-gap20f2009" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2010</a>)</span>. La serie corresponde a la acción mexicana en pesos, no al ADS negociado en Nueva York.</p>
-<p>Los precios se leen de la copia pública guardada en el repositorio, obtenida de Yahoo Finance y registrada el 27 de agosto de 2026, pero se filtran al corte de esta entrega antes de calcular cualquier resultado. Por ello, se trata de una reconstrucción histórica con la versión disponible de los datos, incluidos sus ajustes retrospectivos, y no de una base congelada tal como se conocía en junio. El reporte no descarga información durante su ejecución <span class="citation" data-cites="yahoogapbhistory">(<a href="#ref-yahoogapbhistory" role="doc-biblioref">Yahoo Finance, 2026</a>)</span>.</p>
+<p>Los precios se leen de la copia pública guardada en el repositorio, obtenida de Yahoo Finance y registrada el 15 de octubre de 2026, pero se filtran al corte de esta entrega antes de calcular cualquier resultado. Por ello, se trata de una reconstrucción histórica con la versión disponible de los datos, incluidos sus ajustes retrospectivos, y no de una base congelada tal como se conocía en junio. El reporte no descarga información durante su ejecución <span class="citation" data-cites="yahoogapbhistory">(<a href="#ref-yahoogapbhistory" role="doc-biblioref">Yahoo Finance, 2026</a>)</span>.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
@@ -385,7 +385,7 @@ r_t=\ln\left(\frac{P_t^{aj}}{P_{t-1}^{aj}}\right),
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">"#E5E7EB"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-price" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Serie del cierre de GAPB entre febrero de 2006 y junio de 2026, con retrocesos visibles en 2008, 2020 y 2023.">
+<div id="fig-price" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Serie del cierre de GAPB entre febrero de 2006 y junio de 2026, con retrocesos visibles en 2008, 2020 y 2023." data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-price-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="02-price-history-events_files/figure-html/fig-price-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Serie del cierre de GAPB entre febrero de 2006 y junio de 2026, con retrocesos visibles en 2008, 2020 y 2023." width="1600">
@@ -406,7 +406,7 @@ Figura&nbsp;1: Cierre de GAPB sin ajustar, en pesos por acción. Fuente: copia l
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"#808080"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-returns" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Rendimientos diarios alrededor de cero, con caídas particularmente grandes en 2008, marzo de 2020 y octubre de 2023.">
+<div id="fig-returns" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Rendimientos diarios alrededor de cero, con caídas particularmente grandes en 2008, marzo de 2020 y octubre de 2023." data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-returns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="02-price-history-events_files/figure-html/fig-returns-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Rendimientos diarios alrededor de cero, con caídas particularmente grandes en 2008, marzo de 2020 y octubre de 2023." width="1600">
@@ -444,7 +444,7 @@ Figura&nbsp;2: Rendimientos logarítmicos diarios calculados con el cierre ajust
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(prices<span class="sc">$</span>date[trough], <span class="dv">100</span> <span class="sc">*</span> mdd, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"#174A6E"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-drawdown" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Pérdida respecto del máximo previo; el mínimo es cercano a menos 65 por ciento en octubre de 2008.">
+<div id="fig-drawdown" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Pérdida respecto del máximo previo; el mínimo es cercano a menos 65 por ciento en octubre de 2008." data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-drawdown-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="02-price-history-events_files/figure-html/fig-drawdown-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Pérdida respecto del máximo previo; el mínimo es cercano a menos 65 por ciento en octubre de 2008." width="1600">
@@ -682,7 +682,7 @@ Tabla&nbsp;2: Ventanas históricas: cierre inicial de referencia, cierre final y
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">cex =</span> <span class="fl">0.85</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-gdp" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Comparación anual de 2007 a 2025: los rendimientos de GAPB fluctúan más que el PIB y sus signos divergen en varios años.">
+<div id="fig-gdp" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Comparación anual de 2007 a 2025: los rendimientos de GAPB fluctúan más que el PIB y sus signos divergen en varios años." data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-gdp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="02-price-history-events_files/figure-html/fig-gdp-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparación anual de 2007 a 2025: los rendimientos de GAPB fluctúan más que el PIB y sus signos divergen en varios años." width="1600">
@@ -859,7 +859,7 @@ Tabla&nbsp;3: Datos de la comparación anual, expresados en porcentaje. Fuentes:
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">labels =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(recent_events)), <span class="at">pos =</span> <span class="dv">3</span>, <span class="at">cex =</span> <span class="fl">0.85</span>, <span class="at">xpd =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-recent" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Índice de la inversión ajustada entre junio de 2025 y junio de 2026, con cuatro fechas de eventos señaladas y cierre próximo a 105.">
+<div id="fig-recent" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Índice de la inversión ajustada entre junio de 2025 y junio de 2026, con cuatro fechas de eventos señaladas y cierre próximo a 105." data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-recent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="02-price-history-events_files/figure-html/fig-recent-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Índice de la inversión ajustada entre junio de 2025 y junio de 2026, con cuatro fechas de eventos señaladas y cierre próximo a 105." width="1600">
