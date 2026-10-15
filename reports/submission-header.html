@@ -9,6 +9,12 @@
   :root { --ink: #20252b; --muted: #65707c; --line: #dfe4e8; --accent: #1769aa; }
   body { color: var(--ink); background: #fff; line-height: 1.62; }
   main.content { padding-bottom: 4rem; }
+  /* On windows narrower than the grid (~1470px) the body column runs about one
+     gutter under the margin column, so full-width tables and the last word of
+     a line slide beneath the table of contents. Padding on both sides of the
+     seam, not a width cap. */
+  main.content { padding-right: 1.5rem; }
+  #quarto-margin-sidebar { padding-left: 2.5rem; }
 
   h1, h2, h3 { line-height: 1.18; }
   h2 { color: #173f5f; border-bottom: 1px solid var(--line); padding-bottom: .35rem; margin-top: 2.7rem; }

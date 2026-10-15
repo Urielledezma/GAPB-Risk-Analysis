@@ -301,16 +301,26 @@ the resulting HTML is written to `outputs/submission/`.
 
 Stage 03 estimates on the whole trading history up to the hard cut-off,
 **2006-02-27 to 2025-12-31** (`gbm.estimation_start` and `sample.end` in
-`params.yml`), and reports 2021–2025 beside it in the normality and t tables,
-because the t-test on the mean rejects on the first window and not on the second.
-Its descriptive section runs from 2021 to the last session of the snapshot,
-2026-08-26, and the 2026 prices serve as out-of-sample evidence for the
-projections, which start from the 2025-12-31 close. Every formula follows the
-course material: the daily projection uses the local `dS` approximation and the
-annual one the exact solution of `ln S_t`, each verified by a 100,000-draw Monte
-Carlo check of mean, variance and interval coverage rather than by simulated
-percentiles. Render its Canvas deliverable with
+`params.yml`). The professor confirmed on 2026-10-15 that the whole history
+applies to Part 3 only; stages 04 and 05 keep `sample.start`, 2021 to 2025.
+Its descriptive section runs from 2021 to the last session of the snapshot
+(2026-10-13 at the last refresh), and the 2026 prices serve as out-of-sample
+evidence for the projections, which start from the 2025-12-31 close. Every
+formula follows the course material: the daily projection uses the local `dS`
+approximation and the annual one the exact solution of `ln S_t`, each verified
+by a 100,000-draw Monte Carlo check of mean, variance and interval coverage
+rather than by simulated percentiles. Render its Canvas deliverable with
 `quarto render reports/03-returns-volatility-gbm.qmd --profile submission`.
+
+Its annex re-runs the class moving-average procedure (Modulo 3: windows 5, 10,
+20 and 40, a 70/30 cut, four losses, majority vote with RMSE as tie-break) on
+every session since `sample.oos_start`, and the rolling-volatility figure of
+section 2d uses the window it chooses on the last session. The professor asked
+for that estimate to move with the data until the final delivery, so the daily
+routine is a refresh followed by a render, nothing else: run
+`analysis/05_refresh_public_snapshot.R` and `analysis/04_build_datasets.R`,
+then render stage 03 for the site and with `--profile submission`. Parameters
+of sections 3–5 stay fixed at the 2025 cut-off whatever the refresh brings.
 
 Build qualification for this delivery: on the local Windows installation, R 4.5.1
 crashes at shutdown after loading `rlang` (Quarto reports status -1073741819).
