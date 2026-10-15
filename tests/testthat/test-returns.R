@@ -117,4 +117,7 @@ test_that("price_after_sessions counts sessions, not calendar days", {
   expect_equal(ahead$price, c(11, 13, NA))
   expect_equal(ahead$date[1], as.Date("2026-01-05"))
   expect_error(price_after_sessions(prices, "2026-01-03", 1), "not a session")
+  # Zero sessions is the starting price itself; a negative offset is refused.
+  expect_equal(price_after_sessions(prices, "2026-01-05", 0)$price, 11)
+  expect_error(price_after_sessions(prices, "2026-01-05", c(-1, 1)), "zero or positive")
 })

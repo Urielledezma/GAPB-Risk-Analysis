@@ -146,6 +146,7 @@ return_moments_by_year <- function(returns, years = params()$sample$annual_break
 #'   price. Targets before the first observation, or after the last one, return
 #'   NA, because a price beyond the data cannot be inferred from it.
 price_on_or_before <- function(prices, dates, price_col = params()$conventions$price_field) {
+  prices$date <- as.Date(prices$date)
   prices <- prices[order(prices$date), ]
   dates <- as.Date(dates)
   index <- findInterval(as.numeric(dates), as.numeric(prices$date))
@@ -164,11 +165,14 @@ price_on_or_before <- function(prices, dates, price_col = params()$conventions$p
 #'
 #' @param prices A data frame with date and a price column.
 #' @param from The starting session, which must be in the data.
-#' @param sessions Numbers of sessions ahead.
+#' @param sessions Numbers of sessions ahead, zero or more.
 #' @param price_col Price column to read.
 #' @return One row per offset: sessions, date and price; NA past the data.
 price_after_sessions <- function(prices, from, sessions,
                                  price_col = params()$conventions$price_field) {
+  if (any(sessions < 0)) {
+    stop("price_after_sessions: sessions must be zero or positive.", call. = FALSE)
+  }
   prices <- prices[order(prices$date), ]
   start <- match(as.Date(from), prices$date)
   if (is.na(start)) {
