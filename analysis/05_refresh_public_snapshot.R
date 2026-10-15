@@ -51,7 +51,11 @@ main <- function() {
   validate_prices(prices)
 
   write_processed(prices, "prices_daily")
-  write_processed(provenance(prices), "prices_provenance")
+  # Same manifest schema as record_provenance(), timestamp included, so the
+  # tracked file says when the public copy was taken.
+  manifest <- provenance(prices)
+  manifest$recorded_at <- format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
+  write_processed(manifest, "prices_provenance")
 
   invisible(prices)
 }
