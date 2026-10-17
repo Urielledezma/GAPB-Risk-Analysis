@@ -1063,13 +1063,78 @@ El procedimiento completo se repite al cierre de cada sesión:
 
 ### Resultado al último cierre
 
-```{r}
-#| label: tbl-ma-last
-#| tbl-cap: !expr 'paste0("Procedimiento de clase al cierre del ", fecha(ma_last$date), ": pérdidas de cada ventana en la parte de evaluación y volatilidad pronosticada para la sesión siguiente.")'
-report_table(ma_last_table)
+```{r ma-clase}
+# Mismos rendimientos logarítmicos de GAPB que usa el resto del reporte
+r_ma        <- history_returns$log_return
+n_ma        <- length(r_ma)
+r2_ma       <- r_ma^2          # varianza observada: r_t^2
+ventanas_ma <- config$variance$ma_class$windows
+train_share <- config$variance$ma_class$train_share
+
+# Media móvil hacia atrás, sin dependencias externas
+sma <- function(x, m) as.numeric(stats::filter(x, rep(1 / m, m), sides = 1))
+
+# Pronóstico de la varianza del día t: promedio de los m r^2 anteriores
+# (desplazado un día para no usar el rendimiento del propio día)
+pron_ma <- sapply(ventanas_ma, function(m) c(NA, head(sma(r2_ma, m), -1)))
+
+# Corte 70 / 30
+corte_ma  <- floor(train_share * n_ma)
+prueba_ma <- (corte_ma + 1):n_ma
+
+# Pérdidas de cada ventana en la parte de prueba
+perdidas_ma <- t(sapply(seq_along(ventanas_ma), function(k) {
+  real  <- r2_ma[prueba_ma]
+  pr    <- pron_ma[prueba_ma, k]
+  razon <- pr / real
+  c(RMSE     = sqrt(mean((real - pr)^2)),
+    MAE      = mean(abs(real - pr)),
+    QLIKE    = mean((razon - log(razon) - 1)[real > 0]),  # sin r = 0
+    Relativo = mean(abs(1 - real / pr)))
+}))
+rownames(perdidas_ma) <- paste0("M", ventanas_ma)
 ```
 
-Al cierre del `r fecha(ma_last$date)` la muestra tiene `r num(ma_last$n, 0)` rendimientos, el corte queda en el `r fecha(ma_last$cut_date)` y la evaluación abarca `r num(ma_last$n_test, 0)` sesiones. La @tbl-ma-last muestra que M`r ma_last$chosen` gana `r c("una de las cuatro pérdidas", "dos de las cuatro pérdidas", "tres de las cuatro pérdidas", "las cuatro pérdidas")[last_votes[last_scores$chosen]]``r if (last_votes[last_scores$chosen] == 2) ", con el desempate por el RMSE," else ""` y es, por tanto, la ventana elegida. Su pronóstico para la sesión siguiente, el `r fecha(next_session)`, es una volatilidad de **`r pct(ma_last$vol_chosen, 3)`** diaria, equivalente a `r pct(sqrt(trading_days) * ma_last$vol_chosen, 1)` anualizada, frente al `r pct(sigma_a, 1)` estimado con toda la historia hasta 2025. Con esa varianza simulamos, como en clase, `r num(config$gbm$n_paths, 0)` rendimientos $r^{(i)}_{n+1}\sim\mathcal N\!\left(\bar r,\ \widehat\sigma^{\,2}_{n+1}\right)$ con la media histórica, y la proporción de escenarios positivos es de `r pct(p_up, 1)`: el modelo informa la magnitud del movimiento esperado, pero no su dirección, lo que concuerda con la prueba *t* de la sección 3.
+```{r ma-eleccion}
+# Cada pérdida vota por su ventana ganadora; gana la de más votos.
+# En caso de empate, la de menor RMSE (criterio de clase).
+ganadoras_ma <- ventanas_ma[apply(perdidas_ma, 2, which.min)]
+votos_ma     <- table(factor(ganadoras_ma, levels = ventanas_ma))
+empate_ma    <- ventanas_ma[as.vector(votos_ma) == max(votos_ma)]
+m_elegida    <- empate_ma[which.min(perdidas_ma[paste0("M", empate_ma), "RMSE"])]
+
+# Pronóstico de cada ventana para la sesión siguiente y el de la elegida
+vol_ma       <- sapply(ventanas_ma, function(m) sqrt(mean(tail(r_ma, m)^2)))
+vol_dia_ma   <- sqrt(mean(tail(r_ma, m_elegida)^2))
+vol_anual_ma <- sqrt(trading_days) * vol_dia_ma
+
+# Simulación como en clase: rendimientos del día siguiente
+use_seed()
+sim_ma  <- rnorm(config$gbm$n_paths, mean = mean(r_ma), sd = vol_dia_ma)
+p_up_ma <- mean(sim_ma > 0)
+
+# Comprobación cruzada contra el procedimiento diario del anexo
+stopifnot(m_elegida == ma_last$chosen,
+          isTRUE(all.equal(vol_dia_ma, ma_last$vol_chosen)))
+```
+
+```{r}
+#| label: tbl-ma-last
+#| tbl-cap: "Pérdidas de cada ventana de promedio móvil en la parte de prueba (30% final) y volatilidad pronosticada para la sesión siguiente."
+report_table(data.frame(
+  Ventana                  = rownames(perdidas_ma),
+  "RMSE × 10⁴"             = num(perdidas_ma[, "RMSE"] * 1e4, 3),
+  "MAE × 10⁴"              = num(perdidas_ma[, "MAE"] * 1e4, 3),
+  QLIKE                    = num(perdidas_ma[, "QLIKE"], 1),
+  Relativo                 = num(perdidas_ma[, "Relativo"], 3),
+  "Pérdidas que gana"      = as.vector(votos_ma),
+  "Volatilidad anualizada" = pct(sqrt(trading_days) * vol_ma, 1),
+  "¿Elegida?"              = ifelse(ventanas_ma == m_elegida, "Sí", "No"),
+  check.names = FALSE
+))
+```
+
+Al cierre del `r fecha(max(history_returns$date))` la muestra tiene `r num(n_ma, 0)` rendimientos, el corte del 70% queda en el `r fecha(history_returns$date[corte_ma])` y la evaluación abarca `r num(length(prueba_ma), 0)` sesiones. La @tbl-ma-last muestra que la ventana M`r m_elegida` gana `r max(votos_ma)` de las cuatro pérdidas`r if (length(empate_ma) > 1) " (hubo empate y decidió el RMSE)" else ""`, por lo que es la elegida. Con ella, el pronóstico de la volatilidad para la sesión siguiente, el `r fecha(next_session)`, es de **`r pct(vol_dia_ma, 3)`** diaria, equivalente a `r pct(vol_anual_ma, 1)` anualizada, frente al `r pct(sigma_a, 1)` estimado con toda la historia hasta 2025. Al simular `r num(config$gbm$n_paths, 0)` rendimientos con esa varianza, la proporción de escenarios positivos es de `r pct(p_up_ma, 1)`: el modelo informa la magnitud del movimiento esperado, pero no su dirección, lo que concuerda con la prueba *t* de la sección 3.
 
 ### Cómo se movió la estimación en 2026
 
