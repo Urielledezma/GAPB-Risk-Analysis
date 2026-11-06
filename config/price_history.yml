@@ -1,7 +1,6 @@
 # Stage 02 is descriptive; the model-estimation cutoff in params.yml is unchanged.
 cutoff: "2026-06-30"
-ipo_date: "2006-02-24"
-recent_start: "2025-07-01"
+# Last close before the recent twelve-month window, July 2025-June 2026.
 recent_baseline: "2025-06-30"
 historical:
   label: ["Crisis financiera", "Influenza A/H1N1", "Choque de COVID-19", "Recuperación del tráfico", "Cambio regulatorio"]

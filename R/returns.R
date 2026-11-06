@@ -190,14 +190,6 @@ price_after_sessions <- function(prices, from, sessions,
   )
 }
 
-#' Cumulative wealth index from log returns.
-#'
-#' @param returns Numeric vector of log returns.
-#' @return A numeric vector starting at 1.
-wealth_index <- function(returns) {
-  exp(cumsum(c(0, returns[is.finite(returns)])))
-}
-
 #' Drawdown series from a price or wealth path.
 #'
 #' Drawdown at t is the proportional decline from the running maximum:

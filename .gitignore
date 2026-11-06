@@ -54,6 +54,6 @@ desktop.ini
 *.swp
 ~$*
 
-# RStudio rewrites this file whenever the project is opened.
-GAPB-Risk-Analysis.Rproj
-Proyecto-GAPB.Rproj
+# RStudio project files are per user, and RStudio rewrites them whenever the
+# project is opened.
+*.Rproj

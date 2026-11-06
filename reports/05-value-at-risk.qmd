@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Valor en Riesgo y *Expected Shortfall*"
 subtitle: "Cartera de seis emisoras: estimación, backtesting y optimización"
 author:

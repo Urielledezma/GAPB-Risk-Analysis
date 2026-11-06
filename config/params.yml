@@ -7,11 +7,13 @@
 
 # --- Sample windows ----------------------------------------------------------
 sample:
-  # Estimation sample for volatility and VaR models.
+  # Start of the estimation sample for volatility and VaR models.
   start: "2021-01-01"
-  # Hard cut-off. Nothing after this date informs a fitted parameter.
+  # Parameter cut-off for stages 03 and 05: nothing after this date informs a
+  # parameter they fit. Stage 04 has its own, variance.estimation_end.
   end: "2025-12-31"
-  # Out-of-sample evaluation period for stage 04.
+  # First session the stage 03 annex re-runs the class moving-average
+  # procedure on, one session at a time.
   oos_start: "2026-01-01"
   # Years reported individually in the year-by-year volatility table. 2026 is
   # year-to-date: stage 03's section 2 runs "hasta lo que va de 2026".
@@ -55,8 +57,6 @@ variance:
   estimation_end: "2026-09-30"
   evaluation_start: "2026-10-05"
   evaluation_end: "2026-10-30"
-  # Moving-average windows to sweep when selecting m.
-  ma_windows: [5, 10, 20, 40, 60, 120, 252]
   # The class procedure for choosing m (Modulo 3): candidate windows and the
   # share of the sample before the 70 / 30 cut. Stage 03 re-runs it on every
   # session from sample.oos_start on, over the history from
@@ -69,6 +69,7 @@ variance:
     # RiskMetrics convention, used as the benchmark against which an optimised
     # lambda has to justify itself.
     lambda_riskmetrics: 0.94
+    # Grid on which stage 04 draws the log-likelihood profile of lambda.
     lambda_grid_min: 0.80
     lambda_grid_max: 0.995
     lambda_grid_by: 0.005
@@ -78,10 +79,6 @@ variance:
     # Search interval of the least-squares alpha (DDEWMA.Rmd).
     alpha_interval: [0.001, 0.9999]
   garch:
-    # Orders swept for (p, q); selection is on information criteria.
-    max_p: 2
-    max_q: 2
-    distributions: [norm, std, sstd]
     # The class procedure (ARCH - GARCH.qmd): six sGARCH candidates as
     # (ARCH order, GARCH order), normal errors, the hybrid solver, and the
     # ARCH-LM test with 20 lags.
@@ -95,8 +92,6 @@ variance:
     # run and the highest likelihood kept. Pairs must sum to less than one.
     start_alpha: [0.05, 0.15]
     start_beta: [0.60, 0.80]
-  # Reference series the forecasts are scored against.
-  realised_measure: abs_return
 
 # --- Value at Risk (stage 05) ------------------------------------------------
 var:

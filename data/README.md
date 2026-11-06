@@ -69,7 +69,7 @@ price-level narratives can reference the figure a market participant actually sa
 > been run against an entitled key, `adjusted` mirrors the close on the FactSet path.
 > If the endpoint does not return a total-return series, this understates long-horizon
 > returns while barely moving volatility — which makes it hard to spot and worth settling
-> before stage 03.
+> before any report is rendered from the FactSet path.
 
 ## Fundamentals
 

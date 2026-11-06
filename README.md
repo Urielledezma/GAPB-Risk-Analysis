@@ -56,6 +56,7 @@ same pipeline runs unchanged — the repository is intended to be reused.
 │   └── processed/      # Public-source datasets. Committed, the renderable floor
 ├── outputs/            # Figures, fitted models, scratch. Regenerated, never committed
 ├── docs/               # Rendered site (GitHub Pages source)
+├── archives/           # Retired code, moved rather than deleted. Never sourced
 └── tests/testthat/     # Unit tests for the analytics library
 ```
 
@@ -255,8 +256,8 @@ synced folder.
 | Returns | Continuously compounded (log) returns; √252 annualisation of daily volatility |
 | Distribution | Jarque–Bera normality tests on returns, price and log price; skewness and excess kurtosis; one-sample *t*-test for zero mean |
 | Price dynamics | Geometric Brownian motion, closed-form expectation and 95% intervals, plus Monte Carlo paths |
-| Conditional variance | Moving-average windows, EWMA with a justified λ, data-driven EWMA with an optimised α, and ARCH/GARCH selected on information criteria |
-| Model evaluation | Out-of-sample comparison against realised volatility, estimation cut off at 2025-12-31 |
+| Conditional variance | The course's Modulo 3 procedures: moving averages with the 70/30 window choice, EWMA with λ by maximum likelihood, data-driven EWMA with α by least squares, and ARCH/GARCH on an `auto.arima` mean, selected on significance, likelihood, AIC and BIC |
+| Model evaluation | Information criteria across models, then one-step forecasts against realised volatility: estimation through 2026-09-30, evaluation on 5–30 October 2026 |
 | Value at Risk | Historical simulation, variance–covariance, and Monte Carlo; 95 / 97.5 / 99% at 1, 5, 10 and 20-day horizons |
 | Tail risk | Expected Shortfall at 99% |
 | Validation | Violation-count backtesting against expected exceedances |
@@ -281,7 +282,7 @@ synced folder.
 - [x] Stage 01 — issuer profile and risk taxonomy
 - [x] Stage 02 — price path, drawdowns and documented event interpretation
 - [x] Stage 03 — return distribution and GBM projection
-- [ ] Stage 04 — conditional variance models and out-of-sample evaluation
+- [x] Stage 04 — conditional variance models and out-of-sample evaluation
 - [ ] Stage 05 — portfolio VaR, Expected Shortfall and optimisation
 - [ ] Research article
 - [ ] Render-in-CI once the dependency lockfile is stable
@@ -304,7 +305,7 @@ Stage 03 estimates on the whole trading history up to the hard cut-off,
 `params.yml`). The professor confirmed on 2026-10-15 that the whole history
 applies to Part 3 only; stages 04 and 05 keep `sample.start`, 2021 to 2025.
 Its descriptive section runs from 2021 to the last session of the snapshot
-(2026-10-13 at the last refresh), and the 2026 prices serve as out-of-sample
+(`data/processed/prices_provenance.csv` records it), and the 2026 prices serve as out-of-sample
 evidence for the projections, which start from the 2025-12-31 close. Every
 formula follows the course material: the daily projection uses the local `dS`
 approximation and the annual one the exact solution of `ln S_t`, each verified
@@ -322,16 +323,17 @@ routine is a refresh followed by a render, nothing else: run
 then render stage 03 for the site and with `--profile submission`. Parameters
 of sections 3–5 stay fixed at the 2025 cut-off whatever the refresh brings.
 
-Build qualification for this delivery: on the local Windows installation, R 4.5.1
-crashes at shutdown after loading `rlang` (Quarto reports status -1073741819).
-All 221 unit assertions completed successfully, but the R process did not exit
-successfully; the ordinary end-to-end render therefore remains unverified on that
-installation. The delivered artifacts were produced by executing the original
-QMDs with knitr, checking completion and independent numerical assertions, then
-rendering the saved Markdown with Quarto and the existing styles and bibliography.
-The resulting HTML, cross-references and local resource links were inspected.
-Use the standard command above on a working R installation; the system R and
-package libraries were not modified for this delivery.
+Stage 04 estimates every model on **2021-01-04 to 2026-09-30**
+(`variance.estimation_end`). Inside that window the class 70/30 cut chooses the
+moving-average window and the GARCH orders; the continuous parameters (λ, α and the
+GARCH coefficients) are then re-estimated on the whole window and frozen, and each
+session of **5–30 October 2026** is forecast one step ahead from the returns before
+it. GARCH fits are started from several points (`variance.garch.start_*`), because on
+this sample the likelihood has two local maxima and the default start stops at the
+lower one. Every ranking the prose states is guarded with `stopifnot`, so a refresh
+that flips one fails the render instead of publishing a sentence the numbers no longer
+support. Render its Canvas deliverable with
+`quarto render reports/04-variance-models.qmd --profile submission`.
 
 ---
 

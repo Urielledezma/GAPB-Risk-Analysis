@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Modelos de varianza"
 subtitle: "Proyecto Final · Parte 4 | GAPB, enero de 2021–septiembre de 2026, con evaluación en octubre de 2026"
 author:

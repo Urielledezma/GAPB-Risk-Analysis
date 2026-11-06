@@ -154,24 +154,6 @@ label_series_end <- function(data, x = "date", y = "value", group = "ticker", si
   )
 }
 
-#' Save a figure to outputs/figures/.
-#'
-#' outputs/ is untracked: figures are regenerated from the committed data rather
-#' than versioned alongside it.
-#'
-#' @param plot A ggplot object.
-#' @param name File name without extension.
-#' @param width Width in inches.
-#' @param height Height in inches.
-#' @param dpi Resolution.
-#' @return Invisibly, the path written.
-save_figure <- function(plot, name, width = 8, height = 4.5, dpi = 200) {
-  path <- proj_path("outputs", "figures", paste0(name, ".png"))
-  ensure_dir(dirname(path))
-  ggplot2::ggsave(path, plot, width = width, height = height, dpi = dpi, bg = RISK_INK$surface)
-  invisible(path)
-}
-
 #' Percent formatter for axes and tables.
 #'
 #' @param x Numeric vector of proportions.

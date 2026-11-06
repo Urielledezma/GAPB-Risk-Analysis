@@ -11,7 +11,7 @@
 <meta name="author" content="Jorge Isaac López Ávila">
 <meta name="author" content="Juan Pablo Morán Errejón">
 
-<title>Análisis de Riesgo · GAPB</title>
+<title>Análisis de riesgo de mercado – Análisis de Riesgo · GAPB</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -146,11 +146,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#estructura-del-análisis" id="toc-estructura-del-análisis" class="nav-link active" data-scroll-target="#estructura-del-análisis"><span class="header-section-number">1</span> Estructura del análisis</a></li>
-  <li><a href="#universo-analizado" id="toc-universo-analizado" class="nav-link" data-scroll-target="#universo-analizado"><span class="header-section-number">2</span> Universo analizado</a></li>
-  <li><a href="#cobertura-de-datos" id="toc-cobertura-de-datos" class="nav-link" data-scroll-target="#cobertura-de-datos"><span class="header-section-number">3</span> Cobertura de datos</a></li>
-  <li><a href="#procedencia-de-los-datos" id="toc-procedencia-de-los-datos" class="nav-link" data-scroll-target="#procedencia-de-los-datos"><span class="header-section-number">4</span> Procedencia de los datos</a></li>
-  <li><a href="#nota-metodológica" id="toc-nota-metodológica" class="nav-link" data-scroll-target="#nota-metodológica"><span class="header-section-number">5</span> Nota metodológica</a></li>
+  <li><a href="#estructura-del-análisis" id="toc-estructura-del-análisis" class="nav-link active" data-scroll-target="#estructura-del-análisis">Estructura del análisis</a></li>
+  <li><a href="#universo-analizado" id="toc-universo-analizado" class="nav-link" data-scroll-target="#universo-analizado">Universo analizado</a></li>
+  <li><a href="#cobertura-de-datos" id="toc-cobertura-de-datos" class="nav-link" data-scroll-target="#cobertura-de-datos">Cobertura de datos</a></li>
+  <li><a href="#procedencia-de-los-datos" id="toc-procedencia-de-los-datos" class="nav-link" data-scroll-target="#procedencia-de-los-datos">Procedencia de los datos</a></li>
+  <li><a href="#nota-metodológica" id="toc-nota-metodológica" class="nav-link" data-scroll-target="#nota-metodológica">Nota metodológica</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/index.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
     </div>
@@ -180,7 +180,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">15 de octubre de 2026</p>
+      <p class="date">5 de noviembre de 2026</p>
     </div>
   </div>
   
@@ -227,8 +227,8 @@ GAPB: 27 de febrero de 2006–4 de noviembre de 2026
 </div>
 </dl>
 <p>Este sitio reúne el análisis de riesgo de mercado de <strong>Grupo Aeroportuario del Pacífico</strong> y de una cartera de seis emisoras de la Bolsa Mexicana de Valores. El trabajo avanza en cinco etapas, de los fundamentos del emisor a un modelo de Valor en Riesgo sometido a <em>backtesting</em>.</p>
-<section id="estructura-del-análisis" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="estructura-del-análisis"><span class="header-section-number">1</span> Estructura del análisis</h2>
+<section id="estructura-del-análisis" class="level2">
+<h2 class="anchored" data-anchor-id="estructura-del-análisis">Estructura del análisis</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -260,8 +260,8 @@ GAPB: 27 de febrero de 2006–4 de noviembre de 2026
 </tbody>
 </table>
 </section>
-<section id="universo-analizado" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="universo-analizado"><span class="header-section-number">2</span> Universo analizado</h2>
+<section id="universo-analizado" class="level2">
+<h2 class="anchored" data-anchor-id="universo-analizado">Universo analizado</h2>
 <p>La <a href="#tbl-universe" class="quarto-xref">Tabla&nbsp;1</a> identifica las seis emisoras que integran la cartera de la etapa 05.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-universe" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -331,8 +331,8 @@ Tabla&nbsp;1: Emisoras que integran la cartera analizada en la etapa 05.
 </div>
 </div>
 </section>
-<section id="cobertura-de-datos" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="cobertura-de-datos"><span class="header-section-number">3</span> Cobertura de datos</h2>
+<section id="cobertura-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="cobertura-de-datos">Cobertura de datos</h2>
 <p>La <a href="#tbl-coverage" class="quarto-xref">Tabla&nbsp;2</a> resume el periodo y las observaciones disponibles por emisora.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-coverage" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -396,8 +396,8 @@ Tabla&nbsp;2: Historia de cotización disponible por emisora.
 </div>
 </div>
 </section>
-<section id="procedencia-de-los-datos" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="procedencia-de-los-datos"><span class="header-section-number">4</span> Procedencia de los datos</h2>
+<section id="procedencia-de-los-datos" class="level2">
+<h2 class="anchored" data-anchor-id="procedencia-de-los-datos">Procedencia de los datos</h2>
 <div class="cell" data-layout-align="center">
 <div id="tbl-provenance" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -468,9 +468,9 @@ Tabla&nbsp;3: Fuente efectiva de cada serie de precios en este render.
 </div>
 <p>La licencia institucional de FactSet no incluye acceso por API. Por ello, los precios usan la ruta pública Yahoo Finance / BMV y los fundamentales usan reportes GAP/SEC, salvo que exista una exportación manual de FactSet validada en <code>data/private/</code>. La <a href="#tbl-provenance" class="quarto-xref">Tabla&nbsp;3</a> refleja la fuente efectiva de este render.</p>
 </section>
-<section id="nota-metodológica" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="nota-metodológica"><span class="header-section-number">5</span> Nota metodológica</h2>
-<p>Los modelos trabajan con rendimientos logarítmicos, aditivos en el tiempo, aunque el escalamiento de volatilidad y riesgo por horizonte requiere los supuestos propios de cada modelo. Sus parámetros se estiman con información hasta el <strong>31 de diciembre de 2025</strong>; 2026 se reserva como periodo de evaluación fuera de muestra. La etapa 02 es descriptiva y tiene un corte distinto, el <strong>30 de junio de 2026</strong>, con julio de 2025–junio de 2026 como último año y rendimientos simples acumulados para comparar ventanas y años completos.</p>
+<section id="nota-metodológica" class="level2">
+<h2 class="anchored" data-anchor-id="nota-metodológica">Nota metodológica</h2>
+<p>Los modelos trabajan con rendimientos logarítmicos, aditivos en el tiempo, aunque el escalamiento de volatilidad y riesgo por horizonte requiere los supuestos propios de cada modelo. Cada etapa fija sus parámetros antes del periodo con que se evalúa: la etapa 03 los estima con toda la historia hasta el <strong>31 de diciembre de 2025</strong> y usa 2026 como evidencia fuera de muestra, y la etapa 04 con datos del 1 de enero de 2021 al <strong>30 de septiembre de 2026</strong>, para evaluarlos del 5 de octubre de 2026 al 30 de octubre de 2026. La etapa 02 es descriptiva y tiene un corte distinto, el <strong>30 de junio de 2026</strong>, con julio de 2025–junio de 2026 como último año y rendimientos simples acumulados para comparar ventanas y años completos.</p>
 <p>Ningún reporte consulta una API durante el render: los scripts de <code>analysis/</code> descargan y escriben, y los reportes únicamente leen. Esa separación es lo que permite que cada cifra sea reproducible a partir de un conjunto de datos fijo en lugar de depender de lo que un proveedor esté sirviendo el día de la reconstrucción.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">

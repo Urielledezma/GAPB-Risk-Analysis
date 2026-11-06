@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Análisis de riesgo de mercado"
 subtitle: "Grupo Aeroportuario del Pacífico, Serie B (BMV: GAPB)"
 author:
@@ -99,9 +99,13 @@ reportes GAP/SEC, salvo que exista una exportación manual de FactSet validada e
 
 Los modelos trabajan con rendimientos logarítmicos, aditivos en el tiempo,
 aunque el escalamiento de volatilidad y riesgo por horizonte requiere los
-supuestos propios de cada modelo. Sus parámetros se estiman con información hasta
-el **31 de diciembre de 2025**; 2026 se reserva como periodo de evaluación fuera
-de muestra. La etapa 02 es descriptiva y tiene un corte distinto, el **30 de junio
+supuestos propios de cada modelo. Cada etapa fija sus parámetros antes del periodo
+con que se evalúa: la etapa 03 los estima con toda la historia hasta el
+**`r fecha_es(params()$sample$end)`** y usa 2026 como evidencia fuera de muestra, y la
+etapa 04 con datos del `r fecha_es(params()$sample$start)` al
+**`r fecha_es(params()$variance$estimation_end)`**, para evaluarlos del
+`r fecha_es(params()$variance$evaluation_start)` al
+`r fecha_es(params()$variance$evaluation_end)`. La etapa 02 es descriptiva y tiene un corte distinto, el **30 de junio
 de 2026**, con julio de 2025–junio de 2026 como último año y rendimientos simples
 acumulados para comparar ventanas y años completos.
 

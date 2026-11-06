@@ -56,6 +56,7 @@ moved it.
 | Anything that touches a network | `analysis/`, never a report |
 | A ticker, window, confidence level or seed | `config/`, never inline |
 | Prose, tables and figures for a stage | `reports/<stage>.qmd` |
+| Code that is no longer called | `archives/`, with a line in its README. Moved, never deleted |
 
 Two rules follow from the reproducibility contract and are not negotiable:
 
@@ -93,7 +94,8 @@ before touching any report:
 2. Run the ingest scripts from the R console, in the order given in the README.
 3. Inspect the diff on `data/processed/*.csv`. New dates should appear; old rows should
    not disappear. A shrinking file means an incomplete download, not a successful one.
-4. `testthat::test_dir("tests/testthat")` — still 295.
+4. `testthat::test_dir("tests/testthat")` — no failures, and no fewer tests than before
+   the refresh.
 5. Commit as `data: refresh public snapshot through <yyyy-mm>`.
 6. **Re-render the whole site**, not only the stage being worked on. Build pane →
    **Render Website**. A site with one page on new data and five on old data is worse
