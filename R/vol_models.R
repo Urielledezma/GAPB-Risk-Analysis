@@ -433,8 +433,9 @@ score_volatility <- function(forecast, realised, label = NA_character_) {
 #' Realised volatility proxy.
 #'
 #' The absolute return is a one-observation estimate of the day's volatility.
-#' It is extremely noisy but unbiased, which is what makes it usable as a
-#' scoring reference across models.
+#' It is extremely noisy and biased low: E|r| = rho * sigma, with rho near 0.8
+#' for a normal and lower for fat tails (see ddewma_scale()). The squared
+#' return is the unbiased proxy of the variance.
 #'
 #' @param returns Numeric vector of log returns.
 #' @return A numeric vector.

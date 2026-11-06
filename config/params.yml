@@ -47,6 +47,14 @@ gbm:
 
 # --- Variance models (stage 04) ----------------------------------------------
 variance:
+  # Part 4 windows. Every model is estimated on sample.start..estimation_end
+  # ("desde el 2021 a septiembre 2026") and scored on the sessions from
+  # evaluation_start to evaluation_end, which no parameter ever sees. Inside
+  # the estimation window, the 70 / 30 cut of ma_class.train_share chooses m
+  # and the GARCH orders, as in class.
+  estimation_end: "2026-09-30"
+  evaluation_start: "2026-10-05"
+  evaluation_end: "2026-10-30"
   # Moving-average windows to sweep when selecting m.
   ma_windows: [5, 10, 20, 40, 60, 120, 252]
   # The class procedure for choosing m (Modulo 3): candidate windows and the
@@ -64,11 +72,29 @@ variance:
     lambda_grid_min: 0.80
     lambda_grid_max: 0.995
     lambda_grid_by: 0.005
+    # Search interval of the maximum-likelihood lambda (Verosimilitud.qmd).
+    lambda_interval: [0.001, 0.9999]
+  ddewma:
+    # Search interval of the least-squares alpha (DDEWMA.Rmd).
+    alpha_interval: [0.001, 0.9999]
   garch:
     # Orders swept for (p, q); selection is on information criteria.
     max_p: 2
     max_q: 2
     distributions: [norm, std, sstd]
+    # The class procedure (ARCH - GARCH.qmd): six sGARCH candidates as
+    # (ARCH order, GARCH order), normal errors, the hybrid solver, and the
+    # ARCH-LM test with 20 lags.
+    candidates: [[1, 0], [2, 0], [1, 1], [1, 2], [2, 1], [2, 2]]
+    distribution: norm
+    solver: hybrid
+    arch_lm_lags: 20
+    # Starting sums of the ARCH and GARCH coefficients for the likelihood
+    # search. On 2021-2026 GAPB the likelihood has two local maxima and the
+    # default start alone can stop at the lower one; every search below is
+    # run and the highest likelihood kept. Pairs must sum to less than one.
+    start_alpha: [0.05, 0.15]
+    start_beta: [0.60, 0.80]
   # Reference series the forecasts are scored against.
   realised_measure: abs_return
 

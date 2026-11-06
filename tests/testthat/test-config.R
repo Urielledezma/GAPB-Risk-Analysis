@@ -34,6 +34,17 @@ test_that("model parameters are present and internally consistent", {
   expect_true(p$var$optimisation$max_weight > 1 / nrow(universe()))
 })
 
+test_that("the Part 4 windows never let the evaluation sessions into an estimate", {
+  v <- params()$variance
+
+  expect_true(as.Date(params()$sample$start) < as.Date(v$estimation_end))
+  expect_true(as.Date(v$estimation_end) < as.Date(v$evaluation_start))
+  expect_true(as.Date(v$evaluation_start) < as.Date(v$evaluation_end))
+  expect_equal(length(v$garch$candidates), 6)
+  expect_true(all(unlist(v$ewma$lambda_interval) > 0 & unlist(v$ewma$lambda_interval) < 1))
+  expect_true(all(unlist(v$ddewma$alpha_interval) > 0 & unlist(v$ddewma$alpha_interval) < 1))
+})
+
 test_that("the EWMA grid is a valid set of decay factors and contains RiskMetrics", {
   grid <- ewma_lambda_grid()
 

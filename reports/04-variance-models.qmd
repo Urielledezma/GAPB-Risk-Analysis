@@ -1,6 +1,6 @@
 ﻿---
 title: "Modelos de varianza"
-subtitle: "Promedios móviles, EWMA, EWMA calibrado y ARCH/GARCH, evaluados fuera de muestra"
+subtitle: "Proyecto Final · Parte 4 | GAPB, enero de 2021–septiembre de 2026, con evaluación en octubre de 2026"
 author:
   - "Santiago Álvarez Tostado Estrada"
   - "Francisco Uriel Ledezma Chávez"
@@ -13,174 +13,872 @@ date-format: "D [de] MMMM [de] YYYY"
 ```{r setup}
 #| include: false
 source("_setup.R")
-```
 
-<dl class="report-meta" aria-label="Ficha técnica del reporte">
-<div><dt>Fuente de datos</dt><dd>Yahoo Finance / BMV</dd></div>
-<div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>
-<div><dt>Moneda</dt><dd>Rendimientos y volatilidad en escala decimal</dd></div>
-<div><dt>Periodo cubierto</dt><dd>`r fecha_es(snapshot_manifest()$first[snapshot_manifest()$ticker == subject()])`–`r fecha_es(snapshot_manifest()$last[snapshot_manifest()$ticker == subject()])`</dd></div>
-</dl>
+config <- params()
+v <- config$variance
+trading_days <- config$conventions$trading_days_per_year
+
+# Presentation helpers only; every calculation lives in R/.
+num <- function(x, digits = 2) formatC(x, format = "f", digits = digits, big.mark = ",")
+pct <- function(x, digits = 2) fmt_pct(x, digits)
+fecha <- fecha_es
+models4 <- c("MA", "EWMA", "DDEWMA", "GARCH")
+model_colours <- setNames(RISK_PALETTE[1:4], models4)
+```
 
 ```{r data}
 #| include: false
-returns <- read_dataset("returns_daily")
-subject_returns <- returns[returns$ticker == subject(), ]
+returns <- read_dataset("returns_daily", quiet = TRUE)
+returns <- returns[returns$ticker == subject(), ]
+returns <- returns[order(returns$date), ]
+snapshot_end <- max(returns$date)
+# The evaluation needs every session up to its last day.
+stopifnot(snapshot_end >= as.Date(v$evaluation_end))
 
-estimation <- in_sample(subject_returns)
-evaluation <- subject_returns[subject_returns$date >= as.Date(params()$sample$oos_start), ]
+# Two series, both starting in January 2021 (config/params.yml):
+#   window: up to the estimation cut-off; every parameter comes from here
+#   series: the window followed by every later session, to run the models on
+window <- in_sample(returns, config$sample$start, v$estimation_end)
+series <- in_sample(returns, config$sample$start, snapshot_end)
+r_w <- window$log_return
+d_w <- window$date
+n_w <- length(r_w)
+r_all <- series$log_return
+d_all <- series$date
+n_all <- length(r_all)
+# The window is the head of the series, so index t means the same session in both.
+stopifnot(identical(d_all[seq_len(n_w)], d_w))
+
+# The class 70 / 30 cut inside the window: structure is chosen here.
+cut <- floor(v$ma_class$train_share * n_w)
+train <- seq_len(cut)
+test <- seq.int(cut + 1, n_w)
+
+# Out-of-sample sessions scored in section 3; none of them is in the window.
+oct <- which(d_all >= as.Date(v$evaluation_start) & d_all <= as.Date(v$evaluation_end))
+stopifnot(length(oct) > 0, min(oct) > n_w)
+gap_sessions <- sum(d_all > as.Date(v$estimation_end) & d_all < as.Date(v$evaluation_start))
+
+next_session <- snapshot_end + 1
+while (format(next_session, "%u") %in% c("6", "7")) next_session <- next_session + 1
 ```
+
+<dl class="report-meta" aria-label="Ficha técnica del reporte">
+<div><dt>Activo y mercado</dt><dd>Grupo Aeroportuario del Pacífico · GAPB en la BMV</dd></div>
+<div><dt>Estimación</dt><dd>`r fecha(min(d_w))`–`r fecha(max(d_w))`</dd></div>
+<div><dt>Evaluación fuera de muestra</dt><dd>`r fecha(d_all[min(oct)])`–`r fecha(d_all[max(oct)])`</dd></div>
+<div><dt>Fuentes</dt><dd>Yahoo Finance, material de clase y reportes de GAP</dd></div>
+</dl>
 
 ## Introducción
 
-::: {.callout-important title="Pendiente de redacción"}
-Qué se estima, con qué información y cómo se compara.
-:::
+En la tercera entrega encontramos que la volatilidad de GAPB no es un parámetro fijo: cambia por regímenes y se concentra en episodios, sobre todo en el frente regulatorio de finales de 2023. Esta cuarta entrega convierte ese hallazgo en un pronóstico. Estimamos los cuatro modelos de varianza vistos en clase, el promedio móvil, el EWMA, el EWMA basado en datos (DDEWMA) y la familia ARCH/GARCH, y los comparamos por lo que importa en la gestión de riesgos: qué tan bien anticipan la volatilidad del día siguiente, qué tan rápido reaccionan a un choque y qué tan estables son sus estimaciones, porque esa volatilidad es el insumo directo del valor en riesgo, de los límites de exposición y del capital que se reserva contra una pérdida.
 
-## Metodología
+Todos los modelos se estiman con los `r num(n_w, 0)` rendimientos logarítmicos diarios entre el `r fecha(min(d_w))` y el `r fecha(max(d_w))`. Dentro de esa ventana aplicamos el corte de clase: el primer 70% de las sesiones, hasta el `r fecha(d_w[cut])`, sirve para estimar los parámetros, y el 30% restante, del `r fecha(d_w[cut + 1])` en adelante, para evaluar su capacidad predictiva y elegir la ventana del promedio móvil y los órdenes del GARCH. Después, con la estructura ya elegida, volvemos a estimar los parámetros continuos con toda la ventana, de modo que el modelo que pronostica octubre usa toda la información disponible al 30 de septiembre y ninguna posterior. La evaluación fuera de muestra abarca las `r length(oct)` sesiones del `r fecha(d_all[min(oct)])` al `r fecha(d_all[max(oct)])`.
 
-Cuatro estimadores de la misma cantidad, ordenados por cuánta estructura
-suponen:
+El documento sigue el orden del enunciado. La sección 2 estima cada modelo y justifica sus parámetros. La sección 3 compara primero el ajuste de los cuatro modelos con su verosimilitud, el AIC y el BIC, y después sus pronósticos con la volatilidad realizada, en la parte de evaluación de la ventana y, sesión por sesión, en octubre de 2026. La sección 4 responde las cuatro preguntas sobre alta volatilidad, velocidad de reacción, estabilidad y sesgo, y la sección 5 concluye con el modelo que usaríamos y por qué.
 
-$$
-\text{MA}(m):\quad \hat\sigma^2_t = \frac{1}{m}\sum_{i=1}^{m} r^2_{t-i}
-$$
+## Estimación de modelos
+
+Los cuatro modelos estiman la misma cantidad, la varianza condicional $\sigma_t^2$ del rendimiento de la sesión $t$ con la información disponible al cierre de $t-1$, y difieren en cómo ponderan el pasado. La ventana tiene $n=`r n_w`$ rendimientos y el corte de clase la divide en
 
 $$
-\text{EWMA}:\quad \hat\sigma^2_t = \lambda\,\hat\sigma^2_{t-1} + (1-\lambda)\,r^2_{t-1}
+n_e=\lfloor0.7\,n\rfloor=`r cut`,
+\qquad
+n_p=n-n_e=`r length(test)`,
 $$
 
+sesiones de estimación y de evaluación, respectivamente. En todos los casos la varianza observada de una sesión es su rendimiento al cuadrado, $r_t^2$, y cada pronóstico de la parte de evaluación usa únicamente parámetros estimados con las primeras $n_e$ sesiones [@ruiz2026ma].
+
+### Promedios móviles
+
+```{r ma-fit}
+ma_windows <- v$ma_class$windows
+loss_cols <- c("rmse", "mae", "qlike", "relative")
+
+# The class procedure on the whole window: 70 / 30 cut, four losses, votes.
+ma_scores <- ma_window_losses(r_w)
+m_star <- ma_select_window(ma_scores)
+ma_winners <- vapply(loss_cols, function(k) ma_scores$m[which.min(ma_scores[[k]])], numeric(1))
+ma_votes <- vapply(ma_scores$m, function(m) sum(ma_winners == m), numeric(1))
+
+# The descriptive paths of class, SMA(r^2, m), and their shape.
+ma_trailing <- lapply(ma_windows, function(m) ma_trailing_volatility(r_w, m))
+ma_shape <- as.data.frame(do.call(rbind, lapply(ma_trailing, vol_path_shape)))
+ma_shape$m <- ma_windows
+
+# Forecasts with the chosen window: over the window and over the whole series.
+ma_sigma_w <- ma_volatility(r_w, m_star)
+ma_sigma_all <- ma_volatility(r_all, m_star)
+ma_next <- sqrt(ma_next_variance(r_all, m_star))
+
+# The class procedure re-run on every session after the cut-off, as agreed in class.
+ma_track <- ma_daily_tracking(r_all, d_all, as.Date(v$estimation_end) + 1)
+
+# The prose reads the chosen window as the longest of the grid, and the advantage
+# of longer windows as monotone in RMSE, MAE and the relative error.
+stopifnot(m_star == max(ma_windows),
+          all(diff(ma_scores$rmse) < 0), all(diff(ma_scores$mae) < 0),
+          all(diff(ma_scores$relative) < 0))
+```
+
+El promedio móvil estima la varianza con el promedio simple de los últimos $m$ rendimientos al cuadrado. En clase se calcula como una media móvil que incluye la sesión actual, y su valor al cierre de $t-1$ es el pronóstico de la sesión $t$:
+
 $$
-\text{GARCH}(p,q):\quad \sigma^2_t = \omega + \sum_{i=1}^{q}\alpha_i r^2_{t-i} + \sum_{j=1}^{p}\beta_j \sigma^2_{t-j}
+\bar\sigma_t^{\,2}(m)=\frac1m\sum_{i=0}^{m-1}r_{t-i}^2,
+\qquad
+\widehat\sigma_t^{\,2}(m)=\bar\sigma_{t-1}^{\,2}(m)=\frac1m\sum_{i=1}^{m}r_{t-i}^2,
+\qquad m\in\{`r paste(ma_windows, collapse = ",\\,")`\}.
 $$
-
-Los cuatro estiman la varianza a partir de rendimientos al cuadrado y no de
-desviaciones respecto de una media móvil. A frecuencia diaria la media es
-indistinguible de cero —la etapa 03 lo contrasta directamente— y restar una
-estimación ruidosa de ella agrega varianza al estimador sin eliminar sesgo.
-
-Toda estimación en $t$ usa información hasta $t-1$. Los parámetros se estiman
-con datos hasta el **31 de diciembre de 2025** y se evalúan sobre 2026.
-
-## Promedios móviles
-
-La @fig-ma compara la respuesta de las distintas ventanas móviles.
 
 ```{r}
-#| label: fig-ma
-#| fig-cap: "Volatilidad estimada con distintas ventanas móviles."
-ma <- ma_volatility_grid(estimation$log_return)
-ma_long <- do.call(rbind, lapply(colnames(ma), function(column) {
-  data.frame(
-    date = estimation$date,
-    ventana = column,
-    sigma = ma[, column],
-    stringsAsFactors = FALSE
-  )
+#| label: fig-ma-windows
+#| fig-cap: "Volatilidad diaria de GAPB estimada con promedios móviles de 5, 10, 20 y 40 sesiones, enero de 2021–septiembre de 2026. La línea punteada marca el corte del 70%."
+#| fig-alt: "Cuatro paneles con la misma escala. La ventana de 5 sesiones produce picos de hasta 12% y caídas cercanas a cero; la de 40 sesiones es una curva suave que nunca supera 5%."
+#| fig-height: 5
+ma_long <- do.call(rbind, lapply(seq_along(ma_windows), function(k) {
+  data.frame(date = d_w, ventana = paste0("M", ma_windows[k]), sigma = ma_trailing[[k]])
 }))
+ma_long$ventana <- factor(ma_long$ventana, levels = paste0("M", ma_windows))
 ma_long <- ma_long[is.finite(ma_long$sigma), ]
 
-ggplot(ma_long, aes(date, sigma, colour = ventana)) +
-  geom_line(linewidth = 0.4) +
-  scale_y_continuous(labels = label_percent(accuracy = 0.1)) +
-  labs(x = NULL, y = "Volatilidad diaria estimada")
+ggplot(ma_long, aes(date, sigma)) +
+  geom_vline(xintercept = d_w[cut], linetype = "dashed", colour = RISK_INK$muted, linewidth = 0.3) +
+  geom_line(colour = RISK_PALETTE[1], linewidth = 0.3) +
+  facet_wrap(~ventana, ncol = 2) +
+  scale_x_date(breaks = as.Date(c("2021-01-01", "2023-01-01", "2025-01-01")), date_labels = "%Y") +
+  scale_y_continuous(breaks = seq(0, 0.12, by = 0.02), labels = label_percent(accuracy = 1)) +
+  labs(x = NULL, y = "Volatilidad diaria")
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-Selección de $m$ con criterio de ajuste y capacidad predictiva, e interpretación
-de cómo cambia la estimación conforme se amplía la ventana.
-:::
-
-## EWMA
-
-La @fig-ewma muestra la trayectoria estimada con el factor de RiskMetrics.
-
 ```{r}
-#| label: fig-ewma
-#| fig-cap: "EWMA con el factor de decaimiento de RiskMetrics."
-lambda_rm <- params()$variance$ewma$lambda_riskmetrics
-estimation$ewma <- ewma_volatility(estimation$log_return, lambda = lambda_rm)
-
-ggplot(estimation[is.finite(estimation$ewma), ], aes(date, ewma)) +
-  geom_line(colour = RISK_PALETTE[1], linewidth = 0.4) +
-  scale_y_continuous(labels = label_percent(accuracy = 0.1)) +
-  labs(x = NULL, y = "Volatilidad diaria estimada")
+#| label: tbl-ma-shape
+#| tbl-cap: "Forma de la volatilidad estimada con cada ventana en la ventana de estimación. El cambio diario típico es el promedio de $|\\ln\\bar\\sigma_t-\\ln\\bar\\sigma_{t-1}|$."
+report_table(data.frame(
+  Ventana = paste0("M", ma_shape$m),
+  Promedio = pct(ma_shape$mean),
+  "Desviación estándar" = pct(ma_shape$sd),
+  Mínimo = pct(ma_shape$min),
+  Máximo = pct(ma_shape$max),
+  "Cambio diario típico" = pct(ma_shape$stability, 1),
+  check.names = FALSE
+))
 ```
 
-## EWMA calibrado con los datos
-
-La @tbl-ewma-fit compara los parámetros seleccionados por cada criterio.
+La @fig-ma-windows y la @tbl-ma-shape muestran el efecto de ampliar la ventana. Con cinco sesiones la volatilidad estimada llega a un máximo de `r pct(ma_shape$max[1], 1)` y cae hasta `r pct(ma_shape$min[1], 2)`, y de un día a otro cambia en promedio `r pct(ma_shape$stability[1], 1)`. Con cuarenta sesiones el máximo baja a `r pct(ma_shape$max[4], 1)`, el mínimo sube a `r pct(ma_shape$min[4], 2)` y el cambio diario típico se reduce a `r pct(ma_shape$stability[4], 1)`, mientras el nivel medio apenas se mueve, de `r pct(ma_shape$mean[1])` a `r pct(ma_shape$mean[4])`. Ampliar la ventana no cambia, por tanto, cuánto riesgo mide el modelo en promedio, sino cómo lo distribuye en el tiempo: cada rendimiento recibe un peso de $1/m$, de modo que un choque eleva menos la estimación pero la mantiene elevada durante $m$ sesiones completas, y al salir de la ventana la hace caer de golpe, sin que el mercado haya cambiado ese día. La elección de $m$ es, en consecuencia, un intercambio entre ruido y rezago: una ventana corta responde de inmediato pero confunde un día atípico con un cambio de régimen, y una larga filtra ese ruido a costa de reconocer tarde los cambios verdaderos.
 
 ```{r}
-#| label: tbl-ewma-fit
-fit_rmse <- ewma_fit_lambda(estimation$log_return, loss = "rmse")
-fit_ll <- ewma_fit_lambda(estimation$log_return, loss = "loglik")
+#| label: tbl-ma-losses
+#| tbl-cap: !expr 'paste0("Pérdidas de cada ventana en las ", length(test), " sesiones de evaluación (", fecha(d_w[cut + 1]), "–", fecha(d_w[n_w]), "), con el pronóstico de cada sesión hecho con las anteriores.")'
+report_table(data.frame(
+  Ventana = paste0("M", ma_scores$m),
+  "RMSE × 10⁴" = num(ma_scores$rmse * 1e4, 3),
+  "MAE × 10⁴" = num(ma_scores$mae * 1e4, 3),
+  QLIKE = num(ma_scores$qlike, 0),
+  Relativo = num(ma_scores$relative, 3),
+  "Pérdidas que gana" = ma_votes,
+  "¿Elegida?" = ifelse(ma_scores$m == m_star, "Sí", "No"),
+  check.names = FALSE
+))
+```
 
-report_table(
+Para elegir $m$ comparamos los pronósticos de cada ventana con $r_t^2$ en las `r length(test)` sesiones de evaluación mediante las cuatro funciones de pérdida de clase,
+
+$$
+\text{RMSE}=\sqrt{\frac1{n_p}\sum_t\left(r_t^2-\widehat\sigma_t^{\,2}\right)^2},
+\quad
+\text{MAE}=\frac1{n_p}\sum_t\left|r_t^2-\widehat\sigma_t^{\,2}\right|,
+\quad
+\text{QLIKE}=\frac1{n_p}\sum_t\left(\frac{\widehat\sigma_t^{\,2}}{r_t^2}-\ln\frac{\widehat\sigma_t^{\,2}}{r_t^2}-1\right),
+\quad
+\text{Relativo}=\frac1{n_p}\sum_t\left|1-\frac{r_t^2}{\widehat\sigma_t^{\,2}}\right|,
+$$
+
+y nos quedamos con la ventana que minimiza más de ellas. La @tbl-ma-losses muestra que M`r m_star` gana `r c("una de las cuatro", "dos de las cuatro", "tres de las cuatro", "las cuatro")[max(ma_votes)]` pérdidas, por lo que la elección es `r if (max(ma_votes) == 4) "unánime" else "por mayoría"` y no depende del desempate. El RMSE de M5 es `r pct(ma_scores$rmse[1] / ma_scores$rmse[ma_scores$m == m_star] - 1, 1)` mayor que el de M`r m_star` y su QLIKE `r pct(ma_scores$qlike[1] / ma_scores$qlike[ma_scores$m == m_star] - 1, 0)` mayor, y en el RMSE, el MAE y el error relativo la pérdida baja de manera continua conforme se amplía la ventana. La razón está en los datos: un rendimiento al cuadrado es una medida extremadamente ruidosa de la varianza de su día, y en GAPB lo es todavía más por sus colas pesadas, de modo que promediar más sesiones reduce más error del que agrega el rezago. Como M`r m_star` es la ventana más larga de la malla de clase, el resultado indica además que una ventana mayor podría ajustar todavía mejor, una posibilidad que dejamos fuera para conservar el procedimiento acordado. Por último, al repetir el procedimiento con la información nueva en cada una de las `r nrow(ma_track$daily)` sesiones posteriores al corte, del `r fecha(min(ma_track$daily$date))` al `r fecha(max(ma_track$daily$date))`, la ventana elegida es `r if (length(unique(ma_track$daily$chosen)) == 1) paste0("M", unique(ma_track$daily$chosen), " en todas ellas") else paste0("M", names(which.max(table(ma_track$daily$chosen))), " en la mayoría")`, por lo que la elección es estable frente a los datos nuevos.
+
+### Modelo EWMA
+
+```{r ewma-fit}
+lambda_rm <- v$ewma$lambda_riskmetrics
+# Lambda by maximum likelihood on the first 70% (selection) and on the whole window.
+ewma_train <- ewma_class_path(r_w, cut)
+ewma_full <- ewma_class_path(r_all, n_w)
+ewma_profile <- ewma_loglik_profile(r_w[train])
+ll_rm <- ewma_class_loglik(r_w[train], lambda_rm)
+rm_sigma_w <- sqrt(ewma_class_variance(r_w, lambda_rm))
+lag_weights <- variance_lag_weights(1:80, m_star, ewma_train$lambda)
+ewma_weight_40 <- 1 - ewma_train$lambda^m_star
+
+# The prose reads lambda-hat as a gain in likelihood over RiskMetrics and a
+# half-life longer than a trading month.
+stopifnot(ewma_train$loglik > ll_rm, decay_half_life(ewma_train$lambda) > 21)
+```
+
+El EWMA sustituye el peso uniforme del promedio móvil por un peso que decae geométricamente con la antigüedad del rendimiento. En la forma de clase la recursión arranca con el primer rendimiento al cuadrado,
+
+$$
+\widehat\sigma_1^{\,2}=r_1^2,
+\qquad
+\widehat\sigma_t^{\,2}=(1-\lambda)\,r_{t-1}^2+\lambda\,\widehat\sigma_{t-1}^{\,2},
+\qquad 0<\lambda<1,
+$$
+
+y al desarrollarla se ve que el rendimiento de hace $k$ sesiones recibe un peso $(1-\lambda)\lambda^{k-1}$, por lo que la mitad del peso se pierde en $\ln 0.5/\ln\lambda$ sesiones, la vida media del choque. Para elegir $\lambda$ seguimos el procedimiento iterativo de clase: proponemos un valor, calculamos todas las varianzas y evaluamos la verosimilitud normal sin constantes,
+
+$$
+\ell(\lambda)=\sum_{t=1}^{n_e}\left(-\ln\widehat\sigma_t^{\,2}-\frac{r_t^2}{\widehat\sigma_t^{\,2}}\right),
+$$
+
+y repetimos hasta encontrar el máximo, que en la práctica se obtiene con una búsqueda numérica en el intervalo $(0.001,\,0.9999)$ [@ruiz2026ewma]. La @fig-ewma-profile muestra esa iteración sobre una malla de valores.
+
+```{r}
+#| label: fig-ewma-profile
+#| fig-cap: "Log-verosimilitud del EWMA en la parte de estimación según el valor de λ. Se marcan el máximo y el valor de RiskMetrics, 0.94."
+#| fig-alt: "Curva cóncava de la log-verosimilitud que crece desde λ = 0.80 hasta un máximo cerca de 0.98 y después cae; el valor 0.94 queda a la izquierda del máximo, en un nivel más bajo."
+ggplot(ewma_profile, aes(lambda, loglik)) +
+  geom_line(colour = RISK_PALETTE[1], linewidth = 0.5) +
+  geom_vline(xintercept = ewma_train$lambda, colour = RISK_PALETTE[2], linewidth = 0.4) +
+  geom_vline(xintercept = lambda_rm, colour = RISK_INK$muted, linetype = "dashed", linewidth = 0.4) +
+  annotate("text", x = ewma_train$lambda, y = min(ewma_profile$loglik), hjust = 1.05, vjust = 0,
+           label = paste0("máximo: λ = ", num(ewma_train$lambda, 4)), size = 3, colour = RISK_PALETTE[2]) +
+  annotate("text", x = lambda_rm, y = min(ewma_profile$loglik), hjust = 1.05, vjust = 0,
+           label = "RiskMetrics: 0.94", size = 3, colour = RISK_INK$secondary) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(x = "λ", y = "Log-verosimilitud")
+```
+
+```{r}
+#| label: tbl-ewma
+#| tbl-cap: "Factor de decaimiento del EWMA: estimación por máxima verosimilitud en la parte de estimación y en toda la ventana, frente al valor convencional de RiskMetrics."
+report_table(data.frame(
+  Especificación = c("Máxima verosimilitud, primer 70%", "Máxima verosimilitud, ventana completa",
+                     "RiskMetrics (valor fijo)"),
+  Muestra = c(paste0(fecha(d_w[1]), "–", fecha(d_w[cut])), paste0(fecha(d_w[1]), "–", fecha(d_w[n_w])),
+              paste0(fecha(d_w[1]), "–", fecha(d_w[cut]))),
+  Lambda = num(c(ewma_train$lambda, ewma_full$lambda, lambda_rm), 4),
+  "Log-verosimilitud" = c(num(ewma_train$loglik, 1), num(ewma_full$loglik, 1), num(ll_rm, 1)),
+  "Vida media (sesiones)" = num(decay_half_life(c(ewma_train$lambda, ewma_full$lambda, lambda_rm)), 1),
+  check.names = FALSE
+))
+```
+
+La verosimilitud alcanza su máximo en $\hat\lambda=`r num(ewma_train$lambda, 4)`$ con la parte de estimación y en `r num(ewma_full$lambda, 4)` con toda la ventana (@tbl-ewma). Dos razones justifican ese valor. La primera es estadística: frente al 0.94 de RiskMetrics [@riskmetrics1996], que suele usarse como valor estándar, $\hat\lambda$ eleva la log-verosimilitud en `r num(ewma_train$loglik - ll_rm, 1)` puntos con los mismos datos, y en la parte de evaluación, que no intervino en su estimación, supera a 0.94 en las cuatro pérdidas de clase (sección 3). La segunda es de estabilidad: al agregar `r num(n_w - cut, 0)` sesiones más el estimador apenas cambia en `r num(ewma_full$lambda - ewma_train$lambda, 4)`, lo que indica que no depende de un episodio particular. En términos financieros, $\hat\lambda$ implica una vida media de `r num(decay_half_life(ewma_train$lambda), 0)` sesiones, más de un mes bursátil, contra `r num(decay_half_life(lambda_rm), 0)` de RiskMetrics: los datos de GAPB piden una memoria más larga que la convencional, coherente con que el promedio móvil más largo de la malla haya sido el mejor.
+
+```{r}
+#| label: fig-lag-weights
+#| fig-cap: !expr 'paste0("Peso que recibe el rendimiento al cuadrado de hace k sesiones en el pronóstico de la varianza: promedio móvil de ", m_star, " sesiones y EWMA con λ = ", num(ewma_train$lambda, 4), ".")'
+#| fig-alt: "El promedio móvil asigna un peso constante hasta la sesión 40 y cero después; el EWMA empieza con un peso casi igual y decae suavemente sin llegar a cero."
+weights_long <- rbind(
+  data.frame(lag = lag_weights$lag, modelo = paste0("Promedio móvil (M", m_star, ")"), peso = lag_weights$ma),
+  data.frame(lag = lag_weights$lag, modelo = "EWMA", peso = lag_weights$ewma)
+)
+ggplot(weights_long, aes(lag, peso, colour = modelo)) +
+  geom_step(data = weights_long[weights_long$modelo != "EWMA", ], linewidth = 0.5) +
+  geom_line(data = weights_long[weights_long$modelo == "EWMA", ], linewidth = 0.5) +
+  scale_colour_manual(values = setNames(RISK_PALETTE[1:2], c(paste0("Promedio móvil (M", m_star, ")"), "EWMA"))) +
+  scale_y_continuous(labels = label_percent(accuracy = 0.1)) +
+  labs(x = "Antigüedad del rendimiento, k (sesiones)", y = "Peso", colour = NULL) +
+  theme(legend.position = "top")
+```
+
+Frente al promedio móvil, la capacidad de respuesta del EWMA se entiende con la @fig-lag-weights. El día después de un choque ambos modelos reaccionan casi igual, porque el peso del rendimiento más reciente es `r pct(1 - ewma_train$lambda, 2)` en el EWMA y `r pct(1 / m_star, 2)` en M`r m_star`. La diferencia está en cómo olvidan: el promedio móvil conserva el choque con el mismo peso durante `r m_star` sesiones y luego lo elimina de una vez, mientras que el EWMA lo va descontando de forma continua, de modo que en las últimas `r m_star` sesiones concentra solo `r pct(ewma_weight_40, 0)` de su peso y el resto recae en información más antigua. En consecuencia, el EWMA no reacciona más rápido que el promedio móvil elegido, pero sí de forma más ordenada: no tiene el escalón artificial que produce la salida de un día extremo de la ventana, y por ello su estimación es la más estable de las que comparamos, como mostrará la sección 4.
+
+### Data Driven EWMA
+
+```{r ddewma-fit}
+dd_train <- ddewma_path(r_w, cut)
+dd_full <- ddewma_path(r_all, n_w)
+rho_test <- ddewma_scale(r_w[test])$rho
+rho_normal <- sqrt(2 / pi)
+shock_rank <- order(-abs(r_w[train]))
+shock_at <- shock_rank[1]
+z_shock <- abs(r_w[shock_at] - dd_train$mean) / dd_train$rho
+
+# The prose reads the DDEWMA as forgetting faster than the EWMA, and the
+# evaluation part as having lighter tails than the estimation part.
+stopifnot(dd_train$alpha > 1 - ewma_train$lambda, rho_test > dd_train$rho)
+```
+
+El DDEWMA modela directamente la volatilidad, no la varianza, a partir del valor absoluto de los rendimientos centrados [@ruiz2026ddewma]. Con la media $\bar r$ de la muestra de estimación se calcula un factor de escala $\rho$ y una observación de la volatilidad $z_t$,
+
+$$
+\rho=\operatorname{corr}\!\left(r_t-\bar r,\ \operatorname{sign}(r_t-\bar r)\right),
+\qquad
+z_t=\frac{|r_t-\bar r|}{\rho},
+$$
+
+y la volatilidad se suaviza con
+
+$$
+\widehat\sigma_1=z_1,
+\qquad
+\widehat\sigma_t=\alpha\,z_{t-1}+(1-\alpha)\,\widehat\sigma_{t-1},
+\qquad
+\hat\alpha=\arg\min_{\alpha}\sum_{t=1}^{n_e}\left(z_t-\widehat\sigma_t\right)^2,
+$$
+
+donde, a diferencia del EWMA, el parámetro $\alpha$ pondera la observación nueva y no la estimación anterior, de modo que su análogo es $1-\lambda$ y su vida media es $\ln0.5/\ln(1-\alpha)$.
+
+```{r}
+#| label: tbl-ddewma
+#| tbl-cap: "Parámetros del DDEWMA en la parte de estimación y en toda la ventana. Para comparar, el factor ρ de la parte de evaluación y el de una distribución normal."
+report_table(data.frame(
+  Muestra = c("Primer 70%", "Ventana completa", "Último 30% (solo referencia)", "Normal (teórico)"),
+  "Media r̄" = c(pct(dd_train$mean, 3), pct(dd_full$mean, 3), "—", "—"),
+  "ρ" = num(c(dd_train$rho, dd_full$rho, rho_test, rho_normal), 3),
+  "Escala 1/ρ" = num(1 / c(dd_train$rho, dd_full$rho, rho_test, rho_normal), 3),
+  "α̂" = c(num(dd_train$alpha, 4), num(dd_full$alpha, 4), "—", "—"),
+  "Vida media (sesiones)" = c(num(decay_half_life(1 - c(dd_train$alpha, dd_full$alpha)), 1), "—", "—"),
+  check.names = FALSE
+))
+```
+
+El factor $\rho$ tiene una lectura directa. Como $\operatorname{sign}(r_t-\bar r)$ tiene media cercana a cero y varianza uno, la correlación se reduce a $\rho=E|r_t-\bar r|/\sigma$, la razón entre la desviación absoluta media y la desviación estándar, y por eso $z_t$ es una estimación de $\sigma$ en una sola observación. Para una normal esa razón vale $\sqrt{2/\pi}=`r num(rho_normal, 3)`$; en GAPB vale `r num(dd_train$rho, 3)` en la parte de estimación (@tbl-ddewma), porque las colas pesadas concentran la varianza en pocos días extremos y alejan la desviación estándar de la desviación típica de un día común. El modelo aprovecha esa información de forma explícita: un día de `r pct(r_w[shock_at], 1)`, como el del `r fecha(d_w[shock_at])`, entra como $z_t=`r pct(z_shock, 1)`$, es decir, proporcional a su tamaño, mientras que en el EWMA entra elevado al cuadrado. Por ello el DDEWMA es mucho menos sensible a un solo día extremo, como mostraremos en la sección 4.
+
+El valor óptimo es $\hat\alpha=`r num(dd_train$alpha, 4)`$, con una vida media de `r num(decay_half_life(1 - dd_train$alpha), 0)` sesiones, y al estimarlo con toda la ventana pasa a `r num(dd_full$alpha, 4)`. Comparado con el EWMA, cuyo peso equivalente es $1-\hat\lambda=`r num(1 - ewma_train$lambda, 4)`$, el DDEWMA olvida más rápido, con una vida media `r num(decay_half_life(ewma_train$lambda) / decay_half_life(1 - dd_train$alpha), 1)` veces más corta, aunque suaviza una observación más robusta. Su punto débil es la escala: $\rho$ pasa de `r num(dd_train$rho, 3)` en la parte de estimación a `r num(rho_test, 3)` en la de evaluación, porque esta última no contiene un episodio comparable al de 2023, y como el modelo divide entre el $\rho$ estimado, en un periodo de colas más ligeras sobreestima la volatilidad en una proporción de `r num(rho_test / dd_train$rho, 3)`, que en varianza equivale a `r num((rho_test / dd_train$rho)^2, 2)` veces. Esa es, como veremos, casi exactamente la sobreestimación que el DDEWMA muestra en la evaluación, de modo que su precisión depende de que la forma de las colas no cambie entre la estimación y el pronóstico.
+
+### Modelo ARCH/GARCH
+
+```{r garch-mean}
+# Step 1: the mean equation, as in class, on the first 70%.
+arma <- arma_mean_order(r_w[train])
+arma_order <- arma$order
+arma_label <- paste0("ARMA(", arma_order[["p"]], ",", arma_order[["q"]], ")")
+arma_coef <- stats::coef(arma$fit)
+arma_se <- sqrt(diag(arma$fit$var.coef))
+arma_resid <- as.numeric(residuals(arma$fit))
+
+# Step 2: is there ARCH structure left in the innovations?
+arch_pre <- arch_lm_test(arma_resid)
+shock_dates <- sort(d_w[shock_rank[1:2]])
+before_shocks <- d_w[train] < shock_dates[1]
+after_shocks <- d_w[train] > shock_dates[2]
+share_top2 <- sum(r_w[shock_rank[1:2]]^2) / sum(r_w[train]^2)
+arch_rows <- list(
+  list("Primer 70% completo", arma_resid, 5),
+  list("Primer 70% completo", arma_resid, 10),
+  list("Primer 70% completo", arma_resid, v$garch$arch_lm_lags),
+  list(paste("Antes del", fecha(shock_dates[1])), arma_resid[before_shocks], 5),
+  list(paste("Antes del", fecha(shock_dates[1])), arma_resid[before_shocks], v$garch$arch_lm_lags),
+  list(paste("Después del", fecha(shock_dates[2])), arma_resid[after_shocks], 5),
+  list(paste("Después del", fecha(shock_dates[2])), arma_resid[after_shocks], v$garch$arch_lm_lags)
+)
+arch_table <- do.call(rbind, lapply(arch_rows, function(row) {
+  test_row <- arch_lm_test(row[[2]], lags = row[[3]])
+  data.frame(muestra = row[[1]], n = length(row[[2]]), lags = row[[3]],
+             statistic = test_row$statistic, p_value = test_row$p_value)
+}))
+
+# The prose reads a zero-mean AR model with only its third lag significant, no
+# rejection on the full first 70%, a rejection before the shocks with five lags
+# and none after them.
+arma_t <- arma_coef / arma_se
+alpha_test <- config$tests$alpha
+stopifnot(arma_order[["q"]] == 0, !"intercept" %in% names(arma_coef), length(arma_coef) == 3,
+          abs(arma_t[3]) > qnorm(0.975), all(abs(arma_t[1:2]) < qnorm(0.975)),
+          arch_pre$p_value > alpha_test, arch_table$p_value[4] < alpha_test,
+          all(arch_table$p_value[6:7] > alpha_test))
+```
+
+La metodología de clase separa la ecuación de la media de la de la varianza [@ruiz2026garch]. El rendimiento se escribe como una parte predecible más una innovación, y la media se modela con un ARMA cuyo orden elige `auto.arima` en la parte de estimación,
+
+$$
+r_t=\mu+\sum_{i=1}^{p}\phi_i\,r_{t-i}+\sum_{j=1}^{q}\theta_j\,\varepsilon_{t-j}+\varepsilon_t,
+\qquad
+\varepsilon_t=\sigma_t\,z_t,\quad z_t\sim\mathcal N(0,1).
+$$
+
+`auto.arima` recorre los modelos ARMA estacionarios y se queda con el que minimiza el criterio de Akaike corregido por tamaño de muestra, de modo que el orden se justifica por ajuste penalizado y no por inspección: el elegido es `r arma_label` sin constante, con coeficientes `r paste0("$\\phi_", seq_along(arma_coef), "=", num(arma_coef, 3), "$", collapse = ", ")`. Son pequeños, de modo que la ecuación de la media apenas cambia el resultado: solo $\phi_3$, con un estadístico $t$ de `r num(arma_coef[3] / arma_se[3], 2)`, es significativo al 5%, lo que es compatible con la eficiencia débil que encontramos en la tercera entrega. Lo relevante es la innovación $\varepsilon_t$, sobre la que aplicamos la prueba ARCH-LM de clase, que regresa $\varepsilon_t^2$ sobre sus primeros $L$ rezagos y compara $T R^2$ con una $\chi^2_L$ [@engle1982]:
+
+$$
+\varepsilon_t^2=a_0+\sum_{i=1}^{L}a_i\,\varepsilon_{t-i}^2+u_t,
+\qquad
+H_0:\ a_1=\dots=a_L=0,
+\qquad
+LM=T\,R^2\ \sim\ \chi^2_L .
+$$
+
+```{r}
+#| label: tbl-arch
+#| tbl-cap: "Prueba ARCH-LM sobre las innovaciones del modelo de la media, en la parte de estimación y en dos submuestras que excluyen los dos días más extremos. Un valor p menor que 0.05 indica estructura ARCH."
+report_table(data.frame(
+  Muestra = arch_table$muestra,
+  Observaciones = num(arch_table$n, 0),
+  Rezagos = arch_table$lags,
+  Estadístico = num(arch_table$statistic, 2),
+  "Valor p" = num(arch_table$p_value, 3),
+  "¿Rechaza H0?" = ifelse(arch_table$p_value < config$tests$alpha, "Sí", "No"),
+  check.names = FALSE
+))
+```
+
+Con `r v$garch$arch_lm_lags` rezagos, como en clase, el estadístico es `r num(arch_pre$statistic, 2)` y el valor p `r num(arch_pre$p_value, 3)`, de modo que la prueba no detecta efectos ARCH en GAPB, el resultado contrario al del ejemplo de clase. Lo explicamos por la construcción de la prueba. La regresión sobre cuadrados es muy sensible a los valores extremos, y en la parte de estimación dos días, el `r fecha(shock_dates[1])` y el `r fecha(shock_dates[2])`, aportan por sí solos `r pct(share_top2, 1)` de la suma de los rendimientos al cuadrado de `r num(cut, 0)` sesiones. Ambos se asocian al frente regulatorio de finales de 2023 [@gaptariff2023initial]. Como a cada uno no le siguió un día igual de extremo, la regresión no encuentra una relación lineal entre un cuadrado y los anteriores aunque la volatilidad sí se haya agrupado alrededor del episodio. La @tbl-arch confirma esa lectura: antes del primer choque, con cinco rezagos, la prueba sí rechaza con un valor p de `r num(arch_table$p_value[4], 3)`, y después del segundo no hay rastro de estructura ARCH. Los efectos ARCH de GAPB son, por tanto, débiles y de corta duración: aparecen con pocos rezagos antes del episodio, quedan ocultos por sus dos días extremos y desaparecen después de ellos.
+
+```{r garch-fit}
+# Step 3: the six class candidates on the first 70%, plus the constant-variance benchmark.
+candidates <- garch_class_candidates()
+garch_fits <- lapply(seq_len(nrow(candidates)), function(i) {
+  garch_class_fit(r_w, candidates$p[i], candidates$q[i], arma_order, cut)
+})
+garch_table <- do.call(rbind, lapply(seq_len(nrow(candidates)), function(i) {
+  garch_class_summary(candidates$model[i], garch_fits[[i]], cut)
+}))
+benchmark <- arma_benchmark_summary(arma$fit, cut, paste(arma_label, "con varianza constante"))
+garch_choice <- garch_class_select(garch_table)
+chosen <- candidates[candidates$model == garch_choice, ]
+# The prose below reads the coefficients of a GARCH(1,1).
+stopifnot(chosen$p == 1, chosen$q == 1)
+chosen_row <- garch_table[garch_table$model == garch_choice, ]
+best_aic <- garch_table[which.min(garch_table$aic), ]
+
+# Step 4: the chosen model on the first 70% and re-estimated on the whole window.
+garch_train <- garch_class_path(r_w, chosen$p, chosen$q, arma_order, cut)
+garch_full <- garch_class_path(r_all, chosen$p, chosen$q, arma_order, n_w)
+garch_default <- garch_class_fit(r_all, chosen$p, chosen$q, arma_order, n_w, starts = NULL)
+lr_train <- garch_long_run(garch_train$fit)
+lr_full <- garch_long_run(garch_full$fit)
+cf_train <- rugarch::coef(garch_train$fit)
+cf_full <- rugarch::coef(garch_full$fit)
+cf_default <- rugarch::coef(garch_default)
+ll_full <- rugarch::likelihood(garch_full$fit)
+ll_default <- rugarch::likelihood(garch_default)
+
+# Step 5: is anything left in the standardised residuals?
+z_std <- as.numeric(rugarch::residuals(garch_train$fit, standardize = TRUE))
+arch_post <- arch_lm_test(z_std)
+kurt_post <- kurtosis(z_std)
+matcoef_train <- garch_train$fit@fit$matcoef
+ar_p_train <- matcoef_train[grepl("^ar", rownames(matcoef_train)), 4]
+
+# The prose reads: ARCH(1) and GARCH(1,1) the only fully significant candidates;
+# the best AIC a different, larger model with the highest likelihood; the chosen
+# model the lowest BIC of the table; two local maxima on the whole window with
+# the persistence unchanged between samples; nothing left in the residuals.
+stopifnot(identical(garch_table$model[garch_table$all_significant], c("ARCH(1)", "GARCH(1,1)")),
+          best_aic$model != garch_choice, which.max(garch_table$loglik) == which.min(garch_table$aic),
+          chosen_row$bic == min(c(benchmark$bic, garch_table$bic), na.rm = TRUE),
+          ll_full > ll_default + 1,
+          abs(lr_full$persistence - lr_train$persistence) < 0.05,
+          arch_post$p_value > alpha_test, all(ar_p_train > alpha_test))
+```
+
+Aun sin el respaldo de la prueba estimamos la familia, porque el enunciado lo pide y porque el criterio de clase para elegir el modelo es la verosimilitud, que contesta una pregunta distinta: no si la relación lineal entre cuadrados es significativa, sino cuál varianza condicional explica mejor los datos. Estimamos los seis candidatos de clase, de ARCH(1) a GARCH(2,2), con la media `r arma_label`, errores normales y la varianza
+
+$$
+\sigma_t^2=\omega+\sum_{i=1}^{p}\alpha_i\,\varepsilon_{t-i}^2+\sum_{j=1}^{q}\beta_j\,\sigma_{t-j}^2,
+\qquad
+\text{AIC}=-2\ell+2k,
+\qquad
+\text{BIC}=-2\ell+k\ln n_e,
+$$
+
+donde $\ell$ es la log-verosimilitud y $k$ el número de parámetros [@bollerslev1986]. La @tbl-garch-candidates incluye como referencia el modelo de la media con varianza constante, que es la hipótesis nula de la prueba anterior.
+
+```{r}
+#| label: tbl-garch-candidates
+#| tbl-cap: "Candidatos ARCH/GARCH estimados en la parte de estimación. Un modelo es elegible si todos sus coeficientes ARCH y GARCH son significativos al 5% y su persistencia es menor que uno."
+selection <- rbind(benchmark, garch_table)
+report_table(data.frame(
+  Modelo = selection$model,
+  "Log-verosimilitud" = num(selection$loglik, 2),
+  k = selection$k,
+  AIC = num(selection$aic, 2),
+  BIC = num(selection$bic, 2),
+  "Persistencia α+β" = ifelse(is.na(selection$max_p_value), "—", num(selection$persistence, 3)),
+  "Mayor valor p (α, β)" = ifelse(is.na(selection$max_p_value), "—", num(selection$max_p_value, 3)),
+  "¿Elegible?" = ifelse(seq_len(nrow(selection)) == 1, "Referencia",
+                        ifelse(selection$all_significant & selection$persistence < 1, "Sí", "No")),
+  check.names = FALSE
+))
+```
+
+La varianza condicional mejora claramente a la constante: el `r garch_choice` eleva la log-verosimilitud en `r num(chosen_row$loglik - benchmark$loglik, 1)` puntos con dos parámetros adicionales, y reduce el AIC en `r num(benchmark$aic - chosen_row$aic, 1)` y el BIC en `r num(benchmark$bic - chosen_row$bic, 1)`. Entre los candidatos, solo el ARCH(1) y el GARCH(1,1) tienen todos sus coeficientes significativos; en los demás, los términos que se agregan tienen valores p de hasta `r num(max(garch_table$max_p_value[!garch_table$all_significant]), 2)`, es decir, no aportan nada que los datos distingan del ruido. El `r best_aic$model` tiene el menor AIC y la mayor verosimilitud, pero su ganancia de `r num(best_aic$loglik - chosen_row$loglik, 1)` puntos sobre el GARCH(1,1) no compensa sus `r best_aic$k - chosen_row$k` parámetros adicionales, por lo que el BIC lo penaliza. Por verosimilitud, significancia y parsimonia, los tres criterios de clase, elegimos el **`r garch_choice`**, que tiene además el menor BIC de la tabla.
+
+```{r}
+#| label: tbl-garch-coef
+#| tbl-cap: !expr 'paste0(garch_choice, " con media ", arma_label, ": coeficientes en la parte de estimación y re-estimados con toda la ventana, con su valor p.")'
+coef_names <- rownames(garch_train$fit@fit$matcoef)
+coef_labels <- c(mu = "μ", ar1 = "φ₁", ar2 = "φ₂", ar3 = "φ₃", ma1 = "θ₁", ma2 = "θ₂",
+                 omega = "ω", alpha1 = "α₁", beta1 = "β₁")
+mat_train <- garch_train$fit@fit$matcoef
+mat_full <- garch_full$fit@fit$matcoef
+report_table(data.frame(
+  Parámetro = c(unname(coef_labels[coef_names]), "Persistencia α₁+β₁", "Vida media (sesiones)",
+                "Volatilidad de largo plazo, diaria", "Volatilidad de largo plazo, anual"),
+  "Primer 70%" = c(num(mat_train[, 1], 5), num(lr_train$persistence, 3), num(lr_train$half_life, 1),
+                   pct(lr_train$long_run_vol), pct(sqrt(trading_days) * lr_train$long_run_vol, 1)),
+  "Valor p" = c(num(mat_train[, 4], 3), rep("", 4)),
+  "Ventana completa" = c(num(mat_full[, 1], 5), num(lr_full$persistence, 3), num(lr_full$half_life, 1),
+                         pct(lr_full$long_run_vol), pct(sqrt(trading_days) * lr_full$long_run_vol, 1)),
+  "Valor p " = c(num(mat_full[, 4], 3), rep("", 4)),
+  check.names = FALSE
+))
+```
+
+Los coeficientes de la @tbl-garch-coef describen una volatilidad que reacciona con fuerza y se disipa pronto. Con la parte de estimación, $\hat\alpha_1=`r num(cf_train[["alpha1"]], 3)`$ y $\hat\beta_1=`r num(cf_train[["beta1"]], 3)`$, de modo que la persistencia es `r num(lr_train$persistence, 3)` y la mitad de un choque de varianza desaparece en `r num(lr_train$half_life, 1)` sesiones, mientras que la varianza de largo plazo, $\bar\sigma^2=\omega/(1-\alpha_1-\beta_1)$, equivale a una volatilidad de `r pct(lr_train$long_run_vol)` diaria, `r pct(sqrt(trading_days) * lr_train$long_run_vol, 1)` anual. La comparación con el EWMA es instructiva, porque la recursión del EWMA es un GARCH(1,1) con $\omega=0$, $\alpha_1=1-\lambda$ y $\beta_1=\lambda$, es decir, con persistencia igual a uno y sin nivel de largo plazo al cual regresar. Al no tener ancla, el EWMA solo puede representar un nivel de volatilidad recordando mucho tiempo, de ahí su vida media de `r num(decay_half_life(ewma_train$lambda), 0)` sesiones; el GARCH, en cambio, puede responder fuerte a un choque y volver en pocos días a su nivel de largo plazo. Para GAPB, cuyo riesgo se concentra en saltos asociados a noticias regulatorias más que en rachas prolongadas, esa segunda lectura es la que los datos prefieren por verosimilitud. La ecuación de la media cambia también al modelar la varianza: la especificación de clase agrega la constante $\mu$, y ninguno de los tres coeficientes autorregresivos es ya significativo, con valores p entre `r num(min(ar_p_train), 2)` y `r num(max(ar_p_train), 2)`, lo que sugiere que la autocorrelación que `auto.arima` encontró en la media se debía en parte a los días extremos que el GARCH ahora absorbe en la varianza.
+
+La re-estimación con toda la ventana reveló una fragilidad que conviene declarar. Con el punto de partida que el optimizador usa por defecto, la estimación se detiene en $\alpha_1=`r num(cf_default[["alpha1"]], 3)`$ y $\beta_1=`r num(cf_default[["beta1"]], 3)`$, una lectura de memoria larga con log-verosimilitud de `r num(ll_default, 2)`; al repetir la búsqueda desde `r nrow(garch_class_starts())` puntos de partida adicionales encontramos el máximo en $\alpha_1=`r num(cf_full[["alpha1"]], 3)`$ y $\beta_1=`r num(cf_full[["beta1"]], 3)`$, con `r num(ll_full, 2)`, `r num(ll_full - ll_default, 1)` puntos más. La verosimilitud tiene así dos máximos locales, uno de memoria corta y otro de memoria larga, y elegimos el global en ambas muestras, lo que deja la persistencia prácticamente intacta, de `r num(lr_train$persistence, 3)` a `r num(lr_full$persistence, 3)`. La implicación es práctica: un GARCH estimado una sola vez y sin verificar la búsqueda podría reportar una vida media `r num(decay_half_life(cf_default[["alpha1"]] + cf_default[["beta1"]]) / lr_full$half_life, 0)` veces mayor con datos casi idénticos, y los pronósticos de riesgo heredarían esa diferencia.
+
+Por último, sobre los residuos estandarizados $\hat z_t=\hat\varepsilon_t/\hat\sigma_t$ del modelo elegido, la prueba ARCH-LM da un valor p de `r num(arch_post$p_value, 3)`, sin estructura remanente, aunque ya vimos que la prueba tiene poca potencia en esta serie. Más informativa es su curtosis, de `r num(kurt_post, 1)` contra 3 en una normal: el GARCH explica la agrupación de la volatilidad, pero no las colas, que siguen siendo mucho más pesadas que las normales. Los coeficientes deben leerse como un ajuste de cuasi-máxima verosimilitud, y el cuantil normal que se derive de esta volatilidad subestimará las pérdidas extremas, como ya advertimos en la tercera entrega.
+
+## Evaluación de modelos
+
+```{r evaluation}
+# Validation: parameters from the first 70%, scored on the last 30% of the window.
+val_paths <- list(MA = ma_sigma_w, EWMA = ewma_train$sigma, RiskMetrics = rm_sigma_w,
+                  DDEWMA = dd_train$sigma, GARCH = garch_train$sigma)
+val_scores <- as.data.frame(do.call(rbind, lapply(val_paths, function(s) {
+  forecast_scorecard(r_w[test], s[test])
+})))
+realised_train <- sqrt(mean(r_w[train]^2))
+realised_test <- sqrt(mean(r_w[test]^2))
+
+# October: parameters from the whole window, frozen; each session forecast with the previous ones.
+oct_paths <- list(MA = ma_sigma_all, EWMA = ewma_full$sigma, DDEWMA = dd_full$sigma,
+                  GARCH = garch_full$sigma)
+oct_scores <- as.data.frame(do.call(rbind, lapply(oct_paths, function(s) {
+  forecast_scorecard(r_all[oct], s[oct])
+})))
+oct_realised <- sqrt(mean(r_all[oct]^2))
+oct_abs_ratio <- mean(abs(r_all[oct])) / oct_realised
+oct_model_vol <- vapply(oct_paths, function(s) sqrt(mean(s[oct]^2)), numeric(1))
+z95 <- qnorm(0.95)
+oct_breach <- lapply(oct_paths, function(s) d_all[oct][r_all[oct] < -z95 * s[oct]])
+oct_shock <- oct[which.max(abs(r_all[oct]))]
+stopifnot(oct_shock + 1 <= n_all)
+oct_jump <- vapply(oct_paths, function(s) s[oct_shock + 1] / s[oct_shock] - 1, numeric(1))
+oct_shock_share <- r_all[oct_shock]^2 / sum(r_all[oct]^2)
+gap_dates <- d_all[d_all > as.Date(v$estimation_end) & d_all < as.Date(v$evaluation_start)]
+breach_counts <- lengths(oct_breach)
+breach_words <- c("ninguna vez", "una vez", "dos veces", "tres veces")
+breach_text <- if (length(unique(breach_counts)) == 1 && breach_counts[1] <= 3) {
+  paste0(breach_words[breach_counts[1] + 1],
+         if (breach_counts[1] == 1 && length(unique(do.call(c, oct_breach))) == 1) {
+           paste0(", el mismo día, el ", fecha(oct_breach[[1]][1]))
+         } else "")
+} else {
+  paste0("entre ", min(breach_counts), " y ", max(breach_counts), " veces")
+}
+
+# The prose reads these rankings off the two score tables.
+val_rank <- function(column) rownames(val_scores)[which.min(val_scores[[column]])]
+oct_rank <- function(column) rownames(oct_scores)[which.min(oct_scores[[column]])]
+stopifnot(
+  val_rank("rmse") == "EWMA", val_rank("qlike") == "EWMA", val_rank("qlike_log") == "EWMA",
+  val_rank("mae") == "MA", val_rank("relative") %in% c("DDEWMA", "GARCH"),
+  all(unlist(val_scores["EWMA", loss_cols]) < unlist(val_scores["RiskMetrics", loss_cols])),
+  all(val_scores[c("DDEWMA", "GARCH"), "bias_ratio"] > 1),
+  oct_rank("rmse") == "DDEWMA", oct_rank("qlike_log") == "DDEWMA", oct_rank("relative") == "DDEWMA",
+  oct_rank("mae") == "EWMA", oct_rank("qlike") == "EWMA",
+  all(oct_scores$bias_ratio < 1),
+  names(which.max(oct_jump)) == "GARCH",
+  oct_realised > lr_full$long_run_vol
+)
+
+score_table <- function(scores, labels) {
   data.frame(
-    criterio = c("RMSE", "Log-verosimilitud"),
-    lambda = c(fit_rmse$lambda, fit_ll$lambda),
-    alpha = c(fit_rmse$alpha, fit_ll$alpha)
-  ),
-  caption = "Factor de decaimiento seleccionado bajo cada criterio."
+    Modelo = labels,
+    "RMSE × 10⁴" = num(scores$rmse * 1e4, 3),
+    "MAE × 10⁴" = num(scores$mae * 1e4, 3),
+    "QLIKE (cociente)" = num(scores$qlike, 1),
+    "QLIKE (log)" = num(scores$qlike_log, 3),
+    Relativo = num(scores$relative, 3),
+    "Sesgo σ̂²/r²" = num(scores$bias_ratio, 2),
+    "Cambio diario típico" = pct(scores$stability, 1),
+    check.names = FALSE
+  )
+}
+```
+
+Evaluamos cada modelo con los pronósticos de un paso: la volatilidad de cada sesión se calcula con la información al cierre anterior y con parámetros que no vieron esa sesión. Además de las cuatro pérdidas de clase, que miden el error sobre la varianza, reportamos la QLIKE en la forma que usa el material de ARCH/GARCH y dos medidas descriptivas,
+
+$$
+\text{QLIKE}_{\log}=\frac1{n}\sum_t\left(\ln\widehat\sigma_t^{\,2}+\frac{r_t^2}{\widehat\sigma_t^{\,2}}\right),
+\qquad
+\text{Sesgo}=\frac{\sum_t\widehat\sigma_t^{\,2}}{\sum_t r_t^2},
+\qquad
+\text{Cambio diario típico}=\frac1{n-1}\sum_t\left|\ln\widehat\sigma_t-\ln\widehat\sigma_{t-1}\right|.
+$$
+
+Las dos QLIKE castigan errores distintos. La de cociente, la del material de promedio móvil, crece sin límite cuando el pronóstico supera con mucho a un rendimiento pequeño, y por eso penaliza sobre todo la sobreestimación en días tranquilos; la logarítmica crece con $r_t^2/\widehat\sigma_t^{\,2}$ y castiga más la subestimación, que es el error costoso para quien administra riesgos, y es además robusta al ruido de usar $r_t^2$ como medida de la varianza [@patton2011]. El sesgo es mayor que uno cuando el modelo sobreestima la varianza en promedio, y el cambio diario típico mide qué tanto se mueve la estimación de una sesión a otra.
+
+### Ajuste dentro de muestra: verosimilitud, AIC y BIC
+
+```{r information}
+# Same sessions for every model: the first one with an MA(m*) forecast to the cut.
+info_sessions <- seq.int(m_star + 1, cut)
+garch_resid_train <- c(as.numeric(rugarch::residuals(garch_train$fit)), rep(NA, n_w - cut))
+info_k <- c(MA = 1, EWMA = 1, DDEWMA = 3, GARCH = length(cf_train))
+info <- model_information(
+  residuals = list(MA = r_w, EWMA = r_w, DDEWMA = r_w - dd_train$mean, GARCH = garch_resid_train),
+  sigmas = list(MA = ma_sigma_w, EWMA = ewma_train$sigma, DDEWMA = dd_train$sigma,
+                GARCH = garch_train$sigma),
+  k = info_k, sessions = info_sessions
+)
+rownames(info) <- info$model
+# The GARCH advantage without its mean equation: the same path scored on r_t.
+garch_ll_on_r <- gaussian_loglik(r_w[info_sessions], garch_train$sigma[info_sessions])
+# Out of sample, every model scored on r_t over the evaluation part.
+pred_ll <- vapply(models4, function(k) gaussian_loglik(r_w[test], val_paths[[k]][test]), numeric(1))
+runner_up <- info$model[order(info$aic)][2]
+
+# The conclusion picks the GARCH because it has the lowest AIC and BIC; the
+# prose also reads the EWMA as the best predictive likelihood.
+stopifnot(info$model[which.min(info$aic)] == "GARCH", info$model[which.min(info$bic)] == "GARCH",
+          names(which.max(pred_ll)) == "EWMA")
+```
+
+Antes de comparar pronósticos comparamos el ajuste de los cuatro modelos con el criterio que usamos para elegir los órdenes del GARCH. Para que sus verosimilitudes sean comparables las evaluamos todas con la densidad normal completa,
+
+$$
+\ell=-\frac12\sum_{t}\left(\ln2\pi+\ln\widehat\sigma_t^{\,2}+\frac{e_t^2}{\widehat\sigma_t^{\,2}}\right)
+=\frac{\ell_{\text{clase}}}{2}-\frac{n}{2}\ln2\pi,
+$$
+
+que es la verosimilitud de clase del EWMA dividida entre dos y con su constante, la escala en la que se calculan el AIC y el BIC de la @tbl-garch-candidates. El residuo $e_t$ es el rendimiento para el promedio móvil y el EWMA, que suponen media cero, el rendimiento centrado en $\bar r$ para el DDEWMA y la innovación de la media `r arma_label` para el GARCH, y el número de parámetros es $k=1$ para el promedio móvil ($m$) y el EWMA ($\lambda$), $k=3$ para el DDEWMA ($\alpha$, $\bar r$ y $\rho$) y $k=`r info_k[["GARCH"]]`$ para el GARCH. Usamos para todos las mismas `r num(length(info_sessions), 0)` sesiones de la parte de estimación, de la `r min(info_sessions)` a la `r cut`, porque el promedio móvil de `r m_star` sesiones no tiene pronóstico antes.
+
+```{r}
+#| label: tbl-info
+#| tbl-cap: !expr 'paste0("Log-verosimilitud normal, AIC y BIC de los cuatro modelos en las mismas ", num(length(info_sessions), 0), " sesiones de la parte de estimación (", fecha(d_w[min(info_sessions)]), "–", fecha(d_w[cut]), "), y log-verosimilitud predictiva en las ", length(test), " sesiones de evaluación.")'
+report_table(data.frame(
+  Modelo = c(paste0("Promedio móvil (M", m_star, ")"), "EWMA", "DDEWMA", paste0(garch_choice, " con ", arma_label)),
+  k = info[models4, "k"],
+  "Log-verosimilitud" = num(info[models4, "loglik"], 2),
+  AIC = num(info[models4, "aic"], 2),
+  BIC = num(info[models4, "bic"], 2),
+  "Log-verosimilitud predictiva" = num(unname(pred_ll[models4]), 2),
+  check.names = FALSE, row.names = NULL
+))
+```
+
+El `r garch_choice` tiene el menor AIC y el menor BIC de los cuatro modelos (@tbl-info). Su log-verosimilitud supera en `r num(info["GARCH", "loglik"] - info[runner_up, "loglik"], 1)` puntos a la del `r runner_up`, el segundo, y esa ventaja compensa con holgura sus `r info_k[["GARCH"]] - info_k[[runner_up]]` parámetros adicionales aun con la penalización del BIC, que con `r num(length(info_sessions), 0)` sesiones cobra $\ln n=`r num(log(length(info_sessions)), 1)`$ puntos por parámetro: el BIC del GARCH es `r num(info[runner_up, "bic"] - info["GARCH", "bic"], 1)` puntos menor. La ventaja tampoco depende de la ecuación de la media, porque al evaluar la misma volatilidad del GARCH con los rendimientos en lugar de sus innovaciones la log-verosimilitud apenas cambia, de `r num(info["GARCH", "loglik"], 2)` a `r num(garch_ll_on_r, 2)`. Por el criterio de información, entonces, la varianza condicional del GARCH es la que mejor describe la muestra con que se estimaron los modelos.
+
+Fuera de muestra el orden se invierte por un margen estrecho. La última columna evalúa cada pronóstico en las `r length(test)` sesiones de evaluación con la misma densidad normal, que es la QLIKE logarítmica de la sección siguiente reescalada, y ahí el EWMA obtiene `r num(pred_ll[["EWMA"]], 2)` contra `r num(pred_ll[["GARCH"]], 2)` del GARCH, una diferencia de `r num(pred_ll[["EWMA"]] - pred_ll[["GARCH"]], 1)` puntos en `r length(test)` sesiones. El GARCH explica mejor el tramo con que se estimó, que contiene el episodio de 2023, y el EWMA pronostica ligeramente mejor el tramo siguiente, más tranquilo, lo que anticipa el patrón de sesgos que desarrollamos a continuación.
+
+### Capacidad predictiva en la parte de evaluación
+
+```{r}
+#| label: tbl-validation
+#| tbl-cap: !expr 'paste0("Pérdidas de los pronósticos en las ", length(test), " sesiones de evaluación, ", fecha(d_w[cut + 1]), "–", fecha(d_w[n_w]), ", con parámetros estimados en el primer 70% de la ventana.")'
+report_table(score_table(val_scores, c(paste0("Promedio móvil (M", m_star, ")"),
+                                       paste0("EWMA (λ = ", num(ewma_train$lambda, 3), ")"),
+                                       "EWMA RiskMetrics (λ = 0.94)",
+                                       paste0("DDEWMA (α = ", num(dd_train$alpha, 3), ")"),
+                                       paste0(garch_choice, " con ", arma_label))))
+```
+
+Sobre las `r length(test)` sesiones de evaluación, la @tbl-validation no muestra un ganador absoluto, pero sí un patrón. El EWMA con $\hat\lambda$ tiene el menor RMSE y las dos QLIKE más bajas, y el promedio móvil M`r m_star` el menor MAE, con diferencias entre ambos menores a `r pct(max(abs(val_scores$rmse[1] / val_scores$rmse[2] - 1), abs(val_scores$mae[1] / val_scores$mae[2] - 1)), 1)`; el DDEWMA y el GARCH quedan detrás en esas pérdidas y adelante en el error relativo. Además, el EWMA con $\hat\lambda$ supera al de RiskMetrics en las cuatro pérdidas de clase, una confirmación fuera de la muestra de estimación de que la memoria larga que eligió la verosimilitud no era un sobreajuste. La columna de sesgo explica el resto: el promedio móvil y el EWMA aciertan el nivel medio de la varianza, con cocientes de `r num(val_scores$bias_ratio[1], 2)` y `r num(val_scores$bias_ratio[2], 2)`, mientras que el DDEWMA y el GARCH la sobreestiman en `r pct(val_scores$bias_ratio[4] - 1, 0)` y `r pct(val_scores$bias_ratio[5] - 1, 0)`.
+
+Ambas sobreestimaciones tienen la misma raíz, la diferencia entre los dos tramos de la ventana. La volatilidad realizada fue de `r pct(realised_train)` diaria en la parte de estimación, que incluye el episodio de 2023, y de `r pct(realised_test)` en la de evaluación. El GARCH regresa en pocos días a una volatilidad de largo plazo de `r pct(lr_train$long_run_vol)` que aprendió en el tramo turbulento, y el DDEWMA divide entre el $\rho$ de ese mismo tramo, más bajo que el del periodo evaluado. Los modelos sin nivel propio, el promedio móvil y el EWMA, se limitan a seguir los datos recientes y por eso no arrastran ese nivel. La lección es que el ancla que hace al GARCH capaz de revertir a la media es también el canal por el que un episodio de la muestra de estimación contamina los pronósticos posteriores.
+
+### Estimación diaria del 5 al 30 de octubre de 2026
+
+Para octubre usamos los parámetros estimados con toda la ventana, que termina el `r fecha(max(d_w))`, y los mantenemos fijos: cada día el modelo incorpora el rendimiento observado la sesión anterior, como lo haría un analista que actualiza su estimación al cierre, pero nunca vuelve a estimar $m$, $\lambda$, $\alpha$ ni los coeficientes del GARCH. Las `r gap_sessions` sesiones entre el corte y el inicio de la evaluación, `r paste(fecha(gap_dates), collapse = " y ")`, alimentan las recursiones y no se califican. La medida de referencia que pide el enunciado es la volatilidad realizada $|r_t|=\sqrt{r_t^2}$, que es la columna de comparación de la @tbl-oct-daily, construida como la tabla de estimaciones diarias de clase, con el valor observado frente al estimado en cada sesión.
+
+Esa referencia tiene un sesgo conocido que conviene tener presente al leer la tabla. Por la misma razón que define $\rho$ en el DDEWMA, en promedio $|r_t|$ es $\rho\,\sigma_t$ y no $\sigma_t$, de modo que la volatilidad realizada de un día típico queda por debajo de la verdadera: en octubre, el promedio de $|r_t|$ fue `r pct(oct_abs_ratio, 0)` de la raíz del promedio de $r_t^2$. Por ello comparamos la columna diaria con $|r_t|$, como pide el enunciado, pero medimos el sesgo de cada modelo contra $r_t^2$, cuyo promedio sí estima la varianza sin ese factor.
+
+```{r}
+#| label: tbl-oct-daily
+#| tbl-cap: "Volatilidad realizada y estimada por cada modelo en cada sesión de la evaluación fuera de muestra. La última fila resume el mes con la raíz del promedio de los cuadrados."
+oct_daily <- data.frame(
+  Fecha = format(d_all[oct], "%d/%m/%Y"),
+  Rendimiento = pct(r_all[oct]),
+  "Realizada |r|" = pct(abs(r_all[oct])),
+  "Promedio móvil" = pct(oct_paths$MA[oct]),
+  EWMA = pct(oct_paths$EWMA[oct]),
+  DDEWMA = pct(oct_paths$DDEWMA[oct]),
+  GARCH = pct(oct_paths$GARCH[oct]),
+  check.names = FALSE
+)
+oct_daily <- rbind(oct_daily, data.frame(
+  Fecha = "Octubre", Rendimiento = "", "Realizada |r|" = pct(oct_realised),
+  "Promedio móvil" = pct(oct_model_vol[["MA"]]), EWMA = pct(oct_model_vol[["EWMA"]]),
+  DDEWMA = pct(oct_model_vol[["DDEWMA"]]), GARCH = pct(oct_model_vol[["GARCH"]]),
+  check.names = FALSE
+))
+report_table(oct_daily)
+```
+
+```{r}
+#| label: fig-oct
+#| fig-cap: "Volatilidad diaria estimada por cada modelo y volatilidad realizada |r| en la evaluación fuera de muestra, con parámetros fijos al 30 de septiembre de 2026."
+#| fig-alt: "Las cuatro estimaciones se mueven entre 1.8% y 2.9%, mientras la volatilidad realizada salta entre 0.2% y 6.7%; tras el salto del 20 de octubre el GARCH sube con más fuerza que los demás y regresa en pocos días."
+oct_long <- do.call(rbind, lapply(models4, function(k) {
+  data.frame(date = d_all[oct], modelo = k, sigma = oct_paths[[k]][oct])
+}))
+oct_long$modelo <- factor(oct_long$modelo, levels = models4)
+oct_obs <- data.frame(date = d_all[oct], realizada = abs(r_all[oct]))
+ggplot() +
+  geom_col(data = oct_obs, aes(date, realizada), fill = RISK_INK$gridline, width = 0.8) +
+  geom_line(data = oct_long, aes(date, sigma, colour = modelo), linewidth = 0.6) +
+  scale_colour_manual(values = model_colours) +
+  scale_x_date(date_breaks = "1 week", date_labels = "%d %b") +
+  scale_y_continuous(labels = label_percent(accuracy = 1)) +
+  labs(x = NULL, y = "Volatilidad diaria", colour = NULL) +
+  theme(legend.position = "top")
+```
+
+```{r}
+#| label: tbl-oct-scores
+#| tbl-cap: !expr 'paste0("Pérdidas de los pronósticos en las ", length(oct), " sesiones del ", fecha(d_all[min(oct)]), " al ", fecha(d_all[max(oct)]), ", con parámetros estimados con datos hasta el ", fecha(max(d_w)), ".")'
+report_table(score_table(oct_scores, c(paste0("Promedio móvil (M", m_star, ")"),
+                                       paste0("EWMA (λ = ", num(ewma_full$lambda, 3), ")"),
+                                       paste0("DDEWMA (α = ", num(dd_full$alpha, 3), ")"),
+                                       paste0(garch_choice, " con ", arma_label))))
+```
+
+Octubre fue más volátil de lo que cualquier modelo anticipaba. La volatilidad realizada del mes, medida como la raíz del promedio de los cuadrados, fue de `r pct(oct_realised)` diaria, contra estimaciones promedio de entre `r pct(min(oct_model_vol))` y `r pct(max(oct_model_vol))`, y por ello los cuatro modelos subestimaron la varianza, con cocientes de sesgo entre `r num(min(oct_scores$bias_ratio), 2)` y `r num(max(oct_scores$bias_ratio), 2)` (@tbl-oct-scores). Buena parte de esa diferencia se debe a una sola sesión: el `r fecha(d_all[oct_shock])` GAPB subió `r pct(r_all[oct_shock])`, en la primera jornada después del reporte del tercer trimestre, publicado el 19 de octubre con ingresos 21.8% superiores a los del año anterior [@gap3q2026], y ese día aporta `r pct(oct_shock_share, 0)` de la suma de los cuadrados del mes. Es una asociación temporal y no aísla un efecto causal, pero ilustra el tipo de riesgo de la emisora: saltos ligados a información puntual, que ningún modelo basado en el pasado puede anticipar y que solo cabe incorporar después de que ocurren.
+
+La reacción de la sesión siguiente distingue a los modelos. El GARCH elevó su estimación `r pct(oct_jump[["GARCH"]], 0)`, de `r pct(oct_paths$GARCH[oct_shock])` a `r pct(oct_paths$GARCH[oct_shock + 1])`, y en una semana ya había regresado cerca de su nivel previo, mientras que el promedio móvil, el EWMA y el DDEWMA subieron entre `r pct(min(oct_jump[c("MA", "EWMA", "DDEWMA")]), 0)` y `r pct(max(oct_jump[c("MA", "EWMA", "DDEWMA")]), 0)` y se mantuvieron elevados el resto del mes. En las pérdidas, el DDEWMA tiene el menor RMSE, la menor QLIKE logarítmica y el menor error relativo, y el EWMA el menor MAE y la menor QLIKE de cociente, pero las diferencias de RMSE entre los cuatro son menores a `r pct(max(oct_scores$rmse) / min(oct_scores$rmse) - 1, 1)`, demasiado pequeñas para ordenarlos con `r length(oct)` observaciones dominadas por un solo día. Lo mismo ocurre con un umbral de pérdida diaria al 95%, $-1.645\,\widehat\sigma_t$: cada modelo lo rebasó `r breach_text`, frente a `r num(0.05 * length(oct), 0)` excedencia esperada en `r length(oct)` sesiones. Octubre sirve, así, para confirmar el orden de magnitud y la reacción a los choques de cada modelo, no para elegir entre ellos; esa comparación descansa en las `r length(test)` sesiones de la parte de evaluación.
+
+## Análisis e interpretación
+
+```{r interpretation}
+# Months of the evaluation part: realised volatility against each model's mean forecast.
+by_month <- vol_by_month(d_w[test], r_w[test], lapply(val_paths[models4], function(s) s[test]))
+capture <- capture_ratios(by_month, models4)
+
+# Response to the largest shock of the window, with the selection-stage parameters.
+shock_resp <- lapply(val_paths[models4], function(s) shock_response(s, shock_at, horizon = 45))
+shock_window <- seq.int(shock_at - 15, shock_at + 60)
+summary_table <- data.frame(
+  modelo = models4,
+  high = capture$high, other = capture$other,
+  jump = vapply(shock_resp, function(x) x$jump, numeric(1)),
+  half_back = vapply(shock_resp, function(x) x$half_back, numeric(1)),
+  stab_val = val_scores[models4, "stability"],
+  stab_oct = oct_scores[models4, "stability"],
+  bias_val = val_scores[models4, "bias_ratio"],
+  bias_oct = oct_scores[models4, "bias_ratio"]
+)
+rownames(summary_table) <- models4
+
+# The prose of section 4 reads these orderings.
+fast <- c("DDEWMA", "GARCH")
+slow <- c("MA", "EWMA")
+stopifnot(
+  min(summary_table[fast, "high"]) > max(summary_table[slow, "high"]),
+  all(summary_table[slow, "high"] < 1), all(summary_table[slow, "other"] > 1),
+  all(summary_table[fast, "other"] > 1),
+  names(which.max(sapply(shock_resp, `[[`, "jump"))) == "GARCH",
+  names(which.min(sapply(shock_resp, `[[`, "jump"))) == "DDEWMA",
+  rownames(summary_table)[which.min(summary_table$stab_val)] == "EWMA",
+  rownames(summary_table)[which.max(summary_table$stab_val)] == "GARCH",
+  rownames(summary_table)[which.max(summary_table$stab_oct)] == "GARCH",
+  rownames(summary_table)[which.max(summary_table$bias_oct)] == "DDEWMA",
+  sort(summary_table$bias_oct, decreasing = TRUE)[2] == summary_table["GARCH", "bias_oct"]
 )
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-Justificación de $\lambda$ y comparación de la velocidad de respuesta frente a
-los promedios móviles. Si los dos criterios discrepan, la discrepancia es
-informativa: el RMSE es simétrico, la verosimilitud penaliza mucho más
-subestimar la volatilidad que sobreestimarla.
-:::
-
-## ARCH / GARCH
-
 ```{r}
-#| label: tbl-garch
-#| eval: false
-garch <- fit_garch(estimation$log_return)
-report_table(garch$selection, caption = "Tabla de selección de órdenes.")
+#| label: tbl-summary
+#| tbl-cap: !expr 'paste0("Resumen de las cuatro preguntas. Captura: cociente entre la varianza pronosticada y la realizada en los ", capture$n_high[1], " meses más volátiles de la parte de evaluación y en el resto. Reacción: cociente entre la estimación del día siguiente y la del día del choque del ", fecha(d_w[shock_at]), ", y sesiones hasta recuperar la mitad del alza (más de 45 si no ocurre).")'
+report_table(data.frame(
+  Modelo = c(paste0("Promedio móvil (M", m_star, ")"), "EWMA", "DDEWMA", garch_choice),
+  "Captura, meses volátiles" = num(summary_table$high, 2),
+  "Captura, resto" = num(summary_table$other, 2),
+  "Reacción al choque" = paste0(num(summary_table$jump, 2), "x"),
+  "Sesiones a la mitad" = ifelse(is.na(summary_table$half_back), "> 45", num(summary_table$half_back, 0)),
+  "Cambio diario, evaluación" = pct(summary_table$stab_val, 1),
+  "Cambio diario, octubre" = pct(summary_table$stab_oct, 1),
+  "Sesgo, evaluación" = num(summary_table$bias_val, 2),
+  "Sesgo, octubre" = num(summary_table$bias_oct, 2),
+  check.names = FALSE
+))
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-Identificación del modelo, justificación del orden seleccionado e
-interpretación de los coeficientes: persistencia $\alpha + \beta$, velocidad de
-reversión y significado de una persistencia cercana a uno.
-
-Activar el chunk anterior cuando `rugarch` esté instalado (`renv::restore()`).
-:::
-
-## Evaluación fuera de muestra
+### ¿Qué modelo captura mejor los periodos de alta volatilidad?
 
 ```{r}
-#| label: tbl-scores
-#| eval: false
-realised <- realised_volatility(evaluation$log_return)
-
-scores <- rbind(
-  score_volatility(ma_oos, realised, "MA(m*)"),
-  score_volatility(ewma_oos, realised, "EWMA"),
-  score_volatility(ewma_fit_oos, realised, "EWMA calibrado"),
-  score_volatility(garch_oos, realised, "GARCH")
-)
-report_table(scores, caption = "Desempeño fuera de muestra, 2026.")
+#| label: fig-months
+#| fig-cap: "Volatilidad realizada de cada mes de la parte de evaluación y volatilidad promedio pronosticada por cada modelo. Los puntos señalan los meses más volátiles."
+#| fig-alt: "La volatilidad realizada oscila entre 1.3% y 2.7% mensual; en los meses más volátiles el promedio móvil y el EWMA quedan por debajo, y el GARCH y el DDEWMA más cerca; en los meses tranquilos estos dos quedan por encima."
+month_long <- do.call(rbind, lapply(models4, function(k) {
+  data.frame(month = as.Date(paste0(by_month$month, "-01")), modelo = k, sigma = by_month[[k]])
+}))
+month_long$modelo <- factor(month_long$modelo, levels = models4)
+month_obs <- data.frame(month = as.Date(paste0(by_month$month, "-01")), realised = by_month$realised,
+                        high = by_month$realised >= stats::quantile(by_month$realised, 0.75))
+ggplot() +
+  geom_line(data = month_obs, aes(month, realised), colour = RISK_INK$primary, linewidth = 0.7) +
+  geom_point(data = month_obs[month_obs$high, ], aes(month, realised), colour = RISK_INK$primary, size = 2) +
+  geom_line(data = month_long, aes(month, sigma, colour = modelo), linewidth = 0.5) +
+  scale_colour_manual(values = model_colours) +
+  scale_x_date(date_breaks = "3 months", date_labels = "%b %Y") +
+  scale_y_continuous(labels = label_percent(accuracy = 0.1)) +
+  labs(x = NULL, y = "Volatilidad diaria del mes", colour = NULL,
+       caption = "Línea negra: volatilidad realizada (raíz del promedio de r² del mes).") +
+  theme(legend.position = "top")
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-Construir las series fuera de muestra de cada modelo y compararlas contra la
-volatilidad realizada. Responder de forma argumentada:
+El **GARCH** y el **DDEWMA**. En los `r capture$n_high[1]` meses más volátiles de la parte de evaluación, la varianza que pronosticó el GARCH fue `r num(capture$high[capture$model == "GARCH"], 2)` veces la realizada y la del DDEWMA `r num(capture$high[capture$model == "DDEWMA"], 2)`, mientras que el promedio móvil y el EWMA se quedaron en `r num(capture$high[capture$model == "MA"], 2)` y `r num(capture$high[capture$model == "EWMA"], 2)`, es decir, subestimaron la varianza de esos meses en `r pct(1 - capture$high[capture$model == "MA"], 0)` y `r pct(1 - capture$high[capture$model == "EWMA"], 0)` (@tbl-summary, @fig-months). La razón es la memoria. El promedio móvil y el EWMA reparten su peso entre muchas sesiones, de modo que cuando llega un mes turbulento todavía están promediando los días tranquilos que lo precedieron; el GARCH, con una vida media de `r num(lr_train$half_life, 1)` sesiones, y el DDEWMA, de `r num(decay_half_life(1 - dd_train$alpha), 0)`, se ajustan antes al nuevo nivel. La @fig-shock lleva la comparación al día más extremo de la ventana, el `r fecha(d_w[shock_at])`, con su caída de `r pct(r_w[shock_at], 1)`.
 
-- ¿Qué modelo captura mejor los periodos de alta volatilidad?
-- ¿Cuál reacciona más rápido a los cambios de mercado?
-- ¿Cuál es más estable en sus estimaciones?
-- ¿Cuál tiende a sobreestimar y cuál a subestimar?
-:::
+```{r}
+#| label: fig-shock
+#| fig-cap: !expr 'paste0("Respuesta de cada modelo al choque del ", fecha(d_w[shock_at]), " y a las sesiones que lo siguieron, con parámetros de la parte de estimación. Las barras son la volatilidad realizada |r|, recortada en 12%.")'
+#| fig-alt: "Antes del choque los cuatro modelos están cerca de 2%. El GARCH salta a 10% al día siguiente y en una semana regresa a 3%; el promedio móvil y el EWMA suben a 4.5% y se quedan altos durante semanas; el DDEWMA sube menos, a 3%, y también se queda alto. El promedio móvil cae de golpe cuando el choque sale de su ventana."
+shock_long <- do.call(rbind, lapply(models4, function(k) {
+  data.frame(date = d_w[shock_window], modelo = k, sigma = val_paths[[k]][shock_window])
+}))
+shock_long$modelo <- factor(shock_long$modelo, levels = models4)
+shock_obs <- data.frame(date = d_w[shock_window], realizada = pmin(abs(r_w[shock_window]), 0.12))
+ggplot() +
+  geom_col(data = shock_obs, aes(date, realizada), fill = RISK_INK$gridline, width = 1) +
+  geom_line(data = shock_long, aes(date, sigma, colour = modelo), linewidth = 0.6) +
+  scale_colour_manual(values = model_colours) +
+  scale_x_date(date_breaks = "2 weeks", date_labels = "%d %b %Y") +
+  scale_y_continuous(breaks = seq(0, 0.12, by = 0.02), labels = label_percent(accuracy = 1)) +
+  labs(x = NULL, y = "Volatilidad diaria", colour = NULL) +
+  theme(legend.position = "top", axis.text.x = element_text(angle = 30, hjust = 1))
+```
+
+### ¿Qué modelo reacciona más rápidamente ante cambios en el mercado?
+
+El **GARCH**, por un margen amplio. Tras el choque de 2023 su estimación se multiplicó por `r num(shock_resp$GARCH$jump, 2)` en una sola sesión, de `r pct(val_paths$GARCH[shock_at])` a `r pct(val_paths$GARCH[shock_at + 1])`, y recuperó la mitad del alza en `r shock_resp$GARCH$half_back` sesiones; el promedio móvil se multiplicó por `r num(shock_resp$MA$jump, 2)` y el EWMA por `r num(shock_resp$EWMA$jump, 2)`, y el DDEWMA, que trabaja con valores absolutos y no con cuadrados, solo por `r num(shock_resp$DDEWMA$jump, 2)`. En octubre de 2026 se repitió el orden: tras el salto del `r fecha(d_all[oct_shock])` el GARCH subió `r pct(oct_jump[["GARCH"]], 0)` contra alrededor de `r pct(mean(oct_jump[c("MA", "EWMA", "DDEWMA")]), 0)` de los demás. La explicación está en el peso que cada modelo da al rendimiento más reciente: `r num(cf_train[["alpha1"]], 3)` en el GARCH contra `r num(1 - ewma_train$lambda, 3)` en el EWMA y `r num(1 / m_star, 3)` en el promedio móvil, y además el $\beta_1$ bajo del GARCH hace que ese impulso se disipe pronto. Reaccionar rápido tiene un costo simétrico: el GARCH también abandona antes una alerta que resulta justificada, y el promedio móvil, que reacciona casi como el EWMA, tiene un segundo cambio brusco cuando el choque sale de su ventana, `r m_star` sesiones después, sin que el mercado haya cambiado ese día.
+
+### ¿Qué modelo presenta mayor estabilidad en sus estimaciones?
+
+El **EWMA**, en los dos sentidos que importan. Su estimación cambia en promedio `r pct(summary_table$stab_val[2], 1)` de una sesión a otra en la parte de evaluación, contra `r pct(summary_table$stab_val[1], 1)` del promedio móvil, `r pct(summary_table$stab_val[3], 1)` del DDEWMA y `r pct(summary_table$stab_val[4], 1)` del GARCH, y su parámetro es el más estable entre muestras: $\lambda$ pasa de `r num(ewma_train$lambda, 4)` a `r num(ewma_full$lambda, 4)`. El promedio móvil tiene una ventana igualmente estable, M`r m_star` en todas las sesiones posteriores al corte, pero su trayectoria tiene los escalones de entrada y salida de cada día extremo. El DDEWMA mantiene casi el mismo $\alpha$, de `r num(dd_train$alpha, 4)` a `r num(dd_full$alpha, 4)`, pero su escala $\rho$ se mueve con la forma de las colas. El GARCH es el menos estable por construcción, porque su virtud, la reacción rápida, es precisamente la variabilidad de su estimación, y lo es también en sus parámetros: $\alpha_1$ pasó de `r num(cf_train[["alpha1"]], 3)` a `r num(cf_full[["alpha1"]], 3)` al agregar `r num(n_w - cut, 0)` sesiones, y su verosimilitud admite una segunda lectura de memoria larga. En octubre el GARCH re-estimado tuvo el cambio diario más alto, `r pct(summary_table$stab_oct[4], 1)`, por su reacción al salto del día 20.
+
+### ¿Qué modelo tiende a sobreestimar o subestimar la volatilidad?
+
+Depende del régimen, y esa dependencia es el hallazgo. En promedio sobre la parte de evaluación, el promedio móvil y el EWMA son insesgados, con cocientes de `r num(summary_table$bias_val[1], 2)` y `r num(summary_table$bias_val[2], 2)`, pero ese promedio esconde dos errores que se compensan: subestiman la varianza en los meses turbulentos y la sobreestiman en `r pct(summary_table$other[1] - 1, 0)` y `r pct(summary_table$other[2] - 1, 0)` en los tranquilos, porque su estimación tarda en llegar al nuevo nivel y tarda en abandonarlo. El DDEWMA y el GARCH sobreestiman de manera sistemática, `r pct(summary_table$bias_val[3] - 1, 0)` y `r pct(summary_table$bias_val[4] - 1, 0)` en promedio y `r pct(summary_table$other[3] - 1, 0)` y `r pct(summary_table$other[4] - 1, 0)` en los meses tranquilos, porque arrastran del tramo de estimación el nivel de largo plazo y la forma de colas del episodio de 2023, aunque son los únicos que no subestiman en los meses turbulentos. En octubre de 2026 todos subestimaron, entre `r pct(1 - max(summary_table$bias_oct), 0)` y `r pct(1 - min(summary_table$bias_oct), 0)` de la varianza, porque fue un mes más volátil que cualquier nivel que los modelos tuvieran en memoria: la volatilidad realizada de `r pct(oct_realised)` superó incluso la volatilidad de largo plazo del GARCH re-estimado, de `r pct(lr_full$long_run_vol)`. Desde la perspectiva del riesgo, la diferencia no es simétrica: sobreestimar en calma inmoviliza capital, mientras que subestimar en turbulencia deja a la posición sin cobertura justo cuando las pérdidas son más probables.
 
 ## Conclusión
 
-::: {.callout-important title="Pendiente de redacción"}
-Comparación general y, desde una perspectiva financiera, qué modelo se usaría y
-por qué.
+```{r decision}
+position <- config$var$position_mxn
+next_sigma <- c(MA = ma_next, EWMA = ewma_full$next_sigma, DDEWMA = dd_full$next_sigma,
+                GARCH = garch_full$next_sigma)
+var_95 <- class_var(next_sigma, position, 0.95)
+var_99 <- class_var(next_sigma, position, 0.99)
+# Multi-step forecasts from the last close: flat for the three smoothers, mean-reverting for GARCH.
+garch_term <- sqrt(lr_full$long_run_variance +
+                     lr_full$persistence^(c(1, 5, 20) - 1) *
+                       (garch_full$next_sigma^2 - lr_full$long_run_variance))
+```
+
+Ninguno de los cuatro modelos domina a los demás, y la razón está en la forma del riesgo de GAPB. Entre 2021 y 2026 su volatilidad se movió por saltos ligados a información puntual, como el frente regulatorio de 2023 o el reporte del tercer trimestre de 2026, más que por rachas prolongadas: la prueba ARCH-LM solo detecta agrupación con pocos rezagos y antes del episodio de 2023, el GARCH estima una persistencia de `r num(lr_full$persistence, 2)` con una vida media de `r num(lr_full$half_life, 1)` sesiones, y el promedio móvil más largo de la malla es el que mejor pronostica. En ese entorno, los modelos de memoria larga, el promedio móvil M`r m_star` y el EWMA con $\hat\lambda=`r num(ewma_full$lambda, 3)`$, son los mejores pronosticadores promedio y los más estables, pero llegan tarde a los meses turbulentos y subestiman su varianza entre `r pct(1 - max(capture$high[capture$model %in% slow]), 0)` y `r pct(1 - min(capture$high[capture$model %in% slow]), 0)`. Los de memoria corta, el GARCH(1,1) y el DDEWMA, capturan esos meses y reaccionan antes a un choque, a cambio de sobreestimar la volatilidad en los periodos tranquilos y de depender de parámetros menos estables.
+
+```{r}
+#| label: tbl-decision
+#| tbl-cap: !expr 'paste0("Volatilidad pronosticada para el ", fecha(next_session), " con datos hasta el ", fecha(snapshot_end), ", y VaR paramétrico de un día de una posición de ", fmt_mxn(position), " en GAPB, VaR = |Z|·V₀·σ.")'
+report_table(data.frame(
+  Modelo = c(paste0("Promedio móvil (M", m_star, ")"), "EWMA", "DDEWMA", garch_choice),
+  "Volatilidad diaria" = pct(next_sigma),
+  "VaR 95% (MXN)" = fmt_mxn(var_95),
+  "VaR 99% (MXN)" = fmt_mxn(var_99),
+  check.names = FALSE
+))
+```
+
+Desde una perspectiva financiera elegimos el **`r garch_choice` con media `r arma_label`** como modelo de riesgo, por cuatro razones. La primera es estadística: es el modelo con menor AIC y menor BIC de los cuatro, con una ventaja de `r num(info[runner_up, "aic"] - info["GARCH", "aic"], 1)` y `r num(info[runner_up, "bic"] - info["GARCH", "bic"], 1)` puntos sobre el `r runner_up`, el mismo criterio con el que elegimos sus órdenes. La segunda es la asimetría de los errores: para fijar límites, márgenes o capital, subestimar la volatilidad en un periodo turbulento cuesta más que sobreestimarla en uno tranquilo, y el GARCH y el DDEWMA son los únicos que cubrieron los meses volátiles, con `r num(capture$high[capture$model == "GARCH"], 2)` y `r num(capture$high[capture$model == "DDEWMA"], 2)` de la varianza realizada contra `r num(capture$high[capture$model == "EWMA"], 2)` del EWMA, y los que menos subestimaron en octubre. La tercera es la reacción, que decide entre esos dos: el riesgo de GAPB llega en saltos, y el GARCH es el único que tras un salto eleva su estimación en proporción al choque, `r num(shock_resp$GARCH$jump, 1)` veces en 2023 contra `r num(shock_resp$DDEWMA$jump, 1)` del DDEWMA, que amortigua los extremos al trabajar con valores absolutos, y la normaliza en días, sin el escalón artificial del promedio móvil ni la dependencia del DDEWMA respecto de un factor de escala que cambia con las colas. La cuarta es el horizonte. Los otros tres modelos, al no tener un nivel de largo plazo, extienden a cualquier plazo la estimación de la sesión siguiente, mientras que el GARCH revierte hacia su nivel de largo plazo, $\sigma_{t+h}^2=\bar\sigma^2+(\alpha_1+\beta_1)^{h-1}\left(\sigma_{t+1}^2-\bar\sigma^2\right)$, de `r pct(garch_term[1])` para la sesión siguiente a `r pct(garch_term[3])` a 20 sesiones, la estructura temporal que necesitará el VaR a varios días de la quinta entrega. Con datos al `r fecha(snapshot_end)`, el modelo pronostica una volatilidad de `r pct(next_sigma[["GARCH"]])` para el `r fecha(next_session)`, que implica un VaR al 95% de `r fmt_mxn(var_95[["GARCH"]])` por cada `r fmt_mxn(position)` invertidos (@tbl-decision).
+
+La elección viene con tres condiciones que se desprenden del propio análisis. El GARCH debe re-estimarse periódicamente y con varios puntos de partida, porque su verosimilitud tiene dos máximos y una estimación descuidada puede multiplicar su memoria. Su volatilidad no basta para fijar el cuantil de pérdida: la curtosis de `r num(kurt_post, 1)` de sus residuos indica que el VaR normal subestimará las pérdidas extremas, por lo que en la quinta entrega debe contrastarse con métodos que respeten las colas observadas. Por último, conviene mantener el EWMA con $\hat\lambda$ como referencia de control, porque es el pronosticador promedio más preciso y estable y el de mayor verosimilitud predictiva fuera de muestra, y una divergencia persistente entre ambos modelos es en sí misma una señal de que el régimen de volatilidad está cambiando.
+
+## Referencias {.unnumbered}
+
+::: {#refs}
 :::
 
-## Referencias
+Repositorio del proyecto en GitHub: <https://github.com/Urielledezma/GAPB-Risk-Analysis>
