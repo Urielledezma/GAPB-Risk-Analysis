@@ -1,8 +1,11 @@
 # 00 — FactSet probe
 #
-# Run this once, before anything else, on a machine with an entitled key. It
-# settles in three cheap calls what would otherwise be guessed for the whole
-# project:
+# Historical diagnostic, not part of the production path. ITESO confirmed on
+# 2026-09-01 that its licence carries no API entitlement, which closed the 401
+# investigation this script was written for; FactSet now enters only as a
+# manual export through 03_ingest_fundamentals.R. It is kept for the day an
+# entitled key exists, when it settles in three cheap calls what would
+# otherwise be guessed:
 #
 #   1. Do the credentials authenticate at all (401 versus 403)?
 #   2. Is the account entitled to Prices, and to Fundamentals?
