@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,18 +11,12 @@
 <meta name="author" content="Jorge Isaac López Ávila">
 <meta name="author" content="Juan Pablo Morán Errejón">
 
-<title>variance-models – Análisis de Riesgo · GAPB</title>
+<title>Modelos de varianza – Análisis de Riesgo · GAPB</title>
 <style>
-/* Default styles provided by pandoc.
-** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-*/
+code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: 1.5em;}
-div.column{flex: auto;}
-@media screen {
-div.columns{gap: min(4vw, 1.5em);}
-div.column{overflow-x: auto;}
-}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -101,10 +95,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-bb6b7ff44b12c6be5ebe32cd498144c2.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ee17d8d1060ce319a42574ad56bbd9fa.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dd9eeb3a66d606a42fa7fa148d450bc2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-2508cd08ee2cd26a473b5ac7bc682de0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -119,7 +113,7 @@ div.csl-indent {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "No se han encontrado resultados",
+    "search-no-results-text": "Sin resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
@@ -135,7 +129,7 @@ div.csl-indent {
 <style>html{ scroll-behavior: smooth; }</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -148,7 +142,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+      if (mathElements[i].tagName == "SPAN") {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -282,7 +276,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">5 de noviembre de 2026</p>
+      <p class="date">10 de noviembre de 2026</p>
     </div>
   </div>
   
@@ -348,7 +342,7 @@ n_p=n-n_e=434,
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ma_windows <span class="ot">&lt;-</span> v<span class="sc">$</span>ma_class<span class="sc">$</span>windows</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ma_windows <span class="ot">&lt;-</span> v<span class="sc">$</span>ma_class<span class="sc">$</span>windows</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>loss_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"rmse"</span>, <span class="st">"mae"</span>, <span class="st">"qlike"</span>, <span class="st">"relative"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The class procedure on the whole window: 70 / 30 cut, four losses, votes.</span></span>
@@ -374,7 +368,7 @@ n_p=n-n_e=434,
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># of longer windows as monotone in RMSE, MAE and the relative error.</span></span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(m_star <span class="sc">==</span> <span class="fu">max</span>(ma_windows),</span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>          <span class="fu">all</span>(<span class="fu">diff</span>(ma_scores<span class="sc">$</span>rmse) <span class="sc">&lt;</span> <span class="dv">0</span>), <span class="fu">all</span>(<span class="fu">diff</span>(ma_scores<span class="sc">$</span>mae) <span class="sc">&lt;</span> <span class="dv">0</span>),</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>          <span class="fu">all</span>(<span class="fu">diff</span>(ma_scores<span class="sc">$</span>relative) <span class="sc">&lt;</span> <span class="dv">0</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>          <span class="fu">all</span>(<span class="fu">diff</span>(ma_scores<span class="sc">$</span>relative) <span class="sc">&lt;</span> <span class="dv">0</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>El promedio móvil estima la varianza con el promedio simple de los últimos <span class="math inline">\(m\)</span> rendimientos al cuadrado. En clase se calcula como una media móvil que incluye la sesión actual, y su valor al cierre de <span class="math inline">\(t-1\)</span> es el pronóstico de la sesión <span class="math inline">\(t\)</span>:</p>
@@ -387,7 +381,7 @@ n_p=n-n_e=434,
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ma_long <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq_along</span>(ma_windows), <span class="cf">function</span>(k) {</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ma_long <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq_along</span>(ma_windows), <span class="cf">function</span>(k) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">date =</span> d_w, <span class="at">ventana =</span> <span class="fu">paste0</span>(<span class="st">"M"</span>, ma_windows[k]), <span class="at">sigma =</span> ma_trailing[[k]])</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>}))</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>ma_long<span class="sc">$</span>ventana <span class="ot">&lt;-</span> <span class="fu">factor</span>(ma_long<span class="sc">$</span>ventana, <span class="at">levels =</span> <span class="fu">paste0</span>(<span class="st">"M"</span>, ma_windows))</span>
@@ -399,7 +393,7 @@ n_p=n-n_e=434,
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>ventana, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">breaks =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"2021-01-01"</span>, <span class="st">"2023-01-01"</span>, <span class="st">"2025-01-01"</span>)), <span class="at">date_labels =</span> <span class="st">"%Y"</span>) <span class="sc">+</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">0.12</span>, <span class="at">by =</span> <span class="fl">0.02</span>), <span class="at">labels =</span> <span class="fu">label_percent</span>(<span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Volatilidad diaria"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Volatilidad diaria"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-ma-windows" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Cuatro paneles con la misma escala. La ventana de 5 sesiones produce picos de hasta 12% y caídas cercanas a cero; la de 40 sesiones es una curva suave que nunca supera 5%." data-fig-align="center">
@@ -417,7 +411,7 @@ Figura&nbsp;1: Volatilidad diaria de GAPB estimada con promedios móviles de 5, 
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ventana =</span> <span class="fu">paste0</span>(<span class="st">"M"</span>, ma_shape<span class="sc">$</span>m),</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Promedio =</span> <span class="fu">pct</span>(ma_shape<span class="sc">$</span>mean),</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Desviación estándar"</span> <span class="ot">=</span> <span class="fu">pct</span>(ma_shape<span class="sc">$</span>sd),</span>
@@ -425,7 +419,7 @@ Figura&nbsp;1: Volatilidad diaria de GAPB estimada con promedios móviles de 5, 
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  Máximo <span class="ot">=</span> <span class="fu">pct</span>(ma_shape<span class="sc">$</span>max),</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Cambio diario típico"</span> <span class="ot">=</span> <span class="fu">pct</span>(ma_shape<span class="sc">$</span>stability, <span class="dv">1</span>),</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-ma-shape" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -434,7 +428,7 @@ Tabla&nbsp;1: Forma de la volatilidad estimada con cada ventana en la ventana de
 </figcaption>
 <div aria-describedby="tbl-ma-shape-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 11%">
 <col style="width: 12%">
@@ -497,7 +491,7 @@ Tabla&nbsp;1: Forma de la volatilidad estimada con cada ventana en la ventana de
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ventana =</span> <span class="fu">paste0</span>(<span class="st">"M"</span>, ma_scores<span class="sc">$</span>m),</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"RMSE × 10⁴"</span> <span class="ot">=</span> <span class="fu">num</span>(ma_scores<span class="sc">$</span>rmse <span class="sc">*</span> <span class="fl">1e4</span>, <span class="dv">3</span>),</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"MAE × 10⁴"</span> <span class="ot">=</span> <span class="fu">num</span>(ma_scores<span class="sc">$</span>mae <span class="sc">*</span> <span class="fl">1e4</span>, <span class="dv">3</span>),</span>
@@ -506,7 +500,7 @@ Tabla&nbsp;1: Forma de la volatilidad estimada con cada ventana en la ventana de
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Pérdidas que gana"</span> <span class="ot">=</span> ma_votes,</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"¿Elegida?"</span> <span class="ot">=</span> <span class="fu">ifelse</span>(ma_scores<span class="sc">$</span>m <span class="sc">==</span> m_star, <span class="st">"Sí"</span>, <span class="st">"No"</span>),</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-ma-losses" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -515,7 +509,7 @@ Tabla&nbsp;2: Pérdidas de cada ventana en las 434 sesiones de evaluación (8 de
 </figcaption>
 <div aria-describedby="tbl-ma-losses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 11%">
 <col style="width: 15%">
@@ -597,7 +591,7 @@ Tabla&nbsp;2: Pérdidas de cada ventana en las 434 sesiones de evaluación (8 de
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lambda_rm <span class="ot">&lt;-</span> v<span class="sc">$</span>ewma<span class="sc">$</span>lambda_riskmetrics</span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lambda_rm <span class="ot">&lt;-</span> v<span class="sc">$</span>ewma<span class="sc">$</span>lambda_riskmetrics</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Lambda by maximum likelihood on the first 70% (selection) and on the whole window.</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ewma_train <span class="ot">&lt;-</span> <span class="fu">ewma_class_path</span>(r_w, cut)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>ewma_full <span class="ot">&lt;-</span> <span class="fu">ewma_class_path</span>(r_all, n_w)</span>
@@ -609,7 +603,7 @@ Tabla&nbsp;2: Pérdidas de cada ventana en las 434 sesiones de evaluación (8 de
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># The prose reads lambda-hat as a gain in likelihood over RiskMetrics and a</span></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># half-life longer than a trading month.</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(ewma_train<span class="sc">$</span>loglik <span class="sc">&gt;</span> ll_rm, <span class="fu">decay_half_life</span>(ewma_train<span class="sc">$</span>lambda) <span class="sc">&gt;</span> <span class="dv">21</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(ewma_train<span class="sc">$</span>loglik <span class="sc">&gt;</span> ll_rm, <span class="fu">decay_half_life</span>(ewma_train<span class="sc">$</span>lambda) <span class="sc">&gt;</span> <span class="dv">21</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>El EWMA sustituye el peso uniforme del promedio móvil por un peso que decae geométricamente con la antigüedad del rendimiento. En la forma de clase la recursión arranca con el primer rendimiento al cuadrado,</p>
@@ -627,7 +621,7 @@ Tabla&nbsp;2: Pérdidas de cada ventana en las 434 sesiones de evaluación (8 de
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ewma_profile, <span class="fu">aes</span>(lambda, loglik)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ewma_profile, <span class="fu">aes</span>(lambda, loglik)) <span class="sc">+</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> RISK_PALETTE[<span class="dv">1</span>], <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> ewma_train<span class="sc">$</span>lambda, <span class="at">colour =</span> RISK_PALETTE[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> lambda_rm, <span class="at">colour =</span> RISK_INK<span class="sc">$</span>muted, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">linewidth =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
@@ -636,7 +630,7 @@ Tabla&nbsp;2: Pérdidas de cada ventana en las 434 sesiones de evaluación (8 de
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> lambda_rm, <span class="at">y =</span> <span class="fu">min</span>(ewma_profile<span class="sc">$</span>loglik), <span class="at">hjust =</span> <span class="fl">1.05</span>, <span class="at">vjust =</span> <span class="dv">0</span>,</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="st">"RiskMetrics: 0.94"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> RISK_INK<span class="sc">$</span>secondary) <span class="sc">+</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"λ"</span>, <span class="at">y =</span> <span class="st">"Log-verosimilitud"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"λ"</span>, <span class="at">y =</span> <span class="st">"Log-verosimilitud"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-ewma-profile" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Curva cóncava de la log-verosimilitud que crece desde λ = 0.80 hasta un máximo cerca de 0.98 y después cae; el valor 0.94 queda a la izquierda del máximo, en un nivel más bajo." data-fig-align="center">
@@ -654,7 +648,7 @@ Figura&nbsp;2: Log-verosimilitud del EWMA en la parte de estimación según el v
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  Especificación <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Máxima verosimilitud, primer 70%"</span>, <span class="st">"Máxima verosimilitud, ventana completa"</span>,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"RiskMetrics (valor fijo)"</span>),</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Muestra =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="fu">fecha</span>(d_w[<span class="dv">1</span>]), <span class="st">"–"</span>, <span class="fu">fecha</span>(d_w[cut])), <span class="fu">paste0</span>(<span class="fu">fecha</span>(d_w[<span class="dv">1</span>]), <span class="st">"–"</span>, <span class="fu">fecha</span>(d_w[n_w])),</span>
@@ -663,7 +657,7 @@ Figura&nbsp;2: Log-verosimilitud del EWMA en la parte de estimación según el v
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Log-verosimilitud"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">num</span>(ewma_train<span class="sc">$</span>loglik, <span class="dv">1</span>), <span class="fu">num</span>(ewma_full<span class="sc">$</span>loglik, <span class="dv">1</span>), <span class="fu">num</span>(ll_rm, <span class="dv">1</span>)),</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Vida media (sesiones)"</span> <span class="ot">=</span> <span class="fu">num</span>(<span class="fu">decay_half_life</span>(<span class="fu">c</span>(ewma_train<span class="sc">$</span>lambda, ewma_full<span class="sc">$</span>lambda, lambda_rm)), <span class="dv">1</span>),</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-ewma" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -672,7 +666,7 @@ Tabla&nbsp;3: Factor de decaimiento del EWMA: estimación por máxima verosimili
 </figcaption>
 <div aria-describedby="tbl-ewma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 30%">
 <col style="width: 33%">
@@ -722,7 +716,7 @@ Tabla&nbsp;3: Factor de decaimiento del EWMA: estimación por máxima verosimili
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>weights_long <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>weights_long <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">lag =</span> lag_weights<span class="sc">$</span>lag, <span class="at">modelo =</span> <span class="fu">paste0</span>(<span class="st">"Promedio móvil (M"</span>, m_star, <span class="st">")"</span>), <span class="at">peso =</span> lag_weights<span class="sc">$</span>ma),</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">lag =</span> lag_weights<span class="sc">$</span>lag, <span class="at">modelo =</span> <span class="st">"EWMA"</span>, <span class="at">peso =</span> lag_weights<span class="sc">$</span>ewma)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -732,7 +726,7 @@ Tabla&nbsp;3: Factor de decaimiento del EWMA: estimación por máxima verosimili
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">setNames</span>(RISK_PALETTE[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"Promedio móvil (M"</span>, m_star, <span class="st">")"</span>), <span class="st">"EWMA"</span>))) <span class="sc">+</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(<span class="at">accuracy =</span> <span class="fl">0.1</span>)) <span class="sc">+</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Antigüedad del rendimiento, k (sesiones)"</span>, <span class="at">y =</span> <span class="st">"Peso"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-lag-weights" class="quarto-float quarto-figure quarto-figure-center anchored" alt="El promedio móvil asigna un peso constante hasta la sesión 40 y cero después; el EWMA empieza con un peso casi igual y decae suavemente sin llegar a cero." data-fig-align="center">
@@ -754,7 +748,7 @@ Figura&nbsp;3: Peso que recibe el rendimiento al cuadrado de hace k sesiones en 
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dd_train <span class="ot">&lt;-</span> <span class="fu">ddewma_path</span>(r_w, cut)</span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dd_train <span class="ot">&lt;-</span> <span class="fu">ddewma_path</span>(r_w, cut)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dd_full <span class="ot">&lt;-</span> <span class="fu">ddewma_path</span>(r_all, n_w)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>rho_test <span class="ot">&lt;-</span> <span class="fu">ddewma_scale</span>(r_w[test])<span class="sc">$</span>rho</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>rho_normal <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">/</span> pi)</span>
@@ -764,7 +758,7 @@ Figura&nbsp;3: Peso que recibe el rendimiento al cuadrado de hace k sesiones en 
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># The prose reads the DDEWMA as forgetting faster than the EWMA, and the</span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluation part as having lighter tails than the estimation part.</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(dd_train<span class="sc">$</span>alpha <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">-</span> ewma_train<span class="sc">$</span>lambda, rho_test <span class="sc">&gt;</span> dd_train<span class="sc">$</span>rho)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(dd_train<span class="sc">$</span>alpha <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">-</span> ewma_train<span class="sc">$</span>lambda, rho_test <span class="sc">&gt;</span> dd_train<span class="sc">$</span>rho)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>El DDEWMA modela directamente la volatilidad, no la varianza, a partir del valor absoluto de los rendimientos centrados <span class="citation" data-cites="ruiz2026ddewma">(<a href="#ref-ruiz2026ddewma" role="doc-biblioref">Ruiz Hernández, 2026b</a>)</span>. Con la media <span class="math inline">\(\bar r\)</span> de la muestra de estimación se calcula un factor de escala <span class="math inline">\(\rho\)</span> y una observación de la volatilidad <span class="math inline">\(z_t\)</span>,</p>
@@ -785,7 +779,7 @@ z_t=\frac{|r_t-\bar r|}{\rho},
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Muestra =</span> <span class="fu">c</span>(<span class="st">"Primer 70%"</span>, <span class="st">"Ventana completa"</span>, <span class="st">"Último 30% (solo referencia)"</span>, <span class="st">"Normal (teórico)"</span>),</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Media r̄"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">pct</span>(dd_train<span class="sc">$</span>mean, <span class="dv">3</span>), <span class="fu">pct</span>(dd_full<span class="sc">$</span>mean, <span class="dv">3</span>), <span class="st">"—"</span>, <span class="st">"—"</span>),</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ρ"</span> <span class="ot">=</span> <span class="fu">num</span>(<span class="fu">c</span>(dd_train<span class="sc">$</span>rho, dd_full<span class="sc">$</span>rho, rho_test, rho_normal), <span class="dv">3</span>),</span>
@@ -793,7 +787,7 @@ z_t=\frac{|r_t-\bar r|}{\rho},
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"α̂"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">num</span>(dd_train<span class="sc">$</span>alpha, <span class="dv">4</span>), <span class="fu">num</span>(dd_full<span class="sc">$</span>alpha, <span class="dv">4</span>), <span class="st">"—"</span>, <span class="st">"—"</span>),</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Vida media (sesiones)"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">num</span>(<span class="fu">decay_half_life</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fu">c</span>(dd_train<span class="sc">$</span>alpha, dd_full<span class="sc">$</span>alpha)), <span class="dv">1</span>), <span class="st">"—"</span>, <span class="st">"—"</span>),</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-ddewma" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -802,7 +796,7 @@ Tabla&nbsp;4: Parámetros del DDEWMA en la parte de estimación y en toda la ven
 </figcaption>
 <div aria-describedby="tbl-ddewma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 34%">
 <col style="width: 9%">
@@ -861,7 +855,7 @@ Tabla&nbsp;4: Parámetros del DDEWMA en la parte de estimación y en toda la ven
 </figure>
 </div>
 </div>
-<p>El factor <span class="math inline">\(\rho\)</span> tiene una lectura directa. Como <span class="math inline">\(\operatorname{sign}(r_t-\bar r)\)</span> tiene media cercana a cero y varianza uno, la correlación se reduce a <span class="math inline">\(\rho=E|r_t-\bar r|/\sigma\)</span>, la razón entre la desviación absoluta media y la desviación estándar, y por eso <span class="math inline">\(z_t\)</span> es una estimación de <span class="math inline">\(\sigma\)</span> en una sola observación. Para una normal esa razón vale <span class="math inline">\(\sqrt{2/\pi}=0.798\)</span>; en GAPB vale 0.684 en la parte de estimación (<a href="#tbl-ddewma" class="quarto-xref">Tabla&nbsp;4</a>), porque las colas pesadas concentran la varianza en pocos días extremos y alejan la desviación estándar de la desviación típica de un día común. El modelo aprovecha esa información de forma explícita: un día de -25.4%, como el del 5 de octubre de 2023, entra como <span class="math inline">\(z_t=37.3%\)</span>, es decir, proporcional a su tamaño, mientras que en el EWMA entra elevado al cuadrado. Por ello el DDEWMA es mucho menos sensible a un solo día extremo, como mostraremos en la sección 4.</p>
+<p>El factor <span class="math inline">\(\rho\)</span> tiene una lectura directa. Como <span class="math inline">\(\operatorname{sign}(r_t-\bar r)\)</span> tiene media cercana a cero y varianza uno, la correlación se reduce a <span class="math inline">\(\rho=E|r_t-\bar r|/\sigma\)</span>, la razón entre la desviación absoluta media y la desviación estándar, y por eso <span class="math inline">\(z_t\)</span> es una estimación de <span class="math inline">\(\sigma\)</span> en una sola observación. Para una normal esa razón vale <span class="math inline">\(\sqrt{2/\pi}=0.798\)</span>; en GAPB vale 0.684 en la parte de estimación (<a href="#tbl-ddewma" class="quarto-xref">Tabla&nbsp;4</a>), porque las colas pesadas concentran la varianza en pocos días extremos y alejan la desviación estándar de la desviación típica de un día común. El modelo aprovecha esa información de forma explícita: un día de -25.4%, como el del 5 de octubre de 2023, entra como <span class="math inline">\(z_t\)</span> = 37.3%, es decir, proporcional a su tamaño, mientras que en el EWMA entra elevado al cuadrado. Por ello el DDEWMA es mucho menos sensible a un solo día extremo, como mostraremos en la sección 4.</p>
 <p>El valor óptimo es <span class="math inline">\(\hat\alpha=0.0339\)</span>, con una vida media de 20 sesiones, y al estimarlo con toda la ventana pasa a 0.0304. Comparado con el EWMA, cuyo peso equivalente es <span class="math inline">\(1-\hat\lambda=0.0232\)</span>, el DDEWMA olvida más rápido, con una vida media 1.5 veces más corta, aunque suaviza una observación más robusta. Su punto débil es la escala: <span class="math inline">\(\rho\)</span> pasa de 0.684 en la parte de estimación a 0.769 en la de evaluación, porque esta última no contiene un episodio comparable al de 2023, y como el modelo divide entre el <span class="math inline">\(\rho\)</span> estimado, en un periodo de colas más ligeras sobreestima la volatilidad en una proporción de 1.125, que en varianza equivale a 1.27 veces. Esa es, como veremos, casi exactamente la sobreestimación que el DDEWMA muestra en la evaluación, de modo que su precisión depende de que la forma de las colas no cambie entre la estimación y el pronóstico.</p>
 </section>
 <section id="modelo-archgarch" class="level3">
@@ -869,7 +863,7 @@ Tabla&nbsp;4: Parámetros del DDEWMA en la parte de estimación y en toda la ven
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: the mean equation, as in class, on the first 70%.</span></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: the mean equation, as in class, on the first 70%.</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>arma <span class="ot">&lt;-</span> <span class="fu">arma_mean_order</span>(r_w[train])</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>arma_order <span class="ot">&lt;-</span> arma<span class="sc">$</span>order</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>arma_label <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"ARMA("</span>, arma_order[[<span class="st">"p"</span>]], <span class="st">","</span>, arma_order[[<span class="st">"q"</span>]], <span class="st">")"</span>)</span>
@@ -906,7 +900,7 @@ Tabla&nbsp;4: Parámetros del DDEWMA en la parte de estimación y en toda la ven
 <span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(arma_order[[<span class="st">"q"</span>]] <span class="sc">==</span> <span class="dv">0</span>, <span class="sc">!</span><span class="st">"intercept"</span> <span class="sc">%in%</span> <span class="fu">names</span>(arma_coef), <span class="fu">length</span>(arma_coef) <span class="sc">==</span> <span class="dv">3</span>,</span>
 <span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>          <span class="fu">abs</span>(arma_t[<span class="dv">3</span>]) <span class="sc">&gt;</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>), <span class="fu">all</span>(<span class="fu">abs</span>(arma_t[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]) <span class="sc">&lt;</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>)),</span>
 <span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>          arch_pre<span class="sc">$</span>p_value <span class="sc">&gt;</span> alpha_test, arch_table<span class="sc">$</span>p_value[<span class="dv">4</span>] <span class="sc">&lt;</span> alpha_test,</span>
-<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>          <span class="fu">all</span>(arch_table<span class="sc">$</span>p_value[<span class="dv">6</span><span class="sc">:</span><span class="dv">7</span>] <span class="sc">&gt;</span> alpha_test))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>          <span class="fu">all</span>(arch_table<span class="sc">$</span>p_value[<span class="dv">6</span><span class="sc">:</span><span class="dv">7</span>] <span class="sc">&gt;</span> alpha_test))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>La metodología de clase separa la ecuación de la media de la de la varianza <span class="citation" data-cites="ruiz2026garch">(<a href="#ref-ruiz2026garch" role="doc-biblioref">Ruiz Hernández, 2026a</a>)</span>. El rendimiento se escribe como una parte predecible más una innovación, y la media se modela con un ARMA cuyo orden elige <code>auto.arima</code> en la parte de estimación,</p>
@@ -926,7 +920,7 @@ LM=T\,R^2\ \sim\ \chi^2_L .
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Muestra =</span> arch_table<span class="sc">$</span>muestra,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Observaciones =</span> <span class="fu">num</span>(arch_table<span class="sc">$</span>n, <span class="dv">0</span>),</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Rezagos =</span> arch_table<span class="sc">$</span>lags,</span>
@@ -934,7 +928,7 @@ LM=T\,R^2\ \sim\ \chi^2_L .
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Valor p"</span> <span class="ot">=</span> <span class="fu">num</span>(arch_table<span class="sc">$</span>p_value, <span class="dv">3</span>),</span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"¿Rechaza H0?"</span> <span class="ot">=</span> <span class="fu">ifelse</span>(arch_table<span class="sc">$</span>p_value <span class="sc">&lt;</span> config<span class="sc">$</span>tests<span class="sc">$</span>alpha, <span class="st">"Sí"</span>, <span class="st">"No"</span>),</span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-arch" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -943,7 +937,7 @@ Tabla&nbsp;5: Prueba ARCH-LM sobre las innovaciones del modelo de la media, en l
 </figcaption>
 <div aria-describedby="tbl-arch-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 39%">
 <col style="width: 15%">
@@ -1030,7 +1024,7 @@ Tabla&nbsp;5: Prueba ARCH-LM sobre las innovaciones del modelo de la media, en l
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: the six class candidates on the first 70%, plus the constant-variance benchmark.</span></span>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: the six class candidates on the first 70%, plus the constant-variance benchmark.</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>candidates <span class="ot">&lt;-</span> <span class="fu">garch_class_candidates</span>()</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>garch_fits <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(candidates)), <span class="cf">function</span>(i) {</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">garch_class_fit</span>(r_w, candidates<span class="sc">$</span>p[i], candidates<span class="sc">$</span>q[i], arma_order, cut)</span>
@@ -1074,7 +1068,7 @@ Tabla&nbsp;5: Prueba ARCH-LM sobre las innovaciones del modelo de la media, en l
 <span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>          chosen_row<span class="sc">$</span>bic <span class="sc">==</span> <span class="fu">min</span>(<span class="fu">c</span>(benchmark<span class="sc">$</span>bic, garch_table<span class="sc">$</span>bic), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
 <span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>          ll_full <span class="sc">&gt;</span> ll_default <span class="sc">+</span> <span class="dv">1</span>,</span>
 <span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>          <span class="fu">abs</span>(lr_full<span class="sc">$</span>persistence <span class="sc">-</span> lr_train<span class="sc">$</span>persistence) <span class="sc">&lt;</span> <span class="fl">0.05</span>,</span>
-<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>          arch_post<span class="sc">$</span>p_value <span class="sc">&gt;</span> alpha_test, <span class="fu">all</span>(ar_p_train <span class="sc">&gt;</span> alpha_test))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>          arch_post<span class="sc">$</span>p_value <span class="sc">&gt;</span> alpha_test, <span class="fu">all</span>(ar_p_train <span class="sc">&gt;</span> alpha_test))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Aun sin el respaldo de la prueba estimamos la familia, porque el enunciado lo pide y porque el criterio de clase para elegir el modelo es la verosimilitud, que contesta una pregunta distinta: no si la relación lineal entre cuadrados es significativa, sino cuál varianza condicional explica mejor los datos. Estimamos los seis candidatos de clase, de ARCH(1) a GARCH(2,2), con la media ARMA(3,0), errores normales y la varianza</p>
@@ -1089,7 +1083,7 @@ Tabla&nbsp;5: Prueba ARCH-LM sobre las innovaciones del modelo de la media, en l
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>selection <span class="ot">&lt;-</span> <span class="fu">rbind</span>(benchmark, garch_table)</span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>selection <span class="ot">&lt;-</span> <span class="fu">rbind</span>(benchmark, garch_table)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Modelo =</span> selection<span class="sc">$</span>model,</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Log-verosimilitud"</span> <span class="ot">=</span> <span class="fu">num</span>(selection<span class="sc">$</span>loglik, <span class="dv">2</span>),</span>
@@ -1101,7 +1095,7 @@ Tabla&nbsp;5: Prueba ARCH-LM sobre las innovaciones del modelo de la media, en l
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"¿Elegible?"</span> <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(selection)) <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Referencia"</span>,</span>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">ifelse</span>(selection<span class="sc">$</span>all_significant <span class="sc">&amp;</span> selection<span class="sc">$</span>persistence <span class="sc">&lt;</span> <span class="dv">1</span>, <span class="st">"Sí"</span>, <span class="st">"No"</span>)),</span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-garch-candidates" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1110,7 +1104,7 @@ Tabla&nbsp;6: Candidatos ARCH/GARCH estimados en la parte de estimación. Un mod
 </figcaption>
 <div aria-describedby="tbl-garch-candidates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 26%">
 <col style="width: 14%">
@@ -1191,7 +1185,7 @@ Tabla&nbsp;6: Candidatos ARCH/GARCH estimados en la parte de estimación. Un mod
 <td style="text-align: right;">-4,903.76</td>
 <td style="text-align: right;">-4,864.41</td>
 <td style="text-align: left;">0.755</td>
-<td style="text-align: left;">0.468</td>
+<td style="text-align: left;">0.469</td>
 <td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
@@ -1211,11 +1205,11 @@ Tabla&nbsp;6: Candidatos ARCH/GARCH estimados en la parte de estimación. Un mod
 </figure>
 </div>
 </div>
-<p>La varianza condicional mejora claramente a la constante: el GARCH(1,1) eleva la log-verosimilitud en 15.3 puntos con dos parámetros adicionales, y reduce el AIC en 24.6 y el BIC en 9.8. Entre los candidatos, solo el ARCH(1) y el GARCH(1,1) tienen todos sus coeficientes significativos; en los demás, los términos que se agregan tienen valores p de hasta 1.00, es decir, no aportan nada que los datos distingan del ruido. El GARCH(2,2) tiene el menor AIC y la mayor verosimilitud, pero su ganancia de 3.5 puntos sobre el GARCH(1,1) no compensa sus 2 parámetros adicionales, por lo que el BIC lo penaliza. Por verosimilitud, significancia y parsimonia, los tres criterios de clase, elegimos el <strong>GARCH(1,1)</strong>, que tiene además el menor BIC de la tabla.</p>
+<p>La varianza condicional mejora claramente a la constante: el GARCH(1,1) eleva la log-verosimilitud en 15.3 puntos con tres parámetros adicionales, y reduce el AIC en 24.6 y el BIC en 9.8. Entre los candidatos, solo el ARCH(1) y el GARCH(1,1) tienen todos sus coeficientes significativos; en los demás, los términos que se agregan tienen valores p de hasta 1.00, es decir, no aportan nada que los datos distingan del ruido. El GARCH(2,2) tiene el menor AIC y la mayor verosimilitud, pero su ganancia de 3.5 puntos sobre el GARCH(1,1) no compensa sus 2 parámetros adicionales, por lo que el BIC lo penaliza. Por verosimilitud, significancia y parsimonia, los tres criterios de clase, elegimos el <strong>GARCH(1,1)</strong>, que tiene además el menor BIC de la tabla.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>coef_names <span class="ot">&lt;-</span> <span class="fu">rownames</span>(garch_train<span class="sc">$</span>fit<span class="sc">@</span>fit<span class="sc">$</span>matcoef)</span>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>coef_names <span class="ot">&lt;-</span> <span class="fu">rownames</span>(garch_train<span class="sc">$</span>fit<span class="sc">@</span>fit<span class="sc">$</span>matcoef)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>coef_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">mu =</span> <span class="st">"μ"</span>, <span class="at">ar1 =</span> <span class="st">"φ₁"</span>, <span class="at">ar2 =</span> <span class="st">"φ₂"</span>, <span class="at">ar3 =</span> <span class="st">"φ₃"</span>, <span class="at">ma1 =</span> <span class="st">"θ₁"</span>, <span class="at">ma2 =</span> <span class="st">"θ₂"</span>,</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">omega =</span> <span class="st">"ω"</span>, <span class="at">alpha1 =</span> <span class="st">"α₁"</span>, <span class="at">beta1 =</span> <span class="st">"β₁"</span>)</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>mat_train <span class="ot">&lt;-</span> garch_train<span class="sc">$</span>fit<span class="sc">@</span>fit<span class="sc">$</span>matcoef</span>
@@ -1230,7 +1224,7 @@ Tabla&nbsp;6: Candidatos ARCH/GARCH estimados en la parte de estimación. Un mod
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">pct</span>(lr_full<span class="sc">$</span>long_run_vol), <span class="fu">pct</span>(<span class="fu">sqrt</span>(trading_days) <span class="sc">*</span> lr_full<span class="sc">$</span>long_run_vol, <span class="dv">1</span>)),</span>
 <span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Valor p "</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">num</span>(mat_full[, <span class="dv">4</span>], <span class="dv">3</span>), <span class="fu">rep</span>(<span class="st">""</span>, <span class="dv">4</span>)),</span>
 <span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-garch-coef" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1239,7 +1233,7 @@ Tabla&nbsp;7: GARCH(1,1) con media ARMA(3,0): coeficientes en la parte de estima
 </figcaption>
 <div aria-describedby="tbl-garch-coef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 43%">
 <col style="width: 13%">
@@ -1266,8 +1260,8 @@ Tabla&nbsp;7: GARCH(1,1) con media ARMA(3,0): coeficientes en la parte de estima
 </tr>
 <tr class="even">
 <td style="text-align: left;">φ₁</td>
-<td style="text-align: right;">0.05068</td>
-<td style="text-align: right;">0.192</td>
+<td style="text-align: right;">0.05067</td>
+<td style="text-align: right;">0.193</td>
 <td style="text-align: right;">0.01797</td>
 <td style="text-align: right;">0.557</td>
 </tr>
@@ -1275,14 +1269,14 @@ Tabla&nbsp;7: GARCH(1,1) con media ARMA(3,0): coeficientes en la parte de estima
 <td style="text-align: left;">φ₂</td>
 <td style="text-align: right;">0.01318</td>
 <td style="text-align: right;">0.723</td>
-<td style="text-align: right;">0.00778</td>
+<td style="text-align: right;">0.00777</td>
 <td style="text-align: right;">0.795</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">φ₃</td>
-<td style="text-align: right;">-0.01988</td>
+<td style="text-align: right;">-0.01990</td>
 <td style="text-align: right;">0.620</td>
-<td style="text-align: right;">-0.02665</td>
+<td style="text-align: right;">-0.02667</td>
 <td style="text-align: right;">0.386</td>
 </tr>
 <tr class="odd">
@@ -1294,16 +1288,16 @@ Tabla&nbsp;7: GARCH(1,1) con media ARMA(3,0): coeficientes en la parte de estima
 </tr>
 <tr class="even">
 <td style="text-align: left;">α₁</td>
-<td style="text-align: right;">0.14789</td>
+<td style="text-align: right;">0.14790</td>
 <td style="text-align: right;">0.002</td>
-<td style="text-align: right;">0.10467</td>
+<td style="text-align: right;">0.10473</td>
 <td style="text-align: right;">0.001</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">β₁</td>
-<td style="text-align: right;">0.62792</td>
+<td style="text-align: right;">0.62790</td>
 <td style="text-align: right;">0.000</td>
-<td style="text-align: right;">0.67310</td>
+<td style="text-align: right;">0.67292</td>
 <td style="text-align: right;">0.000</td>
 </tr>
 <tr class="even">
@@ -1351,7 +1345,7 @@ Tabla&nbsp;7: GARCH(1,1) con media ARMA(3,0): coeficientes en la parte de estima
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validation: parameters from the first 70%, scored on the last 30% of the window.</span></span>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validation: parameters from the first 70%, scored on the last 30% of the window.</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>val_paths <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">MA =</span> ma_sigma_w, <span class="at">EWMA =</span> ewma_train<span class="sc">$</span>sigma, <span class="at">RiskMetrics =</span> rm_sigma_w,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">DDEWMA =</span> dd_train<span class="sc">$</span>sigma, <span class="at">GARCH =</span> garch_train<span class="sc">$</span>sigma)</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>val_scores <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(val_paths, <span class="cf">function</span>(s) {</span>
@@ -1414,7 +1408,7 @@ Tabla&nbsp;7: GARCH(1,1) con media ARMA(3,0): coeficientes en la parte de estima
 <span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Cambio diario típico"</span> <span class="ot">=</span> <span class="fu">pct</span>(scores<span class="sc">$</span>stability, <span class="dv">1</span>),</span>
 <span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
 <span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Evaluamos cada modelo con los pronósticos de un paso: la volatilidad de cada sesión se calcula con la información al cierre anterior y con parámetros que no vieron esa sesión. Además de las cuatro pérdidas de clase, que miden el error sobre la varianza, reportamos la QLIKE en la forma que usa el material de ARCH/GARCH y dos medidas descriptivas,</p>
@@ -1431,7 +1425,7 @@ Tabla&nbsp;7: GARCH(1,1) con media ARMA(3,0): coeficientes en la parte de estima
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same sessions for every model: the first one with an MA(m*) forecast to the cut.</span></span>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same sessions for every model: the first one with an MA(m*) forecast to the cut.</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>info_sessions <span class="ot">&lt;-</span> <span class="fu">seq.int</span>(m_star <span class="sc">+</span> <span class="dv">1</span>, cut)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>garch_resid_train <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">as.numeric</span>(rugarch<span class="sc">::</span><span class="fu">residuals</span>(garch_train<span class="sc">$</span>fit)), <span class="fu">rep</span>(<span class="cn">NA</span>, n_w <span class="sc">-</span> cut))</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>info_k <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">MA =</span> <span class="dv">1</span>, <span class="at">EWMA =</span> <span class="dv">1</span>, <span class="at">DDEWMA =</span> <span class="dv">3</span>, <span class="at">GARCH =</span> <span class="fu">length</span>(cf_train))</span>
@@ -1451,7 +1445,7 @@ Tabla&nbsp;7: GARCH(1,1) con media ARMA(3,0): coeficientes en la parte de estima
 <span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co"># The conclusion picks the GARCH because it has the lowest AIC and BIC; the</span></span>
 <span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="co"># prose also reads the EWMA as the best predictive likelihood.</span></span>
 <span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(info<span class="sc">$</span>model[<span class="fu">which.min</span>(info<span class="sc">$</span>aic)] <span class="sc">==</span> <span class="st">"GARCH"</span>, info<span class="sc">$</span>model[<span class="fu">which.min</span>(info<span class="sc">$</span>bic)] <span class="sc">==</span> <span class="st">"GARCH"</span>,</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>          <span class="fu">names</span>(<span class="fu">which.max</span>(pred_ll)) <span class="sc">==</span> <span class="st">"EWMA"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>          <span class="fu">names</span>(<span class="fu">which.max</span>(pred_ll)) <span class="sc">==</span> <span class="st">"EWMA"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Antes de comparar pronósticos comparamos el ajuste de los cuatro modelos con el criterio que usamos para elegir los órdenes del GARCH. Para que sus verosimilitudes sean comparables las evaluamos todas con la densidad normal completa,</p>
@@ -1463,7 +1457,7 @@ Tabla&nbsp;7: GARCH(1,1) con media ARMA(3,0): coeficientes en la parte de estima
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Modelo =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"Promedio móvil (M"</span>, m_star, <span class="st">")"</span>), <span class="st">"EWMA"</span>, <span class="st">"DDEWMA"</span>, <span class="fu">paste0</span>(garch_choice, <span class="st">" con "</span>, arma_label)),</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">k =</span> info[models4, <span class="st">"k"</span>],</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Log-verosimilitud"</span> <span class="ot">=</span> <span class="fu">num</span>(info[models4, <span class="st">"loglik"</span>], <span class="dv">2</span>),</span>
@@ -1471,7 +1465,7 @@ Tabla&nbsp;7: GARCH(1,1) con media ARMA(3,0): coeficientes en la parte de estima
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">BIC =</span> <span class="fu">num</span>(info[models4, <span class="st">"bic"</span>], <span class="dv">2</span>),</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Log-verosimilitud predictiva"</span> <span class="ot">=</span> <span class="fu">num</span>(<span class="fu">unname</span>(pred_ll[models4]), <span class="dv">2</span>),</span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">NULL</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-info" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1480,7 +1474,7 @@ Tabla&nbsp;8: Log-verosimilitud normal, AIC y BIC de los cuatro modelos en las m
 </figcaption>
 <div aria-describedby="tbl-info-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 26%">
 <col style="width: 3%">
@@ -1547,11 +1541,11 @@ Tabla&nbsp;8: Log-verosimilitud normal, AIC y BIC de los cuatro modelos en las m
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">score_table</span>(val_scores, <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"Promedio móvil (M"</span>, m_star, <span class="st">")"</span>),</span>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">score_table</span>(val_scores, <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"Promedio móvil (M"</span>, m_star, <span class="st">")"</span>),</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">paste0</span>(<span class="st">"EWMA (λ = "</span>, <span class="fu">num</span>(ewma_train<span class="sc">$</span>lambda, <span class="dv">3</span>), <span class="st">")"</span>),</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">"EWMA RiskMetrics (λ = 0.94)"</span>,</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">paste0</span>(<span class="st">"DDEWMA (α = "</span>, <span class="fu">num</span>(dd_train<span class="sc">$</span>alpha, <span class="dv">3</span>), <span class="st">")"</span>),</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">paste0</span>(garch_choice, <span class="st">" con "</span>, arma_label))))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">paste0</span>(garch_choice, <span class="st">" con "</span>, arma_label))))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-validation" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1560,7 +1554,7 @@ Tabla&nbsp;9: Pérdidas de los pronósticos en las 434 sesiones de evaluación, 
 </figcaption>
 <div aria-describedby="tbl-validation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 23%">
 <col style="width: 9%">
@@ -1628,7 +1622,7 @@ Tabla&nbsp;9: Pérdidas de los pronósticos en las 434 sesiones de evaluación, 
 <td style="text-align: left;">GARCH(1,1) con ARMA(3,0)</td>
 <td style="text-align: right;">5.866</td>
 <td style="text-align: right;">4.120</td>
-<td style="text-align: right;">3,990.1</td>
+<td style="text-align: right;">3,989.9</td>
 <td style="text-align: right;">-6.922</td>
 <td style="text-align: right;">0.939</td>
 <td style="text-align: right;">1.27</td>
@@ -1651,7 +1645,7 @@ Tabla&nbsp;9: Pérdidas de los pronósticos en las 434 sesiones de evaluación, 
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>oct_daily <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>oct_daily <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Fecha =</span> <span class="fu">format</span>(d_all[oct], <span class="st">"%d/%m/%Y"</span>),</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Rendimiento =</span> <span class="fu">pct</span>(r_all[oct]),</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Realizada |r|"</span> <span class="ot">=</span> <span class="fu">pct</span>(<span class="fu">abs</span>(r_all[oct])),</span>
@@ -1667,7 +1661,7 @@ Tabla&nbsp;9: Pérdidas de los pronósticos en las 434 sesiones de evaluación, 
 <span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">DDEWMA =</span> <span class="fu">pct</span>(oct_model_vol[[<span class="st">"DDEWMA"</span>]]), <span class="at">GARCH =</span> <span class="fu">pct</span>(oct_model_vol[[<span class="st">"GARCH"</span>]]),</span>
 <span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
 <span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(oct_daily)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(oct_daily)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-oct-daily" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1676,7 +1670,7 @@ Tabla&nbsp;10: Volatilidad realizada y estimada por cada modelo en cada sesión 
 </figcaption>
 <div aria-describedby="tbl-oct-daily-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 13%">
 <col style="width: 14%">
@@ -1897,7 +1891,7 @@ Tabla&nbsp;10: Volatilidad realizada y estimada por cada modelo en cada sesión 
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>oct_long <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(models4, <span class="cf">function</span>(k) {</span>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>oct_long <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(models4, <span class="cf">function</span>(k) {</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">date =</span> d_all[oct], <span class="at">modelo =</span> k, <span class="at">sigma =</span> oct_paths[[k]][oct])</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>}))</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>oct_long<span class="sc">$</span>modelo <span class="ot">&lt;-</span> <span class="fu">factor</span>(oct_long<span class="sc">$</span>modelo, <span class="at">levels =</span> models4)</span>
@@ -1909,7 +1903,7 @@ Tabla&nbsp;10: Volatilidad realizada y estimada por cada modelo en cada sesión 
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"1 week"</span>, <span class="at">date_labels =</span> <span class="st">"%d %b"</span>) <span class="sc">+</span></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(<span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Volatilidad diaria"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-oct" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Las cuatro estimaciones se mueven entre 1.8% y 2.9%, mientras la volatilidad realizada salta entre 0.2% y 6.7%; tras el salto del 20 de octubre el GARCH sube con más fuerza que los demás y regresa en pocos días." data-fig-align="center">
@@ -1927,10 +1921,10 @@ Figura&nbsp;4: Volatilidad diaria estimada por cada modelo y volatilidad realiza
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">score_table</span>(oct_scores, <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"Promedio móvil (M"</span>, m_star, <span class="st">")"</span>),</span>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">score_table</span>(oct_scores, <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"Promedio móvil (M"</span>, m_star, <span class="st">")"</span>),</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">paste0</span>(<span class="st">"EWMA (λ = "</span>, <span class="fu">num</span>(ewma_full<span class="sc">$</span>lambda, <span class="dv">3</span>), <span class="st">")"</span>),</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">paste0</span>(<span class="st">"DDEWMA (α = "</span>, <span class="fu">num</span>(dd_full<span class="sc">$</span>alpha, <span class="dv">3</span>), <span class="st">")"</span>),</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">paste0</span>(garch_choice, <span class="st">" con "</span>, arma_label))))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">paste0</span>(garch_choice, <span class="st">" con "</span>, arma_label))))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-oct-scores" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1939,7 +1933,7 @@ Tabla&nbsp;11: Pérdidas de los pronósticos en las 20 sesiones del 5 de octubre
 </figcaption>
 <div aria-describedby="tbl-oct-scores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 21%">
 <col style="width: 9%">
@@ -2019,7 +2013,7 @@ Tabla&nbsp;11: Pérdidas de los pronósticos en las 20 sesiones del 5 de octubre
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Months of the evaluation part: realised volatility against each model's mean forecast.</span></span>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Months of the evaluation part: realised volatility against each model's mean forecast.</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>by_month <span class="ot">&lt;-</span> <span class="fu">vol_by_month</span>(d_w[test], r_w[test], <span class="fu">lapply</span>(val_paths[models4], <span class="cf">function</span>(s) s[test]))</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>capture <span class="ot">&lt;-</span> <span class="fu">capture_ratios</span>(by_month, models4)</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -2052,13 +2046,13 @@ Tabla&nbsp;11: Pérdidas de los pronósticos en las 20 sesiones del 5 de octubre
 <span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(summary_table)[<span class="fu">which.max</span>(summary_table<span class="sc">$</span>stab_oct)] <span class="sc">==</span> <span class="st">"GARCH"</span>,</span>
 <span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(summary_table)[<span class="fu">which.max</span>(summary_table<span class="sc">$</span>bias_oct)] <span class="sc">==</span> <span class="st">"DDEWMA"</span>,</span>
 <span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>(summary_table<span class="sc">$</span>bias_oct, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">2</span>] <span class="sc">==</span> summary_table[<span class="st">"GARCH"</span>, <span class="st">"bias_oct"</span>]</span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Modelo =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"Promedio móvil (M"</span>, m_star, <span class="st">")"</span>), <span class="st">"EWMA"</span>, <span class="st">"DDEWMA"</span>, garch_choice),</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Captura, meses volátiles"</span> <span class="ot">=</span> <span class="fu">num</span>(summary_table<span class="sc">$</span>high, <span class="dv">2</span>),</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Captura, resto"</span> <span class="ot">=</span> <span class="fu">num</span>(summary_table<span class="sc">$</span>other, <span class="dv">2</span>),</span>
@@ -2069,7 +2063,7 @@ Tabla&nbsp;11: Pérdidas de los pronósticos en las 20 sesiones del 5 de octubre
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Sesgo, evaluación"</span> <span class="ot">=</span> <span class="fu">num</span>(summary_table<span class="sc">$</span>bias_val, <span class="dv">2</span>),</span>
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Sesgo, octubre"</span> <span class="ot">=</span> <span class="fu">num</span>(summary_table<span class="sc">$</span>bias_oct, <span class="dv">2</span>),</span>
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -2078,7 +2072,7 @@ Tabla&nbsp;12: Resumen de las cuatro preguntas. Captura: cociente entre la varia
 </figcaption>
 <div aria-describedby="tbl-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 11%">
 <col style="width: 13%">
@@ -2160,7 +2154,7 @@ Tabla&nbsp;12: Resumen de las cuatro preguntas. Captura: cociente entre la varia
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>month_long <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(models4, <span class="cf">function</span>(k) {</span>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>month_long <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(models4, <span class="cf">function</span>(k) {</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">month =</span> <span class="fu">as.Date</span>(<span class="fu">paste0</span>(by_month<span class="sc">$</span>month, <span class="st">"-01"</span>)), <span class="at">modelo =</span> k, <span class="at">sigma =</span> by_month[[k]])</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>}))</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>month_long<span class="sc">$</span>modelo <span class="ot">&lt;-</span> <span class="fu">factor</span>(month_long<span class="sc">$</span>modelo, <span class="at">levels =</span> models4)</span>
@@ -2175,7 +2169,7 @@ Tabla&nbsp;12: Resumen de las cuatro preguntas. Captura: cociente entre la varia
 <span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(<span class="at">accuracy =</span> <span class="fl">0.1</span>)) <span class="sc">+</span></span>
 <span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Volatilidad diaria del mes"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>,</span>
 <span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"Línea negra: volatilidad realizada (raíz del promedio de r² del mes)."</span>) <span class="sc">+</span></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-months" class="quarto-float quarto-figure quarto-figure-center anchored" alt="La volatilidad realizada oscila entre 1.3% y 2.7% mensual; en los meses más volátiles el promedio móvil y el EWMA quedan por debajo, y el GARCH y el DDEWMA más cerca; en los meses tranquilos estos dos quedan por encima." data-fig-align="center">
@@ -2194,7 +2188,7 @@ Figura&nbsp;5: Volatilidad realizada de cada mes de la parte de evaluación y vo
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>shock_long <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(models4, <span class="cf">function</span>(k) {</span>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>shock_long <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(models4, <span class="cf">function</span>(k) {</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">date =</span> d_w[shock_window], <span class="at">modelo =</span> k, <span class="at">sigma =</span> val_paths[[k]][shock_window])</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>}))</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>shock_long<span class="sc">$</span>modelo <span class="ot">&lt;-</span> <span class="fu">factor</span>(shock_long<span class="sc">$</span>modelo, <span class="at">levels =</span> models4)</span>
@@ -2206,7 +2200,7 @@ Figura&nbsp;5: Volatilidad realizada de cada mes de la parte de evaluación y vo
 <span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"2 weeks"</span>, <span class="at">date_labels =</span> <span class="st">"%d %b %Y"</span>) <span class="sc">+</span></span>
 <span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">0.12</span>, <span class="at">by =</span> <span class="fl">0.02</span>), <span class="at">labels =</span> <span class="fu">label_percent</span>(<span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
 <span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Volatilidad diaria"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>, <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">30</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>, <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">30</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-shock" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Antes del choque los cuatro modelos están cerca de 2%. El GARCH salta a 10% al día siguiente y en una semana regresa a 3%; el promedio móvil y el EWMA suben a 4.5% y se quedan altos durante semanas; el DDEWMA sube menos, a 3%, y también se queda alto. El promedio móvil cae de golpe cuando el choque sale de su ventana." data-fig-align="center">
@@ -2240,7 +2234,7 @@ Figura&nbsp;6: Respuesta de cada modelo al choque del 5 de octubre de 2023 y a l
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>position <span class="ot">&lt;-</span> config<span class="sc">$</span>var<span class="sc">$</span>position_mxn</span>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>position <span class="ot">&lt;-</span> config<span class="sc">$</span>var<span class="sc">$</span>position_mxn</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>next_sigma <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">MA =</span> ma_next, <span class="at">EWMA =</span> ewma_full<span class="sc">$</span>next_sigma, <span class="at">DDEWMA =</span> dd_full<span class="sc">$</span>next_sigma,</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">GARCH =</span> garch_full<span class="sc">$</span>next_sigma)</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>var_95 <span class="ot">&lt;-</span> <span class="fu">class_var</span>(next_sigma, position, <span class="fl">0.95</span>)</span>
@@ -2248,20 +2242,20 @@ Figura&nbsp;6: Respuesta de cada modelo al choque del 5 de octubre de 2023 y a l
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Multi-step forecasts from the last close: flat for the three smoothers, mean-reverting for GARCH.</span></span>
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>garch_term <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(lr_full<span class="sc">$</span>long_run_variance <span class="sc">+</span></span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                     lr_full<span class="sc">$</span>persistence<span class="sc">^</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">20</span>) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>                       (garch_full<span class="sc">$</span>next_sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> lr_full<span class="sc">$</span>long_run_variance))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>                       (garch_full<span class="sc">$</span>next_sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> lr_full<span class="sc">$</span>long_run_variance))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Ninguno de los cuatro modelos domina a los demás, y la razón está en la forma del riesgo de GAPB. Entre 2021 y 2026 su volatilidad se movió por saltos ligados a información puntual, como el frente regulatorio de 2023 o el reporte del tercer trimestre de 2026, más que por rachas prolongadas: la prueba ARCH-LM solo detecta agrupación con pocos rezagos y antes del episodio de 2023, el GARCH estima una persistencia de 0.78 con una vida media de 2.8 sesiones, y el promedio móvil más largo de la malla es el que mejor pronostica. En ese entorno, los modelos de memoria larga, el promedio móvil M40 y el EWMA con <span class="math inline">\(\hat\lambda=0.980\)</span>, son los mejores pronosticadores promedio y los más estables, pero llegan tarde a los meses turbulentos y subestiman su varianza entre 20% y 25%. Los de memoria corta, el GARCH(1,1) y el DDEWMA, capturan esos meses y reaccionan antes a un choque, a cambio de sobreestimar la volatilidad en los periodos tranquilos y de depender de parámetros menos estables.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Modelo =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"Promedio móvil (M"</span>, m_star, <span class="st">")"</span>), <span class="st">"EWMA"</span>, <span class="st">"DDEWMA"</span>, garch_choice),</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Volatilidad diaria"</span> <span class="ot">=</span> <span class="fu">pct</span>(next_sigma),</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VaR 95% (MXN)"</span> <span class="ot">=</span> <span class="fu">fmt_mxn</span>(var_95),</span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VaR 99% (MXN)"</span> <span class="ot">=</span> <span class="fu">fmt_mxn</span>(var_99),</span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-decision" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -2270,7 +2264,7 @@ Tabla&nbsp;13: Volatilidad pronosticada para el 5 de noviembre de 2026 con datos
 </figcaption>
 <div aria-describedby="tbl-decision-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 30%">
 <col style="width: 27%">
@@ -2317,6 +2311,7 @@ Tabla&nbsp;13: Volatilidad pronosticada para el 5 de noviembre de 2026 con datos
 </figure>
 </div>
 </div>
+<p>Conviene aclarar qué sustenta la elección que sigue y qué no. No se apoya en una mayor precisión promedio fuera de muestra: en las 434 sesiones de evaluación el RMSE del GARCH es 2.2% mayor que el del EWMA, y el EWMA también obtiene las dos QLIKE más bajas, aunque con diferencias pequeñas. La decisión descansa, por tanto, en otros criterios: el ajuste dentro de muestra, la cobertura de los meses volátiles, la reacción a los saltos y la estructura a varios horizontes, que se detallan a continuación.</p>
 <p>Desde una perspectiva financiera elegimos el <strong>GARCH(1,1) con media ARMA(3,0)</strong> como modelo de riesgo, por cuatro razones. La primera es estadística: es el modelo con menor AIC y menor BIC de los cuatro, con una ventaja de 54.7 y 25.5 puntos sobre el EWMA, el mismo criterio con el que elegimos sus órdenes. La segunda es la asimetría de los errores: para fijar límites, márgenes o capital, subestimar la volatilidad en un periodo turbulento cuesta más que sobreestimarla en uno tranquilo, y el GARCH y el DDEWMA son los únicos que cubrieron los meses volátiles, con 0.94 y 1.04 de la varianza realizada contra 0.75 del EWMA, y los que menos subestimaron en octubre. La tercera es la reacción, que decide entre esos dos: el riesgo de GAPB llega en saltos, y el GARCH es el único que tras un salto eleva su estimación en proporción al choque, 3.9 veces en 2023 contra 1.6 del DDEWMA, que amortigua los extremos al trabajar con valores absolutos, y la normaliza en días, sin el escalón artificial del promedio móvil ni la dependencia del DDEWMA respecto de un factor de escala que cambia con las colas. La cuarta es el horizonte. Los otros tres modelos, al no tener un nivel de largo plazo, extienden a cualquier plazo la estimación de la sesión siguiente, mientras que el GARCH revierte hacia su nivel de largo plazo, <span class="math inline">\(\sigma_{t+h}^2=\bar\sigma^2+(\alpha_1+\beta_1)^{h-1}\left(\sigma_{t+1}^2-\bar\sigma^2\right)\)</span>, de 2.07% para la sesión siguiente a 2.12% a 20 sesiones, la estructura temporal que necesitará el VaR a varios días de la quinta entrega. Con datos al 4 de noviembre de 2026, el modelo pronostica una volatilidad de 2.07% para el 5 de noviembre de 2026, que implica un VaR al 95% de $3,402 por cada $100,000 invertidos (<a href="#tbl-decision" class="quarto-xref">Tabla&nbsp;13</a>).</p>
 <p>La elección viene con tres condiciones que se desprenden del propio análisis. El GARCH debe re-estimarse periódicamente y con varios puntos de partida, porque su verosimilitud tiene dos máximos y una estimación descuidada puede multiplicar su memoria. Su volatilidad no basta para fijar el cuantil de pérdida: la curtosis de 17.5 de sus residuos indica que el VaR normal subestimará las pérdidas extremas, por lo que en la quinta entrega debe contrastarse con métodos que respeten las colas observadas. Por último, conviene mantener el EWMA con <span class="math inline">\(\hat\lambda\)</span> como referencia de control, porque es el pronosticador promedio más preciso y estable y el de mayor verosimilitud predictiva fuera de muestra, y una divergencia persistente entre ambos modelos es en sí misma una señal de que el régimen de volatilidad está cambiando.</p>
 </section>
@@ -2411,14 +2406,13 @@ Ruiz Hernández, M. del R. (2026d). <em>Verosimilitud: estimación del parámetr
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
