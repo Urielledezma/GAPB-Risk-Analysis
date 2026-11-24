@@ -283,7 +283,7 @@ synced folder.
 - [x] Stage 02 — price path, drawdowns and documented event interpretation
 - [x] Stage 03 — return distribution and GBM projection
 - [x] Stage 04 — conditional variance models and out-of-sample evaluation
-- [ ] Stage 05 — portfolio VaR, Expected Shortfall and optimisation
+- [x] Stage 05 — portfolio VaR, Expected Shortfall and optimisation
 - [ ] Research article
 - [ ] Render-in-CI once the dependency lockfile is stable
 
@@ -303,7 +303,9 @@ the resulting HTML is written to `outputs/submission/`.
 Stage 03 estimates on the whole trading history up to the hard cut-off,
 **2006-02-27 to 2025-12-31** (`gbm.estimation_start` and `sample.end` in
 `params.yml`). The professor confirmed on 2026-10-15 that the whole history
-applies to Part 3 only; stages 04 and 05 keep `sample.start`, 2021 to 2025.
+was specified for Part 3. Stage 04 uses its own model window. The final Part 5
+assignment calls for the full common equity history for historical simulation
+and the latest six calendar months for the covariance estimate.
 Its descriptive section runs from 2021 to the last session of the snapshot
 (`data/processed/prices_provenance.csv` records it), and the 2026 prices serve as out-of-sample
 evidence for the projections, which start from the 2025-12-31 close. Every
@@ -334,6 +336,17 @@ lower one. Every ranking the prose states is guarded with `stopifnot`, so a refr
 that flips one fails the render instead of publishing a sentence the numbers no longer
 support. Render its Canvas deliverable with
 `quarto render reports/04-variance-models.qmd --profile submission`.
+
+Stage 05 values six equal MXN 100,000 positions at the **2026-11-23 close**.
+Its separate Yahoo snapshot (`data/processed/stage05_prices.csv`) retains
+the series behind the earlier deliveries. From the project root, run
+`Rscript analysis/07_stage05_prices.R` to retrieve the fixed-date sample,
+or use the saved data to render offline. The report evaluates one-day risk
+on 2026 sessions using prior observations only, and the historical scenarios
+revalue fixed holdings at each horizon. The minimum-VaR allocation uses the
+six-month covariance, while the individual GAPB estimates resample daily returns.
+Render the website page with `quarto render reports/05-value-at-risk.qmd`
+and the Canvas file with `quarto render reports/05-value-at-risk.qmd --profile submission`.
 
 ---
 

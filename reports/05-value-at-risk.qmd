@@ -1,250 +1,328 @@
 ---
-title: "Valor en Riesgo y *Expected Shortfall*"
-subtitle: "Cartera de seis emisoras: estimación, backtesting y optimización"
+title: "Valor en riesgo de una cartera de seis acciones mexicanas"
+subtitle: "Proyecto Final · Parte 5 | Simulación histórica, varianza-covarianza y evaluación diaria"
 author:
   - "Santiago Álvarez Tostado Estrada"
   - "Francisco Uriel Ledezma Chávez"
   - "Jorge Isaac López Ávila"
   - "Juan Pablo Morán Errejón"
-date: last-modified
+date: 2026-11-24
 date-format: "D [de] MMMM [de] YYYY"
+format:
+  html:
+    html-math-method: mathml
 ---
 
-```{r setup}
+```{r}
+#| label: setup
 #| include: false
 source("_setup.R")
+prices <- read_processed("stage05_prices")
+p5 <- stage05_portfolio(prices)
+px <- p5$prices
+ret <- p5$asset_returns
+w <- p5$weights
+S0 <- p5$value
+Sigma <- p5$covariance
+cutoff <- p5$as_of
+port_ret <- p5$daily$portfolio_return
+holds <- p5$holdings
+hold_display <- data.frame(Emisora = holds$ticker, Cierre = round(holds$price, 2),
+                           Títulos = round(holds$shares, 3), Peso = fmt_pct(w),
+                           Inversión = fmt_mxn(holds$value), row.names = NULL)
+wide_risk <- function(field, scenarios = FALSE) {
+  spec <- params()$var
+  out <- data.frame(Sesiones = spec$horizons_days)
+  if (scenarios) out$Escenarios <- p5$risk$n[!duplicated(p5$risk$horizon)]
+  for (c in spec$confidence) {
+    out[[fmt_pct(c, if (c == 0.975) 1 else 0)]] <- fmt_mxn(p5$risk[[field]][p5$risk$confidence == c])
+  }
+  out
+}
+hist_display <- wide_risk("historical_var_mxn", TRUE)
+param_display <- wide_risk("normal_var_mxn")
+one <- subset(p5$risk, horizon == 1)
+one_hist <- one$historical_var_mxn
+one_param <- one$normal_var_mxn
+es_basket <- one$historical_es_mxn[one$confidence == .99]
+last_h <- subset(p5$risk, horizon == 20 & confidence == .99)
+h20 <- last_h$historical_var_mxn
+p20 <- last_h$normal_var_mxn
+sigma_daily <- p5$sigma_daily
+n_recent <- length(p5$cov_dates)
+first_recent <- min(p5$cov_dates)
+recent_pnl <- p5$daily$pnl_mxn[p5$daily$date %in% p5$cov_dates]
+recent_hist99 <- -unname(quantile(recent_pnl, .01))
+covg <- p5$coverage
+bt_start <- min(p5$backtest$date)
+bt_end <- max(p5$backtest$date)
+bt_n <- length(unique(p5$backtest$date))
+bt_display <- data.frame(Confianza = fmt_pct(covg$confidence, 1),
+                         Modelo = ifelse(covg$method == "normal", "Normal", "Histórico"),
+                         Observadas = covg$observed_breaches, Esperadas = round(covg$expected_breaches, 2),
+                         Frecuencia = fmt_pct(covg$breach_rate), "p de Kupiec" = round(covg$p_value, 3),
+                         check.names = FALSE)
+bt99 <- subset(bt_display, Confianza == "99.0%")
+bt_worst <- subset(p5$backtest, confidence == .99)
+bt_worst <- bt_worst[bt_worst$pnl_mxn == min(bt_worst$pnl_mxn), ]
+oct_limits <- subset(p5$backtest, confidence == .99 &
+                       date %in% as.Date(c("2026-10-20", "2026-10-21")))
+oct_normal <- oct_limits$var_mxn[oct_limits$method == "normal"]
+oct_hist <- oct_limits$var_mxn[oct_limits$method == "historical"]
+bt_interpretation <- sprintf("Al 99%%, el histórico registró %d violación y el normal %d frente a %.2f esperadas.",
+                             bt99$Observadas[bt99$Modelo == "Histórico"],
+                             bt99$Observadas[bt99$Modelo == "Normal"], bt_n * .01)
+more_hist <- sum(p5$risk$historical_var_mxn > p5$risk$normal_var_mxn)
+conservative_summary <- sprintf("En %d de las %d comparaciones, la reserva histórica es mayor.", more_hist, nrow(p5$risk))
+event_dates <- as.character(p5$cases$date[endsWith(p5$cases$case, "_subject_abs_max")])
+stopifnot(identical(event_dates, c("2023-10-05", "2026-10-20")))
+events <- ret[event_dates, , drop = FALSE]
+event_gap <- S0 * w[subject()] * events[, subject()]
+event_total <- as.numeric(S0 * events %*% w)
+event_display <- data.frame(Fecha = rownames(events), GAPB = round(event_gap),
+                            "Otras cinco" = round(event_total - event_gap),
+                            Cartera = round(event_total), check.names = FALSE, row.names = NULL)
 ```
 
-<dl class="report-meta" aria-label="Ficha técnica del reporte">
-<div><dt>Fuente de datos</dt><dd>Yahoo Finance / BMV para seis emisoras</dd></div>
-<div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>
-<div><dt>Moneda</dt><dd>MXN; pérdidas y rendimientos de cartera</dd></div>
-<div><dt>Periodo cubierto</dt><dd>`r fecha_es(max(snapshot_manifest()$first))`–`r fecha_es(max(snapshot_manifest()$last))`</dd></div>
+<dl class="report-meta" aria-label="Ficha técnica">
+<div><dt>Fuente de precios</dt><dd>Yahoo Finance · BMV</dd></div>
+<div><dt>Fecha de valuación</dt><dd>`r fecha_es(cutoff)`</dd></div>
+<div><dt>Capital inicial</dt><dd>`r fmt_mxn(S0)` MXN</dd></div>
+<div><dt>Horizontes</dt><dd>1, 5, 10 y 20 sesiones</dd></div>
 </dl>
-
-```{r data}
-#| include: false
-prices <- read_dataset("prices_daily")
-returns <- read_dataset("returns_daily")
-
-matrix_returns <- returns_matrix(returns)
-portfolio <- build_portfolio(prices)
-portfolio_r <- portfolio_returns(matrix_returns, portfolio$weights)
-```
 
 ## Introducción
 
-::: {.callout-important title="Pendiente de redacción"}
-Qué se estima y con qué propósito.
-:::
+El 5 de octubre de 2023, una noticia sobre la regulación tarifaria de los aeropuertos coincidió con una caída de más de una quinta parte del valor de GAPB [@gaptariff2023initial]. Para quien tiene seis acciones mexicanas, la consecuencia depende de dos cantidades observables: cuánto capital tenía expuesto a GAPB y qué hicieron las otras cinco emisoras ese día. Esa distinción entre riesgo de la emisora y riesgo de la cartera guía nuestra estimación.
 
-## Construcción de la cartera
+Valuamos seis posiciones iguales y calculamos cuánto podrían perder en una sesión, una semana, dos semanas y un mes bursátil. Para cada horizonte comparamos los movimientos conjuntos observados a lo largo de la historia con los que implica una distribución normal calibrada a los últimos seis meses. Después ponemos a prueba los límites diarios con datos de 2026, medimos cuánto cambia el riesgo al redistribuir el capital y examinamos por separado la pérdida media de GAPB en su peor 1% de escenarios.
 
-La cartera invierte `r fmt_mxn(params()$var$position_mxn)` en cada una de las
-seis emisoras. Son pesos iguales en **monto**, no en número de acciones: las
-seis cotizan a niveles de precio muy distintos y una cartera de cien acciones de
-cada una sería una apuesta concentrada en la más cara.
+## Construcción del portafolio
 
-La @tbl-portfolio presenta la composición monetaria inicial.
+Asignamos $100,000 MXN a cada emisora. Al cierre del `r fecha_es(cutoff)` esa inversión equivale a dividir $100,000 entre el precio de cierre de cada acción, por lo que admitimos títulos fraccionarios para mantener exactamente la sexta parte del capital en cada posición. Con cien títulos por emisora la inversión sumaría `r fmt_mxn(100 * sum(holds$price))`, por lo que usamos los montos equitativos que fija la indicación de construcción. La @tbl-hold presenta los títulos redondeados para lectura. En la valuación conservamos la precisión completa, de modo que $S_0=\sum_i q_iP_{i,0}=$ `r fmt_mxn(S0)`.
 
 ```{r}
-#| label: tbl-portfolio
-report_table(
-  portfolio$holdings,
-  caption = paste0("Composición inicial al ", portfolio$as_of, ".")
-)
+#| label: tbl-hold
+#| tbl-cap: "Posiciones iniciales al cierre de valuación. Importes en MXN."
+report_table(hold_display, digits = 3)
 ```
 
-El valor inicial de la cartera es $S_0 =$ `r fmt_mxn(portfolio$value)`.
+Usamos cierres ajustados para medir cambios proporcionales, pues así un dividendo o un desdoblamiento no aparece como una pérdida mecánica. El rendimiento diario de esta cartera es $R_{p,t}=\sum_i w_i(P^a_{i,t}/P^a_{i,t-1}-1)$, con los pesos iniciales $w_i=1/6$. Cada día histórico responde a la misma pregunta: cuánto ganaría o perdería **la cartera actual** si se repitiera ese movimiento conjunto. Con posiciones fijas durante un escenario de varios días, el peso de cada emisora puede cambiar dentro de ese horizonte.
 
-## VaR no paramétrico: simulación histórica
+Los cierres diarios proceden de Yahoo Finance para las seis series de la BMV. La primera observación diaria conjunta corresponde al `r fecha_es(min(as.Date(rownames(ret))))`. Disponemos de `r nrow(ret)` rendimientos diarios completos, con un promedio de `r fmt_pct(mean(port_ret),3)`, una desviación estándar de `r fmt_pct(sd(port_ret))` y un rendimiento de `r fmt_pct(tail(port_ret,1))` en la última sesión. El inicio depende de la historia disponible de Banco del Bajío. Conservamos el calendario y exigimos precios para las seis emisoras en ambos extremos de cada escenario.
 
-El cuantil se lee directamente de la distribución empírica, sin suponer ninguna
-forma funcional, de modo que las colas pesadas y la asimetría se arrastran tal
-como la muestra las exhibe.
+## VaR por simulación histórica
 
-La @tbl-var-hist cuantifica los escenarios y la @fig-var sitúa visualmente los
-umbrales sobre la distribución de pérdidas y ganancias.
+Revaluamos las seis posiciones con bloques de $h$ sesiones consecutivas. Para cada fecha con ambos cierres disponibles calculamos la ganancia o pérdida $\mathrm{PyG}_{t,h}=S_0\sum_i w_i(P^a_{i,t}/P^a_{i,t-h}-1)$ y tomamos el cuantil inferior de su distribución. Al mantener juntas las seis variaciones de cada fecha conservamos tanto las caídas individuales como las jornadas en que varias emisoras perdieron al mismo tiempo. Usamos todos los bloques disponibles, incluidos los traslapados, por lo que dos escenarios contiguos a veinte días comparten diecinueve sesiones y aportan menos información independiente que dos episodios distintos.
 
 ```{r}
-#| label: tbl-var-hist
-grid <- expand.grid(
-  confidence = params()$var$confidence,
-  horizon = params()$var$horizons_days
-)
-hist_var <- do.call(rbind, lapply(seq_len(nrow(grid)), function(i) {
-  var_historical(portfolio_r, grid$confidence[i], grid$horizon[i], portfolio$value)
-}))
-report_table(hist_var, caption = "VaR por simulación histórica.", digits = 2)
+#| label: tbl-hist
+#| tbl-cap: "Pérdida histórica por horizonte y confianza, en MXN. Un importe positivo indica pérdida."
+report_table(hist_display, digits = 0)
 ```
 
 ```{r}
-#| label: fig-var
-#| fig-cap: "Distribución de pérdidas y ganancias diarias de la cartera, con el VaR a un día."
-pnl <- portfolio$value * (exp(portfolio_r) - 1)
-cuts <- vapply(params()$var$confidence, function(c) {
-  -var_historical(portfolio_r, c, 1, portfolio$value)$var_currency
-}, numeric(1))
-cut_labels <- data.frame(
-  confidence = paste0(100 * params()$var$confidence, "%"),
-  value = cuts,
-  stringsAsFactors = FALSE
-)
-
-ggplot(data.frame(pnl = pnl), aes(pnl)) +
-  geom_histogram(bins = 100, fill = RISK_PALETTE[1], alpha = 0.7) +
-  geom_vline(
-    data = cut_labels, aes(xintercept = value, colour = confidence),
-    linewidth = 0.6
-  ) +
-  scale_colour_manual(values = unname(RISK_PALETTE[c(2, 4, 6)])) +
-  scale_x_continuous(labels = label_dollar(prefix = "$")) +
-  labs(
-    x = "Pérdida / ganancia diaria (MXN)", y = "Frecuencia",
-    caption = "Líneas verticales: VaR a un día por nivel de confianza."
-  )
+#| label: fig-hist
+#| fig-cap: "Ganancias y pérdidas a un día para la cartera de $600,000. Las líneas identifican los cuantiles de la cola izquierda."
+#| fig-alt: "Histograma de resultados diarios en pesos con un panel inferior que amplía la cola de pérdidas y marca los tres límites."
+#| fig-height: 6
+pnl <- S0 * port_ret
+marks <- -one_hist
+op <- par(mfrow = c(2, 1), mar = c(3.7, 4.3, 2, 1), mgp = c(2, 0.6, 0))
+bins <- hist(pnl, breaks = 95, plot = FALSE)
+for (zoom in c(FALSE, TRUE)) {
+  xr <- if (zoom) range(c(marks * 1.35, 0)) else range(bins$breaks)
+  yr <- if (zoom) max(bins$counts[bins$mids >= xr[1] & bins$mids <= min(marks[1] * 0.65, 0)]) else max(bins$counts)
+  if (zoom) xr[2] <- marks[1] * 0.65
+  plot(bins, xlim = xr, ylim = c(0, yr * 1.12), col = "#bad4df",
+       border = "white", main = if (zoom) "Detalle de la cola izquierda" else "Distribución completa",
+       xlab = if (zoom) "Pérdida (−) / ganancia (+), MXN" else "", ylab = "Sesiones")
+  abline(v = marks, lty = 1:3, lwd = 2, col = "#113f55")
+  if (!zoom) legend("topright", legend = c("95%", "97.5%", "99%"),
+                    lty = 1:3, lwd = 2, col = "#113f55", bty = "n", cex = .9)
+}
+par(op)
 ```
+
+Al 99%, el límite diario es `r fmt_mxn(one_hist[3])`. En la @fig-hist las sesiones a la izquierda de esa línea muestran por qué el importe reservado para cubrir una pérdida poco frecuente puede resultar insuficiente: en esa cola la pérdida media, o *Expected Shortfall* histórico de la cartera, alcanza `r fmt_mxn(es_basket)`, y la mayor pérdida observada fue de `r fmt_mxn(-min(pnl))` el `r fecha_es(as.Date(rownames(ret)[which.min(pnl)]))`. El VaR mide dónde empieza la cola y el ES cuantifica la exposición media una vez dentro de ella.
 
 ## VaR paramétrico
 
-Bajo normalidad, con $\Sigma$ la matriz de covarianzas y $w$ el vector de pesos:
-
-$$
-\sigma_p = \sqrt{w' \Sigma\, w}
-\qquad
-\text{VaR}_{h} = S_0\left(1 - e^{\,z_{1-c}\,\sigma_p\sqrt{h}}\right)
-$$
-
-El escalamiento por $\sqrt{h}$ supone independencia serial: la varianza crece
-linealmente en el tiempo y la desviación estándar con su raíz.
-
-La @tbl-var-param resume el VaR paramétrico y la @tbl-cov documenta la
-estructura de correlaciones utilizada.
-
-```{r}
-#| label: tbl-var-param
-covariance <- covariance_matrix(matrix_returns)
-sigma_p <- portfolio_sigma(portfolio$weights, covariance)
-
-param_var <- do.call(rbind, lapply(seq_len(nrow(grid)), function(i) {
-  var_parametric(sigma_p, grid$confidence[i], grid$horizon[i], portfolio$value)
-}))
-report_table(param_var, caption = "VaR paramétrico (varianza-covarianza).", digits = 2)
-```
+Estimamos la volatilidad diaria de cada acción con la desviación estándar de sus rendimientos en los seis meses de calendario que terminan el `r fecha_es(cutoff)`. Son `r n_recent` observaciones comunes, del `r fecha_es(first_recent)` al `r fecha_es(cutoff)`. La diagonal de la matriz contiene las varianzas diarias y cada elemento fuera de ella mide cuánto tienden a moverse juntas dos acciones. Usamos la matriz completa porque un promedio de volatilidades individuales por sí solo perdería ese efecto de diversificación [@ruiz2026var].
 
 ```{r}
 #| label: tbl-cov
-report_table(
-  as.data.frame(round(stats::cov2cor(covariance), 3)),
-  caption = "Matriz de correlaciones de los últimos seis meses."
-)
+#| tbl-cap: "Covarianzas diarias de los últimos seis meses, en puntos porcentuales al cuadrado. Para obtener covarianzas en decimales se divide entre 10,000."
+cov_display <- as.data.frame(10000 * Sigma, check.names = FALSE)
+report_table(cov_display, digits = 3)
 ```
 
-## Backtesting
+La volatilidad diaria de la cartera es $\sigma_p=\sqrt{w^\top\Sigma w}=$ `r fmt_pct(sigma_daily,3)`. Si las seis posiciones se movieran con correlación positiva perfecta, sus volatilidades ponderadas sumarían `r fmt_pct(sum(w * sqrt(diag(Sigma))),3)`. La diferencia mide cuánto riesgo se compensa al combinar las posiciones con las correlaciones observadas en esta ventana.
 
-Cada día se estima el VaR con la ventana previa únicamente, de modo que la serie
-es lo que el modelo habría reportado ese día. Estimarlo sobre la muestra completa
-y contar excepciones contra esa misma muestra no es un *backtest*.
-
-La prueba de cobertura incondicional de Kupiec contrasta el número observado de
-excepciones contra el esperado:
-
-$$
-LR = -2\ln\frac{(1-p)^{\,n-x}\,p^{\,x}}{(1-\hat\pi)^{\,n-x}\,\hat\pi^{\,x}} \;\sim\; \chi^2_{1}
-$$
-
-La @tbl-backtest contrasta las excedencias observadas y esperadas.
+Suponemos media diaria cero porque estimar una tendencia con seis meses introduciría una fuente adicional de error en el límite de corto plazo. Bajo la aproximación lineal de pérdidas y ganancias normales, con varianza diaria constante e incrementos sin autocorrelación, la varianza acumulada es $h\sigma_p^2$, por lo que $\mathrm{VaR}_{c,h}=S_0\,\Phi^{-1}(c)\,\sigma_p\sqrt{h}$. La persistencia de la volatilidad y las caídas simultáneas de varias acciones pueden hacer que la pérdida observada a veinte días se aparte de ese escalamiento.
 
 ```{r}
-#| label: tbl-backtest
-confidence <- 0.99
-rolling_hist <- rolling_var(portfolio_r, confidence, method = "historical")
-rolling_param <- rolling_var(portfolio_r, confidence, method = "parametric")
-
-backtest <- rbind(
-  cbind(metodo = "Histórico", backtest_var(portfolio_r, rolling_hist, confidence)),
-  cbind(metodo = "Paramétrico", backtest_var(portfolio_r, rolling_param, confidence))
-)
-report_table(backtest, caption = "Backtesting del VaR a un día al 99%.")
+#| label: tbl-normal
+#| tbl-cap: "VaR normal de la misma cartera y con los mismos niveles de confianza, en MXN."
+report_table(param_display, digits = 0)
 ```
 
-::: {.callout-important title="Pendiente de redacción"}
-Comparación de excepciones observadas contra esperadas y evaluación del
-desempeño. Demasiadas pocas excepciones reprueban la prueba igual que
-demasiadas: un modelo que nunca se excede no es conservador, está mal calibrado
-y es caro.
-:::
+## Backtesting del VaR diario
+
+Para cada cierre de evaluación reconstruimos la información disponible en la víspera. El modelo histórico incorpora los rendimientos conjuntos observados hasta entonces y el paramétrico vuelve a estimar su volatilidad con los seis meses precedentes. Comparamos ambas previsiones con la misma pérdida realizada sobre $600,000 y los mismos pesos iniciales. Así se puede evaluar la calibración de la regla de riesgo aunque el tamaño real de una cuenta cambie por depósitos, retiros o rebalanceos.
+
+Una violación ocurre cuando la pérdida realizada supera el VaR anunciado. Entre el `r fecha_es(bt_start)` y el `r fecha_es(bt_end)` contamos `r bt_n` pronósticos comparables. Al 99% esperaríamos `r round(bt_n*.01,2)` violaciones, de modo que una sola sesión mueve apreciablemente el resultado. Evaluamos la cercanía al conteo esperado en los tres niveles y distinguimos la frecuencia de la gravedad de las pérdidas.
+
+```{r}
+#| label: tbl-bt
+#| tbl-cap: "Cobertura fuera de muestra. Conteos de sesiones para ambos modelos."
+report_table(bt_display, digits = 2)
+```
+
+`r bt_interpretation` Por cercanía al conteo esperado, el normal obtuvo la mejor cobertura al 97.5% y al 99%, mientras que el histórico quedó más cerca al 95%. La prueba de Kupiec compara la frecuencia observada con la que implica cada nivel de confianza [@kupiec1995]. Los seis valores p superan 0.05, por lo que la muestra resulta compatible con la cobertura de ambos métodos. Con apenas dos excepciones esperadas al 99%, la prueba distingue con dificultad entre modelos y tampoco evalúa si las pérdidas se agrupan en días sucesivos.
+
+El `r fecha_es(bt_worst$date[1])`, la jornada de mayor pérdida de la cartera en la evaluación, el resultado fue de `r fmt_mxn(bt_worst$pnl_mxn[1])`. Los límites que se podían calcular antes de esa sesión eran `r fmt_mxn(bt_worst$var_mxn[bt_worst$method == "historical"])` con el histórico y `r fmt_mxn(bt_worst$var_mxn[bt_worst$method == "normal"])` con el normal. El tamaño de esa diferencia importa cuando se usa el VaR para decidir cuánta liquidez mantener disponible.
 
 ## Optimización de la cartera
 
-```{r}
-#| label: tbl-optimisation
-#| eval: false
-optimal <- optimise_min_var(matrix_returns)
+Conservamos el capital de `r fmt_mxn(S0)` y cambiamos únicamente su distribución entre las seis emisoras. Si el rendimiento simple diario sigue una normal con media cero, el VaR a un día es el capital multiplicado por el cuantil normal y por la volatilidad de la cartera. Como los dos primeros factores son positivos y constantes, la cartera que minimiza la varianza también alcanza el VaR mínimo bajo este modelo.
 
-comparison <- compare_allocations(
-  matrix_returns,
-  list(
-    "Pesos iguales" = portfolio$weights,
-    "VaR mínimo" = optimal$weights
-  ),
-  value = portfolio$value
+```{r allocation-optimum}
+opt_cfg <- params()$var$optimisation
+opt_assets <- names(w)
+opt_cov <- Sigma[opt_assets, opt_assets, drop = FALSE]
+opt_n <- length(w)
+opt_cap <- opt_cfg$max_weight
+stopifnot(isTRUE(opt_cfg$long_only))
+
+# solve.QP impone t(Amat) %*% pesos >= bvec, salvo la primera igualdad.
+opt_fit <- quadprog::solve.QP(
+  Dmat = 2 * opt_cov, dvec = numeric(opt_n),
+  Amat = cbind(rep(1, opt_n), diag(opt_n), -diag(opt_n)),
+  bvec = c(1, numeric(opt_n), rep(-opt_cap, opt_n)), meq = 1
 )
-report_table(comparison, caption = "Cartera equiponderada frente a la de VaR mínimo.", digits = 2)
-```
+opt_w <- setNames(opt_fit$solution, opt_assets)
 
-::: {.callout-important title="Pendiente de redacción"}
-Comparación de composiciones y análisis del cambio en riesgo y diversificación.
-Activar el chunk cuando `nloptr` esté instalado (`renv::restore()`).
-:::
-
-## VaR individual y *Expected Shortfall*
-
-La @tbl-individual presenta ambas medidas para la posición individual.
-
-```{r}
-#| label: tbl-individual
-position <- params()$var$position_mxn
-subject_returns <- returns[returns$ticker == subject(), "log_return"]
-
-individual <- var_monte_carlo(
-  subject_returns,
-  confidence = params()$var$monte_carlo$confidence,
-  horizon = 1,
-  value = position
-)
-report_table(
-  individual,
-  caption = paste0("VaR y ES al 99% por Monte Carlo sobre una posición de ", fmt_mxn(position), " en ", subject(), "."),
-  digits = 2
+# Una transferencia desde i hacia j cambia la varianza al margen en g[j] - g[i].
+opt_tol <- 1e-8
+opt_gradient <- drop(2 * opt_cov %*% opt_w)
+opt_sell <- opt_w > opt_tol
+opt_buy <- opt_w < opt_cap - opt_tol
+stopifnot(
+  abs(sum(opt_w) - 1) < opt_tol,
+  all(opt_w >= -opt_tol & opt_w <= opt_cap + opt_tol),
+  min(opt_gradient[opt_buy]) >= max(opt_gradient[opt_sell]) - opt_tol
 )
 ```
 
-El *Expected Shortfall* es la pérdida promedio condicionada a haber rebasado el
-VaR:
+Estimamos la varianza con las covarianzas de los últimos `r params()$var$parametric_window_months` meses. La inversión suma el 100 % del capital, con posiciones largas y un máximo de `r fmt_pct(opt_cap, 0)` por emisora. Para comprobar la solución verificamos que ninguna transferencia pequeña de capital entre dos emisoras permita reducir la varianza respetando esos límites. Como la función que minimizamos es convexa, esa condición verifica el mínimo global.
 
-$$
-\text{ES}_c = \mathbb{E}\left[\,L \mid L \ge \text{VaR}_c\,\right]
-$$
+```{r tbl-allocation-weights}
+allocation_amounts <- data.frame(
+  Emisora = opt_assets,
+  "Peso inicial" = fmt_pct(w),
+  "Peso óptimo" = fmt_pct(opt_w),
+  "Monto inicial" = round(S0 * w),
+  "Monto óptimo" = round(S0 * opt_w),
+  "Cambio en MXN" = round(S0 * (opt_w - w)),
+  check.names = FALSE, row.names = NULL
+)
+report_table(allocation_amounts, caption = "Distribución del capital por emisora, en pesos mexicanos.")
+```
 
-Donde el VaR dice cuánto se pierde antes de entrar al peor 1%, el ES dice cuánto
-se pierde dentro de ese 1% — la pregunta que el VaR es estructuralmente incapaz
-de responder.
+```{r tbl-allocation-risk}
+allocation_weights <- cbind(Equiponderada = w, Óptima = opt_w)
+allocation_vol <- apply(allocation_weights, 2, portfolio_sigma, covariance = opt_cov)
+allocation_normal <- S0 * qnorm(opt_cfg$confidence) * allocation_vol
 
-## Análisis e interpretación
+# Cada fila conserva los movimientos simultáneos de las seis emisoras.
+allocation_losses <- -S0 * ret[, opt_assets, drop = FALSE] %*% allocation_weights
+allocation_hist <- apply(allocation_losses, 2, quantile, probs = opt_cfg$confidence,
+                         names = FALSE)
+allocation_effective <- 1 / colSums(allocation_weights^2)
+allocation_gain <- unname(allocation_normal[1] - allocation_normal[2])
+allocation_hist_change <- unname(allocation_hist[2] - allocation_hist[1])
+allocation_top <- head(sort(opt_w, decreasing = TRUE), 2)
 
-::: {.callout-important title="Pendiente de redacción"}
-- ¿Qué diferencias hay entre el VaR paramétrico y el no paramétrico?
-- ¿Cuál captura mejor los eventos extremos?
-- ¿Cuál es más conservador?
-- ¿Qué implica elegir un modelo que subestima el riesgo?
-- ¿Qué arroja el *backtesting* y qué se concluye de ello?
-:::
+report_table(data.frame(
+  Cartera = colnames(allocation_weights),
+  "Volatilidad diaria" = fmt_pct(allocation_vol),
+  "VaR normal" = fmt_mxn(allocation_normal),
+  "VaR histórico" = fmt_mxn(allocation_hist),
+  "Número efectivo de emisoras" = round(allocation_effective, 2),
+  check.names = FALSE, row.names = NULL
+), caption = paste0("Riesgo a un día al ", fmt_pct(opt_cfg$confidence, 0),
+                    " en MXN y concentración del capital."))
+```
+
+La reasignación reduce el VaR normal diario en **`r fmt_mxn(allocation_gain)`**, equivalentes al `r fmt_pct(allocation_gain / allocation_normal[1])` del VaR inicial. Las dos posiciones de mayor peso, `r paste(names(allocation_top), collapse = " y ")`, reúnen el `r fmt_pct(sum(allocation_top))` del capital. El número efectivo de emisoras pasa de `r round(allocation_effective[1], 2)` a `r round(allocation_effective[2], 2)`. Esta medida, el inverso de la suma de los pesos al cuadrado, indica cuántas posiciones iguales tendrían la misma concentración de capital.
+
+Al aplicar ambas composiciones a las mismas `r format(nrow(ret), big.mark = ",")` sesiones históricas, el VaR de la cartera óptima `r if (allocation_hist_change < 0) "baja" else if (allocation_hist_change > 0) "sube" else "cambia"` en `r fmt_mxn(abs(allocation_hist_change))` frente al de la equiponderada. Este contraste muestra cómo habrían respondido los pesos actuales a las caídas observadas. La garantía de mínimo corresponde al VaR normal calculado con la covarianza reciente.
+
+## VaR y pérdida esperada en la cola de GAPB
+
+```{r allocation-individual-sample}
+mc_cfg <- params()$var$monte_carlo
+mc_position <- params()$var$position_mxn
+mc_cutoff <- max(as.Date(rownames(px)))
+mc_prices <- prices[prices$ticker == subject() & prices$date <= mc_cutoff,
+                    c("date", "adjusted")]
+mc_prices <- mc_prices[order(mc_prices$date), ]
+stopifnot(nrow(mc_prices) >= 2L, !anyDuplicated(mc_prices$date))
+mc_calendar <- p5$session_dates[p5$session_dates >= min(mc_prices$date) &
+                                p5$session_dates <= mc_cutoff]
+mc_prices <- data.frame(date = mc_calendar,
+                        adjusted = mc_prices$adjusted[match(mc_calendar, mc_prices$date)])
+mc_previous <- head(mc_prices$adjusted, -1)
+mc_current <- tail(mc_prices$adjusted, -1)
+mc_valid <- is.finite(mc_previous) & mc_previous > 0 &
+            is.finite(mc_current) & mc_current > 0
+mc_returns <- mc_current[mc_valid] / mc_previous[mc_valid] - 1
+stopifnot(length(mc_returns) > 0L)
+```
+
+Para una posición de **`r fmt_mxn(mc_position)` en `r subject()`**, usamos la historia propia de la emisora hasta el corte de la cartera, el `r fecha_es(mc_cutoff)`. Desde el cierre del `r fecha_es(head(mc_prices$date, -1)[which(mc_valid)[1]])` contamos `r format(length(mc_returns), big.mark = ",")` rendimientos simples entre cierres ajustados consecutivos válidos. Así se incluyen también los años anteriores a la primera sesión común de las seis acciones.
+
+```{r tbl-allocation-individual-tail}
+use_seed()
+mc_draws <- sample(mc_returns, size = mc_cfg$n_simulations, replace = TRUE)
+mc_losses <- -mc_position * mc_draws
+mc_var <- unname(quantile(mc_losses, mc_cfg$confidence))
+mc_tail <- mc_losses[mc_losses >= mc_var]
+mc_es <- mean(mc_tail)
+stopifnot(mc_es >= mc_var)
+
+report_table(data.frame(
+  Medida = c("Valor en riesgo (VaR)", "Pérdida esperada en la cola (ES)"),
+  "Pérdida en MXN" = fmt_mxn(c(mc_var, mc_es), 2),
+  "Porcentaje de la posición" = fmt_pct(c(mc_var, mc_es) / mc_position),
+  check.names = FALSE
+), caption = paste0("Riesgo individual a un día por Monte Carlo empírico al ",
+                    fmt_pct(mc_cfg$confidence, 0), "."))
+```
+
+Cada uno de los `r format(mc_cfg$n_simulations, big.mark = ",")` escenarios toma al azar, con reemplazo, el rendimiento de una sesión de GAPB y lo aplica a la posición actual. El VaR de **`r fmt_mxn(mc_var, 2)`** marca la entrada al peor `r fmt_pct(1 - mc_cfg$confidence, 0)` de las pérdidas simuladas. Entre los `r format(length(mc_tail), big.mark = ",")` escenarios que alcanzan o superan ese umbral, incluidos los empates del remuestreo, la pérdida promedio asciende a **`r fmt_mxn(mc_es, 2)`**, es decir, `r fmt_mxn(mc_es - mc_var, 2)` más que el VaR. El remuestreo conserva las caídas extremas registradas en GAPB, aunque su pérdida máxima posible queda limitada a la peor sesión observada.
+
+## Comparación e interpretación financiera {.unnumbered}
+
+Al 99% y a una sesión, el método histórico exige `r fmt_mxn(one_hist[3])` frente a `r fmt_mxn(one_param[3])` del normal. A veinte sesiones la comparación pasa a `r fmt_mxn(h20)` y `r fmt_mxn(p20)`, respectivamente. La diferencia combina dos efectos: el histórico conserva la forma de la cola y abarca años que quedan fuera de la ventana reciente. Por ello no podemos atribuir la brecha exclusivamente a la normalidad. `r conservative_summary`
+
+Si restringimos el histórico a las mismas `r n_recent` sesiones que usa la matriz de covarianzas, su VaR diario al 99% pasa de `r fmt_mxn(one_hist[3])` a `r fmt_mxn(recent_hist99)`. La comparación a igual ventana deja una diferencia de `r fmt_mxn(abs(recent_hist99 - one_param[3]))` con el normal. Ese cuantil reciente depende de apenas dos o tres observaciones de cola, lo que explica por qué conservamos la historia completa como referencia para eventos extremos.
+
+```{r}
+#| label: tbl-events
+#| tbl-cap: "Dos jornadas de GAPB revaluadas sobre las posiciones actuales. Una cifra positiva indica ganancia, en pesos."
+report_table(event_display, digits = 0)
+```
+
+El 5 de octubre de 2023, tras el anuncio de cambios a las bases tarifarias, la pérdida de GAPB explica `r fmt_pct(event_gap[1]/event_total[1],1)` de la pérdida de la cartera. En cambio, el 20 de octubre de 2026, primera sesión después de publicarse los resultados trimestrales de GAP [@gap3q2026], el alza de la emisora aportó `r fmt_mxn(event_gap[2])`. Ambos movimientos elevan una medida de volatilidad que eleva los rendimientos al cuadrado, pero solo la caída entra directamente a la cola izquierda de GAPB. La reacción del portafolio depende además de cuánto aportan las otras cinco posiciones ese mismo día.
+
+El movimiento del 20 de octubre entró al pronóstico de la sesión siguiente. Entre ambos días el VaR normal al 99% pasó de `r fmt_mxn(oct_normal[1])` a `r fmt_mxn(oct_normal[2])`, mientras que el histórico cambió de `r fmt_mxn(oct_hist[1])` a `r fmt_mxn(oct_hist[2])`. La covarianza móvil responde a los movimientos amplios en ambas direcciones. Para el histórico, añadir una jornada de ganancia apenas cambia la posición del percentil entre las pérdidas ordenadas. Así, un salto favorable de GAPB puede aumentar la volatilidad reciente sin generar una violación del límite.
 
 ## Conclusiones
 
-::: {.callout-important title="Pendiente de redacción"}
-Comparación de metodologías y justificación de cuál se usaría en la práctica.
-:::
+Para decidir cuánto capital apartar ante una pérdida extrema usaríamos el histórico como referencia principal, acompañado por el ES. Conserva la experiencia de sesiones en que varias acciones cayeron juntas y permite expresar la severidad de ese riesgo en pesos. El cálculo normal de seis meses cumple otra función en la mesa de riesgo: permite actualizar el límite cuando cambia la volatilidad reciente y medir el efecto de sustituir una posición por otra con distinta covarianza.
 
-## Referencias
+Si se aparta solo `r fmt_mxn(min(one_hist[3],one_param[3]))` al 99% diario, la diferencia hasta el umbral más alto es de `r fmt_mxn(abs(diff(c(one_hist[3],one_param[3]))))`. Para una cartera que necesite liquidez precisamente en una caída generalizada, una reserva insuficiente puede obligar a vender después de la pérdida. Revisaríamos esa decisión al acumular más pronósticos fuera de muestra, atendiendo tanto al número de violaciones como a su importe y a la concentración de la cartera que realmente se mantiene.
+
+## Referencias {.unnumbered}
