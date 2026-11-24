@@ -7,10 +7,10 @@
 
 # --- Sample windows ----------------------------------------------------------
 sample:
-  # Start of the estimation sample for volatility and VaR models.
+  # Start of the volatility estimation sample.
   start: "2021-01-01"
-  # Parameter cut-off for stages 03 and 05: nothing after this date informs a
-  # parameter they fit. Stage 04 has its own, variance.estimation_end.
+  # Parameter cut-off for stage 03. Stage 04 uses variance.estimation_end.
+  # Stage 05 uses each forecast origin and the latest common close for valuation.
   end: "2025-12-31"
   # First session the stage 03 annex re-runs the class moving-average
   # procedure on, one session at a time.
