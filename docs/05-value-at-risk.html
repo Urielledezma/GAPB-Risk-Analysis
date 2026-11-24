@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,7 +11,7 @@
 <meta name="author" content="Jorge Isaac López Ávila">
 <meta name="author" content="Juan Pablo Morán Errejón">
 
-<title>value-at-risk – Análisis de Riesgo · GAPB</title>
+<title>Valor en riesgo de una cartera de seis acciones mexicanas – Análisis de Riesgo · GAPB</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -65,7 +65,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -77,14 +97,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-bb6b7ff44b12c6be5ebe32cd498144c2.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-cab699995ebdeb5568a5683a1385ade4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dd9eeb3a66d606a42fa7fa148d450bc2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4720c45d1e131c754770d378e5879de5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -114,51 +135,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Saltar al contenido principal</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Sitio web">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Análisis de Riesgo · GAPB</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Buscar"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -198,6 +189,7 @@ window.Quarto = {
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -206,30 +198,30 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
   <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
-  <li><a href="#construcción-de-la-cartera" id="toc-construcción-de-la-cartera" class="nav-link" data-scroll-target="#construcción-de-la-cartera"><span class="header-section-number">2</span> Construcción de la cartera</a></li>
-  <li><a href="#var-no-paramétrico-simulación-histórica" id="toc-var-no-paramétrico-simulación-histórica" class="nav-link" data-scroll-target="#var-no-paramétrico-simulación-histórica"><span class="header-section-number">3</span> VaR no paramétrico: simulación histórica</a></li>
+  <li><a href="#construcción-del-portafolio" id="toc-construcción-del-portafolio" class="nav-link" data-scroll-target="#construcción-del-portafolio"><span class="header-section-number">2</span> Construcción del portafolio</a></li>
+  <li><a href="#var-por-simulación-histórica" id="toc-var-por-simulación-histórica" class="nav-link" data-scroll-target="#var-por-simulación-histórica"><span class="header-section-number">3</span> VaR por simulación histórica</a></li>
   <li><a href="#var-paramétrico" id="toc-var-paramétrico" class="nav-link" data-scroll-target="#var-paramétrico"><span class="header-section-number">4</span> VaR paramétrico</a></li>
-  <li><a href="#backtesting" id="toc-backtesting" class="nav-link" data-scroll-target="#backtesting"><span class="header-section-number">5</span> Backtesting</a></li>
+  <li><a href="#backtesting-del-var-diario" id="toc-backtesting-del-var-diario" class="nav-link" data-scroll-target="#backtesting-del-var-diario"><span class="header-section-number">5</span> Backtesting del VaR diario</a></li>
   <li><a href="#optimización-de-la-cartera" id="toc-optimización-de-la-cartera" class="nav-link" data-scroll-target="#optimización-de-la-cartera"><span class="header-section-number">6</span> Optimización de la cartera</a></li>
-  <li><a href="#var-individual-y-expected-shortfall" id="toc-var-individual-y-expected-shortfall" class="nav-link" data-scroll-target="#var-individual-y-expected-shortfall"><span class="header-section-number">7</span> VaR individual y <em>Expected Shortfall</em></a></li>
-  <li><a href="#análisis-e-interpretación" id="toc-análisis-e-interpretación" class="nav-link" data-scroll-target="#análisis-e-interpretación"><span class="header-section-number">8</span> Análisis e interpretación</a></li>
-  <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones"><span class="header-section-number">9</span> Conclusiones</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">10</span> Referencias</a></li>
+  <li><a href="#var-y-pérdida-esperada-en-la-cola-de-gapb" id="toc-var-y-pérdida-esperada-en-la-cola-de-gapb" class="nav-link" data-scroll-target="#var-y-pérdida-esperada-en-la-cola-de-gapb"><span class="header-section-number">7</span> VaR y pérdida esperada en la cola de GAPB</a></li>
+  <li><a href="#comparación-e-interpretación-financiera" id="toc-comparación-e-interpretación-financiera" class="nav-link" data-scroll-target="#comparación-e-interpretación-financiera">Comparación e interpretación financiera</a></li>
+  <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones"><span class="header-section-number">8</span> Conclusiones</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/reports/05-value-at-risk.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content" tabindex="-1">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Valor en Riesgo y <em>Expected Shortfall</em></h1>
-<p class="subtitle lead">Cartera de seis emisoras: estimación, backtesting y optimización</p>
+<h1 class="title">Valor en riesgo de una cartera de seis acciones mexicanas</h1>
+<p class="subtitle lead">Proyecto Final · Parte 5 | Simulación histórica, varianza-covarianza y evaluación diaria</p>
 </div>
 
 
@@ -249,7 +241,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">15 de octubre de 2026</p>
+      <p class="date">24 de noviembre de 2026</p>
     </div>
   </div>
   
@@ -261,134 +253,112 @@ window.Quarto = {
 </header>
 
 
-<dl class="report-meta" aria-label="Ficha técnica del reporte">
+<dl class="report-meta" aria-label="Ficha técnica">
 <div>
 <dt>
-Fuente de datos
+Fuente de precios
 </dt>
 <dd>
-Yahoo Finance / BMV para seis emisoras
+Yahoo Finance · BMV
 </dd>
 </div>
 <div>
 <dt>
-Corte financiero
+Fecha de valuación
 </dt>
 <dd>
-31 de diciembre de 2025
+23 de noviembre de 2026
 </dd>
 </div>
 <div>
 <dt>
-Moneda
+Capital inicial
 </dt>
 <dd>
-MXN; pérdidas y rendimientos de cartera
+$600,000 MXN
 </dd>
 </div>
 <div>
 <dt>
-Periodo cubierto
+Horizontes
 </dt>
 <dd>
-8 de junio de 2017–4 de noviembre de 2026
+1, 5, 10 y 20 sesiones
 </dd>
 </div>
 </dl>
 <section id="introducción" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introducción"><span class="header-section-number">1</span> Introducción</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Qué se estima y con qué propósito.</p>
-</div>
-</div>
+<p>El 5 de octubre de 2023, una noticia sobre la regulación tarifaria de los aeropuertos coincidió con una caída de más de una quinta parte del valor de GAPB <span class="citation" data-cites="gaptariff2023initial">(<a href="#ref-gaptariff2023initial" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2023</a>)</span>. Para quien tiene seis acciones mexicanas, la consecuencia depende de dos cantidades observables: cuánto capital tenía expuesto a GAPB y qué hicieron las otras cinco emisoras ese día. Esa distinción entre riesgo de la emisora y riesgo de la cartera guía nuestra estimación.</p>
+<p>Valuamos seis posiciones iguales y calculamos cuánto podrían perder en una sesión, una semana, dos semanas y un mes bursátil. Para cada horizonte comparamos los movimientos conjuntos observados a lo largo de la historia con los que implica una distribución normal calibrada a los últimos seis meses. Después ponemos a prueba los límites diarios con datos de 2026, medimos cuánto cambia el riesgo al redistribuir el capital y examinamos por separado la pérdida media de GAPB en su peor 1% de escenarios.</p>
 </section>
-<section id="construcción-de-la-cartera" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="construcción-de-la-cartera"><span class="header-section-number">2</span> Construcción de la cartera</h2>
-<p>La cartera invierte $100,000 en cada una de las seis emisoras. Son pesos iguales en <strong>monto</strong>, no en número de acciones: las seis cotizan a niveles de precio muy distintos y una cartera de cien acciones de cada una sería una apuesta concentrada en la más cara.</p>
-<p>La <a href="#tbl-portfolio" class="quarto-xref">Tabla&nbsp;1</a> presenta la composición monetaria inicial.</p>
+<section id="construcción-del-portafolio" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="construcción-del-portafolio"><span class="header-section-number">2</span> Construcción del portafolio</h2>
+<p>Asignamos $100,000 MXN a cada emisora. Al cierre del 23 de noviembre de 2026 esa inversión equivale a dividir $100,000 entre el precio de cierre de cada acción, por lo que admitimos títulos fraccionarios para mantener exactamente la sexta parte del capital en cada posición. Con cien títulos por emisora la inversión sumaría $80,921, por lo que usamos los montos equitativos que fija la indicación de construcción. La <a href="#tbl-hold" class="quarto-xref">Tabla&nbsp;1</a> presenta los títulos redondeados para lectura. En la valuación conservamos la precisión completa, de modo que <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>0</mn></msub><mo>=</mo><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>q</mi><mi>i</mi></msub><msub><mi>P</mi><mrow><mi>i</mi><mo>,</mo><mn>0</mn></mrow></msub><mo>=</mo></mrow><annotation encoding="application/x-tex">S_0=\sum_i q_iP_{i,0}=</annotation></semantics></math> $600,000.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  portfolio<span class="sc">$</span>holdings,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="fu">paste0</span>(<span class="st">"Composición inicial al "</span>, portfolio<span class="sc">$</span>as_of, <span class="st">"."</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(hold_display, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-portfolio" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-hold" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-portfolio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;1: Composición inicial al 2026-11-04.
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-hold-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;1: Posiciones iniciales al cierre de valuación. Importes en MXN.
 </figcaption>
-<div aria-describedby="tbl-portfolio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-hold-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Ticker</th>
-<th style="text-align: right;">Precio (MXN)</th>
+<th style="text-align: left;">Emisora</th>
+<th style="text-align: right;">Cierre</th>
+<th style="text-align: right;">Títulos</th>
 <th style="text-align: right;">Peso</th>
-<th style="text-align: right;">Valor (MXN)</th>
-<th style="text-align: right;">Acciones</th>
+<th style="text-align: left;">Inversión</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">6798</td>
 <td style="text-align: left;">ALSEA.MX</td>
-<td style="text-align: right;">54.85</td>
-<td style="text-align: right;">0.1667</td>
-<td style="text-align: right;">100,000</td>
-<td style="text-align: right;">1,823.2</td>
+<td style="text-align: right;">58.91</td>
+<td style="text-align: right;">1,697.5</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: left;">$100,000</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">9164</td>
 <td style="text-align: left;">BBAJIOO.MX</td>
-<td style="text-align: right;">55.50</td>
-<td style="text-align: right;">0.1667</td>
-<td style="text-align: right;">100,000</td>
-<td style="text-align: right;">1,801.8</td>
+<td style="text-align: right;">54.31</td>
+<td style="text-align: right;">1,841.3</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: left;">$100,000</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">14368</td>
 <td style="text-align: left;">GAPB.MX</td>
-<td style="text-align: right;">432.05</td>
-<td style="text-align: right;">0.1667</td>
-<td style="text-align: right;">100,000</td>
-<td style="text-align: right;">231.5</td>
+<td style="text-align: right;">423.23</td>
+<td style="text-align: right;">236.3</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: left;">$100,000</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">21178</td>
 <td style="text-align: left;">GMEXICOB.MX</td>
-<td style="text-align: right;">224.71</td>
-<td style="text-align: right;">0.1667</td>
-<td style="text-align: right;">100,000</td>
-<td style="text-align: right;">445.0</td>
+<td style="text-align: right;">197.63</td>
+<td style="text-align: right;">506.0</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: left;">$100,000</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">27987</td>
 <td style="text-align: left;">ORBIA.MX</td>
-<td style="text-align: right;">22.16</td>
-<td style="text-align: right;">0.1667</td>
-<td style="text-align: right;">100,000</td>
-<td style="text-align: right;">4,512.6</td>
+<td style="text-align: right;">20.39</td>
+<td style="text-align: right;">4,904.4</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: left;">$100,000</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">34014</td>
 <td style="text-align: left;">WALMEX.MX</td>
-<td style="text-align: right;">52.22</td>
-<td style="text-align: right;">0.1667</td>
-<td style="text-align: right;">100,000</td>
-<td style="text-align: right;">1,915.0</td>
+<td style="text-align: right;">54.74</td>
+<td style="text-align: right;">1,826.8</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: left;">$100,000</td>
 </tr>
 </tbody>
 </table>
@@ -397,146 +367,62 @@ Tabla&nbsp;1: Composición inicial al 2026-11-04.
 </figure>
 </div>
 </div>
-<p>El valor inicial de la cartera es <span class="math inline">\(S_0 =\)</span> $600,000.</p>
+<p>Usamos cierres ajustados para medir cambios proporcionales, pues así un dividendo o un desdoblamiento no aparece como una pérdida mecánica. El rendimiento diario de esta cartera es <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>p</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>=</mo><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>w</mi><mi>i</mi></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>P</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow><mi>a</mi></msubsup><mi>/</mi><msubsup><mi>P</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi><mo>−</mo><mn>1</mn></mrow><mi>a</mi></msubsup><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">R_{p,t}=\sum_i w_i(P^a_{i,t}/P^a_{i,t-1}-1)</annotation></semantics></math>, con los pesos iniciales <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn><mi>/</mi><mn>6</mn></mrow><annotation encoding="application/x-tex">w_i=1/6</annotation></semantics></math>. Cada día histórico responde a la misma pregunta: cuánto ganaría o perdería <strong>la cartera actual</strong> si se repitiera ese movimiento conjunto. Con posiciones fijas durante un escenario de varios días, el peso de cada emisora puede cambiar dentro de ese horizonte.</p>
+<p>Los cierres diarios proceden de Yahoo Finance para las seis series de la BMV. La primera observación diaria conjunta corresponde al 9 de junio de 2017. Disponemos de 2376 rendimientos diarios completos, con un promedio de 0.050%, una desviación estándar de 1.25% y un rendimiento de 0.49% en la última sesión. El inicio depende de la historia disponible de Banco del Bajío. Conservamos el calendario y exigimos precios para las seis emisoras en ambos extremos de cada escenario.</p>
 </section>
-<section id="var-no-paramétrico-simulación-histórica" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="var-no-paramétrico-simulación-histórica"><span class="header-section-number">3</span> VaR no paramétrico: simulación histórica</h2>
-<p>El cuantil se lee directamente de la distribución empírica, sin suponer ninguna forma funcional, de modo que las colas pesadas y la asimetría se arrastran tal como la muestra las exhibe.</p>
-<p>La <a href="#tbl-var-hist" class="quarto-xref">Tabla&nbsp;2</a> cuantifica los escenarios y la <a href="#fig-var" class="quarto-xref">Figura&nbsp;1</a> sitúa visualmente los umbrales sobre la distribución de pérdidas y ganancias.</p>
+<section id="var-por-simulación-histórica" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="var-por-simulación-histórica"><span class="header-section-number">3</span> VaR por simulación histórica</h2>
+<p>Revaluamos las seis posiciones con bloques de <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math> sesiones consecutivas. Para cada fecha con ambos cierres disponibles calculamos la ganancia o pérdida <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">P</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">G</mi></mrow><mrow><mi>t</mi><mo>,</mo><mi>h</mi></mrow></msub><mo>=</mo><msub><mi>S</mi><mn>0</mn></msub><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>w</mi><mi>i</mi></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>P</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow><mi>a</mi></msubsup><mi>/</mi><msubsup><mi>P</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi><mo>−</mo><mi>h</mi></mrow><mi>a</mi></msubsup><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{PyG}_{t,h}=S_0\sum_i w_i(P^a_{i,t}/P^a_{i,t-h}-1)</annotation></semantics></math> y tomamos el cuantil inferior de su distribución. Al mantener juntas las seis variaciones de cada fecha conservamos tanto las caídas individuales como las jornadas en que varias emisoras perdieron al mismo tiempo. Usamos todos los bloques disponibles, incluidos los traslapados, por lo que dos escenarios contiguos a veinte días comparten diecinueve sesiones y aportan menos información independiente que dos episodios distintos.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">confidence =</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>confidence,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizon =</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>horizons_days</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>hist_var <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(grid)), <span class="cf">function</span>(i) {</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">var_historical</span>(portfolio_r, grid<span class="sc">$</span>confidence[i], grid<span class="sc">$</span>horizon[i], portfolio<span class="sc">$</span>value)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>}))</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(hist_var, <span class="at">caption =</span> <span class="st">"VaR por simulación histórica."</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(hist_display, <span class="at">digits =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-var-hist" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-hist" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;2: VaR por simulación histórica.
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;2: Pérdida histórica por horizonte y confianza, en MXN. Un importe positivo indica pérdida.
 </figcaption>
-<div aria-describedby="tbl-var-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 13%">
-<col style="width: 13%">
-<col style="width: 24%">
-<col style="width: 13%">
-<col style="width: 10%">
-</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Método</th>
-<th style="text-align: right;">Confianza</th>
-<th style="text-align: right;">Horizonte</th>
-<th style="text-align: right;">VaR (rendimiento)</th>
-<th style="text-align: right;">VaR (MXN)</th>
-<th style="text-align: right;">VaR (%)</th>
+<th style="text-align: right;">Sesiones</th>
+<th style="text-align: right;">Escenarios</th>
+<th style="text-align: left;">95%</th>
+<th style="text-align: left;">97.5%</th>
+<th style="text-align: left;">99%</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.95</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">-0.02</td>
-<td style="text-align: right;">10,570</td>
-<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">2,376</td>
+<td style="text-align: left;">$10,584</td>
+<td style="text-align: left;">$14,184</td>
+<td style="text-align: left;">$19,652</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.98</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">-0.02</td>
-<td style="text-align: right;">14,194</td>
-<td style="text-align: right;">0.02</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">-0.03</td>
-<td style="text-align: right;">19,755</td>
-<td style="text-align: right;">0.03</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.95</td>
 <td style="text-align: right;">5</td>
-<td style="text-align: right;">-0.04</td>
-<td style="text-align: right;">23,379</td>
-<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2,372</td>
+<td style="text-align: left;">$24,417</td>
+<td style="text-align: left;">$32,034</td>
+<td style="text-align: left;">$42,507</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.98</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">-0.05</td>
-<td style="text-align: right;">31,277</td>
-<td style="text-align: right;">0.05</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">-0.07</td>
-<td style="text-align: right;">43,276</td>
-<td style="text-align: right;">0.07</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.95</td>
 <td style="text-align: right;">10</td>
-<td style="text-align: right;">-0.06</td>
-<td style="text-align: right;">32,794</td>
-<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">2,367</td>
+<td style="text-align: left;">$33,335</td>
+<td style="text-align: left;">$43,615</td>
+<td style="text-align: left;">$60,289</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.98</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">-0.08</td>
-<td style="text-align: right;">43,749</td>
-<td style="text-align: right;">0.07</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">-0.11</td>
-<td style="text-align: right;">60,274</td>
-<td style="text-align: right;">0.10</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.95</td>
 <td style="text-align: right;">20</td>
-<td style="text-align: right;">-0.08</td>
-<td style="text-align: right;">45,847</td>
-<td style="text-align: right;">0.08</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.98</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">-0.11</td>
-<td style="text-align: right;">60,923</td>
-<td style="text-align: right;">0.10</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">historical (scale)</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">-0.15</td>
-<td style="text-align: right;">83,431</td>
-<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">2,357</td>
+<td style="text-align: left;">$46,127</td>
+<td style="text-align: left;">$62,383</td>
+<td style="text-align: left;">$109,225</td>
 </tr>
 </tbody>
 </table>
@@ -548,206 +434,51 @@ Tabla&nbsp;2: VaR por simulación histórica.
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pnl <span class="ot">&lt;-</span> portfolio<span class="sc">$</span>value <span class="sc">*</span> (<span class="fu">exp</span>(portfolio_r) <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>cuts <span class="ot">&lt;-</span> <span class="fu">vapply</span>(<span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>confidence, <span class="cf">function</span>(c) {</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span><span class="fu">var_historical</span>(portfolio_r, c, <span class="dv">1</span>, portfolio<span class="sc">$</span>value)<span class="sc">$</span>var_currency</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>}, <span class="fu">numeric</span>(<span class="dv">1</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>cut_labels <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">confidence =</span> <span class="fu">paste0</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>confidence, <span class="st">"%"</span>),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> cuts,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">pnl =</span> pnl), <span class="fu">aes</span>(pnl)) <span class="sc">+</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>, <span class="at">fill =</span> RISK_PALETTE[<span class="dv">1</span>], <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> cut_labels, <span class="fu">aes</span>(<span class="at">xintercept =</span> value, <span class="at">colour =</span> confidence),</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.6</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">unname</span>(RISK_PALETTE[<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>)])) <span class="sc">+</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">label_dollar</span>(<span class="at">prefix =</span> <span class="st">"$"</span>)) <span class="sc">+</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Pérdida / ganancia diaria (MXN)"</span>, <span class="at">y =</span> <span class="st">"Frecuencia"</span>,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Líneas verticales: VaR a un día por nivel de confianza."</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pnl <span class="ot">&lt;-</span> S0 <span class="sc">*</span> port_ret</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>marks <span class="ot">&lt;-</span> <span class="sc">-</span>one_hist</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="fl">3.7</span>, <span class="fl">4.3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="at">mgp =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="fl">0.6</span>, <span class="dv">0</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>bins <span class="ot">&lt;-</span> <span class="fu">hist</span>(pnl, <span class="at">breaks =</span> <span class="dv">95</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (zoom <span class="cf">in</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>)) {</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  xr <span class="ot">&lt;-</span> <span class="cf">if</span> (zoom) <span class="fu">range</span>(<span class="fu">c</span>(marks <span class="sc">*</span> <span class="fl">1.35</span>, <span class="dv">0</span>)) <span class="cf">else</span> <span class="fu">range</span>(bins<span class="sc">$</span>breaks)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  yr <span class="ot">&lt;-</span> <span class="cf">if</span> (zoom) <span class="fu">max</span>(bins<span class="sc">$</span>counts[bins<span class="sc">$</span>mids <span class="sc">&gt;=</span> xr[<span class="dv">1</span>] <span class="sc">&amp;</span> bins<span class="sc">$</span>mids <span class="sc">&lt;=</span> <span class="fu">min</span>(marks[<span class="dv">1</span>] <span class="sc">*</span> <span class="fl">0.65</span>, <span class="dv">0</span>)]) <span class="cf">else</span> <span class="fu">max</span>(bins<span class="sc">$</span>counts)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (zoom) xr[<span class="dv">2</span>] <span class="ot">&lt;-</span> marks[<span class="dv">1</span>] <span class="sc">*</span> <span class="fl">0.65</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(bins, <span class="at">xlim =</span> xr, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, yr <span class="sc">*</span> <span class="fl">1.12</span>), <span class="at">col =</span> <span class="st">"#bad4df"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">main =</span> <span class="cf">if</span> (zoom) <span class="st">"Detalle de la cola izquierda"</span> <span class="cf">else</span> <span class="st">"Distribución completa"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="cf">if</span> (zoom) <span class="st">"Pérdida (−) / ganancia (+), MXN"</span> <span class="cf">else</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Sesiones"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">v =</span> marks, <span class="at">lty =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"#113f55"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>zoom) <span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"95%"</span>, <span class="st">"97.5%"</span>, <span class="st">"99%"</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">lty =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"#113f55"</span>, <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">cex =</span> .<span class="dv">9</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-var" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-hist" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Histograma de resultados diarios en pesos con un panel inferior que amplía la cola de pérdidas y marca los tres límites.">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="05-value-at-risk_files/figure-html/fig-var-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1600">
+<div aria-describedby="fig-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-value-at-risk_files/figure-html/fig-hist-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Histograma de resultados diarios en pesos con un panel inferior que amplía la cola de pérdidas y marca los tres límites." width="1600">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;1: Distribución de pérdidas y ganancias diarias de la cartera, con el VaR a un día.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1: Ganancias y pérdidas a un día para la cartera de $600,000. Las líneas identifican los cuantiles de la cola izquierda.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>Al 99%, el límite diario es $19,652. En la <a href="#fig-hist" class="quarto-xref">Figura&nbsp;1</a> las sesiones a la izquierda de esa línea muestran por qué el importe reservado para cubrir una pérdida poco frecuente puede resultar insuficiente: en esa cola la pérdida media, o <em>Expected Shortfall</em> histórico de la cartera, alcanza $30,504, y la mayor pérdida observada fue de $73,786 el 17 de marzo de 2020. El VaR mide dónde empieza la cola y el ES cuantifica la exposición media una vez dentro de ella.</p>
 </section>
 <section id="var-paramétrico" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="var-paramétrico"><span class="header-section-number">4</span> VaR paramétrico</h2>
-<p>Bajo normalidad, con <span class="math inline">\(\Sigma\)</span> la matriz de covarianzas y <span class="math inline">\(w\)</span> el vector de pesos:</p>
-<p><span class="math display">\[
-\sigma_p = \sqrt{w' \Sigma\, w}
-\qquad
-\text{VaR}_{h} = S_0\left(1 - e^{\,z_{1-c}\,\sigma_p\sqrt{h}}\right)
-\]</span></p>
-<p>El escalamiento por <span class="math inline">\(\sqrt{h}\)</span> supone independencia serial: la varianza crece linealmente en el tiempo y la desviación estándar con su raíz.</p>
-<p>La <a href="#tbl-var-param" class="quarto-xref">Tabla&nbsp;3</a> resume el VaR paramétrico y la <a href="#tbl-cov" class="quarto-xref">Tabla&nbsp;4</a> documenta la estructura de correlaciones utilizada.</p>
+<p>Estimamos la volatilidad diaria de cada acción con la desviación estándar de sus rendimientos en los seis meses de calendario que terminan el 23 de noviembre de 2026. Son 128 observaciones comunes, del 25 de mayo de 2026 al 23 de noviembre de 2026. La diagonal de la matriz contiene las varianzas diarias y cada elemento fuera de ella mide cuánto tienden a moverse juntas dos acciones. Usamos la matriz completa porque un promedio de volatilidades individuales por sí solo perdería ese efecto de diversificación <span class="citation" data-cites="ruiz2026var">(<a href="#ref-ruiz2026var" role="doc-biblioref">Ruiz Hernández, 2026</a>)</span>.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>covariance <span class="ot">&lt;-</span> <span class="fu">covariance_matrix</span>(matrix_returns)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sigma_p <span class="ot">&lt;-</span> <span class="fu">portfolio_sigma</span>(portfolio<span class="sc">$</span>weights, covariance)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>param_var <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(grid)), <span class="cf">function</span>(i) {</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">var_parametric</span>(sigma_p, grid<span class="sc">$</span>confidence[i], grid<span class="sc">$</span>horizon[i], portfolio<span class="sc">$</span>value)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}))</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(param_var, <span class="at">caption =</span> <span class="st">"VaR paramétrico (varianza-covarianza)."</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div id="tbl-var-param" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var-param-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3: VaR paramétrico (varianza-covarianza).
-</figcaption>
-<div aria-describedby="tbl-var-param-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 16%">
-<col style="width: 14%">
-<col style="width: 14%">
-<col style="width: 26%">
-<col style="width: 14%">
-<col style="width: 11%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Método</th>
-<th style="text-align: right;">Confianza</th>
-<th style="text-align: right;">Horizonte</th>
-<th style="text-align: right;">VaR (rendimiento)</th>
-<th style="text-align: right;">VaR (MXN)</th>
-<th style="text-align: right;">VaR (%)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">-0.01</td>
-<td style="text-align: right;">8,603</td>
-<td style="text-align: right;">0.01</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.98</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">-0.02</td>
-<td style="text-align: right;">10,237</td>
-<td style="text-align: right;">0.02</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">-0.02</td>
-<td style="text-align: right;">12,131</td>
-<td style="text-align: right;">0.02</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">-0.03</td>
-<td style="text-align: right;">19,067</td>
-<td style="text-align: right;">0.03</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.98</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">-0.04</td>
-<td style="text-align: right;">22,650</td>
-<td style="text-align: right;">0.04</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">-0.05</td>
-<td style="text-align: right;">26,788</td>
-<td style="text-align: right;">0.04</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">-0.05</td>
-<td style="text-align: right;">26,786</td>
-<td style="text-align: right;">0.04</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.98</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">-0.05</td>
-<td style="text-align: right;">31,779</td>
-<td style="text-align: right;">0.05</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">-0.06</td>
-<td style="text-align: right;">37,531</td>
-<td style="text-align: right;">0.06</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">-0.06</td>
-<td style="text-align: right;">37,528</td>
-<td style="text-align: right;">0.06</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.98</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">-0.08</td>
-<td style="text-align: right;">44,445</td>
-<td style="text-align: right;">0.07</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">parametric</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">-0.09</td>
-<td style="text-align: right;">52,380</td>
-<td style="text-align: right;">0.09</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(<span class="fu">round</span>(stats<span class="sc">::</span><span class="fu">cov2cor</span>(covariance), <span class="dv">3</span>)),</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Matriz de correlaciones de los últimos seis meses."</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cov_display <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="dv">10000</span> <span class="sc">*</span> Sigma, <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(cov_display, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div id="tbl-cov" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4: Matriz de correlaciones de los últimos seis meses.
+Tabla&nbsp;3: Covarianzas diarias de los últimos seis meses, en puntos porcentuales al cuadrado. Para obtener covarianzas en decimales se divide entre 10,000.
 </figcaption>
 <div aria-describedby="tbl-cov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -775,57 +506,112 @@ Tabla&nbsp;4: Matriz de correlaciones de los últimos seis meses.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">ALSEA.MX</td>
-<td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.191</td>
-<td style="text-align: right;">0.084</td>
-<td style="text-align: right;">0.099</td>
-<td style="text-align: right;">0.125</td>
-<td style="text-align: right;">0.252</td>
+<td style="text-align: right;">2.539</td>
+<td style="text-align: right;">0.378</td>
+<td style="text-align: right;">0.245</td>
+<td style="text-align: right;">0.068</td>
+<td style="text-align: right;">0.304</td>
+<td style="text-align: right;">0.545</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BBAJIOO.MX</td>
-<td style="text-align: right;">0.191</td>
-<td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.151</td>
-<td style="text-align: right;">0.214</td>
-<td style="text-align: right;">0.159</td>
-<td style="text-align: right;">0.011</td>
+<td style="text-align: right;">0.378</td>
+<td style="text-align: right;">1.732</td>
+<td style="text-align: right;">0.440</td>
+<td style="text-align: right;">0.506</td>
+<td style="text-align: right;">0.399</td>
+<td style="text-align: right;">0.063</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">GAPB.MX</td>
-<td style="text-align: right;">0.084</td>
-<td style="text-align: right;">0.151</td>
-<td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.229</td>
-<td style="text-align: right;">0.055</td>
-<td style="text-align: right;">0.191</td>
+<td style="text-align: right;">0.245</td>
+<td style="text-align: right;">0.440</td>
+<td style="text-align: right;">3.801</td>
+<td style="text-align: right;">0.890</td>
+<td style="text-align: right;">0.108</td>
+<td style="text-align: right;">0.516</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">GMEXICOB.MX</td>
-<td style="text-align: right;">0.099</td>
-<td style="text-align: right;">0.214</td>
-<td style="text-align: right;">0.229</td>
-<td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.173</td>
-<td style="text-align: right;">-0.116</td>
+<td style="text-align: right;">0.068</td>
+<td style="text-align: right;">0.506</td>
+<td style="text-align: right;">0.890</td>
+<td style="text-align: right;">4.372</td>
+<td style="text-align: right;">0.620</td>
+<td style="text-align: right;">-0.433</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">ORBIA.MX</td>
-<td style="text-align: right;">0.125</td>
-<td style="text-align: right;">0.159</td>
-<td style="text-align: right;">0.055</td>
-<td style="text-align: right;">0.173</td>
-<td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.007</td>
+<td style="text-align: right;">0.304</td>
+<td style="text-align: right;">0.399</td>
+<td style="text-align: right;">0.108</td>
+<td style="text-align: right;">0.620</td>
+<td style="text-align: right;">3.139</td>
+<td style="text-align: right;">0.048</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">WALMEX.MX</td>
-<td style="text-align: right;">0.252</td>
-<td style="text-align: right;">0.011</td>
-<td style="text-align: right;">0.191</td>
-<td style="text-align: right;">-0.116</td>
-<td style="text-align: right;">0.007</td>
-<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.545</td>
+<td style="text-align: right;">0.063</td>
+<td style="text-align: right;">0.516</td>
+<td style="text-align: right;">-0.433</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">1.882</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>La volatilidad diaria de la cartera es <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>p</mi></msub><mo>=</mo><msqrt><mrow><msup><mi>w</mi><mi>⊤</mi></msup><mi mathvariant="normal">Σ</mi><mi>w</mi></mrow></msqrt><mo>=</mo></mrow><annotation encoding="application/x-tex">\sigma_p=\sqrt{w^\top\Sigma w}=</annotation></semantics></math> 0.864%. Si las seis posiciones se movieran con correlación positiva perfecta, sus volatilidades ponderadas sumarían 1.682%. La diferencia mide cuánto riesgo se compensa al combinar las posiciones con las correlaciones observadas en esta ventana.</p>
+<p>Suponemos media diaria cero porque estimar una tendencia con seis meses introduciría una fuente adicional de error en el límite de corto plazo. Bajo la aproximación lineal de pérdidas y ganancias normales, con varianza diaria constante e incrementos sin autocorrelación, la varianza acumulada es <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><msubsup><mi>σ</mi><mi>p</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">h\sigma_p^2</annotation></semantics></math>, por lo que <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">V</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">R</mi></mrow><mrow><mi>c</mi><mo>,</mo><mi>h</mi></mrow></msub><mo>=</mo><msub><mi>S</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><msup><mi mathvariant="normal">Φ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>σ</mi><mi>p</mi></msub><msqrt><mi>h</mi></msqrt></mrow><annotation encoding="application/x-tex">\mathrm{VaR}_{c,h}=S_0\,\Phi^{-1}(c)\,\sigma_p\sqrt{h}</annotation></semantics></math>. La persistencia de la volatilidad y las caídas simultáneas de varias acciones pueden hacer que la pérdida observada a veinte días se aparte de ese escalamiento.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(param_display, <span class="at">digits =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-normal" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-normal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;4: VaR normal de la misma cartera y con los mismos niveles de confianza, en MXN.
+</figcaption>
+<div aria-describedby="tbl-normal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Sesiones</th>
+<th style="text-align: left;">95%</th>
+<th style="text-align: left;">97.5%</th>
+<th style="text-align: left;">99%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">$8,524</td>
+<td style="text-align: left;">$10,157</td>
+<td style="text-align: left;">$12,056</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">$19,061</td>
+<td style="text-align: left;">$22,713</td>
+<td style="text-align: left;">$26,958</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">$26,956</td>
+<td style="text-align: left;">$32,120</td>
+<td style="text-align: left;">$38,125</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">$38,122</td>
+<td style="text-align: left;">$45,425</td>
+<td style="text-align: left;">$53,917</td>
 </tr>
 </tbody>
 </table>
@@ -835,81 +621,81 @@ Tabla&nbsp;4: Matriz de correlaciones de los últimos seis meses.
 </div>
 </div>
 </section>
-<section id="backtesting" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="backtesting"><span class="header-section-number">5</span> Backtesting</h2>
-<p>Cada día se estima el VaR con la ventana previa únicamente, de modo que la serie es lo que el modelo habría reportado ese día. Estimarlo sobre la muestra completa y contar excepciones contra esa misma muestra no es un <em>backtest</em>.</p>
-<p>La prueba de cobertura incondicional de Kupiec contrasta el número observado de excepciones contra el esperado:</p>
-<p><span class="math display">\[
-LR = -2\ln\frac{(1-p)^{\,n-x}\,p^{\,x}}{(1-\hat\pi)^{\,n-x}\,\hat\pi^{\,x}} \;\sim\; \chi^2_{1}
-\]</span></p>
-<p>La <a href="#tbl-backtest" class="quarto-xref">Tabla&nbsp;5</a> contrasta las excedencias observadas y esperadas.</p>
+<section id="backtesting-del-var-diario" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="backtesting-del-var-diario"><span class="header-section-number">5</span> Backtesting del VaR diario</h2>
+<p>Para cada cierre de evaluación reconstruimos la información disponible en la víspera. El modelo histórico incorpora los rendimientos conjuntos observados hasta entonces y el paramétrico vuelve a estimar su volatilidad con los seis meses precedentes. Comparamos ambas previsiones con la misma pérdida realizada sobre $600,000 y los mismos pesos iniciales. Así se puede evaluar la calibración de la regla de riesgo aunque el tamaño real de una cuenta cambie por depósitos, retiros o rebalanceos.</p>
+<p>Una violación ocurre cuando la pérdida realizada supera el VaR anunciado. Entre el 2 de enero de 2026 y el 23 de noviembre de 2026 contamos 222 pronósticos comparables. Al 99% esperaríamos 2.22 violaciones, de modo que una sola sesión mueve apreciablemente el resultado. Evaluamos la cercanía al conteo esperado en los tres niveles y distinguimos la frecuencia de la gravedad de las pérdidas.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>confidence <span class="ot">&lt;-</span> <span class="fl">0.99</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>rolling_hist <span class="ot">&lt;-</span> <span class="fu">rolling_var</span>(portfolio_r, confidence, <span class="at">method =</span> <span class="st">"historical"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>rolling_param <span class="ot">&lt;-</span> <span class="fu">rolling_var</span>(portfolio_r, confidence, <span class="at">method =</span> <span class="st">"parametric"</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>backtest <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="at">metodo =</span> <span class="st">"Histórico"</span>, <span class="fu">backtest_var</span>(portfolio_r, rolling_hist, confidence)),</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="at">metodo =</span> <span class="st">"Paramétrico"</span>, <span class="fu">backtest_var</span>(portfolio_r, rolling_param, confidence))</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(backtest, <span class="at">caption =</span> <span class="st">"Backtesting del VaR a un día al 99%."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(bt_display, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-backtest" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<div id="tbl-bt" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-backtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;5: Backtesting del VaR a un día al 99%.
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-bt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;5: Cobertura fuera de muestra. Conteos de sesiones para ambos modelos.
 </figcaption>
-<div aria-describedby="tbl-backtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-bt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 8%">
-<col style="width: 7%">
-<col style="width: 9%">
-<col style="width: 15%">
-<col style="width: 16%">
-<col style="width: 14%">
-<col style="width: 10%">
-<col style="width: 5%">
-<col style="width: 12%">
-</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Método</th>
 <th style="text-align: right;">Confianza</th>
-<th style="text-align: right;">Observaciones</th>
-<th style="text-align: right;">Excedencias esperadas</th>
-<th style="text-align: right;">Excedencias observadas</th>
-<th style="text-align: right;">Tasa de excedencias</th>
-<th style="text-align: right;">Estadístico LR</th>
-<th style="text-align: right;">Valor p</th>
-<th style="text-align: left;">Rechaza el modelo</th>
+<th style="text-align: left;">Modelo</th>
+<th style="text-align: right;">Observadas</th>
+<th style="text-align: right;">Esperadas</th>
+<th style="text-align: right;">Frecuencia</th>
+<th style="text-align: right;">p de Kupiec</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: right;">95.0%</td>
 <td style="text-align: left;">Histórico</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">2,115</td>
-<td style="text-align: right;">21.15</td>
-<td style="text-align: right;">35</td>
-<td style="text-align: right;">0.0165</td>
-<td style="text-align: right;">7.651</td>
-<td style="text-align: right;">0.0057</td>
-<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">11.10</td>
+<td style="text-align: right;">3.60%</td>
+<td style="text-align: right;">0.32</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Paramétrico</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">2,115</td>
-<td style="text-align: right;">21.15</td>
-<td style="text-align: right;">38</td>
-<td style="text-align: right;">0.0180</td>
-<td style="text-align: right;">10.968</td>
-<td style="text-align: right;">0.0009</td>
-<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">95.0%</td>
+<td style="text-align: left;">Normal</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">11.10</td>
+<td style="text-align: right;">3.15%</td>
+<td style="text-align: right;">0.18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">97.5%</td>
+<td style="text-align: left;">Histórico</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5.55</td>
+<td style="text-align: right;">2.25%</td>
+<td style="text-align: right;">0.81</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">97.5%</td>
+<td style="text-align: left;">Normal</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">5.55</td>
+<td style="text-align: right;">2.70%</td>
+<td style="text-align: right;">0.85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">99.0%</td>
+<td style="text-align: left;">Histórico</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.22</td>
+<td style="text-align: right;">0.45%</td>
+<td style="text-align: right;">0.36</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">99.0%</td>
+<td style="text-align: left;">Normal</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2.22</td>
+<td style="text-align: right;">1.35%</td>
+<td style="text-align: right;">0.62</td>
 </tr>
 </tbody>
 </table>
@@ -918,126 +704,131 @@ Tabla&nbsp;5: Backtesting del VaR a un día al 99%.
 </figure>
 </div>
 </div>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Comparación de excepciones observadas contra esperadas y evaluación del desempeño. Demasiadas pocas excepciones reprueban la prueba igual que demasiadas: un modelo que nunca se excede no es conservador, está mal calibrado y es caro.</p>
-</div>
-</div>
+<p>Al 99%, el histórico registró 1 violación y el normal 3 frente a 2.22 esperadas. Por cercanía al conteo esperado, el normal obtuvo la mejor cobertura al 97.5% y al 99%, mientras que el histórico quedó más cerca al 95%. La prueba de Kupiec compara la frecuencia observada con la que implica cada nivel de confianza <span class="citation" data-cites="kupiec1995">(<a href="#ref-kupiec1995" role="doc-biblioref">Kupiec, 1995</a>)</span>. Los seis valores p superan 0.05, por lo que la muestra resulta compatible con la cobertura de ambos métodos. Con apenas dos excepciones esperadas al 99%, la prueba distingue con dificultad entre modelos y tampoco evalúa si las pérdidas se agrupan en días sucesivos.</p>
+<p>El 3 de marzo de 2026, la jornada de mayor pérdida de la cartera en la evaluación, el resultado fue de $-21,459. Los límites que se podían calcular antes de esa sesión eran $20,352 con el histórico y $16,385 con el normal. El tamaño de esa diferencia importa cuando se usa el VaR para decidir cuánta liquidez mantener disponible.</p>
 </section>
 <section id="optimización-de-la-cartera" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="optimización-de-la-cartera"><span class="header-section-number">6</span> Optimización de la cartera</h2>
-<div id="tbl-optimisation" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-optimisation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;6
-</figcaption>
-<div aria-describedby="tbl-optimisation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<details class="code-fold">
-<summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>optimal <span class="ot">&lt;-</span> <span class="fu">optimise_min_var</span>(matrix_returns)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>comparison <span class="ot">&lt;-</span> <span class="fu">compare_allocations</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  matrix_returns,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pesos iguales"</span> <span class="ot">=</span> portfolio<span class="sc">$</span>weights,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"VaR mínimo"</span> <span class="ot">=</span> optimal<span class="sc">$</span>weights</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> portfolio<span class="sc">$</span>value</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(comparison, <span class="at">caption =</span> <span class="st">"Cartera equiponderada frente a la de VaR mínimo."</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-</figure>
-</div>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Comparación de composiciones y análisis del cambio en riesgo y diversificación. Activar el chunk cuando <code>nloptr</code> esté instalado (<code>renv::restore()</code>).</p>
-</div>
-</div>
-</section>
-<section id="var-individual-y-expected-shortfall" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="var-individual-y-expected-shortfall"><span class="header-section-number">7</span> VaR individual y <em>Expected Shortfall</em></h2>
-<p>La <a href="#tbl-individual" class="quarto-xref">Tabla&nbsp;7</a> presenta ambas medidas para la posición individual.</p>
+<p>Conservamos el capital de $600,000 y cambiamos únicamente su distribución entre las seis emisoras. Si el rendimiento simple diario sigue una normal con media cero, el VaR a un día es el capital multiplicado por el cuantil normal y por la volatilidad de la cartera. Como los dos primeros factores son positivos y constantes, la cartera que minimiza la varianza también alcanza el VaR mínimo bajo este modelo.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Ver código</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>position <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>position_mxn</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>subject_returns <span class="ot">&lt;-</span> returns[returns<span class="sc">$</span>ticker <span class="sc">==</span> <span class="fu">subject</span>(), <span class="st">"log_return"</span>]</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>individual <span class="ot">&lt;-</span> <span class="fu">var_monte_carlo</span>(</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  subject_returns,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">confidence =</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>monte_carlo<span class="sc">$</span>confidence,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizon =</span> <span class="dv">1</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> position</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  individual,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="fu">paste0</span>(<span class="st">"VaR y ES al 99% por Monte Carlo sobre una posición de "</span>, <span class="fu">fmt_mxn</span>(position), <span class="st">" en "</span>, <span class="fu">subject</span>(), <span class="st">"."</span>),</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">2</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>opt_cfg <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>optimisation</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>opt_assets <span class="ot">&lt;-</span> <span class="fu">names</span>(w)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>opt_cov <span class="ot">&lt;-</span> Sigma[opt_assets, opt_assets, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>opt_n <span class="ot">&lt;-</span> <span class="fu">length</span>(w)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>opt_cap <span class="ot">&lt;-</span> opt_cfg<span class="sc">$</span>max_weight</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">isTRUE</span>(opt_cfg<span class="sc">$</span>long_only))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># solve.QP impone t(Amat) %*% pesos &gt;= bvec, salvo la primera igualdad.</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>opt_fit <span class="ot">&lt;-</span> quadprog<span class="sc">::</span><span class="fu">solve.QP</span>(</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Dmat =</span> <span class="dv">2</span> <span class="sc">*</span> opt_cov, <span class="at">dvec =</span> <span class="fu">numeric</span>(opt_n),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Amat =</span> <span class="fu">cbind</span>(<span class="fu">rep</span>(<span class="dv">1</span>, opt_n), <span class="fu">diag</span>(opt_n), <span class="sc">-</span><span class="fu">diag</span>(opt_n)),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">bvec =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">numeric</span>(opt_n), <span class="fu">rep</span>(<span class="sc">-</span>opt_cap, opt_n)), <span class="at">meq =</span> <span class="dv">1</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>opt_w <span class="ot">&lt;-</span> <span class="fu">setNames</span>(opt_fit<span class="sc">$</span>solution, opt_assets)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Una transferencia desde i hacia j cambia la varianza al margen en g[j] - g[i].</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>opt_tol <span class="ot">&lt;-</span> <span class="fl">1e-8</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>opt_gradient <span class="ot">&lt;-</span> <span class="fu">drop</span>(<span class="dv">2</span> <span class="sc">*</span> opt_cov <span class="sc">%*%</span> opt_w)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>opt_sell <span class="ot">&lt;-</span> opt_w <span class="sc">&gt;</span> opt_tol</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>opt_buy <span class="ot">&lt;-</span> opt_w <span class="sc">&lt;</span> opt_cap <span class="sc">-</span> opt_tol</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(<span class="fu">sum</span>(opt_w) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">&lt;</span> opt_tol,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(opt_w <span class="sc">&gt;=</span> <span class="sc">-</span>opt_tol <span class="sc">&amp;</span> opt_w <span class="sc">&lt;=</span> opt_cap <span class="sc">+</span> opt_tol),</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">min</span>(opt_gradient[opt_buy]) <span class="sc">&gt;=</span> <span class="fu">max</span>(opt_gradient[opt_sell]) <span class="sc">-</span> opt_tol</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-individual" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+</div>
+<p>Estimamos la varianza con las covarianzas de los últimos 6 meses. La inversión suma el 100 % del capital, con posiciones largas y un máximo de 40% por emisora. Para comprobar la solución verificamos que ninguna transferencia pequeña de capital entre dos emisoras permita reducir la varianza respetando esos límites. Como la función que minimizamos es convexa, esa condición verifica el mínimo global.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>allocation_amounts <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Emisora =</span> opt_assets,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Peso inicial"</span> <span class="ot">=</span> <span class="fu">fmt_pct</span>(w),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Peso óptimo"</span> <span class="ot">=</span> <span class="fu">fmt_pct</span>(opt_w),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Monto inicial"</span> <span class="ot">=</span> <span class="fu">round</span>(S0 <span class="sc">*</span> w),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Monto óptimo"</span> <span class="ot">=</span> <span class="fu">round</span>(S0 <span class="sc">*</span> opt_w),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Cambio en MXN"</span> <span class="ot">=</span> <span class="fu">round</span>(S0 <span class="sc">*</span> (opt_w <span class="sc">-</span> w)),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">NULL</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(allocation_amounts, <span class="at">caption =</span> <span class="st">"Distribución del capital por emisora, en pesos mexicanos."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-allocation-weights" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-individual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en GAPB.MX.
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-allocation-weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;6: Distribución del capital por emisora, en pesos mexicanos.
 </figcaption>
-<div aria-describedby="tbl-individual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-allocation-weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 19%">
-<col style="width: 7%">
-<col style="width: 7%">
-<col style="width: 10%">
-<col style="width: 14%">
-<col style="width: 7%">
-<col style="width: 6%">
-<col style="width: 13%">
-<col style="width: 7%">
-<col style="width: 5%">
+<col style="width: 15%">
+<col style="width: 16%">
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 16%">
+<col style="width: 17%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Método</th>
-<th style="text-align: right;">Confianza</th>
-<th style="text-align: right;">Horizonte</th>
-<th style="text-align: right;">Simulaciones</th>
-<th style="text-align: right;">VaR (rendimiento)</th>
-<th style="text-align: right;">VaR (MXN)</th>
-<th style="text-align: right;">VaR (%)</th>
-<th style="text-align: right;">ES (rendimiento)</th>
-<th style="text-align: right;">ES (MXN)</th>
-<th style="text-align: right;">ES (%)</th>
+<th style="text-align: left;">Emisora</th>
+<th style="text-align: right;">Peso inicial</th>
+<th style="text-align: right;">Peso óptimo</th>
+<th style="text-align: right;">Monto inicial</th>
+<th style="text-align: right;">Monto óptimo</th>
+<th style="text-align: right;">Cambio en MXN</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">monte carlo (bootstrap)</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: left;">ALSEA.MX</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: right;">12.72%</td>
 <td style="text-align: right;">100,000</td>
-<td style="text-align: right;">-0.05</td>
-<td style="text-align: right;">5,106</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">-0.07</td>
-<td style="text-align: right;">7,182</td>
-<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">76,314</td>
+<td style="text-align: right;">-23,686</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BBAJIOO.MX</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: right;">25.66%</td>
+<td style="text-align: right;">100,000</td>
+<td style="text-align: right;">153,989</td>
+<td style="text-align: right;">53,989</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GAPB.MX</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: right;">6.05%</td>
+<td style="text-align: right;">100,000</td>
+<td style="text-align: right;">36,297</td>
+<td style="text-align: right;">-63,703</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GMEXICOB.MX</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: right;">11.63%</td>
+<td style="text-align: right;">100,000</td>
+<td style="text-align: right;">69,781</td>
+<td style="text-align: right;">-30,219</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ORBIA.MX</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: right;">13.25%</td>
+<td style="text-align: right;">100,000</td>
+<td style="text-align: right;">79,483</td>
+<td style="text-align: right;">-20,517</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">WALMEX.MX</td>
+<td style="text-align: right;">16.67%</td>
+<td style="text-align: right;">30.69%</td>
+<td style="text-align: right;">100,000</td>
+<td style="text-align: right;">184,135</td>
+<td style="text-align: right;">84,135</td>
 </tr>
 </tbody>
 </table>
@@ -1046,57 +837,239 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
 </figure>
 </div>
 </div>
-<p>El <em>Expected Shortfall</em> es la pérdida promedio condicionada a haber rebasado el VaR:</p>
-<p><span class="math display">\[
-\text{ES}_c = \mathbb{E}\left[\,L \mid L \ge \text{VaR}_c\,\right]
-\]</span></p>
-<p>Donde el VaR dice cuánto se pierde antes de entrar al peor 1%, el ES dice cuánto se pierde dentro de ese 1% — la pregunta que el VaR es estructuralmente incapaz de responder.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>allocation_weights <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="at">Equiponderada =</span> w, Ó<span class="at">ptima =</span> opt_w)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>allocation_vol <span class="ot">&lt;-</span> <span class="fu">apply</span>(allocation_weights, <span class="dv">2</span>, portfolio_sigma, <span class="at">covariance =</span> opt_cov)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>allocation_normal <span class="ot">&lt;-</span> S0 <span class="sc">*</span> <span class="fu">qnorm</span>(opt_cfg<span class="sc">$</span>confidence) <span class="sc">*</span> allocation_vol</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Cada fila conserva los movimientos simultáneos de las seis emisoras.</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>allocation_losses <span class="ot">&lt;-</span> <span class="sc">-</span>S0 <span class="sc">*</span> ret[, opt_assets, drop <span class="ot">=</span> <span class="cn">FALSE</span>] <span class="sc">%*%</span> allocation_weights</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>allocation_hist <span class="ot">&lt;-</span> <span class="fu">apply</span>(allocation_losses, <span class="dv">2</span>, quantile, <span class="at">probs =</span> opt_cfg<span class="sc">$</span>confidence,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>allocation_effective <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">colSums</span>(allocation_weights<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>allocation_gain <span class="ot">&lt;-</span> <span class="fu">unname</span>(allocation_normal[<span class="dv">1</span>] <span class="sc">-</span> allocation_normal[<span class="dv">2</span>])</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>allocation_hist_change <span class="ot">&lt;-</span> <span class="fu">unname</span>(allocation_hist[<span class="dv">2</span>] <span class="sc">-</span> allocation_hist[<span class="dv">1</span>])</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>allocation_top <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">sort</span>(opt_w, <span class="at">decreasing =</span> <span class="cn">TRUE</span>), <span class="dv">2</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">Cartera =</span> <span class="fu">colnames</span>(allocation_weights),</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Volatilidad diaria"</span> <span class="ot">=</span> <span class="fu">fmt_pct</span>(allocation_vol),</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VaR normal"</span> <span class="ot">=</span> <span class="fu">fmt_mxn</span>(allocation_normal),</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VaR histórico"</span> <span class="ot">=</span> <span class="fu">fmt_mxn</span>(allocation_hist),</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Número efectivo de emisoras"</span> <span class="ot">=</span> <span class="fu">round</span>(allocation_effective, <span class="dv">2</span>),</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">NULL</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>), <span class="at">caption =</span> <span class="fu">paste0</span>(<span class="st">"Riesgo a un día al "</span>, <span class="fu">fmt_pct</span>(opt_cfg<span class="sc">$</span>confidence, <span class="dv">0</span>),</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>                    <span class="st">" en MXN y concentración del capital."</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-allocation-risk" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-allocation-risk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;7: Riesgo a un día al 99% en MXN y concentración del capital.
+</figcaption>
+<div aria-describedby="tbl-allocation-risk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 22%">
+<col style="width: 12%">
+<col style="width: 16%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Cartera</th>
+<th style="text-align: right;">Volatilidad diaria</th>
+<th style="text-align: left;">VaR normal</th>
+<th style="text-align: left;">VaR histórico</th>
+<th style="text-align: right;">Número efectivo de emisoras</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Equiponderada</td>
+<td style="text-align: right;">0.86%</td>
+<td style="text-align: left;">$12,056</td>
+<td style="text-align: left;">$19,652</td>
+<td style="text-align: right;">6.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Óptima</td>
+<td style="text-align: right;">0.81%</td>
+<td style="text-align: left;">$11,255</td>
+<td style="text-align: left;">$18,113</td>
+<td style="text-align: right;">4.74</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>La reasignación reduce el VaR normal diario en <strong>$801</strong>, equivalentes al 6.65% del VaR inicial. Las dos posiciones de mayor peso, WALMEX.MX y BBAJIOO.MX, reúnen el 56.35% del capital. El número efectivo de emisoras pasa de 6 a 4.74. Esta medida, el inverso de la suma de los pesos al cuadrado, indica cuántas posiciones iguales tendrían la misma concentración de capital.</p>
+<p>Al aplicar ambas composiciones a las mismas 2,376 sesiones históricas, el VaR de la cartera óptima baja en $1,540 frente al de la equiponderada. Este contraste muestra cómo habrían respondido los pesos actuales a las caídas observadas. La garantía de mínimo corresponde al VaR normal calculado con la covarianza reciente.</p>
 </section>
-<section id="análisis-e-interpretación" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="análisis-e-interpretación"><span class="header-section-number">8</span> Análisis e interpretación</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="var-y-pérdida-esperada-en-la-cola-de-gapb" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="var-y-pérdida-esperada-en-la-cola-de-gapb"><span class="header-section-number">7</span> VaR y pérdida esperada en la cola de GAPB</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mc_cfg <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>monte_carlo</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mc_position <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>position_mxn</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mc_cutoff <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">as.Date</span>(<span class="fu">rownames</span>(px)))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>mc_prices <span class="ot">&lt;-</span> prices[prices<span class="sc">$</span>ticker <span class="sc">==</span> <span class="fu">subject</span>() <span class="sc">&amp;</span> prices<span class="sc">$</span>date <span class="sc">&lt;=</span> mc_cutoff,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">c</span>(<span class="st">"date"</span>, <span class="st">"adjusted"</span>)]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>mc_prices <span class="ot">&lt;-</span> mc_prices[<span class="fu">order</span>(mc_prices<span class="sc">$</span>date), ]</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(mc_prices) <span class="sc">&gt;=</span> <span class="dv">2</span>L, <span class="sc">!</span><span class="fu">anyDuplicated</span>(mc_prices<span class="sc">$</span>date))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>mc_calendar <span class="ot">&lt;-</span> p5<span class="sc">$</span>session_dates[p5<span class="sc">$</span>session_dates <span class="sc">&gt;=</span> <span class="fu">min</span>(mc_prices<span class="sc">$</span>date) <span class="sc">&amp;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                                p5<span class="sc">$</span>session_dates <span class="sc">&lt;=</span> mc_cutoff]</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>mc_prices <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">date =</span> mc_calendar,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">adjusted =</span> mc_prices<span class="sc">$</span>adjusted[<span class="fu">match</span>(mc_calendar, mc_prices<span class="sc">$</span>date)])</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>mc_previous <span class="ot">&lt;-</span> <span class="fu">head</span>(mc_prices<span class="sc">$</span>adjusted, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>mc_current <span class="ot">&lt;-</span> <span class="fu">tail</span>(mc_prices<span class="sc">$</span>adjusted, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>mc_valid <span class="ot">&lt;-</span> <span class="fu">is.finite</span>(mc_previous) <span class="sc">&amp;</span> mc_previous <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>            <span class="fu">is.finite</span>(mc_current) <span class="sc">&amp;</span> mc_current <span class="sc">&gt;</span> <span class="dv">0</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>mc_returns <span class="ot">&lt;-</span> mc_current[mc_valid] <span class="sc">/</span> mc_previous[mc_valid] <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">length</span>(mc_returns) <span class="sc">&gt;</span> <span class="dv">0</span>L)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
+<p>Para una posición de <strong>$100,000 en GAPB.MX</strong>, usamos la historia propia de la emisora hasta el corte de la cartera, el 23 de noviembre de 2026. Desde el cierre del 27 de febrero de 2006 contamos 5,214 rendimientos simples entre cierres ajustados consecutivos válidos. Así se incluyen también los años anteriores a la primera sesión común de las seis acciones.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">use_seed</span>()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>mc_draws <span class="ot">&lt;-</span> <span class="fu">sample</span>(mc_returns, <span class="at">size =</span> mc_cfg<span class="sc">$</span>n_simulations, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mc_losses <span class="ot">&lt;-</span> <span class="sc">-</span>mc_position <span class="sc">*</span> mc_draws</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>mc_var <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">quantile</span>(mc_losses, mc_cfg<span class="sc">$</span>confidence))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>mc_tail <span class="ot">&lt;-</span> mc_losses[mc_losses <span class="sc">&gt;=</span> mc_var]</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>mc_es <span class="ot">&lt;-</span> <span class="fu">mean</span>(mc_tail)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(mc_es <span class="sc">&gt;=</span> mc_var)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Medida =</span> <span class="fu">c</span>(<span class="st">"Valor en riesgo (VaR)"</span>, <span class="st">"Pérdida esperada en la cola (ES)"</span>),</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Pérdida en MXN"</span> <span class="ot">=</span> <span class="fu">fmt_mxn</span>(<span class="fu">c</span>(mc_var, mc_es), <span class="dv">2</span>),</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Porcentaje de la posición"</span> <span class="ot">=</span> <span class="fu">fmt_pct</span>(<span class="fu">c</span>(mc_var, mc_es) <span class="sc">/</span> mc_position),</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>), <span class="at">caption =</span> <span class="fu">paste0</span>(<span class="st">"Riesgo individual a un día por Monte Carlo empírico al "</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">fmt_pct</span>(mc_cfg<span class="sc">$</span>confidence, <span class="dv">0</span>), <span class="st">"."</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-allocation-individual-tail" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-allocation-individual-tail-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;8: Riesgo individual a un día por Monte Carlo empírico al 99%.
+</figcaption>
+<div aria-describedby="tbl-allocation-individual-tail-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 44%">
+<col style="width: 20%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Medida</th>
+<th style="text-align: left;">Pérdida en MXN</th>
+<th style="text-align: right;">Porcentaje de la posición</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Valor en riesgo (VaR)</td>
+<td style="text-align: left;">$5,084.76</td>
+<td style="text-align: right;">5.08%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pérdida esperada en la cola (ES)</td>
+<td style="text-align: left;">$7,099.29</td>
+<td style="text-align: right;">7.10%</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<ul>
-<li>¿Qué diferencias hay entre el VaR paramétrico y el no paramétrico?</li>
-<li>¿Cuál captura mejor los eventos extremos?</li>
-<li>¿Cuál es más conservador?</li>
-<li>¿Qué implica elegir un modelo que subestima el riesgo?</li>
-<li>¿Qué arroja el <em>backtesting</em> y qué se concluye de ello?</li>
-</ul>
+</figure>
 </div>
 </div>
+<p>Cada uno de los 100,000 escenarios toma al azar, con reemplazo, el rendimiento de una sesión de GAPB y lo aplica a la posición actual. El VaR de <strong>$5,084.76</strong> marca la entrada al peor 1% de las pérdidas simuladas. Entre los 1,016 escenarios que alcanzan o superan ese umbral, incluidos los empates del remuestreo, la pérdida promedio asciende a <strong>$7,099.29</strong>, es decir, $2,014.53 más que el VaR. El remuestreo conserva las caídas extremas registradas en GAPB, aunque su pérdida máxima posible queda limitada a la peor sesión observada.</p>
 </section>
-<section id="conclusiones" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="conclusiones"><span class="header-section-number">9</span> Conclusiones</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Pendiente de redacción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="comparación-e-interpretación-financiera" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="comparación-e-interpretación-financiera">Comparación e interpretación financiera</h2>
+<p>Al 99% y a una sesión, el método histórico exige $19,652 frente a $12,056 del normal. A veinte sesiones la comparación pasa a $109,225 y $53,917, respectivamente. La diferencia combina dos efectos: el histórico conserva la forma de la cola y abarca años que quedan fuera de la ventana reciente. Por ello no podemos atribuir la brecha exclusivamente a la normalidad. En 12 de las 12 comparaciones, la reserva histórica es mayor.</p>
+<p>Si restringimos el histórico a las mismas 128 sesiones que usa la matriz de covarianzas, su VaR diario al 99% pasa de $19,652 a $12,846. La comparación a igual ventana deja una diferencia de $790 con el normal. Ese cuantil reciente depende de apenas dos o tres observaciones de cola, lo que explica por qué conservamos la historia completa como referencia para eventos extremos.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(event_display, <span class="at">digits =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-events" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;9: Dos jornadas de GAPB revaluadas sobre las posiciones actuales. Una cifra positiva indica ganancia, en pesos.
+</figcaption>
+<div aria-describedby="tbl-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Fecha</th>
+<th style="text-align: right;">GAPB</th>
+<th style="text-align: right;">Otras cinco</th>
+<th style="text-align: right;">Cartera</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2023-10-05</td>
+<td style="text-align: right;">-22,451</td>
+<td style="text-align: right;">-5,195</td>
+<td style="text-align: right;">-27,645</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2026-10-20</td>
+<td style="text-align: right;">6,954</td>
+<td style="text-align: right;">975</td>
+<td style="text-align: right;">7,929</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Pendiente de redacción
+</div>
+</figure>
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p>Comparación de metodologías y justificación de cuál se usaría en la práctica.</p>
-</div>
-</div>
+<p>El 5 de octubre de 2023, tras el anuncio de cambios a las bases tarifarias, la pérdida de GAPB explica 81.2% de la pérdida de la cartera. En cambio, el 20 de octubre de 2026, primera sesión después de publicarse los resultados trimestrales de GAP <span class="citation" data-cites="gap3q2026">(<a href="#ref-gap3q2026" role="doc-biblioref">Grupo Aeroportuario del Pacífico, 2026</a>)</span>, el alza de la emisora aportó $6,954. Ambos movimientos elevan una medida de volatilidad que eleva los rendimientos al cuadrado, pero solo la caída entra directamente a la cola izquierda de GAPB. La reacción del portafolio depende además de cuánto aportan las otras cinco posiciones ese mismo día.</p>
+<p>El movimiento del 20 de octubre entró al pronóstico de la sesión siguiente. Entre ambos días el VaR normal al 99% pasó de $12,868 a $12,965, mientras que el histórico cambió de $19,865 a $19,856. La covarianza móvil responde a los movimientos amplios en ambas direcciones. Para el histórico, añadir una jornada de ganancia apenas cambia la posición del percentil entre las pérdidas ordenadas. Así, un salto favorable de GAPB puede aumentar la volatilidad reciente sin generar una violación del límite.</p>
 </section>
-<section id="referencias" class="level2" data-number="10">
-<h2 data-number="10" class="anchored" data-anchor-id="referencias"><span class="header-section-number">10</span> Referencias</h2>
+<section id="conclusiones" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="conclusiones"><span class="header-section-number">8</span> Conclusiones</h2>
+<p>Para decidir cuánto capital apartar ante una pérdida extrema usaríamos el histórico como referencia principal, acompañado por el ES. Conserva la experiencia de sesiones en que varias acciones cayeron juntas y permite expresar la severidad de ese riesgo en pesos. El cálculo normal de seis meses cumple otra función en la mesa de riesgo: permite actualizar el límite cuando cambia la volatilidad reciente y medir el efecto de sustituir una posición por otra con distinta covarianza.</p>
+<p>Si se aparta solo $12,056 al 99% diario, la diferencia hasta el umbral más alto es de $7,596. Para una cartera que necesite liquidez precisamente en una caída generalizada, una reserva insuficiente puede obligar a vender después de la pérdida. Revisaríamos esa decisión al acumular más pronósticos fuera de muestra, atendiendo tanto al número de violaciones como a su importe y a la concentración de la cartera que realmente se mantiene.</p>
+</section>
+<section id="referencias" class="level2 unnumbered">
+
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Referencias</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-gaptariff2023initial" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2023, octubre 4). <em>Announces Government Action to Change Tariff Base Regulation</em>. <a href="https://www.globenewswire.com/news-release/2023/10/05/2755031/0/en/Grupo-Aeroportuario-del-Pacifico-Announces-Government-Action-to-Change-Tariff-Base-Regulation.html">https://www.globenewswire.com/news-release/2023/10/05/2755031/0/en/Grupo-Aeroportuario-del-Pacifico-Announces-Government-Action-to-Change-Tariff-Base-Regulation.html</a>
+</div>
+<div id="ref-gap3q2026" class="csl-entry" role="listitem">
+Grupo Aeroportuario del Pacífico. (2026, octubre 19). <em>Announces Results for the Third Quarter of 2026</em>. <a href="https://finance.yahoo.com/markets/stocks/articles/grupo-aeroportuario-del-pacifico-announces-022700810.html">https://finance.yahoo.com/markets/stocks/articles/grupo-aeroportuario-del-pacifico-announces-022700810.html</a>
+</div>
+<div id="ref-kupiec1995" class="csl-entry" role="listitem">
+Kupiec, P. H. (1995). Techniques for Verifying the Accuracy of Risk Measurement Models. <em>The Journal of Derivatives</em>, <em>3</em>(2), 73-84. <a href="https://doi.org/10.3905/jod.1995.407942">https://doi.org/10.3905/jod.1995.407942</a>
+</div>
+<div id="ref-ruiz2026var" class="csl-entry" role="listitem">
+Ruiz Hernández, M. del R. (2026). <em><span>VaR</span> paramétrico de acciones</em>. Material de clase, Análisis del Riesgo, Módulo 3, <span>ITESO</span>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -1171,11 +1144,30 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
         var filterRegex = new RegExp('/' + window.location.host + '/');
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -1189,8 +1181,70 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
             if (link.getAttribute("rel") === null) {
               link.setAttribute("rel", "noopener");
             }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -1204,6 +1258,7 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -1366,44 +1421,54 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -1501,6 +1566,9 @@ Tabla&nbsp;7: VaR y ES al 99% por Monte Carlo sobre una posición de $100,000 en
       }
     }
   });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Código desplazable","output":"Salida desplazable"};
   </script>
 </div> <!-- /content -->
 <footer class="footer">
