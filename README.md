@@ -145,9 +145,8 @@ Random draws (Monte Carlo VaR, GBM path simulation) are seeded from `config/para
 
 ## Ingest scripts
 
-Seven numbered scripts live in `analysis/`. They are the only code in the repository that
-touches a network. Reports never call any of them: they read `data/processed/` and
-nothing else.
+The numbered scripts in `analysis/` fetch and prepare the data. Reports read saved
+datasets and can be rendered offline.
 
 | Script | Writes to `data/processed/` | Needs a token? | When to run |
 |---|---|---|---|
@@ -158,6 +157,7 @@ nothing else.
 | `04_build_datasets.R` | `returns_daily` and other derived sets | No | **Always last.** It rebuilds everything downstream of the raw ingests. |
 | `05_refresh_public_snapshot.R` | `prices_daily`, `prices_provenance` | No | Only when extending the coverage window. See the warning below. |
 | `06_ingest_gap_filings.R` | `fundamentals_annual`, `eps_quarterly` | No | Whenever a new GAP filing extends the window. Reads `config/filings.yml`, the provenance manifest naming the accession behind every period, and rebuilds both datasets from the documents themselves. |
+| `07_stage05_prices.R` | `stage05_prices` | No | Rebuilds the separate six-equity snapshot for Stage 05 through the November 23 close. |
 
 ### Order
 
@@ -253,12 +253,12 @@ synced folder.
 
 | Area | Approach |
 |---|---|
-| Returns | Continuously compounded (log) returns; √252 annualisation of daily volatility |
+| Returns | Log returns for GBM and conditional variance models. Stage 05 uses simple adjusted-price returns to revalue the positions in pesos. |
 | Distribution | Jarque–Bera normality tests on returns, price and log price; skewness and excess kurtosis; one-sample *t*-test for zero mean |
 | Price dynamics | Geometric Brownian motion, closed-form expectation and 95% intervals, plus Monte Carlo paths |
 | Conditional variance | The course's Modulo 3 procedures: moving averages with the 70/30 window choice, EWMA with λ by maximum likelihood, data-driven EWMA with α by least squares, and ARCH/GARCH on an `auto.arima` mean, selected on significance, likelihood, AIC and BIC |
 | Model evaluation | Information criteria across models, then one-step forecasts against realised volatility: estimation through 2026-09-30, evaluation on 5–30 October 2026 |
-| Value at Risk | Historical simulation, variance–covariance, and Monte Carlo; 95 / 97.5 / 99% at 1, 5, 10 and 20-day horizons |
+| Value at Risk | Historical and normal portfolio VaR at 95%, 97.5% and 99% over 1, 5, 10 and 20 sessions. GAPB's individual one-day VaR uses a nonparametric bootstrap at 99%. |
 | Tail risk | Expected Shortfall at 99% |
 | Validation | Violation-count backtesting against expected exceedances |
 | Optimisation | Minimum-VaR portfolio weights, compared against the equally weighted allocation |
@@ -268,7 +268,7 @@ synced folder.
 ## Conventions
 
 - `snake_case` for objects and functions; functions live in `R/`, never in a report.
-- Ingest scripts are numbered by pipeline stage: `analysis/00_…` through `analysis/06_…`.
+- Ingest scripts are numbered by pipeline stage, through `analysis/07_stage05_prices.R`.
 - Parameters are never hard-coded in a report. They come from `config/params.yml`.
 - Tickers are never hard-coded either. They come from `config/assets.yml`.
 - Code, documentation and commit messages in English; report and article prose in Spanish.
@@ -303,9 +303,7 @@ the resulting HTML is written to `outputs/submission/`.
 Stage 03 estimates on the whole trading history up to the hard cut-off,
 **2006-02-27 to 2025-12-31** (`gbm.estimation_start` and `sample.end` in
 `params.yml`). The professor confirmed on 2026-10-15 that the whole history
-was specified for Part 3. Stage 04 uses its own model window. The final Part 5
-assignment calls for the full common equity history for historical simulation
-and the latest six calendar months for the covariance estimate.
+was specified for Part 3.
 Its descriptive section runs from 2021 to the last session of the snapshot
 (`data/processed/prices_provenance.csv` records it), and the 2026 prices serve as out-of-sample
 evidence for the projections, which start from the 2025-12-31 close. Every

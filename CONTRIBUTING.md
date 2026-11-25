@@ -82,8 +82,9 @@ and a day of work rebuilt on top of a stale copy.
 ### 2. Decide whether the data needs refreshing
 
 Most stages do not need it. The committed snapshot in `data/processed/` renders every
-report as is, and `config/params.yml` fixes a hard estimation cut-off, so refreshing
-prices does **not** move the fitted parameters in stages 03 to 05.
+report as is. Stages 03 and 04 have fixed estimation dates in `config/params.yml`.
+Stage 05 has a separate snapshot. Extending it changes the valuation date, the
+six-month covariance window and the number of daily forecasts evaluated.
 
 Check what the snapshot currently covers before assuming it is stale.
 

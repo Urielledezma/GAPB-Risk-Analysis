@@ -7,7 +7,7 @@ the data has been processed.
 |---|---|---|---|
 | `raw/` | Untouched vendor extracts and cached filings | **No** | `analysis/01_…`, `03_…`, `06_…` |
 | `private/` | Analysis-ready datasets **derived from FactSet** | **No** | `analysis/01_…`, `04_…` |
-| `processed/` | Analysis-ready datasets derived from public sources | **Yes** | `analysis/04_…`, `05_…`, `06_…` |
+| `processed/` | Analysis-ready datasets derived from public sources | **Yes** | `analysis/04_…`, `05_…`, `06_…`, `07_…` |
 
 `raw/sec/` holds the SEC documents `analysis/06_ingest_gap_filings.R` downloads, one
 directory per accession. It is a cache rather than an extract: filings are immutable once
@@ -54,6 +54,7 @@ untracked `private/`. In their absence, reports use the tracked public snapshot.
 | File | Tier | Grain | Key columns |
 |---|---|---|---|
 | `prices_daily.csv` | private or processed | One row per ticker per trading day | `date`, `ticker`, `open`, `high`, `low`, `close`, `adjusted`, `volume`, `source` |
+| `stage05_prices.csv` | processed | One row per equity and observed session from Yahoo Finance, through 2026-11-23 | `date`, `ticker`, `close`, `adjusted` |
 | `returns_daily.csv` | private or processed | One row per ticker per trading day | `date`, `ticker`, `log_return`, `source` |
 | `prices_provenance.csv` | follows the prices | One row per ticker and source | `ticker`, `source`, `rows`, `first`, `last` |
 | `gdp_mx.csv` | processed | One row per year | `date`, `year`, `gdp_growth` |

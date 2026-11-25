@@ -97,7 +97,7 @@ reportes GAP/SEC, salvo que exista una exportación manual de FactSet validada e
 
 ## Nota metodológica
 
-Los modelos trabajan con rendimientos logarítmicos, aditivos en el tiempo,
+Los modelos de precios y volatilidad trabajan con rendimientos logarítmicos, aditivos en el tiempo,
 aunque el escalamiento de volatilidad y riesgo por horizonte requiere los
 supuestos propios de cada modelo. Cada etapa fija sus parámetros antes del periodo
 con que se evalúa: la etapa 03 los estima con toda la historia hasta el
@@ -108,6 +108,8 @@ etapa 04 con datos del `r fecha_es(params()$sample$start)` al
 `r fecha_es(params()$variance$evaluation_end)`. La etapa 02 es descriptiva y tiene un corte distinto, el **30 de junio
 de 2026**, con julio de 2025–junio de 2026 como último año y rendimientos simples
 acumulados para comparar ventanas y años completos.
+
+En la etapa 05 usamos rendimientos simples para calcular cuánto habría ganado o perdido la cartera con cada movimiento conjunto de las seis acciones. El modelo histórico emplea toda la muestra común y el normal estima las covarianzas con los seis meses previos a cada pronóstico.
 
 Ningún reporte consulta una API durante el render: los scripts de `analysis/`
 descargan y escriben, y los reportes únicamente leen. Esa separación es lo que
