@@ -214,7 +214,7 @@
     "href": "index.html",
     "title": "Análisis de riesgo de mercado",
     "section": "",
-    "text": "Fuente de datos\n\n\nYahoo Finance / BMV, GAP / SEC y Banco Mundial\n\n\n\n\nCorte financiero\n\n\n31 de diciembre de 2025\n\n\n\n\nMoneda\n\n\nMXN; EPS en MXN por acción serie B\n\n\n\n\nPeriodo cubierto\n\n\nGAPB: 27 de febrero de 2006–4 de noviembre de 2026\nEste sitio reúne el análisis de riesgo de mercado de Grupo Aeroportuario del Pacífico y de una cartera de seis emisoras de la Bolsa Mexicana de Valores. El trabajo avanza en cinco etapas, de los fundamentos del emisor a un modelo de Valor en Riesgo sometido a backtesting."
+    "text": "Descargar la presentación final (PowerPoint) · 8 diapositivas · 15 minutos\nEstudio de caso individual (PDF) · Código de respaldo en R\nEste sitio reúne el análisis de riesgo de mercado de Grupo Aeroportuario del Pacífico y de una cartera de seis emisoras de la Bolsa Mexicana de Valores. El trabajo avanza en cinco etapas, de los fundamentos del emisor a un modelo de Valor en Riesgo sometido a backtesting."
   },
   {
     "objectID": "index.html#estructura-del-análisis",

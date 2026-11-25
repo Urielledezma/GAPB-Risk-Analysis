@@ -16,6 +16,10 @@ number-sections: false
 source("_setup.R")
 ```
 
+**[Descargar la presentación final (PowerPoint)](https://raw.githubusercontent.com/Urielledezma/GAPB-Risk-Analysis/main/presentacion/GAPB%20-%20Examen%20final%20de%20An%C3%A1lisis%20del%20Riesgo.pptx)** · 8 diapositivas · 15 minutos
+
+[Estudio de caso individual (PDF)](https://github.com/Urielledezma/GAPB-Risk-Analysis/blob/main/paper/GAPB.pdf) · [Código de respaldo en R](https://github.com/Urielledezma/GAPB-Risk-Analysis/tree/main/R)
+
 <dl class="report-meta" aria-label="Ficha técnica del proyecto">
 <div><dt>Fuente de datos</dt><dd>Yahoo Finance / BMV, GAP / SEC y Banco Mundial</dd></div>
 <div><dt>Corte financiero</dt><dd>31 de diciembre de 2025</dd></div>

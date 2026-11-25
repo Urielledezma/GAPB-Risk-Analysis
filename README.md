@@ -1,5 +1,11 @@
 # Market Risk Analysis — GAPB.MX
 
+**[Descargar la presentación final (PowerPoint)](https://raw.githubusercontent.com/Urielledezma/GAPB-Risk-Analysis/main/presentacion/GAPB%20-%20Examen%20final%20de%20An%C3%A1lisis%20del%20Riesgo.pptx)** · 8 diapositivas · 15 minutos
+
+La defensa sigue una decisión de cartera: cuánto asignar a GAPB después de medir la exposición al choque tarifario y contrastar dos estimaciones de pérdida.
+
+[Cinco reportes](https://urielledezma.github.io/GAPB-Risk-Analysis/) · [Código en R](R/) · [Estudio de caso individual (PDF)](paper/GAPB.pdf) · [Descargar proyecto para Overleaf](https://raw.githubusercontent.com/Urielledezma/GAPB-Risk-Analysis/main/paper/GAPB-Overleaf.zip)
+
 [![checks](https://github.com/Urielledezma/GAPB-Risk-Analysis/actions/workflows/checks.yml/badge.svg)](https://github.com/Urielledezma/GAPB-Risk-Analysis/actions/workflows/checks.yml)
 [![R](https://img.shields.io/badge/R-%3E%3D%204.2-276DC3?logo=r&logoColor=white)](https://www.r-project.org/)
 [![Quarto](https://img.shields.io/badge/Quarto-reports-39729E?logo=quarto&logoColor=white)](https://quarto.org/)
@@ -17,14 +23,14 @@ The project moves from the fundamentals of the issuer to a fully backtested Valu
 Risk model, in five stages: business and financial characterisation, price-path and
 event attribution, return distribution and geometric Brownian motion, conditional
 variance models, and portfolio VaR / Expected Shortfall. Each stage renders as a page
-of the research site; together they form the basis of a research article.
+of the research site and provides the evidence behind the presentation.
 
 Reusable analytics live in `R/` as a small library driven by `config/`; stage 02
 also shows introductory return and drawdown calculations directly in its report.
 Point `config/assets.yml` at a different universe and the
 same pipeline runs unchanged — the repository is intended to be reused.
 
-**Reports:** <https://urielledezma.github.io/GAPB-Risk-Analysis/>
+To edit the case study, upload `paper/GAPB-Overleaf.zip` in Overleaf via **New project → Existing project (.zip)**. Compile `main.tex` with pdfLaTeX. The ZIP includes the figure from stage 04. The five reports and their R sources document the calculations.
 
 ---
 
@@ -37,7 +43,7 @@ same pipeline runs unchanged — the repository is intended to be reused.
 | 03 — Returns & GBM | Are returns normal? Is the price lognormal? What does a GBM projection imply? | `reports/03-returns-volatility-gbm.qmd` |
 | 04 — Variance models | Which conditional variance model — MA, EWMA, data-driven EWMA, ARCH/GARCH — forecasts best out of sample? | `reports/04-variance-models.qmd` |
 | 05 — VaR & Expected Shortfall | What is the portfolio's loss exposure, does the model survive backtesting, and which weights minimise it? | `reports/05-value-at-risk.qmd` |
-| — Article | Publication-format synthesis of all five stages | `paper/article.qmd` |
+
 
 ---
 
@@ -49,7 +55,8 @@ same pipeline runs unchanged — the repository is intended to be reused.
 ├── analysis/           # Numbered ingest scripts. The only code that touches a network
 ├── config/             # Asset universe, model parameters and the SEC filings manifest
 ├── reports/            # Quarto sources for the five stage reports
-├── paper/              # Research article (renders to .docx and .html)
+├── presentacion/       # Final oral defense (PowerPoint)
+├── paper/              # Individual case study, PDF and self-contained Overleaf ZIP
 ├── data/
 │   ├── raw/            # Untouched vendor extracts. Never committed
 │   ├── private/        # FactSet-derived datasets. Never committed
@@ -284,7 +291,7 @@ synced folder.
 - [x] Stage 03 — return distribution and GBM projection
 - [x] Stage 04 — conditional variance models and out-of-sample evaluation
 - [x] Stage 05 — portfolio VaR, Expected Shortfall and optimisation
-- [ ] Research article
+- [x] Final presentation and individual case study
 - [ ] Render-in-CI once the dependency lockfile is stable
 
 Stage 02 uses the public price snapshot through **2026-06-30**, with
