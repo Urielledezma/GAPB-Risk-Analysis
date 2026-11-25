@@ -452,7 +452,7 @@ Tabla&nbsp;2: Pérdida histórica por horizonte y confianza, en MXN. Un importe 
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-hist" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Histograma de resultados diarios en pesos con un panel inferior que amplía la cola de pérdidas y marca los tres límites.">
+<div id="fig-hist" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Histograma de resultados diarios en pesos con un panel inferior que amplía la cola de pérdidas y marca los tres límites." data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="05-value-at-risk_files/figure-html/fig-hist-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Histograma de resultados diarios en pesos con un panel inferior que amplía la cola de pérdidas y marca los tres límites." width="1600">
@@ -464,7 +464,7 @@ Figura&nbsp;1: Ganancias y pérdidas a un día para la cartera de $600,000. Las 
 </div>
 </div>
 </div>
-<p>Al 99%, el límite diario es $19,652. En la <a href="#fig-hist" class="quarto-xref">Figura&nbsp;1</a> las sesiones a la izquierda de esa línea muestran por qué el importe reservado para cubrir una pérdida poco frecuente puede resultar insuficiente: en esa cola la pérdida media, o <em>Expected Shortfall</em> histórico de la cartera, alcanza $30,504, y la mayor pérdida observada fue de $73,786 el 17 de marzo de 2020. El VaR mide dónde empieza la cola y el ES cuantifica la exposición media una vez dentro de ella.</p>
+<p>Al 99%, el límite diario es $19,652. En la <a href="#fig-hist" class="quarto-xref">Figura&nbsp;1</a> las sesiones a la izquierda de esa línea muestran cuánto puede perderse una vez rebasado el límite. Al promediar el peor 1 % de las pérdidas, dando a la última observación el peso necesario para completar ese porcentaje, el <em>Expected Shortfall</em> histórico alcanza $30,606. La mayor pérdida observada fue de $73,786 el 17 de marzo de 2020.</p>
 </section>
 <section id="var-paramétrico" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="var-paramétrico"><span class="header-section-number">4</span> VaR paramétrico</h2>
@@ -919,7 +919,7 @@ Tabla&nbsp;7: Riesgo a un día al 99% en MXN y concentración del capital.
 <summary>Ver código</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mc_cfg <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>monte_carlo</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mc_position <span class="ot">&lt;-</span> <span class="fu">params</span>()<span class="sc">$</span>var<span class="sc">$</span>position_mxn</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mc_cutoff <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">as.Date</span>(<span class="fu">rownames</span>(px)))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mc_cutoff <span class="ot">&lt;-</span> cutoff</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>mc_prices <span class="ot">&lt;-</span> prices[prices<span class="sc">$</span>ticker <span class="sc">==</span> <span class="fu">subject</span>() <span class="sc">&amp;</span> prices<span class="sc">$</span>date <span class="sc">&lt;=</span> mc_cutoff,</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">c</span>(<span class="st">"date"</span>, <span class="st">"adjusted"</span>)]</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>mc_prices <span class="ot">&lt;-</span> mc_prices[<span class="fu">order</span>(mc_prices<span class="sc">$</span>date), ]</span>
@@ -944,8 +944,8 @@ Tabla&nbsp;7: Riesgo a un día al 99% en MXN y concentración del capital.
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>mc_draws <span class="ot">&lt;-</span> <span class="fu">sample</span>(mc_returns, <span class="at">size =</span> mc_cfg<span class="sc">$</span>n_simulations, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mc_losses <span class="ot">&lt;-</span> <span class="sc">-</span>mc_position <span class="sc">*</span> mc_draws</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>mc_var <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">quantile</span>(mc_losses, mc_cfg<span class="sc">$</span>confidence))</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>mc_tail <span class="ot">&lt;-</span> mc_losses[mc_losses <span class="sc">&gt;=</span> mc_var]</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>mc_es <span class="ot">&lt;-</span> <span class="fu">mean</span>(mc_tail)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>mc_n_tail <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">length</span>(mc_losses) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> mc_cfg<span class="sc">$</span>confidence), <span class="dv">6</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>mc_es <span class="ot">&lt;-</span> <span class="fu">stage05_es</span>(mc_losses, mc_cfg<span class="sc">$</span>confidence)</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(mc_es <span class="sc">&gt;=</span> mc_var)</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(<span class="fu">data.frame</span>(</span>
@@ -984,8 +984,8 @@ Tabla&nbsp;8: Riesgo individual a un día por Monte Carlo empírico al 99%.
 </tr>
 <tr class="even">
 <td style="text-align: left;">Pérdida esperada en la cola (ES)</td>
-<td style="text-align: left;">$7,099.29</td>
-<td style="text-align: right;">7.10%</td>
+<td style="text-align: left;">$7,131.52</td>
+<td style="text-align: right;">7.13%</td>
 </tr>
 </tbody>
 </table>
@@ -994,7 +994,7 @@ Tabla&nbsp;8: Riesgo individual a un día por Monte Carlo empírico al 99%.
 </figure>
 </div>
 </div>
-<p>Cada uno de los 100,000 escenarios toma al azar, con reemplazo, el rendimiento de una sesión de GAPB y lo aplica a la posición actual. El VaR de <strong>$5,084.76</strong> marca la entrada al peor 1% de las pérdidas simuladas. Entre los 1,016 escenarios que alcanzan o superan ese umbral, incluidos los empates del remuestreo, la pérdida promedio asciende a <strong>$7,099.29</strong>, es decir, $2,014.53 más que el VaR. El remuestreo conserva las caídas extremas registradas en GAPB, aunque su pérdida máxima posible queda limitada a la peor sesión observada.</p>
+<p>Cada uno de los 100,000 escenarios toma al azar, con reemplazo, el rendimiento de una sesión de GAPB y lo aplica a la posición actual. El VaR de <strong>$5,084.76</strong> marca la entrada al peor 1% de las pérdidas simuladas. Al ordenar las pérdidas de mayor a menor, los 1,000 peores escenarios promedian <strong>$7,131.52</strong>, es decir, $2,046.76 más que el VaR. Si el remuestreo repite la pérdida en el umbral, contamos los empates necesarios para completar ese 1 %. La estimación conserva las caídas registradas en GAPB, aunque su pérdida máxima posible queda limitada a la peor sesión observada.</p>
 </section>
 <section id="comparación-e-interpretación-financiera" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="comparación-e-interpretación-financiera">Comparación e interpretación financiera</h2>
