@@ -45,22 +45,24 @@ stage05_asset_scenarios <- function(panel, horizon) {
        returns = panel[ends, , drop = FALSE] / panel[starts, , drop = FALSE] - 1)
 }
 
+#' Average the worst (1 - confidence) share of equiprobable losses.
+stage05_es <- function(loss, confidence) {
+  tail_size <- length(loss) * (1 - confidence)
+  cutoff <- sort(loss, decreasing = TRUE)[ceiling(tail_size)]
+  # Give the cutoff only the weight left after all strictly worse outcomes.
+  cutoff + sum(pmax(loss - cutoff, 0)) / tail_size
+}
+
 #' Empirical and normal loss thresholds in pesos, by horizon and confidence.
 stage05_risk <- function(scenarios, confidence, sigma, value) {
   rows <- lapply(split(scenarios, scenarios$horizon), function(s) {
     if (!nrow(s)) stop("Empty historical scenario sample.", call. = FALSE)
     cuts <- stats::quantile(s$pnl_mxn, 1 - confidence, type = 7, names = FALSE)
-    # The class Rmd averages the outcomes strictly below its empirical quantile.
-    # At a tied minimum, the observed minimum is the whole available loss tail.
-    tail_n <- vapply(cuts, function(cut) sum(s$pnl_mxn < cut), integer(1))
-    es <- vapply(cuts, function(cut) {
-      tail_pnl <- s$pnl_mxn[s$pnl_mxn < cut]
-      if (length(tail_pnl)) -mean(tail_pnl) else -cut
-    }, numeric(1))
+    es <- vapply(confidence, function(c) stage05_es(-s$pnl_mxn, c), numeric(1))
     data.frame(confidence = confidence, horizon = s$horizon[1], n = nrow(s),
                historical_var_mxn = -cuts,
                normal_var_mxn = value * stats::qnorm(confidence) * sigma * sqrt(s$horizon[1]),
-               historical_es_mxn = es, n_below_quantile = tail_n)
+               historical_es_mxn = es)
   })
   out <- do.call(rbind, rows)
   rownames(out) <- NULL
@@ -74,9 +76,10 @@ stage05_backtest <- function(daily, asset_returns, weights, value, spec, first_d
   months <- spec$parametric_window_months
   targets <- which(d >= first_day & format(d, "%Y") == format(first_day, "%Y"))
   rows <- lapply(targets, function(i) {
-    lower <- stage05_months_before(d[i], months)
+    origin <- daily$start_date[i]
+    lower <- stage05_months_before(origin, months)
     prior <- seq_len(i - 1L)
-    rolling <- prior[d[prior] >= lower]
+    rolling <- prior[d[prior] > lower & d[prior] <= origin]
     if (min(daily$start_date) > lower || length(rolling) < 2L) return(NULL)
     historical <- -stats::quantile(daily$pnl_mxn[prior], 1 - conf, names = FALSE, type = 7)
     sigma <- portfolio_sigma(weights, stats::cov(asset_returns[rolling, , drop = FALSE]))
@@ -100,15 +103,6 @@ stage05_coverage <- function(backtest, alpha) {
   out <- do.call(rbind, lapply(groups, function(b) {
     conf <- b$confidence[1]
     coverage <- backtest_var(b$pnl_mxn, -b$var_mxn, conf, alpha)
-    # At zero or all exceptions, the limiting log likelihood remains finite.
-    if (is.na(coverage$lr_statistic)) {
-      x <- coverage$observed_breaches
-      n <- coverage$n
-      coverage$lr_statistic <- 2 * (stats::dbinom(x, n, x / n, log = TRUE) -
-                                      stats::dbinom(x, n, 1 - conf, log = TRUE))
-      coverage$p_value <- stats::pchisq(coverage$lr_statistic, df = 1, lower.tail = FALSE)
-      coverage$reject_model <- coverage$p_value < alpha
-    }
     data.frame(method = b$method[1], coverage)
   }))
   rownames(out) <- NULL
@@ -139,11 +133,8 @@ stage05_portfolio <- function(prices) {
   common_dates <- as.Date(rownames(complete_px))
   if (!length(common_dates)) stop("No common six-asset valuation date.", call. = FALSE)
   portfolio <- build_portfolio(prices[prices$ticker %in% colnames(panel), ],
-                               as_of = max(common_dates), position = spec$position_mxn)
-  closes <- prices[prices$date == portfolio$as_of, c("ticker", "close")]
-  portfolio$holdings$price <- closes$close[match(portfolio$holdings$ticker, closes$ticker)]
-  stopifnot(all(is.finite(portfolio$holdings$price) & portfolio$holdings$price > 0))
-  portfolio$holdings$shares <- portfolio$holdings$value / portfolio$holdings$price
+                               as_of = max(common_dates), position = spec$position_mxn,
+                               price_col = "close")
   weights <- portfolio$weights[colnames(panel)]
   one <- stage05_asset_scenarios(panel, 1L)
   scenarios <- lapply(spec$horizons_days, function(h) {
@@ -155,8 +146,7 @@ stage05_portfolio <- function(prices) {
   })
   scenarios <- do.call(rbind, scenarios)
   daily <- scenarios[scenarios$horizon == 1L, ]
-  # As of the close: (cutoff minus six calendar months, cutoff]. For the
-  # forecast of day t use only return end dates in [t minus six months, t).
+  # Both the final estimate and each forecast use (origin minus six months, origin].
   lower <- stage05_months_before(portfolio$as_of, spec$parametric_window_months)
   in_window <- one$date > lower & one$date <= portfolio$as_of
   if (min(common_dates) > lower || sum(in_window) < 2L) {
@@ -167,8 +157,8 @@ stage05_portfolio <- function(prices) {
   risk <- stage05_risk(scenarios, spec$confidence, sigma, portfolio$value)
   backtest <- stage05_backtest(daily, one$returns, weights, portfolio$value, spec,
                                as.Date(params()$sample$oos_start))
-  c(portfolio, list(prices = complete_px, common_dates = common_dates, asset_returns = one$returns,
-                    session_dates = as.Date(rownames(panel)), daily = daily, scenarios = scenarios,
+  c(portfolio, list(asset_returns = one$returns,
+                    session_dates = as.Date(rownames(panel)), daily = daily,
                     cov_dates = one$date[in_window], covariance = cov, sigma_daily = sigma,
                     risk = risk, backtest = backtest,
                     coverage = stage05_coverage(backtest, spec$backtest$alpha),

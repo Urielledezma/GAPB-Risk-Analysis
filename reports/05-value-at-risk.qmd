@@ -19,7 +19,6 @@ format:
 source("_setup.R")
 prices <- read_processed("stage05_prices")
 p5 <- stage05_portfolio(prices)
-px <- p5$prices
 ret <- p5$asset_returns
 w <- p5$weights
 S0 <- p5$value
@@ -144,7 +143,7 @@ for (zoom in c(FALSE, TRUE)) {
 par(op)
 ```
 
-Al 99%, el límite diario es `r fmt_mxn(one_hist[3])`. En la @fig-hist las sesiones a la izquierda de esa línea muestran por qué el importe reservado para cubrir una pérdida poco frecuente puede resultar insuficiente: en esa cola la pérdida media, o *Expected Shortfall* histórico de la cartera, alcanza `r fmt_mxn(es_basket)`, y la mayor pérdida observada fue de `r fmt_mxn(-min(pnl))` el `r fecha_es(as.Date(rownames(ret)[which.min(pnl)]))`. El VaR mide dónde empieza la cola y el ES cuantifica la exposición media una vez dentro de ella.
+Al 99%, el límite diario es `r fmt_mxn(one_hist[3])`. En la @fig-hist las sesiones a la izquierda de esa línea muestran cuánto puede perderse una vez rebasado el límite. Al promediar el peor 1 % de las pérdidas, dando a la última observación el peso necesario para completar ese porcentaje, el *Expected Shortfall* histórico alcanza `r fmt_mxn(es_basket)`. La mayor pérdida observada fue de `r fmt_mxn(-min(pnl))` el `r fecha_es(as.Date(rownames(ret)[which.min(pnl)]))`.
 
 ## VaR paramétrico
 
@@ -264,7 +263,7 @@ Al aplicar ambas composiciones a las mismas `r format(nrow(ret), big.mark = ",")
 ```{r allocation-individual-sample}
 mc_cfg <- params()$var$monte_carlo
 mc_position <- params()$var$position_mxn
-mc_cutoff <- max(as.Date(rownames(px)))
+mc_cutoff <- cutoff
 mc_prices <- prices[prices$ticker == subject() & prices$date <= mc_cutoff,
                     c("date", "adjusted")]
 mc_prices <- mc_prices[order(mc_prices$date), ]
@@ -288,8 +287,8 @@ use_seed()
 mc_draws <- sample(mc_returns, size = mc_cfg$n_simulations, replace = TRUE)
 mc_losses <- -mc_position * mc_draws
 mc_var <- unname(quantile(mc_losses, mc_cfg$confidence))
-mc_tail <- mc_losses[mc_losses >= mc_var]
-mc_es <- mean(mc_tail)
+mc_n_tail <- round(length(mc_losses) * (1 - mc_cfg$confidence), 6)
+mc_es <- stage05_es(mc_losses, mc_cfg$confidence)
 stopifnot(mc_es >= mc_var)
 
 report_table(data.frame(
@@ -301,7 +300,7 @@ report_table(data.frame(
                     fmt_pct(mc_cfg$confidence, 0), "."))
 ```
 
-Cada uno de los `r format(mc_cfg$n_simulations, big.mark = ",")` escenarios toma al azar, con reemplazo, el rendimiento de una sesión de GAPB y lo aplica a la posición actual. El VaR de **`r fmt_mxn(mc_var, 2)`** marca la entrada al peor `r fmt_pct(1 - mc_cfg$confidence, 0)` de las pérdidas simuladas. Entre los `r format(length(mc_tail), big.mark = ",")` escenarios que alcanzan o superan ese umbral, incluidos los empates del remuestreo, la pérdida promedio asciende a **`r fmt_mxn(mc_es, 2)`**, es decir, `r fmt_mxn(mc_es - mc_var, 2)` más que el VaR. El remuestreo conserva las caídas extremas registradas en GAPB, aunque su pérdida máxima posible queda limitada a la peor sesión observada.
+Cada uno de los `r format(mc_cfg$n_simulations, big.mark = ",")` escenarios toma al azar, con reemplazo, el rendimiento de una sesión de GAPB y lo aplica a la posición actual. El VaR de **`r fmt_mxn(mc_var, 2)`** marca la entrada al peor `r fmt_pct(1 - mc_cfg$confidence, 0)` de las pérdidas simuladas. Al ordenar las pérdidas de mayor a menor, los `r format(mc_n_tail, big.mark = ",")` peores escenarios promedian **`r fmt_mxn(mc_es, 2)`**, es decir, `r fmt_mxn(mc_es - mc_var, 2)` más que el VaR. Si el remuestreo repite la pérdida en el umbral, contamos los empates necesarios para completar ese 1 %. La estimación conserva las caídas registradas en GAPB, aunque su pérdida máxima posible queda limitada a la peor sesión observada.
 
 ## Comparación e interpretación financiera {.unnumbered}
 

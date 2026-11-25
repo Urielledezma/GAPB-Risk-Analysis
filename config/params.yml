@@ -22,9 +22,10 @@ sample:
 # --- Conventions -------------------------------------------------------------
 conventions:
   trading_days_per_year: 252
-  # Daily model inputs use continuously compounded returns. Stage 02 converts
+  # GBM and volatility models use continuously compounded returns. Stage 02 converts
   # them to compounded simple returns for event windows and calendar years;
   # its descriptive cutoff is configured separately in price_history.yml.
+  # Stage 05 revalues holdings with simple adjusted-price returns.
   return_type: log
   price_field: adjusted
 
@@ -37,7 +38,7 @@ gbm:
   # Start of the estimation window for the normality tests, the t-test and both
   # GBM projections. Part 3 asks for "todo el periodo de cotización hasta
   # diciembre 2025", so it takes the whole history up to sample.end; the loader
-  # begins at the first session that exists. Stages 04 and 05 keep sample.start.
+  # begins at the first session that exists. Stage 04 uses sample.start.
   estimation_start: "2006-01-01"
   # Horizons in trading days, using daily parameters.
   horizons_days: [10, 20, 40]
@@ -105,12 +106,9 @@ var:
     n_simulations: 100000
     confidence: 0.99
   backtest:
-    # Rolling window for the one-day backtest, in trading days.
-    window: 250
     # Kupiec unconditional coverage test.
     alpha: 0.05
   optimisation:
-    objective: minimise_var
     confidence: 0.99
     long_only: true
     max_weight: 0.40

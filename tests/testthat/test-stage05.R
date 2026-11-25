@@ -14,6 +14,12 @@ test_that("months are measured on the calendar, including short months", {
   expect_equal(stage05_months_before(as.Date("2026-11-23"), 6), as.Date("2026-05-23"))
 })
 
+test_that("expected shortfall includes exactly the specified probability mass", {
+  expect_equal(stage05_es(c(20, 10, 10, 10, 0), .6), 15)
+  expect_equal(stage05_es(c(30, 15, 0), .5), 25)
+  expect_equal(stage05_es(c(30, 15, 0), .99), 30)
+})
+
 test_that("the public portfolio reconciles to positions and ex ante forecasts", {
   prices <- read_processed("stage05_prices")
   p <- stage05_portfolio(prices)
@@ -28,5 +34,13 @@ test_that("the public portfolio reconciles to positions and ex ante forecasts", 
   before <- p$daily$pnl_mxn[p$daily$date < target]
   expect_equal(b$var_mxn, -unname(quantile(before, .01)))
   expect_equal(b$breach, -b$pnl_mxn > b$var_mxn)
+  # A Monday forecast uses the six calendar months known at Friday's close.
+  monday <- as.Date("2026-11-23")
+  friday <- as.Date("2026-11-20")
+  window <- p$daily$date > as.Date("2026-05-20") & p$daily$date <= friday
+  normal <- subset(p$backtest, date == monday & method == "normal" & confidence == .99)
+  expect_equal(normal$train_last, friday)
+  expect_equal(normal$train_n, sum(window))
+  expect_equal(normal$var_mxn, p$value * qnorm(.99) * sd(p$daily$portfolio_return[window]))
   expect_equal(p$coverage$observed_breaches, c(8, 7, 5, 6, 1, 3))
 })
