@@ -2,6 +2,8 @@
 
 **[Descargar la presentación final (PowerPoint)](https://raw.githubusercontent.com/Urielledezma/GAPB-Risk-Analysis/main/presentacion/GAPB%20-%20Examen%20final%20de%20An%C3%A1lisis%20del%20Riesgo.pptx)** · 8 diapositivas · 15 minutos
 
+**[Descargar la defensa ampliada V2 (PowerPoint)](https://raw.githubusercontent.com/Urielledezma/GAPB-Risk-Analysis/main/presentacion/GAPB%20-%20Defensa%20ampliada%20V2.pptx)** · 12 diapositivas para exponer y 5 de respaldo para preguntas.
+
 La defensa sigue una decisión de cartera: cuánto asignar a GAPB después de medir la exposición al choque tarifario y contrastar dos estimaciones de pérdida.
 
 [Cinco reportes](https://urielledezma.github.io/GAPB-Risk-Analysis/) · [Código en R](R/) · [Estudio de caso individual (PDF)](paper/GAPB.pdf) · [Descargar proyecto para Overleaf](https://raw.githubusercontent.com/Urielledezma/GAPB-Risk-Analysis/main/paper/GAPB-Overleaf.zip)
